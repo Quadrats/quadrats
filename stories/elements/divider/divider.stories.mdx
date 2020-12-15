@@ -1,0 +1,61 @@
+import { Meta, ArgsTable } from '@storybook/addon-docs/blocks';
+import { createReactDivider } from '@quadrats/react/divider';
+import { DividerToolbarIcon } from '@quadrats/react/divider/toolbar';
+import { createJsxSerializeDivider } from '@quadrats/react/divider/jsx-serializer';
+import {
+  createRenderElementDocgen,
+  ReactDividerDocgen,
+  DividerElementDocgen,
+  RenderDividerElementPropsDocgen,
+  JsxSerializeDividerPropsDocgen,
+} from './docgen';
+
+<Meta title="Elements/Divider/Docs" />
+
+# Factories
+
+## createReactDivider
+
+<ArgsTable of={createReactDivider} />
+
+## .createRenderElement
+
+<ArgsTable of={createRenderElementDocgen} />
+
+# Interfaces
+
+## ReactDivider
+
+<ArgsTable of={ReactDividerDocgen} />
+
+## DividerElement
+
+<ArgsTable of={DividerElementDocgen} />
+
+## RenderDividerElementProps
+
+<ArgsTable of={RenderDividerElementPropsDocgen} />
+
+# Widgets
+
+## Toolbar
+
+### DividerToolbarIcon
+
+<ArgsTable of={DividerToolbarIcon} />
+
+# Serializers
+
+## Jsx
+
+### Factories
+
+#### createJsxSerializeDivider
+
+<ArgsTable of={createJsxSerializeDivider} />
+
+### Interfaces
+
+#### JsxSerializeDividerProps
+
+<ArgsTable of={JsxSerializeDividerPropsDocgen} />

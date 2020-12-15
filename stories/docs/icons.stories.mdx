@@ -1,0 +1,71 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as icons from '@quadrats/icons';
+import { Icon } from '@quadrats/react/components';
+import './icons-stories.scss';
+
+<Meta title="Docs/Icons" />
+
+# @quadrats/icons
+
+[![npm package](https://img.shields.io/npm/v/@quadrats/icons.svg?maxAge=60)](https://www.npmjs.com/package/@quadrats/icons)
+[![npm downloads](https://img.shields.io/npm/dt/@quadrats/icons.svg?maxAge=60)](https://www.npmjs.com/package/@quadrats/icons)
+
+## Introduction
+
+This package just only includes `all icons for quadrats` and the interface [IconDefinition](https://github.com/Quadrats/quadrats/tree/master/packages/icons/src/typings.ts).
+All icons are restricted in the definition.
+
+## Installation
+
+```bash
+npm install @quadrats/icons --save
+```
+
+or
+
+```bash
+yarn add @quadrats/icons
+```
+
+## Usage
+
+```ts
+import { AlignLeft } from '@quadrats/icons';
+```
+
+or
+
+```ts
+import { AlignLeft } from '@quadrats/icons/align-left';
+```
+
+### For React
+
+You can use the icon definition to render the svg by yourself.eg.
+
+```tsx
+return (
+  <svg>
+    <path {...icon.definition.path} />
+  </svg>
+);
+```
+
+Or use the built in component [Icon](https://github.com/Quadrats/quadrats/tree/master/packages/react/components/src/Icon/index.tsx).
+
+## Built-in Icons
+
+<br />
+<div className="stories__icons__built-ins__all">
+  {Object.keys(icons)
+    .sort()
+    .map(key => icons[key])
+    .map(icon => (
+      <div key={icon.name} className="stories__icons__built-ins__all__container">
+        <div style={{ fontSize: 32 }}>
+          <Icon icon={icon} />
+        </div>
+        {icon.name}
+      </div>
+    ))}
+</div>

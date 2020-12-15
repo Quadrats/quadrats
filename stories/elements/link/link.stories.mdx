@@ -1,0 +1,61 @@
+import { Meta, ArgsTable } from '@storybook/addon-docs/blocks';
+import { createReactLink } from '@quadrats/react/link';
+import { LinkToolbarIcon } from '@quadrats/react/link/toolbar';
+import { createJsxSerializeLink } from '@quadrats/react/link/jsx-serializer';
+import {
+  createRenderElementDocgen,
+  ReactLinkDocgen,
+  LinkElementDocgen,
+  RenderLinkElementPropsDocgen,
+  JsxSerializeLinkElementPropsDocgen,
+} from './docgen';
+
+<Meta title="Elements/Link/Docs" />
+
+# Factories
+
+## createReactLink
+
+<ArgsTable of={createReactLink} />
+
+## .createRenderElement
+
+<ArgsTable of={createRenderElementDocgen} />
+
+# Interfaces
+
+## ReactLink
+
+<ArgsTable of={ReactLinkDocgen} />
+
+## LinkElement
+
+<ArgsTable of={LinkElementDocgen} />
+
+## RenderLinkElementProps
+
+<ArgsTable of={RenderLinkElementPropsDocgen} />
+
+# Widgets
+
+## Toolbar
+
+### LinkToolbarIcon
+
+<ArgsTable of={LinkToolbarIcon} />
+
+# Serializers
+
+## Jsx
+
+### Factories
+
+#### createJsxSerializeLink
+
+<ArgsTable of={createJsxSerializeLink} />
+
+### Interfaces
+
+#### JsxSerializeLinkElementProps
+
+<ArgsTable of={JsxSerializeLinkElementPropsDocgen} />

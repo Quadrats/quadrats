@@ -1,0 +1,15 @@
+import {
+  Editor,
+  Element,
+  Transforms,
+} from 'slate';
+import { TransformsWrapNodesOptions } from '../adapter/slate';
+import { unhangRange } from './unhangRange';
+
+/**
+ * Since currently `Transforms.wrapNodes` not support `hanging` option.
+ */
+export function wrapNodesWithUnhangRange(editor: Editor, element: Element, options: TransformsWrapNodesOptions = {}) {
+  unhangRange(editor, options);
+  Transforms.wrapNodes(editor, element, options);
+}

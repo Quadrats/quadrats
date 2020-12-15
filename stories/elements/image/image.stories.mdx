@@ -1,0 +1,87 @@
+import { Meta, ArgsTable } from '@storybook/addon-docs/blocks';
+import { createReactImage, ImageLevel } from '@quadrats/react/image';
+import { createJsxSerializeImage } from '@quadrats/react/image/jsx-serializer';
+import {
+  createHandlersDocgen,
+  createRenderElementDocgen,
+  ReactImageDocgen,
+  ImageFigureElementDocgen,
+  ImageElementDocgen,
+  ImageCaptionElementDocgen,
+  RenderImageFigureElementPropsDocgen,
+  RenderImageElementPropsDocgen,
+  RenderImageCaptionElementPropsDocgen,
+  JsxSerializeImageFigureElementPropsDocgen,
+  JsxSerializeImageElementPropsDocgen,
+  JsxSerializeImageCaptionElementPropsDocgen,
+} from './docgen';
+
+<Meta title="Elements/Image/Docs" />
+
+# Factories
+
+## createReactImage
+
+<ArgsTable of={createReactImage} />
+
+## .createHandlers
+
+<ArgsTable of={createHandlersDocgen} />
+
+## .createRenderElement
+
+<ArgsTable of={createRenderElementDocgen} />
+
+# Interfaces
+
+## ReactImage
+
+<ArgsTable of={ReactImageDocgen} />
+
+## ImageFigureElement
+
+<ArgsTable of={ImageFigureElementDocgen} />
+
+## ImageElement
+
+<ArgsTable of={ImageElementDocgen} />
+
+## ImageCaptionElement
+
+<ArgsTable of={ImageCaptionElementDocgen} />
+
+## RenderImageFigureElementProps
+
+<ArgsTable of={RenderImageFigureElementPropsDocgen} />
+
+## RenderImageElementProps
+
+<ArgsTable of={RenderImageElementPropsDocgen} />
+
+## RenderImageCaptionElementProps
+
+<ArgsTable of={RenderImageCaptionElementPropsDocgen} />
+
+# Serializers
+
+## Jsx
+
+### Factories
+
+#### createJsxSerializeImage
+
+<ArgsTable of={createJsxSerializeImage} />
+
+### Interfaces
+
+#### JsxSerializeImageFigureElementProps
+
+<ArgsTable of={JsxSerializeImageFigureElementPropsDocgen} />
+
+#### JsxSerializeImageElementProps
+
+<ArgsTable of={JsxSerializeImageElementPropsDocgen} />
+
+#### JsxSerializeImageCaptionElementProps
+
+<ArgsTable of={JsxSerializeImageCaptionElementPropsDocgen} />

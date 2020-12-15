@@ -1,0 +1,13 @@
+import { ReadMoreElement } from '@quadrats/common/read-more';
+import {
+  ReactReadMore,
+  ReactReadMoreCreateRenderElementOptions,
+  RenderReadMoreElementProps,
+} from '@quadrats/react/read-more';
+import { JsxSerializeReadMoreProps } from '@quadrats/react/read-more/jsx-serializer';
+
+export const createRenderElementDocgen = (options: ReactReadMoreCreateRenderElementOptions) => options;
+export const ReactReadMoreDocgen = (t: ReactReadMore) => t;
+export const ReadMoreElementDocgen = (element: ReadMoreElement) => element;
+export const RenderReadMoreElementPropsDocgen = (props: RenderReadMoreElementProps) => props;
+export const JsxSerializeReadMorePropsDocgen = (props: JsxSerializeReadMoreProps) => props;

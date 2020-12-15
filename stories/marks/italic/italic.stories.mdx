@@ -1,0 +1,61 @@
+import { Meta, ArgsTable } from '@storybook/addon-docs/blocks';
+import { createReactItalic } from '@quadrats/react/italic';
+import { ToggleMarkToolbarIcon } from '@quadrats/react/toggle-mark/toolbar';
+import { createJsxSerializeItalic } from '@quadrats/react/italic/jsx-serializer';
+import {
+  createHandlersDocgen,
+  createRenderLeafDocgen,
+  ReactToggleMarkDocgen,
+  RenderToggleMarkPropsDocgen,
+  JsxSerializeToggleMarkPropsDocgen,
+} from './docgen';
+
+<Meta title="Marks/Italic/Docs" />
+
+# Factories
+
+## createReactItalic
+
+<ArgsTable of={createReactItalic} />
+
+## .createHandlers
+
+<ArgsTable of={createHandlersDocgen} />
+
+## .createRenderLeaf
+
+<ArgsTable of={createRenderLeafDocgen} />
+
+# Interfaces
+
+## ReactToggleMark
+
+<ArgsTable of={ReactToggleMarkDocgen} />
+
+## RenderToggleMarkProps
+
+<ArgsTable of={RenderToggleMarkPropsDocgen} />
+
+# Widgets
+
+## Toolbar
+
+### ToggleMarkToolbarIcon
+
+<ArgsTable of={ToggleMarkToolbarIcon} />
+
+# Serializers
+
+## Jsx
+
+### Factories
+
+#### createJsxSerializeItalic
+
+<ArgsTable of={createJsxSerializeItalic} />
+
+### Interfaces
+
+#### JsxSerializeToggleMarkProps
+
+<ArgsTable of={JsxSerializeToggleMarkPropsDocgen} />

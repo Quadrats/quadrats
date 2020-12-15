@@ -1,0 +1,38 @@
+import { Meta, ArgsTable } from '@storybook/addon-docs/blocks';
+import { createRenderParagraphElement } from '@quadrats/react/paragraph';
+import { createJsxSerializeParagraph } from '@quadrats/react/paragraph/jsx-serializer';
+import { ParagraphElementDocgen, RenderParagraphElementPropsDocgen, JsxSerializeParagraphPropsDocgen } from './docgen';
+
+<Meta title="Elements/Paragraph/Docs" />
+
+# Factories
+
+## createRenderParagraphElement
+
+<ArgsTable of={createRenderParagraphElement} />
+
+# Interfaces
+
+## ParagraphElement
+
+<ArgsTable of={ParagraphElementDocgen} />
+
+## RenderParagraphElementProps
+
+<ArgsTable of={RenderParagraphElementPropsDocgen} />
+
+# Serializers
+
+## Jsx
+
+### Factories
+
+#### createJsxSerializeParagraph
+
+<ArgsTable of={createJsxSerializeParagraph} />
+
+### Interfaces
+
+#### JsxSerializeParagraphProps
+
+<ArgsTable of={JsxSerializeParagraphPropsDocgen} />

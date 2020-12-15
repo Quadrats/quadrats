@@ -1,0 +1,66 @@
+import { Meta, ArgsTable } from '@storybook/addon-docs/blocks';
+import { createReactList } from '@quadrats/react/list';
+import { ListToolbarIcon } from '@quadrats/react/list/toolbar';
+import { createJsxSerializeList } from '@quadrats/react/list/jsx-serializer';
+import {
+  createHandlersDocgen,
+  createRenderElementDocgen,
+  ReactListDocgen,
+  ListElementDocgen,
+  RenderListElementPropsDocgen,
+  JsxSerializeListElementPropsDocgen,
+} from './docgen';
+
+<Meta title="Elements/List/Docs" />
+
+# Factories
+
+## createReactList
+
+<ArgsTable of={createReactList} />
+
+## .createHandlers
+
+<ArgsTable of={createHandlersDocgen} />
+
+## .createRenderElement
+
+<ArgsTable of={createRenderElementDocgen} />
+
+# Interfaces
+
+## ReactList
+
+<ArgsTable of={ReactListDocgen} />
+
+## ListElement
+
+<ArgsTable of={ListElementDocgen} />
+
+## RenderListElementProps
+
+<ArgsTable of={RenderListElementPropsDocgen} />
+
+# Widgets
+
+## Toolbar
+
+### ListToolbarIcon
+
+<ArgsTable of={ListToolbarIcon} />
+
+# Serializers
+
+## Jsx
+
+### Factories
+
+#### createJsxSerializeList
+
+<ArgsTable of={createJsxSerializeList} />
+
+### Interfaces
+
+#### JsxSerializeListElementProps
+
+<ArgsTable of={JsxSerializeListElementPropsDocgen} />

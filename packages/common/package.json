@@ -1,0 +1,135 @@
+{
+  "name": "@quadrats/common",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Rytass",
+  "homepage": "https://github.com/Quadrats/quadrats#readme",
+  "license": "MIT",
+  "quadratsConfig": {
+    "packages": {
+      "__ROOT__": {
+        "sideEffects": false
+      },
+      "blockquote": {
+        "sideEffects": false
+      },
+      "bold": {
+        "sideEffects": false,
+        "deps": [
+          "toggle-mark"
+        ]
+      },
+      "divider": {
+        "sideEffects": false
+      },
+      "embed": {
+        "sideEffects": false
+      },
+      "embed/strategies/facebook": {
+        "sideEffects": false,
+        "deps": [
+          "embed"
+        ]
+      },
+      "embed/strategies/instagram": {
+        "sideEffects": false,
+        "deps": [
+          "embed"
+        ]
+      },
+      "embed/strategies/twitter": {
+        "sideEffects": false,
+        "deps": [
+          "embed"
+        ]
+      },
+      "embed/strategies/vimeo": {
+        "sideEffects": false,
+        "deps": [
+          "embed"
+        ]
+      },
+      "embed/strategies/youtube": {
+        "sideEffects": false,
+        "deps": [
+          "embed"
+        ]
+      },
+      "file-uploader": {
+        "sideEffects": false
+      },
+      "heading": {
+        "sideEffects": false
+      },
+      "highlight": {
+        "sideEffects": false,
+        "deps": [
+          "toggle-mark"
+        ]
+      },
+      "image": {
+        "sideEffects": false
+      },
+      "input-block": {
+        "sideEffects": false,
+        "deps": [
+          "input-widget"
+        ]
+      },
+      "input-widget": {
+        "sideEffects": false
+      },
+      "italic": {
+        "sideEffects": false,
+        "deps": [
+          "toggle-mark"
+        ]
+      },
+      "link": {
+        "sideEffects": false
+      },
+      "list": {
+        "sideEffects": false
+      },
+      "read-more": {
+        "sideEffects": false
+      },
+      "strikethrough": {
+        "sideEffects": false,
+        "deps": [
+          "toggle-mark"
+        ]
+      },
+      "toggle-mark": {
+        "sideEffects": false
+      },
+      "underline": {
+        "sideEffects": false,
+        "deps": [
+          "toggle-mark"
+        ]
+      }
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Quadrats/quadrats.git",
+    "directory": "packages/common"
+  },
+  "bugs": {
+    "url": "https://github.com/Quadrats/quadrats/issues"
+  },
+  "scripts": {
+    "clean": "npm run build:clean",
+    "build:clean": "node ../../scripts/cleanBuild.js",
+    "build": "npm run build:clean && node ../../scripts/build.js"
+  },
+  "dependencies": {
+    "@quadrats/core": "^0.0.0",
+    "@quadrats/locales": "^0.0.0",
+    "@quadrats/utils": "^0.0.0"
+  }
+}

@@ -1,0 +1,432 @@
+{
+  "name": "@quadrats/react",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Rytass",
+  "homepage": "https://github.com/Quadrats/quadrats#readme",
+  "license": "MIT",
+  "quadratsConfig": {
+    "packages": {
+      "__ROOT__": {
+        "sideEffects": false,
+        "deps": [
+          "_internal",
+          "configs"
+        ]
+      },
+      "_internal": {
+        "sideEffects": false
+      },
+      "blockquote": {
+        "sideEffects": false,
+        "deps": [
+          "__ROOT__",
+          "break"
+        ]
+      },
+      "blockquote/jsx-serializer": {
+        "sideEffects": false,
+        "deps": [
+          "jsx-serializer",
+          "blockquote"
+        ]
+      },
+      "blockquote/toolbar": {
+        "sideEffects": false,
+        "deps": [
+          "toolbar",
+          "blockquote"
+        ]
+      },
+      "bold": {
+        "sideEffects": false,
+        "deps": [
+          "toggle-mark"
+        ]
+      },
+      "bold/jsx-serializer": {
+        "sideEffects": false,
+        "deps": [
+          "toggle-mark/jsx-serializer",
+          "bold"
+        ]
+      },
+      "break": {
+        "sideEffects": false,
+        "deps": [
+          "__ROOT__"
+        ]
+      },
+      "components": {
+        "sideEffects": false,
+        "deps": [
+          "utils",
+          "configs"
+        ]
+      },
+      "configs": {
+        "sideEffects": false
+      },
+      "divider": {
+        "sideEffects": false,
+        "deps": [
+          "__ROOT__"
+        ]
+      },
+      "divider/jsx-serializer": {
+        "sideEffects": false,
+        "deps": [
+          "jsx-serializer",
+          "divider"
+        ]
+      },
+      "divider/toolbar": {
+        "sideEffects": false,
+        "deps": [
+          "toolbar",
+          "divider"
+        ]
+      },
+      "embed": {
+        "sideEffects": false,
+        "deps": [
+          "__ROOT__",
+          "embed/common"
+        ]
+      },
+      "embed/common": {
+        "sideEffects": false,
+        "deps": [
+          "__ROOT__",
+          "utils"
+        ]
+      },
+      "embed/jsx-serializer": {
+        "deps": [
+          "jsx-serializer",
+          "embed"
+        ]
+      },
+      "embed/jsx-serializer/facebook": {
+        "sideEffects": false,
+        "deps": [
+          "embed/jsx-serializer",
+          "embed/renderers/facebook"
+        ]
+      },
+      "embed/jsx-serializer/instagram": {
+        "sideEffects": false,
+        "deps": [
+          "embed/jsx-serializer",
+          "embed/renderers/instagram"
+        ]
+      },
+      "embed/jsx-serializer/twitter": {
+        "sideEffects": false,
+        "deps": [
+          "embed/jsx-serializer",
+          "embed/renderers/twitter"
+        ]
+      },
+      "embed/jsx-serializer/vimeo": {
+        "sideEffects": false,
+        "deps": [
+          "embed/jsx-serializer",
+          "embed/renderers/vimeo"
+        ]
+      },
+      "embed/jsx-serializer/youtube": {
+        "sideEffects": false,
+        "deps": [
+          "embed/jsx-serializer",
+          "embed/renderers/youtube"
+        ]
+      },
+      "embed/renderers/facebook": {
+        "sideEffects": false,
+        "deps": [
+          "embed"
+        ]
+      },
+      "embed/renderers/instagram": {
+        "sideEffects": false,
+        "deps": [
+          "embed"
+        ]
+      },
+      "embed/renderers/twitter": {
+        "sideEffects": false,
+        "deps": [
+          "embed"
+        ]
+      },
+      "embed/renderers/vimeo": {
+        "sideEffects": false,
+        "deps": [
+          "embed"
+        ]
+      },
+      "embed/renderers/youtube": {
+        "sideEffects": false,
+        "deps": [
+          "embed"
+        ]
+      },
+      "embed/toolbar": {
+        "sideEffects": false,
+        "deps": [
+          "toolbar",
+          "embed"
+        ]
+      },
+      "file-uploader": {
+        "sideEffects": false,
+        "deps": [
+          "__ROOT__",
+          "components"
+        ]
+      },
+      "file-uploader/toolbar": {
+        "sideEffects": false,
+        "deps": [
+          "toolbar",
+          "file-uploader"
+        ]
+      },
+      "heading": {
+        "sideEffects": false,
+        "deps": [
+          "__ROOT__",
+          "break"
+        ]
+      },
+      "heading/jsx-serializer": {
+        "sideEffects": false,
+        "deps": [
+          "jsx-serializer",
+          "heading"
+        ]
+      },
+      "heading/toolbar": {
+        "sideEffects": false,
+        "deps": [
+          "toolbar",
+          "heading"
+        ]
+      },
+      "highlight": {
+        "sideEffects": false,
+        "deps": [
+          "toggle-mark"
+        ]
+      },
+      "highlight/jsx-serializer": {
+        "sideEffects": false,
+        "deps": [
+          "toggle-mark/jsx-serializer",
+          "highlight"
+        ]
+      },
+      "image": {
+        "sideEffects": false,
+        "deps": [
+          "__ROOT__"
+        ]
+      },
+      "image/jsx-serializer": {
+        "sideEffects": false,
+        "deps": [
+          "jsx-serializer",
+          "image"
+        ]
+      },
+      "input-block": {
+        "sideEffects": false,
+        "deps": [
+          "__ROOT__"
+        ]
+      },
+      "italic": {
+        "sideEffects": false,
+        "deps": [
+          "toggle-mark"
+        ]
+      },
+      "italic/jsx-serializer": {
+        "sideEffects": false,
+        "deps": [
+          "toggle-mark/jsx-serializer",
+          "italic"
+        ]
+      },
+      "jsx-serializer": {
+        "sideEffects": false,
+        "deps": [
+          "_internal"
+        ]
+      },
+      "link": {
+        "sideEffects": false,
+        "deps": [
+          "__ROOT__"
+        ]
+      },
+      "link/jsx-serializer": {
+        "sideEffects": false,
+        "deps": [
+          "jsx-serializer",
+          "link"
+        ]
+      },
+      "link/toolbar": {
+        "sideEffects": false,
+        "deps": [
+          "toolbar",
+          "link"
+        ]
+      },
+      "list": {
+        "sideEffects": false,
+        "deps": [
+          "__ROOT__"
+        ]
+      },
+      "list/jsx-serializer": {
+        "sideEffects": false,
+        "deps": [
+          "jsx-serializer",
+          "list"
+        ]
+      },
+      "list/toolbar": {
+        "sideEffects": false,
+        "deps": [
+          "toolbar",
+          "list"
+        ]
+      },
+      "paragraph": {
+        "sideEffects": false,
+        "deps": [
+          "__ROOT__"
+        ]
+      },
+      "paragraph/jsx-serializer": {
+        "sideEffects": false,
+        "deps": [
+          "jsx-serializer",
+          "paragraph"
+        ]
+      },
+      "read-more": {
+        "sideEffects": false,
+        "deps": [
+          "__ROOT__"
+        ]
+      },
+      "read-more/jsx-serializer": {
+        "sideEffects": false,
+        "deps": [
+          "jsx-serializer",
+          "read-more"
+        ]
+      },
+      "read-more/toolbar": {
+        "sideEffects": false,
+        "deps": [
+          "toolbar",
+          "read-more"
+        ]
+      },
+      "strikethrough": {
+        "sideEffects": false,
+        "deps": [
+          "toggle-mark"
+        ]
+      },
+      "strikethrough/jsx-serializer": {
+        "sideEffects": false,
+        "deps": [
+          "toggle-mark/jsx-serializer",
+          "strikethrough"
+        ]
+      },
+      "toggle-mark": {
+        "sideEffects": false,
+        "deps": [
+          "__ROOT__"
+        ]
+      },
+      "toggle-mark/jsx-serializer": {
+        "sideEffects": false,
+        "deps": [
+          "jsx-serializer",
+          "toggle-mark"
+        ]
+      },
+      "toggle-mark/toolbar": {
+        "sideEffects": false,
+        "deps": [
+          "toolbar",
+          "toggle-mark"
+        ]
+      },
+      "toolbar": {
+        "sideEffects": false,
+        "deps": [
+          "__ROOT__",
+          "components"
+        ]
+      },
+      "underline": {
+        "sideEffects": false,
+        "deps": [
+          "toggle-mark"
+        ]
+      },
+      "underline/jsx-serializer": {
+        "sideEffects": false,
+        "deps": [
+          "toggle-mark/jsx-serializer",
+          "underline"
+        ]
+      },
+      "utils": {
+        "sideEffects": false
+      }
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Quadrats/quadrats.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Quadrats/quadrats/issues"
+  },
+  "scripts": {
+    "clean": "npm run build:clean",
+    "build:clean": "node ../../scripts/cleanBuild.js",
+    "build": "npm run build:clean && node ../../scripts/build.js"
+  },
+  "dependencies": {
+    "@types/is-hotkey": "^0.1.2",
+    "@quadrats/common": "^0.0.0",
+    "@quadrats/core": "^0.0.0",
+    "@quadrats/icons": "^0.0.0",
+    "@quadrats/locales": "^0.0.0",
+    "@quadrats/theme": "^0.0.0",
+    "@quadrats/utils": "^0.0.0",
+    "clsx": "^1.1.1",
+    "is-hotkey": "^0.2.0",
+    "react-transition-group": "^4.3.0",
+    "slate-react": "^0.59.0",
+    "tslib": "^2.0.3"
+  },
+  "peerDependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  }
+}

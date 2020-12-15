@@ -1,0 +1,106 @@
+$qdr-toolbar-popup-gap: 10px;
+$qdr-toolbar-arrow-size: $qdr-toolbar-popup-gap;
+$qdr-toolbar-height: 40px;
+$qdr-toolbar-padding-vertical: 8px;
+$qdr-toolbar-padding-horizontal: 10px;
+$qdr-toolbar-input-cross-size: 14px;
+
+.qdr-toolbar {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  height: $qdr-toolbar-height;
+  padding: $qdr-toolbar-padding-vertical $qdr-toolbar-padding-horizontal;
+  background-color: var(--qdr-surface);
+  border: 1px solid var(--qdr-border);
+  border-radius: 4px;
+  box-sizing: border-box;
+
+  &__wrapper {
+    position: absolute;
+    z-index: 1;
+    padding-bottom: $qdr-toolbar-popup-gap;
+    height: $qdr-toolbar-height;
+    box-sizing: content-box;
+
+    &--inputting {
+      min-width: 250px;
+      max-width: 350px;
+    }
+  }
+
+  &__arrow {
+    position: absolute;
+    top: calc(100% - #{$qdr-toolbar-popup-gap});
+    left: 50%;
+    content: '';
+    width: $qdr-toolbar-arrow-size;
+    height: $qdr-toolbar-arrow-size;
+    background: var(--qdr-surface);
+    border: 1px solid var(--qdr-border);
+    border-top: none;
+    border-left: none;
+    transform: translateX(-50%) translateY(-50%) rotate(45deg);
+  }
+
+  &__divider {
+    width: 1px;
+    height: 20px;
+    background-color: var(--qdr-divider);
+    margin: 0 8px;
+  }
+
+  &__icon {
+    position: relative;
+    color: var(--qdr-icon);
+    font-size: 24px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 9px;
+    border: 0;
+    background-color: transparent;
+    padding: 0;
+    outline: none;
+    box-shadow: none;
+    border-radius: 0;
+    transition: color 0.2s ease-out;
+    cursor: pointer;
+
+    &:hover,
+    &--active {
+      color: var(--qdr-primary);
+    }
+  }
+
+  &__input {
+    font-size: 13px;
+    background: var(--qdr-surface);
+    color: var(--qdr-placeholder);
+    width: calc(100% - #{$qdr-toolbar-input-cross-size});
+    height: 100%;
+    border: none;
+    padding: 0;
+    outline: none;
+
+    &__wrapper {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: $qdr-toolbar-padding-vertical;
+      left: $qdr-toolbar-padding-horizontal;
+      width: calc(100% - #{$qdr-toolbar-padding-horizontal * 2});
+      height: calc(100% - #{$qdr-toolbar-padding-vertical * 2 + $qdr-toolbar-popup-gap});
+      background: var(--qdr-surface);
+      box-sizing: border-box;
+    }
+
+    &__cross {
+      fill: var(--qdr-placeholder);
+      font-size: $qdr-toolbar-input-cross-size;
+      width: 1em;
+      height: 1em;
+      cursor: pointer;
+    }
+  }
+}

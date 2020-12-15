@@ -1,0 +1,7 @@
+@mixin qdr-theme($name, $palette) {
+  .qdr-theme-#{$name} {
+    @each $name, $color in $palette {
+      --qdr-#{$name}: #{$color};
+    }
+  }
+}

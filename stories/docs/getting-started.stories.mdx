@@ -1,0 +1,241 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Getting Started" />
+
+# Getting Started
+
+1. [Installing](#installing)
+1. [Setup Basic Editor](#setup-basic-editor)
+1. [Adding Plugins](#adding-plugins)
+1. [Adding Widgets Like Toolbar](#adding-widgets-like-toolbar)
+1. [Adding Theme and Locales](#adding-theme-and-locales)
+1. [Saving To a Database](#saving-to-a-database)
+1. [Rendering Via Jsx Serializer](#rendering-via-jsx-serializer)
+1. [Customizing Renderers](#customizing-renderers)
+
+## Installing
+
+```bash
+npm install react react-dom @quadrats/react --save
+```
+
+or
+
+```
+yarn add react react-dom @quadrats/react
+```
+
+## Setup Basic Editor
+
+```tsx
+import React, { useState, useMemo } from 'react';
+import { Node, PARAGRAPH_TYPE } from '@quadrats/core';
+import { Quadrats, Editable, createReactEditor } from '@quadrats/react';
+
+const initialValue: Node[] = [
+  {
+    type: PARAGRAPH_TYPE,
+    children: [{ text: '' }],
+  },
+];
+
+const MyEditor = () => {
+  const [value, setValue] = useState(initialValue);
+  const editor = useMemo(() => createReactEditor(), []);
+
+  return (
+    <Quadrats editor={editor} onChange={setValue} value={value}>
+      <Editable />
+    </Quadrats>
+  );
+};
+```
+
+## Adding Plugins
+
+After your editor rendered, but you want to do more than just typing a plaintext string. Let's just add some plugins on your editor.
+You can use [pre-built features of quadrats](./?path=/story/docs-intro--page#features) or create a customize plugin of [slate](https://docs.slatejs.org/).
+
+Let's use bold for example:
+
+```tsx
+import React, { useState, useMemo } from 'react';
+import { Node, PARAGRAPH_TYPE } from '@quadrats/core';
+import { Quadrats, Editable, createReactEditor, composeRenderLeafs, composeHandlers } from '@quadrats/react';
+import { createReactBold } from '@quadrats/react/bold';
+
+const initialValue: Node[] = [
+  {
+    type: PARAGRAPH_TYPE,
+    children: [{ text: '' }],
+  },
+];
+
+const bold = createReactBold();
+
+const createHandlers = composeHandlers([bold.createHandlers()]);
+
+const renderLeaf = composeRenderLeafs([bold.createRenderLeaf()]);
+
+const MyEditor = () => {
+  const [value, setValue] = useState(initialValue);
+  const editor = useMemo(() => createReactEditor(), []);
+  const handlers = useMemo(() => createHandlers(editor), [editor]);
+
+  return (
+    <Quadrats editor={editor} onChange={setValue} value={value}>
+      <Editable {...handlers} renderLeaf={renderLeaf} />
+    </Quadrats>
+  );
+};
+```
+
+Now you can use the default hotkey of bold, <kbd>⌘</kbd>+<kbd>b</kbd> on Mac or <kbd>ctrl</kbd>+<kbd>b</kbd> on Windows, to toggle text between bold.
+
+## Adding Widgets Like Toolbar
+
+Eventhough you can use hotkey to control the bold, but you want user can just click a button to control it. Let's just add a toolbar, menu, ...etc.
+[More built-in widgets](./?path=/story/docs-intro--page#features).
+
+```tsx
+import React, { useState, useMemo } from 'react';
+import { Bold as BoldIcon } from '@quadrats/icons';
+import { Node, PARAGRAPH_TYPE } from '@quadrats/core';
+import { Quadrats, Editable, createReactEditor, composeRenderLeafs, composeHandlers } from '@quadrats/react';
+import { createReactBold } from '@quadrats/react/bold';
+import { Toolbar } from '@quadrats/react/toolbar';
+import { ToggleMarkToolbarIcon } from '@quadrats/react/toggle-mark/toolbar';
+
+const initialValue: Node[] = [
+  {
+    type: PARAGRAPH_TYPE,
+    children: [{ text: '' }],
+  },
+];
+
+const bold = createReactBold();
+
+const createHandlers = composeHandlers([bold.createHandlers()]);
+
+const renderLeaf = composeRenderLeafs([bold.createRenderLeaf()]);
+
+const MyEditor = () => {
+  const [value, setValue] = useState(initialValue);
+  const editor = useMemo(() => createReactEditor(), []);
+  const handlers = useMemo(() => createHandlers(editor), [editor]);
+
+  return (
+    <Quadrats editor={editor} onChange={setValue} value={value}>
+      <Toolbar>
+        {(expanded) => {
+          if (expanded) {
+            return <ToggleMarkToolbarIcon icon={BoldIcon} controller={bold} />;
+          }
+
+          return null;
+        }}
+      </Toolbar>
+      <Editable {...handlers} renderLeaf={renderLeaf} />
+    </Quadrats>
+  );
+};
+```
+
+## Adding Theme and Locales
+
+Quadrats use [css variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) to theming.
+You can pass `string` or `object` to `theme` prop of component `Quadrats`.
+
+Please see the docs of [Theme](./?path=/story/docs-theme--page) to learn more.
+
+Let's delete all texts on the editor first, and then you can see the built-in placeholder provided by locale.
+You can just pass it to `locale` prop of component `Quadrats`.
+
+Please see the docs of [Locales](./?path=/story/docs-locales--page) to learn more.
+
+### For React
+
+Provide theme and locale by using [ConfigsProvider](https://github.com/Quadrats/quadrats/blob/main/packages/react/configs/src/ConfigsProvider.tsx).
+
+```tsx
+import { ConfigsProvider } from '@quadrats/react/configs';
+import { enUS } from '@quadrats/locales';
+
+// ...
+
+return <ConfigsProvider locale={enUS}>...</ConfigsProvider>;
+```
+
+For editor, just use the [Quadrats](https://github.com/Quadrats/quadrats/blob/main/packages/react/src/core/components/Quadrats.tsx) component
+built w/ [ConfigsProvider](https://github.com/Quadrats/quadrats/blob/main/packages/react/configs/src/ConfigsProvider.tsx).
+
+```tsx
+import { Quadrats } from '@quadrats/react';
+import { enUS } from '@quadrats/locales';
+
+// ...
+
+return (
+  <Quadrats locale={enUS} theme="my-custom">
+    ...
+  </Quadrats>
+);
+```
+
+## Saving To a Database
+
+It's very easy to save the value of quadrats to database since it's just a json object.
+
+```ts
+import { Node } from '@quadrats/core';
+
+const value: Node[] = [
+  {
+    type: PARAGRAPH_TYPE,
+    children: [{ text: '' }],
+  },
+];
+const valueString = JSON.stringify(value);
+```
+
+## Rendering Via Jsx Serializer
+
+If you want to render the value stored in your database as what you see in the editor. Just use [JsxSerializer](./?path=/story/serializers-jsx--example).
+It's a quick and easy way to reuse your custom component on both editor and anywhere you want to render the json of value.
+
+```tsx
+import { createJsxSerializer } from '@quadrats/react/jsx-serializer';
+import { createJsxSerializeBold } from '@quadrats/react/bold/jsx-serializer';
+
+const jsxSerializer = createJsxSerializer({
+  leafs: [createJsxSerializeBold()],
+});
+
+// ...
+
+return <div>{jsxSerializer.serialize(json)}</div>;
+```
+
+Please see [JsxSerializer](./?path=/story/serializers-jsx--example) to learn more.
+
+## Customizing Renderers
+
+The default component of `Bold` is `<strong>` tag of HTML. If you want to override it, just create your custom component and then pass it to both editor and jsx-serializer:
+
+```tsx
+const renderMyBold = ({ children }) => <span style={{ fontWeight: 'bold' }}>{children}</span>;
+
+// ...
+import { createReactBold } from '@quadrats/react/bold';
+
+const bold = createReactBold();
+const renderBold = bold.createRenderLeaf({ render: renderMyBold });
+
+// ...
+import { createJsxSerializer } from '@quadrats/react/jsx-serializer';
+import { createJsxSerializeBold } from '@quadrats/react/bold/jsx-serializer';
+
+const jsxSerializer = createJsxSerializer({
+  leafs: [createJsxSerializeBold({ render: renderMyBold })],
+});
+```

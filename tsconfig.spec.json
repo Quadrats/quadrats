@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.dev.json",
+  "compilerOptions": {
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "references": [
+    {
+      "path": "__fixtures__"
+    },
+    {
+      "path": "__mocks__"
+    }
+  ],
+  "include": ["./packages", "**/*.spec.*"]
+}

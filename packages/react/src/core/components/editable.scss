@@ -1,0 +1,28 @@
+.qdr-editable {
+  background-color: var(--qdr-background);
+  border: solid 1px var(--qdr-border);
+  color: var(--qdr-text);
+  caret-color: var(--qdr-primary);
+  transition: background-color 300ms ease-in-out, border-color 300ms ease-in-out, color 300ms ease-in-out;
+  will-change: background-color, border-color, color;
+
+  ::selection {
+    background-color: var(--qdr-primary-light);
+  }
+
+  &__placeholder {
+    display: inline-block;
+    top: 0;
+    left: 0;
+    color: var(--qdr-placeholder);
+    font: inherit;
+    padding: inherit;
+    width: 0;
+    max-width: 100%;
+    opacity: 0.333;
+    white-space: nowrap;
+    text-decoration: none;
+    pointer-events: none;
+    user-select: none;
+  }
+}

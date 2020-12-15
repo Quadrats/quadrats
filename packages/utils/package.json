@@ -1,0 +1,34 @@
+{
+  "name": "@quadrats/utils",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Rytass",
+  "homepage": "https://github.com/Quadrats/quadrats#readme",
+  "license": "MIT",
+  "quadratsConfig": {
+    "packages": {
+      "__ROOT__": {
+        "sideEffects": false
+      }
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Quadrats/quadrats.git",
+    "directory": "packages/utils"
+  },
+  "bugs": {
+    "url": "https://github.com/Quadrats/quadrats/issues"
+  },
+  "scripts": {
+    "clean": "npm run build:clean",
+    "build:clean": "node ../../scripts/cleanBuild.js",
+    "build": "npm run build:clean && node ../../scripts/build.js"
+  },
+  "dependencies": {
+    "tslib": "^2.0.3"
+  }
+}

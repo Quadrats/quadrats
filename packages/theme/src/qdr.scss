@@ -1,0 +1,4 @@
+@import '../theming/register';
+@import '../theming/palettes';
+
+@include qdr-theme('qdr', $qdr-palette-qdr);
