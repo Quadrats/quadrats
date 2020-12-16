@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/common/embed/strategies/instagram",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "embed"
+    ]
+  }
+}

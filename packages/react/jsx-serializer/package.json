@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/react/jsx-serializer",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "_internal"
+    ]
+  }
+}

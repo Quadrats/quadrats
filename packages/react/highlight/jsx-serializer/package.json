@@ -1,0 +1,10 @@
+{
+  "name": "@quadrats/react/highlight/jsx-serializer",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "toggle-mark/jsx-serializer",
+      "highlight"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/react/embed/renderers/instagram",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "embed"
+    ]
+  }
+}

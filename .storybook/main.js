@@ -5,7 +5,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const ROOT_PATH = path.resolve(__dirname, '..');
 const PACKAGES_PATH = path.resolve(ROOT_PATH, 'packages');
 const STORIES_PATH = path.resolve(ROOT_PATH, 'stories');
-const STORY_BOOK_TS_CONFIG_PATH = path.resolve(__dirname, 'tsconfig.json');
+const TS_CONFIG = path.resolve(ROOT_PATH, 'tsconfig.dev.json');
 
 module.exports = {
   stories: ['../stories/**/*.stories.@(tsx|mdx)'],
@@ -19,13 +19,13 @@ module.exports = {
           {
             loader: 'awesome-typescript-loader',
             options: {
-              configFileName: STORY_BOOK_TS_CONFIG_PATH
+              configFileName: TS_CONFIG
             }
           },
           {
             loader: 'react-docgen-typescript-loader',
             options: {
-              tsconfigPath: path.resolve(STORIES_PATH, 'tsconfig.json')
+              tsconfigPath: TS_CONFIG
             }
           }
         ]
@@ -38,7 +38,7 @@ module.exports = {
     );
     config.resolve.plugins.push(
       new TsconfigPathsPlugin({
-        configFile: STORY_BOOK_TS_CONFIG_PATH,
+        configFile: TS_CONFIG,
       })
     );
 

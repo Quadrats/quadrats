@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/react/bold",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "toggle-mark"
+    ]
+  }
+}

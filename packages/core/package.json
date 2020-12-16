@@ -5,16 +5,7 @@
   "author": "Rytass",
   "homepage": "https://github.com/Quadrats/quadrats#readme",
   "license": "MIT",
-  "quadratsConfig": {
-    "packages": {
-      "__ROOT__": {
-        "sideEffects": false
-      },
-      "serializers": {
-        "sideEffects": false
-      }
-    }
-  },
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },

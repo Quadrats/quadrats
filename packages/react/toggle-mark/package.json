@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/react/toggle-mark",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "__ROOT__"
+    ]
+  }
+}

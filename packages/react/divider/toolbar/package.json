@@ -1,0 +1,10 @@
+{
+  "name": "@quadrats/react/divider/toolbar",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "toolbar",
+      "divider"
+    ]
+  }
+}

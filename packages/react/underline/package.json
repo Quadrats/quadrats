@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/react/underline",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "toggle-mark"
+    ]
+  }
+}

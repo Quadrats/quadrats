@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/react/strikethrough",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "toggle-mark"
+    ]
+  }
+}

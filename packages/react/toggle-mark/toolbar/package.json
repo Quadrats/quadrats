@@ -1,0 +1,10 @@
+{
+  "name": "@quadrats/react/toggle-mark/toolbar",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "toolbar",
+      "toggle-mark"
+    ]
+  }
+}

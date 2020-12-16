@@ -1,0 +1,10 @@
+{
+  "name": "@quadrats/react/embed/jsx-serializer/facebook",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "embed/jsx-serializer",
+      "embed/renderers/facebook"
+    ]
+  }
+}

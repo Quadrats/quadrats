@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/react/italic",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "toggle-mark"
+    ]
+  }
+}

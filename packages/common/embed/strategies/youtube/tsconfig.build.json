@@ -1,8 +1,5 @@
 {
   "extends": "../../../../../tsconfig.base.json",
-  "compilerOptions": {
-    "rootDir": "./src"
-  },
-  "exclude": ["../../../../../__fixtures__", "../../../../../__mocks__", "**/*.spec.*"],
+  "exclude": ["**/*.spec.*"],
   "include": ["./src"]
 }

@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/react/embed/renderers/youtube",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "embed"
+    ]
+  }
+}

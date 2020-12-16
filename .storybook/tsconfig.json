@@ -1,4 +1,0 @@
-{
-  "extends": "../tsconfig.dev.json",
-  "exclude": ["node_modules", "**/node_modules", "../__fixtures__", "../__mocks__"]
-}

@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/react/image",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "__ROOT__"
+    ]
+  }
+}

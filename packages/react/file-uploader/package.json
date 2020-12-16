@@ -1,0 +1,10 @@
+{
+  "name": "@quadrats/react/file-uploader",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "__ROOT__",
+      "components"
+    ]
+  }
+}

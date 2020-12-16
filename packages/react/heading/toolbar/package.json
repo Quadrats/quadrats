@@ -1,0 +1,10 @@
+{
+  "name": "@quadrats/react/heading/toolbar",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "toolbar",
+      "heading"
+    ]
+  }
+}

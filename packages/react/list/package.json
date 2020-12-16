@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/react/list",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "__ROOT__"
+    ]
+  }
+}

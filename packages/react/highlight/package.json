@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/react/highlight",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "toggle-mark"
+    ]
+  }
+}

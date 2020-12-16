@@ -5,15 +5,11 @@
   "author": "Rytass",
   "homepage": "https://github.com/Quadrats/quadrats#readme",
   "license": "MIT",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
   "quadratsConfig": {
-    "packages": {
-      "__ROOT__": {
-        "sideEffects": [
-          "**/*.css",
-          "**/*.scss"
-        ]
-      }
-    },
     "copy": [
       "prebuilts",
       "theming"

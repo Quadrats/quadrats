@@ -1,0 +1,10 @@
+{
+  "name": "@quadrats/react/embed/jsx-serializer/vimeo",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "embed/jsx-serializer",
+      "embed/renderers/vimeo"
+    ]
+  }
+}

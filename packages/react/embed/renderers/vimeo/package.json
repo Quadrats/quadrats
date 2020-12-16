@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/react/embed/renderers/vimeo",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "embed"
+    ]
+  }
+}

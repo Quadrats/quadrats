@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/common/underline",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "toggle-mark"
+    ]
+  }
+}

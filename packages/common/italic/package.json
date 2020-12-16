@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/common/italic",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "toggle-mark"
+    ]
+  }
+}
