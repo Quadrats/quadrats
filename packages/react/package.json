@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@types/is-hotkey": "^0.1.2",
+    "@types/react-transition-group": "^4.2.4",
     "@quadrats/common": "^0.0.0",
     "@quadrats/core": "^0.0.0",
     "@quadrats/icons": "^0.0.0",
