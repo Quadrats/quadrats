@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import clsx from 'clsx';
-import './progress.styles';
+import './progress.scss';
 
 export interface ProgressProps {
   className?: string;

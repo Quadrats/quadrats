@@ -2,7 +2,7 @@ import React from 'react';
 import { Progress } from '@quadrats/react/components';
 import { RenderFileUploaderElementProps } from '../typings';
 import { useFileUploader } from '../hooks/useFileUploader';
-import './file-uploader.styles';
+import './file-uploader.scss';
 
 function FileUploader(props: RenderFileUploaderElementProps) {
   const { attributes, children, element } = props;

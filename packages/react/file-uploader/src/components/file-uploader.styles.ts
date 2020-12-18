@@ -1,1 +1,0 @@
-import './file-uploader.scss';

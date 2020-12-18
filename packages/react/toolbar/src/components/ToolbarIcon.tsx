@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { Icon, IconProps } from '@quadrats/react/components';
-import './toolbar.styles';
+import './toolbar.scss';
 
 export interface ToolbarIconProps extends Omit<IconProps, 'ref'> {
   active?: boolean;

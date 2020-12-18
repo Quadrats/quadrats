@@ -17,7 +17,7 @@ import { Portal } from '@quadrats/react/components';
 import { StartToolInput, ToolInputConfig } from '../typings';
 import { StartToolInputContext } from '../contexts/StartToolInputContext';
 import ToolbarInput from './ToolbarInput';
-import './toolbar.styles';
+import './toolbar.scss';
 
 function roundNumber(value: number, min: number, max: number) {
   if (value < min) {

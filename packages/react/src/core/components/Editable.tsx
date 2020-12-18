@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { Editor, isAncestorEmpty } from '@quadrats/core';
 import { useLocale, useTheme } from '@quadrats/react/configs';
 import DefaultLeaf from './DefaultLeaf';
-import './editable.styles';
+import './editable.scss';
 
 const PLACEHOLDER_KEY = '__quadrats-placeholder__';
 

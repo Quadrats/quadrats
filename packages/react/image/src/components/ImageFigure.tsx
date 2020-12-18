@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { useFocused, useSelected } from '@quadrats/react';
 import { RenderImageFigureElementProps } from '../typings';
-import './image.styles';
+import './image.scss';
 
 function ImageFigure(props: RenderImageFigureElementProps) {
   const { attributes, children, style } = props;

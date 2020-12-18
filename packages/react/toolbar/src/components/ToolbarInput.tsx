@@ -1,7 +1,7 @@
 import React, { KeyboardEventHandler, KeyboardEvent, MouseEvent } from 'react';
 import { useLocale } from '@quadrats/react';
 import { ToolInputConfig } from '../typings';
-import './toolbar.styles';
+import './toolbar.scss';
 
 export interface ToolbarInputProps {
   exit: VoidFunction;
