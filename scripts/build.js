@@ -98,11 +98,20 @@ async function build(packageSymbol, packageInfos) {
     await rollupBuild({
       input: indexPath,
       external: isExternal,
-      output: ['es', 'cjs'].map(format => ({
-        file: path.resolve(packageDistPath, `index.${format}.js`),
-        format,
-        externalLiveBindings: false,
-      })),
+      output: [
+        {
+          dir: path.resolve(packageDistPath),
+          format: 'es',
+          externalLiveBindings: false,
+          preserveModules: true,
+          preserveModulesRoot: packageSrcPath,
+        },
+        {
+          file: path.resolve(packageDistPath, 'index.cjs.js'),
+          format: 'cjs',
+          externalLiveBindings: false,
+        },
+      ],
       plugins: [
         ts({
           check: false,
@@ -127,7 +136,7 @@ async function build(packageSymbol, packageInfos) {
     });
 
     packageJson.main = './index.cjs.js';
-    packageJson.module = './index.es.js';
+    packageJson.module = './index.js';
     packageJson.typings = './index.d.ts';
   }
 
