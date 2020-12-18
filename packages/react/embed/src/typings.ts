@@ -1,6 +1,12 @@
 import { Embed, EmbedElement } from '@quadrats/common/embed';
 import { WithCreateRenderElement, RenderElementProps } from '@quadrats/react';
-import { WithEmbedRenderData } from '@quadrats/react/embed/common';
+
+export interface WithEmbedRenderData<RenderData> {
+  /**
+   * The data deserialized from element by corresponding strategy.
+   */
+  data: RenderData;
+}
 
 export interface RenderEmbedElementProps<EmbedData extends Record<string, unknown>, RenderData>
   extends RenderElementProps<EmbedElement & EmbedData>,

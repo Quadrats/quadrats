@@ -1,6 +1,6 @@
 import { EmbedStrategies, EMBED_TYPE } from '@quadrats/common/embed';
+import { createRenderEmbedElementBase } from '@quadrats/react/embed';
 import { createJsxSerializeElement } from '@quadrats/react/jsx-serializer';
-import { createRenderEmbedElementBase } from '@quadrats/react/embed/common';
 import { JsxSerializeEmbedElementProps } from './typings';
 
 export interface CreateJsxSerializeEmbedOptions<Provider extends string> {

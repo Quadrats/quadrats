@@ -3,8 +3,7 @@
   "sideEffects": false,
   "quadratsConfig": {
     "deps": [
-      "__ROOT__",
-      "embed/common"
+      "__ROOT__"
     ]
   }
 }

@@ -1,7 +1,7 @@
 import { createEmbed, CreateEmbedOptions } from '@quadrats/common/embed';
 import { createRenderElement } from '@quadrats/react';
-import { createRenderEmbedElementBase } from '@quadrats/react/embed/common';
 import { ReactEmbed, RenderEmbedElementProps } from './typings';
+import { createRenderEmbedElementBase } from './createRenderEmbedElementBase';
 
 export type CreateReactEmbedOptions<P extends string> = CreateEmbedOptions<P>;
 
