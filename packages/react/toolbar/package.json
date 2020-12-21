@@ -1,6 +1,9 @@
 {
   "name": "@quadrats/react/toolbar",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.scss",
+    "**/*.scss.js"
+  ],
   "quadratsConfig": {
     "deps": [
       "__ROOT__",

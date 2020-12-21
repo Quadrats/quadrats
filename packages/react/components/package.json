@@ -1,6 +1,9 @@
 {
   "name": "@quadrats/react/components",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.scss",
+    "**/*.scss.js"
+  ],
   "quadratsConfig": {
     "deps": [
       "utils",

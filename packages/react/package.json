@@ -5,7 +5,10 @@
   "author": "Rytass",
   "homepage": "https://github.com/Quadrats/quadrats#readme",
   "license": "MIT",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.scss",
+    "**/*.scss.js"
+  ],
   "quadratsConfig": {
     "deps": [
       "_internal",
