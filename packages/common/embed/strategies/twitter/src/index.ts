@@ -4,8 +4,7 @@ export type TwitterEmbedType = 'tweet';
 
 export type TwitterEmbedElementData = {
   embedType: TwitterEmbedType;
-  account: string;
-  hash?: string;
+  tweetId: string;
 };
 
 export type TwitterEmbedElement = EmbedElement & TwitterEmbedElementData;
@@ -13,15 +12,14 @@ export type TwitterEmbedElement = EmbedElement & TwitterEmbedElementData;
 export type TwitterEmbedStrategy = EmbedStrategy<TwitterEmbedElementData, string>;
 
 export function getTwitterTweetDataFromUrl(url: string): TwitterEmbedElementData | undefined {
-  const result = /^https:\/\/twitter.com\/([\w]*)\/status\/([\w-]*)/i.exec(url);
+  const result = /^https:\/\/twitter.com\/[\w]*\/status\/([\w-]*)/i.exec(url);
 
   if (result) {
-    const [, account, hash] = result;
+    const [, tweetId] = result;
 
     return {
       embedType: 'tweet',
-      account,
-      hash,
+      tweetId,
     };
   }
 }
@@ -48,16 +46,18 @@ export const TwitterEmbedStrategy: TwitterEmbedStrategy = {
 
     return getter(embedCode);
   },
-  deserialize: ({ embedType, account, hash }) => {
-    if (embedType === 'tweet') {
-      return `https://www.twitter.com/${account}/status/${hash}`;
+  deserialize: (data) => {
+    if (data.embedType === 'tweet') {
+      return data.tweetId;
     }
 
     return '';
   },
-  isElementDataValid: ({ embedType, account, hash }) => {
-    if (embedType === 'tweet') {
-      return typeof account === 'string' && typeof hash === 'string';
+  isElementDataValid: (data) => {
+    if (data.embedType === 'tweet') {
+      const { tweetId } = data;
+
+      return typeof tweetId === 'string' && !!tweetId;
     }
 
     return true;
