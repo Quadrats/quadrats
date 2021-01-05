@@ -1,36 +1,54 @@
-import { useEffect } from 'react';
+import { RefObject, useEffect } from 'react';
 
 function getTwitterEmbedApi():
 | {
   widgets: {
-    load: VoidFunction;
+    createTweet: (
+      tweetId: string,
+      element: HTMLElement,
+    ) => void;
   };
 }
 | undefined {
   return (window as any).twttr;
 }
 
-export function useLoadTwitterEmbedApi(html: string | undefined) {
+function createTweet(
+  tweetId: string,
+  containerEl: HTMLElement,
+) {
+  const twttr = getTwitterEmbedApi();
+
+  if (twttr) {
+    twttr.widgets.createTweet(tweetId, containerEl);
+    return true;
+  }
+
+  return false;
+}
+
+export function useLoadTwitterEmbedApi(
+  tweetId: string,
+  tweetContainerRef: RefObject<HTMLElement | null>,
+) {
   useEffect(() => {
-    if (html) {
-      let twttr = getTwitterEmbedApi();
+    const { current: containerEl } = tweetContainerRef;
 
-      if (twttr) {
-        twttr.widgets.load();
-        return;
+    if (tweetId && containerEl) {
+      const created = createTweet(tweetId, containerEl);
+
+      if (!created) {
+        const script = document.createElement('script');
+
+        script.src = 'https://platform.twitter.com/widgets.js';
+        script.async = true;
+        script.onload = () => {
+          createTweet(tweetId, containerEl);
+          script.remove();
+        };
+
+        document.body.appendChild(script);
       }
-
-      const script = document.createElement('script');
-
-      script.src = 'https://platform.twitter.com/widgets.js';
-      script.onload = () => {
-        twttr = getTwitterEmbedApi();
-        twttr?.widgets.load();
-        script.remove();
-      };
-      script.async = true;
-
-      document.body.appendChild(script);
     }
-  }, [html]);
+  }, [tweetId, tweetContainerRef]);
 }

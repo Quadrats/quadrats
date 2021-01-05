@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { TwitterEmbedElement } from '@quadrats/common/embed/strategies/twitter';
 import { RenderElementProps } from '@quadrats/react';
+import { composeRefs } from '@quadrats/react/utils';
 import { useLoadTwitterEmbedApi } from '../hooks/useLoadTwitterEmbedApi';
-import { useLoadTwitterEmbedHtml } from '../hooks/useLoadTwitterEmbedHtml';
 
 export interface TwitterProps {
   attributes?: RenderElementProps['attributes'];
@@ -11,26 +11,18 @@ export interface TwitterProps {
   element: TwitterEmbedElement;
 }
 
-function Twitter({ attributes, children, data: url }: TwitterProps) {
-  const html = useLoadTwitterEmbedHtml(url);
+function Twitter({ attributes, children, data: tweetId }: TwitterProps) {
+  const tweetContainerRef = useRef<HTMLElement | null>(null);
+  const composedRef = composeRefs([attributes?.ref, tweetContainerRef]);
 
-  useLoadTwitterEmbedApi(html);
+  useLoadTwitterEmbedApi(tweetId, tweetContainerRef);
 
   return (
-    <div {...attributes} contentEditable={false}>
-      {html && (
-        <div
-          style={{
-            display: 'flex',
-            marginTop: -10,
-            marginBottom: -10,
-          }}
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{
-            __html: html,
-          }}
-        />
-      )}
+    <div
+      {...attributes}
+      ref={composedRef}
+      contentEditable={false}
+    >
       {attributes ? children : undefined}
     </div>
   );
