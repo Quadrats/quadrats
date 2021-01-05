@@ -1,13 +1,16 @@
 {
   "name": "@quadrats/react/toolbar",
   "sideEffects": [
-    "**/*.scss",
-    "**/*.scss.js"
+    "**/*.css",
+    "**/*.scss"
   ],
   "quadratsConfig": {
     "deps": [
       "__ROOT__",
       "components"
-    ]
+    ],
+    "styles": {
+      "components/toolbar": "toolbar"
+    }
   }
 }

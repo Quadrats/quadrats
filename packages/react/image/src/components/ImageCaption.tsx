@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import { Editor } from '@quadrats/core';
 import { ReactEditor, useEditor, useLocale } from '@quadrats/react';
 import { RenderImageCaptionElementProps } from '../typings';
-import './image.scss';
 
 function ImageCaption(props: RenderImageCaptionElementProps) {
   const { attributes, children, element } = props;

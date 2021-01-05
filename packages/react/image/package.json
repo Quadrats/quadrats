@@ -1,12 +1,15 @@
 {
   "name": "@quadrats/react/image",
   "sideEffects": [
-    "**/*.scss",
-    "**/*.scss.js"
+    "**/*.css",
+    "**/*.scss"
   ],
   "quadratsConfig": {
     "deps": [
       "__ROOT__"
-    ]
+    ],
+    "styles": {
+      "components/image": "image"
+    }
   }
 }

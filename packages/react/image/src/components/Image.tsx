@@ -3,7 +3,6 @@ import { Transforms } from '@quadrats/core';
 import { ReactEditor, useEditor } from '@quadrats/react';
 import { RenderImageElementProps } from '../typings';
 import { useImageResizer } from '../hooks/useImageResizer';
-import './image.scss';
 
 function Image(props: RenderImageElementProps) {
   const {

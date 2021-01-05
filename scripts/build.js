@@ -1,12 +1,9 @@
 const path = require('path');
-const fs = require('fs');
 const fse = require('fs-extra');
 const { execSync } = require('child_process');
 const glob = require('glob');
 const { rollup } = require('rollup');
 const ts = require('rollup-plugin-typescript2');
-const postcss = require('rollup-plugin-postcss');
-const autoprefixer = require('autoprefixer');
 
 const { PWD } = process.env;
 const rootPackagePath = PWD;
@@ -90,7 +87,7 @@ async function build(packageSymbol, packageInfos) {
   const packageSrcPath = path.resolve(packagePath, 'src');
   const indexPath = path.resolve(packageSrcPath, 'index.ts');
 
-  if (!(isRoot && !fs.existsSync(indexPath))) {
+  if (!(isRoot && !fse.existsSync(indexPath))) {
     const tsconfig = path.resolve(packagePath, 'tsconfig.build.json');
 
     execSync(`npx tsc --project ${tsconfig} --outDir ${packageDistPath} --emitDeclarationOnly`);
@@ -123,15 +120,6 @@ async function build(packageSymbol, packageInfos) {
             },
           },
         }),
-        postcss({
-          extract: false,
-          modules: false,
-          minimize: true,
-          extensions: ['scss'],
-          plugins: [
-            autoprefixer(),
-          ],
-        }),
       ],
     });
 
@@ -140,10 +128,21 @@ async function build(packageSymbol, packageInfos) {
     packageJson.typings = './index.d.ts';
   }
 
+  if (packageJson?.quadratsConfig?.styles) {
+    Object
+      .entries(packageJson.quadratsConfig.styles)
+      .forEach(([from, to]) => {
+        const file = path.resolve(packageSrcPath, `${from}.scss`);
+
+        fse.copyFileSync(file, path.resolve(packageDistPath, `${to}.scss`));
+        execSync(`npx sass ${file} ${path.resolve(packageDistPath, `${to}.css --no-source-map --style=compressed`)}`);
+      });
+  }
+
   delete packageJson.scripts;
   delete packageJson.quadratsConfig;
 
-  fs.writeFileSync(packageJsonDistPath, `${JSON.stringify(packageJson, undefined, 2)}\n`);
+  fse.writeFileSync(packageJsonDistPath, `${JSON.stringify(packageJson, undefined, 2)}\n`);
 
   fse.copySync(
     packageDistPath,
@@ -174,7 +173,7 @@ async function run() {
   /**
    * prepare dist
    */
-  fs.mkdirSync(rootPackageDistPath);
+  fse.mkdirSync(rootPackageDistPath);
 
   /**
    * copy LICENSE

@@ -1,6 +1,5 @@
 import React from 'react';
 import { RenderElementProps, useLocale } from '@quadrats/react';
-import './read-more.scss';
 
 export interface ReadMoreProps {
   attributes?: RenderElementProps['attributes'];

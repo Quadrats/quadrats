@@ -6,14 +6,17 @@
   "homepage": "https://github.com/Quadrats/quadrats#readme",
   "license": "MIT",
   "sideEffects": [
-    "**/*.scss",
-    "**/*.scss.js"
+    "**/*.css",
+    "**/*.scss"
   ],
   "quadratsConfig": {
     "deps": [
       "_internal",
       "configs"
-    ]
+    ],
+    "styles": {
+      "core/components/editable": "editable"
+    }
   },
   "publishConfig": {
     "access": "public"

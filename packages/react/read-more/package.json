@@ -1,12 +1,15 @@
 {
   "name": "@quadrats/react/read-more",
   "sideEffects": [
-    "**/*.scss",
-    "**/*.scss.js"
+    "**/*.css",
+    "**/*.scss"
   ],
   "quadratsConfig": {
     "deps": [
       "__ROOT__"
-    ]
+    ],
+    "styles": {
+      "components/read-more": "read-more"
+    }
   }
 }

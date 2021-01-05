@@ -18,7 +18,6 @@ import { ThemeContext } from '@quadrats/react/configs';
 import Portal from '../Portal';
 import { TooltipTrigger, TooltipProps } from './typings';
 import { calculatePosition } from './calculatePosition';
-import './tooltip.scss';
 
 const clsPrefix = 'qdr-tooltip';
 

@@ -1,13 +1,17 @@
 {
   "name": "@quadrats/react/components",
   "sideEffects": [
-    "**/*.scss",
-    "**/*.scss.js"
+    "**/*.css",
+    "**/*.scss"
   ],
   "quadratsConfig": {
     "deps": [
       "utils",
       "configs"
-    ]
+    ],
+    "styles": {
+      "Progress/progress": "progress",
+      "Tooltip/tooltip": "tooltip"
+    }
   }
 }
