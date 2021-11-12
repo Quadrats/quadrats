@@ -20,6 +20,12 @@ export interface LocaleDefinition {
         inputPlaceholder: string;
       };
     };
+    podcastApple: {
+      inputPlaceholder: string;
+    };
+    podcastSpotify: {
+      inputPlaceholder: string;
+    };
     video: {
       inputPlaceholder: string;
     };
