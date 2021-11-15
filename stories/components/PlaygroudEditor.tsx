@@ -20,6 +20,9 @@ import {
   Instagram as InstagramIcon,
   Twitter as TwitterIcon,
   ReadMore as ReadMoreIcon,
+  Fn as FnIcon,
+  PodcastApple as PodcastAppleIcon,
+  PodcastSpotify as PodcastSpotifyIcon,
 } from '@quadrats/icons';
 import { Theme } from '@quadrats/theme';
 import { LocaleDefinition } from '@quadrats/locales';
@@ -48,11 +51,13 @@ import { VimeoEmbedStrategy } from '@quadrats/common/embed/strategies/vimeo';
 import { InstagramEmbedStrategy } from '@quadrats/common/embed/strategies/instagram';
 import { FacebookEmbedStrategy } from '@quadrats/common/embed/strategies/facebook';
 import { TwitterEmbedStrategy } from '@quadrats/common/embed/strategies/twitter';
+import { PodcastAppleEmbedStrategy } from '@quadrats/common/embed/strategies/podcast-apple';
 import { defaultRenderYoutubeEmbedElement } from '@quadrats/react/embed/renderers/youtube';
 import { defaultRenderVimeoEmbedElement } from '@quadrats/react/embed/renderers/vimeo';
 import { defaultRenderInstagramEmbedElement } from '@quadrats/react/embed/renderers/instagram';
 import { defaultRenderFacebookEmbedElement } from '@quadrats/react/embed/renderers/facebook';
 import { defaultRenderTwitterEmbedElement } from '@quadrats/react/embed/renderers/twitter';
+import { defaultRenderPodcastAppleEmbedElement } from '@quadrats/react/embed/renderers/podcast-apple/src';
 import { createReactFileUploader } from '@quadrats/react/file-uploader';
 import { createReactHeading } from '@quadrats/react/heading';
 import { createReactImage } from '@quadrats/react/image';
@@ -77,6 +82,7 @@ import { customRenderBlockquote } from '../custom-elements';
 const bold = createReactBold();
 const highlight = createReactHighlight();
 const italic = createReactItalic();
+const footnote = createReactItalic(); // createFootnote();
 const strikethrough = createReactStrikethrough();
 const underline = createReactUnderline();
 const heading = createReactHeading({
@@ -91,6 +97,8 @@ const embed = createReactEmbed({
     instagram: InstagramEmbedStrategy,
     facebook: FacebookEmbedStrategy,
     twitter: TwitterEmbedStrategy,
+    podcastApple: PodcastAppleEmbedStrategy,
+    podcastSpotify: PodcastAppleEmbedStrategy,
   },
 });
 const fileUploader = createReactFileUploader();
@@ -150,6 +158,8 @@ const renderElement = composeRenderElements([
     instagram: defaultRenderInstagramEmbedElement,
     facebook: defaultRenderFacebookEmbedElement,
     twitter: defaultRenderTwitterEmbedElement,
+    podcastApple: defaultRenderPodcastAppleEmbedElement,
+    podcastSpotify: defaultRenderPodcastAppleEmbedElement,
   }),
   fileUploader.createRenderElement(),
   heading.createRenderElement(),
@@ -199,6 +209,7 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
                 <ToggleMarkToolbarIcon icon={HighlightIcon} controller={highlight} />
                 {linkTool}
                 {unlinkTool}
+                <ToggleMarkToolbarIcon icon={FnIcon} controller={footnote} />
               </>
             );
           } if (image.isSelectionInImageCaption(editor)) {
@@ -269,6 +280,20 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
                 controller={embed}
                 providers={['twitter']}
                 getPlaceholder={(locale) => locale.editor.twitter.tweet.inputPlaceholder}
+                startToolInput={inputBlock.start}
+              />
+              <EmbedToolbarIcon
+                icon={PodcastAppleIcon}
+                controller={embed}
+                providers={['podcastApple']}
+                getPlaceholder={(locale) => locale.editor.podcastApple.inputPlaceholder}
+                startToolInput={inputBlock.start}
+              />
+              <EmbedToolbarIcon
+                icon={PodcastSpotifyIcon}
+                controller={embed}
+                providers={['podcastSpotify']}
+                getPlaceholder={(locale) => locale.editor.podcastSpotify.inputPlaceholder}
                 startToolInput={inputBlock.start}
               />
               <ReadMoreToolbarIcon icon={ReadMoreIcon} controller={readMore} />

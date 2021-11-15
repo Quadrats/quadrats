@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/common/embed/strategies/podcast-apple",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "embed"
+    ]
+  }
+}

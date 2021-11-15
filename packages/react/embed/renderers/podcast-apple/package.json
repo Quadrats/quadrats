@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/react/embed/renderers/padcast-apple",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "embed"
+    ]
+  }
+}
