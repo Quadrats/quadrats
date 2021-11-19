@@ -1,5 +1,5 @@
 {
-  "name": "@quadrats/react/embed/renderers/podcast-apple",
+  "name": "@quadrats/common/embed/strategies/spotify",
   "sideEffects": false,
   "quadratsConfig": {
     "deps": [

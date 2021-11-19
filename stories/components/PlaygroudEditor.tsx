@@ -76,6 +76,8 @@ import { HeadingToolbarIcon } from '@quadrats/react/heading/toolbar';
 import { LinkToolbarIcon, UnlinkToolbarIcon } from '@quadrats/react/link/toolbar';
 import { ListToolbarIcon } from '@quadrats/react/list/toolbar';
 import { ReadMoreToolbarIcon } from '@quadrats/react/read-more/toolbar';
+import { defaultRenderSpotifyEmbedElement } from '@quadrats/react/embed/renderers/spotify/src';
+import { SpotifyEmbedStrategy } from '@quadrats/common/embed/strategies/spotify/src';
 
 import { customRenderBlockquote } from '../custom-elements';
 
@@ -98,7 +100,7 @@ const embed = createReactEmbed({
     facebook: FacebookEmbedStrategy,
     twitter: TwitterEmbedStrategy,
     podcastApple: PodcastAppleEmbedStrategy,
-    podcastSpotify: PodcastAppleEmbedStrategy,
+    podcastSpotify: SpotifyEmbedStrategy,
   },
 });
 const fileUploader = createReactFileUploader();
@@ -159,7 +161,7 @@ const renderElement = composeRenderElements([
     facebook: defaultRenderFacebookEmbedElement,
     twitter: defaultRenderTwitterEmbedElement,
     podcastApple: defaultRenderPodcastAppleEmbedElement,
-    podcastSpotify: defaultRenderPodcastAppleEmbedElement,
+    podcastSpotify: defaultRenderSpotifyEmbedElement,
   }),
   fileUploader.createRenderElement(),
   heading.createRenderElement(),
