@@ -25,7 +25,7 @@ export const zhTW: LocaleDefinition = {
     podcastApple: {
       inputPlaceholder: '請在此輸入或貼上Podcast(Apple)的貼文連結，並按下Enter',
     },
-    podcastSpotify: {
+    spotify: {
       inputPlaceholder: '請在此輸入或貼上Podcast(Spotify)的貼文連結，並按下Enter',
     },
     video: {

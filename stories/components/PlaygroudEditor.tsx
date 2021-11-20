@@ -22,7 +22,7 @@ import {
   ReadMore as ReadMoreIcon,
   Fn as FnIcon,
   PodcastApple as PodcastAppleIcon,
-  PodcastSpotify as PodcastSpotifyIcon,
+  Spotify as SpotifyIcon,
 } from '@quadrats/icons';
 import { Theme } from '@quadrats/theme';
 import { LocaleDefinition } from '@quadrats/locales';
@@ -100,7 +100,7 @@ const embed = createReactEmbed({
     facebook: FacebookEmbedStrategy,
     twitter: TwitterEmbedStrategy,
     podcastApple: PodcastAppleEmbedStrategy,
-    podcastSpotify: SpotifyEmbedStrategy,
+    spotify: SpotifyEmbedStrategy,
   },
 });
 const fileUploader = createReactFileUploader();
@@ -161,7 +161,7 @@ const renderElement = composeRenderElements([
     facebook: defaultRenderFacebookEmbedElement,
     twitter: defaultRenderTwitterEmbedElement,
     podcastApple: defaultRenderPodcastAppleEmbedElement,
-    podcastSpotify: defaultRenderSpotifyEmbedElement,
+    spotify: defaultRenderSpotifyEmbedElement,
   }),
   fileUploader.createRenderElement(),
   heading.createRenderElement(),
@@ -292,10 +292,10 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
                 startToolInput={inputBlock.start}
               />
               <EmbedToolbarIcon
-                icon={PodcastSpotifyIcon}
+                icon={SpotifyIcon}
                 controller={embed}
-                providers={['podcastSpotify']}
-                getPlaceholder={(locale) => locale.editor.podcastSpotify.inputPlaceholder}
+                providers={['spotify']}
+                getPlaceholder={(locale) => locale.editor.spotify.inputPlaceholder}
                 startToolInput={inputBlock.start}
               />
               <ReadMoreToolbarIcon icon={ReadMoreIcon} controller={readMore} />

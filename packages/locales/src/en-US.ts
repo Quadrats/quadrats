@@ -25,8 +25,8 @@ export const enUS: LocaleDefinition = {
     podcastApple: {
       inputPlaceholder: 'Please paste a link to embed content from Podcast(Apple), and press Enter',
     },
-    podcastSpotify: {
-      inputPlaceholder: 'Please paste a link to embed content from Podcast(Spotify), and press Enter',
+    spotify: {
+      inputPlaceholder: 'Please paste a link to embed content from Spotify, and press Enter',
     },
     video: {
       inputPlaceholder: 'Please paste a Youtube, Vimeo, or other video link, and press Enter',

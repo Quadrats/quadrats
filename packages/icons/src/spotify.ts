@@ -1,7 +1,7 @@
 import { IconDefinition } from './typings';
 
-export const PodcastSpotify: IconDefinition = {
-  name: 'podcast-Spotify',
+export const Spotify: IconDefinition = {
+  name: 'spotify',
   definition: {
     svg: {
       viewBox: '0 0 24 24',

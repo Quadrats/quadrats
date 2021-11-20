@@ -22,7 +22,7 @@ export { Italic } from './italic';
 export { Link } from './link';
 export { OrderedList } from './ordered-list';
 export { PodcastApple } from './podcastApple';
-export { PodcastSpotify } from './podcastSpotify';
+export { Spotify } from './spotify';
 export { ReadMore } from './read-more';
 export { Strikethrough } from './strikethrough';
 export { Twitter } from './twitter';

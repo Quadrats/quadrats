@@ -23,7 +23,7 @@ export interface LocaleDefinition {
     podcastApple: {
       inputPlaceholder: string;
     };
-    podcastSpotify: {
+    spotify: {
       inputPlaceholder: string;
     };
     video: {
