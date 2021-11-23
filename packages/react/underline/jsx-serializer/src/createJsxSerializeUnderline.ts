@@ -4,5 +4,5 @@ import { defaultRenderUnderline } from './defaultRenderUnderline';
 
 export const createJsxSerializeUnderline = createJsxSerializeToggleMarkCreator({
   type: UNDERLINE_TYPE,
-  render: defaultRenderUnderline,
+  render: defaultRenderUnderline(),
 });
