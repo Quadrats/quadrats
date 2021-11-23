@@ -3,6 +3,7 @@
   "sideEffects": false,
   "quadratsConfig": {
     "deps": [
+      "@quadrats/core",
       "toggle-mark"
     ]
   }
