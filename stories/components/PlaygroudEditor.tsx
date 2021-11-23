@@ -20,6 +20,9 @@ import {
   Instagram as InstagramIcon,
   Twitter as TwitterIcon,
   ReadMore as ReadMoreIcon,
+  SheetMusic as SheetMusicIcon,
+  Drama as DramaIcon,
+  Dance as DanceIcon,
 } from '@quadrats/icons';
 import { Theme } from '@quadrats/theme';
 import { LocaleDefinition } from '@quadrats/locales';
@@ -60,7 +63,6 @@ import { createReactLink } from '@quadrats/react/link';
 import { createReactList } from '@quadrats/react/list';
 import { createReactReadMore } from '@quadrats/react/read-more';
 import { createReactInputBlock } from '@quadrats/react/input-block';
-
 import { Toolbar, TOOLBAR_DIVIDER } from '@quadrats/react/toolbar';
 import { ToggleMarkToolbarIcon } from '@quadrats/react/toggle-mark/toolbar';
 import { BlockquoteToolbarIcon } from '@quadrats/react/blockquote/toolbar';
@@ -75,8 +77,11 @@ import { ReadMoreToolbarIcon } from '@quadrats/react/read-more/toolbar';
 import { customRenderBlockquote } from '../custom-elements';
 
 const bold = createReactBold();
-const highlight = createReactHighlight();
 const italic = createReactItalic();
+const highlight = createReactHighlight();
+const sheetMusic = createReactHighlight('sheet-music');
+const drama = createReactHighlight('drama');
+const dance = createReactHighlight('dance');
 const strikethrough = createReactStrikethrough();
 const underline = createReactUnderline();
 const heading = createReactHeading({
@@ -128,6 +133,9 @@ const createHandlers = composeHandlers([
   bold.createHandlers(),
   highlight.createHandlers(),
   italic.createHandlers(),
+  sheetMusic.createHandlers(),
+  drama.createHandlers(),
+  dance.createHandlers(),
   strikethrough.createHandlers(),
   underline.createHandlers(),
   blockquote.createHandlers(),
@@ -163,6 +171,9 @@ const renderLeaf = composeRenderLeafs([
   bold.createRenderLeaf(),
   highlight.createRenderLeaf(),
   italic.createRenderLeaf(),
+  sheetMusic.createRenderLeaf(),
+  drama.createRenderLeaf(),
+  dance.createRenderLeaf(),
   strikethrough.createRenderLeaf(),
   underline.createRenderLeaf(),
 ]);
@@ -192,6 +203,9 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
           if (expanded) {
             return (
               <>
+                <ToggleMarkToolbarIcon icon={SheetMusicIcon} controller={sheetMusic} />
+                <ToggleMarkToolbarIcon icon={DramaIcon} controller={drama} />
+                <ToggleMarkToolbarIcon icon={DanceIcon} controller={dance} />
                 <ToggleMarkToolbarIcon icon={BoldIcon} controller={bold} />
                 <ToggleMarkToolbarIcon icon={ItalicIcon} controller={italic} />
                 <ToggleMarkToolbarIcon icon={UnderlineIcon} controller={underline} />
