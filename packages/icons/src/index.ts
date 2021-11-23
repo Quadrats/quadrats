@@ -27,3 +27,6 @@ export { Underline } from './underline';
 export { Unlink } from './unlink';
 export { UnorderedList } from './unordered-list';
 export { Video } from './video';
+export { SheetMusic } from './sheet-music';
+export { Drama } from './drama';
+export { Dance } from './dance';
