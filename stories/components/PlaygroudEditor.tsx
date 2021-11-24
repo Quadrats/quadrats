@@ -20,6 +20,7 @@ import {
   Instagram as InstagramIcon,
   Twitter as TwitterIcon,
   ReadMore as ReadMoreIcon,
+  Fn as FnIcon,
 } from '@quadrats/icons';
 import { Theme } from '@quadrats/theme';
 import { LocaleDefinition } from '@quadrats/locales';
@@ -70,8 +71,10 @@ import { FileUploaderToolbarIcon } from '@quadrats/react/file-uploader/toolbar';
 import { HeadingToolbarIcon } from '@quadrats/react/heading/toolbar';
 import { LinkToolbarIcon, UnlinkToolbarIcon } from '@quadrats/react/link/toolbar';
 import { ListToolbarIcon } from '@quadrats/react/list/toolbar';
+import { FootnoteToolbarIcon } from '@quadrats/react/footnote/toolbar';
 import { ReadMoreToolbarIcon } from '@quadrats/react/read-more/toolbar';
 
+import { createReactFootnote } from '@quadrats/react/footnote';
 import { customRenderBlockquote } from '../custom-elements';
 
 const bold = createReactBold();
@@ -104,6 +107,7 @@ const inputBlock = createReactInputBlock();
 const link = createReactLink({
   wrappableVoidTypes: [image.types.image],
 });
+const footnote = createReactFootnote();
 const list = createReactList();
 const readMore = createReactReadMore();
 
@@ -116,6 +120,7 @@ const createPlaygroudEditor = () => pipe(
   heading.with,
   inputBlock.with,
   link.with,
+  footnote.with,
   /**
      * The plugin order of image should higher then link.
      */
@@ -126,6 +131,7 @@ const createPlaygroudEditor = () => pipe(
 
 const createHandlers = composeHandlers([
   bold.createHandlers(),
+  // footnote.createHandlers(),
   highlight.createHandlers(),
   italic.createHandlers(),
   strikethrough.createHandlers(),
@@ -152,6 +158,7 @@ const renderElement = composeRenderElements([
     twitter: defaultRenderTwitterEmbedElement,
   }),
   fileUploader.createRenderElement(),
+  footnote.createRenderElement(),
   heading.createRenderElement(),
   image.createRenderElement(),
   inputBlock.createRenderElement(),
@@ -188,6 +195,7 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
           const linkTool = <LinkToolbarIcon icon={LinkIcon} controller={link} />;
           const unlinkTool = <UnlinkToolbarIcon icon={UnlinkIcon} controller={link} />;
           const blockquoteTool = <BlockquoteToolbarIcon icon={BlockquoteIcon} controller={blockquote} />;
+          const footnoteTool = <FootnoteToolbarIcon icon={FnIcon} controller={footnote} />;
 
           if (expanded) {
             return (
@@ -199,6 +207,7 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
                 <ToggleMarkToolbarIcon icon={HighlightIcon} controller={highlight} />
                 {linkTool}
                 {unlinkTool}
+                {footnoteTool}
               </>
             );
           } if (image.isSelectionInImageCaption(editor)) {
@@ -208,6 +217,7 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
               <>
                 {linkTool}
                 {unlinkTool}
+                {footnoteTool}
               </>
             );
           } if (blockquote.isSelectionInBlockquote(editor)) {
