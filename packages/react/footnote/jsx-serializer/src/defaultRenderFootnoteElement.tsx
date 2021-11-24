@@ -2,7 +2,7 @@ import React from 'react';
 import { JsxSerializeFootnoteElementProps } from './typings';
 
 export const defaultRenderFootnoteElement = ({ children, element }: JsxSerializeFootnoteElementProps) => (
-  <span>
+  <a href="./#">
     {`${children}[${element.footnote}]`}
-  </span>
+  </a>
 );

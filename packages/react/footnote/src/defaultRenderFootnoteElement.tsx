@@ -19,9 +19,9 @@ export const defaultRenderFootnoteElement = ({
   return (
     <>
       <Tooltip placement={placement} popup={footnote}>
-        <span {...attributes}>
+        <a {...attributes} href="./#" target="_blank">
           {children}
-        </span>
+        </a>
       </Tooltip>
       <span
         style={{ userSelect: 'none' }}
