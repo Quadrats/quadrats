@@ -16,6 +16,9 @@ export const zhTW: LocaleDefinition = {
     link: {
       inputPlaceholder: '請在此貼上或輸入連結...',
     },
+    footnote: {
+      inputPlaceholder: '請在此輸入註腳...',
+    },
     readMore: '繼續閱讀',
     twitter: {
       tweet: {

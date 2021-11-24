@@ -16,6 +16,9 @@ export const enUS: LocaleDefinition = {
     link: {
       inputPlaceholder: 'Paste or type a link...',
     },
+    footnote: {
+      inputPlaceholder: 'Please type the footnote, and press Enter',
+    },
     readMore: 'READ MORE',
     twitter: {
       tweet: {
