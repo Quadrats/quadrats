@@ -35,7 +35,7 @@ export function createLineBreak({
   };
   const toggleLineBreakNodes: LineBreak['toggleLineBreakNodes'] = (editor) => {
     const at: Point = editor?.selection?.focus ?? { offset: 15, path: [] };
-    const isActive = isSelectionInLineBreak(editor);
+    const isActive = isSelectionInLineBreak(editor, { at });
 
     const start = at?.path?.[0] ?? 0;
     const end = at?.offset ?? 15; // slate 預設 end 最高為 15
