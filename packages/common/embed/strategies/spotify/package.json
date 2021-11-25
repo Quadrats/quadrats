@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/common/embed/strategies/spotify",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "embed"
+    ]
+  }
+}
