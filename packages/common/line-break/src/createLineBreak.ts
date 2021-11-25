@@ -38,7 +38,7 @@ export function createLineBreak({
     const isActive = isSelectionInLineBreak(editor, { at });
 
     const start = at?.path?.[0] ?? 0;
-    const end = at?.offset ?? 15; // slate 預設 end 最高為 15
+    const end = 15; // slate 預設 end 最高為 15
 
     if (isActive) {
       Transforms.removeNodes(editor, {
