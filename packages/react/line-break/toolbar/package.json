@@ -1,0 +1,10 @@
+{
+  "name": "@quadrats/react/line-break/toolbar",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "toolbar",
+      "line-break"
+    ]
+  }
+}

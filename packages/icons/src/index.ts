@@ -27,3 +27,4 @@ export { Underline } from './underline';
 export { Unlink } from './unlink';
 export { UnorderedList } from './unordered-list';
 export { Video } from './video';
+export { CombinedShape } from './combined-shape';

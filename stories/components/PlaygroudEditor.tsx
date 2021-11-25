@@ -20,6 +20,7 @@ import {
   Instagram as InstagramIcon,
   Twitter as TwitterIcon,
   ReadMore as ReadMoreIcon,
+  CombinedShape as CombinedShapeIcon,
 } from '@quadrats/icons';
 import { Theme } from '@quadrats/theme';
 import { LocaleDefinition } from '@quadrats/locales';
@@ -60,6 +61,7 @@ import { createReactLink } from '@quadrats/react/link';
 import { createReactList } from '@quadrats/react/list';
 import { createReactReadMore } from '@quadrats/react/read-more';
 import { createReactInputBlock } from '@quadrats/react/input-block';
+import { createReactLineBreak } from '@quadrats/react/line-break';
 
 import { Toolbar, TOOLBAR_DIVIDER } from '@quadrats/react/toolbar';
 import { ToggleMarkToolbarIcon } from '@quadrats/react/toggle-mark/toolbar';
@@ -71,6 +73,7 @@ import { HeadingToolbarIcon } from '@quadrats/react/heading/toolbar';
 import { LinkToolbarIcon, UnlinkToolbarIcon } from '@quadrats/react/link/toolbar';
 import { ListToolbarIcon } from '@quadrats/react/list/toolbar';
 import { ReadMoreToolbarIcon } from '@quadrats/react/read-more/toolbar';
+import { LineBreakToolbarIcon } from '@quadrats/react/line-break/toolbar';
 
 import { customRenderBlockquote } from '../custom-elements';
 
@@ -82,6 +85,7 @@ const underline = createReactUnderline();
 const heading = createReactHeading({
   enabledLevels: [1, 2, 3],
 });
+const linebreak = createReactLineBreak();
 const blockquote = createReactBlockquote();
 const divider = createReactDivider();
 const embed = createReactEmbed({
@@ -114,6 +118,7 @@ const createPlaygroudEditor = () => pipe(
   embed.with,
   fileUploader.with,
   heading.with,
+  linebreak.with,
   inputBlock.with,
   link.with,
   /**
@@ -129,6 +134,7 @@ const createHandlers = composeHandlers([
   highlight.createHandlers(),
   italic.createHandlers(),
   strikethrough.createHandlers(),
+  linebreak.createHandlers(),
   underline.createHandlers(),
   blockquote.createHandlers(),
   heading.createHandlers(),
@@ -153,6 +159,7 @@ const renderElement = composeRenderElements([
   }),
   fileUploader.createRenderElement(),
   heading.createRenderElement(),
+  linebreak.createRenderElement(),
   image.createRenderElement(),
   inputBlock.createRenderElement(),
   link.createRenderElement(),
@@ -272,6 +279,7 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
                 startToolInput={inputBlock.start}
               />
               <ReadMoreToolbarIcon icon={ReadMoreIcon} controller={readMore} />
+              <LineBreakToolbarIcon icon={CombinedShapeIcon} controller={linebreak} />
             </>
           );
         }}
