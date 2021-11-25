@@ -20,7 +20,6 @@ import {
   Instagram as InstagramIcon,
   Twitter as TwitterIcon,
   ReadMore as ReadMoreIcon,
-  CombinedShape as CombinedShapeIcon,
 } from '@quadrats/icons';
 import { Theme } from '@quadrats/theme';
 import { LocaleDefinition } from '@quadrats/locales';
@@ -73,7 +72,6 @@ import { HeadingToolbarIcon } from '@quadrats/react/heading/toolbar';
 import { LinkToolbarIcon, UnlinkToolbarIcon } from '@quadrats/react/link/toolbar';
 import { ListToolbarIcon } from '@quadrats/react/list/toolbar';
 import { ReadMoreToolbarIcon } from '@quadrats/react/read-more/toolbar';
-import { LineBreakToolbarIcon } from '@quadrats/react/line-break/toolbar';
 
 import { customRenderBlockquote } from '../custom-elements';
 
@@ -279,7 +277,6 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
                 startToolInput={inputBlock.start}
               />
               <ReadMoreToolbarIcon icon={ReadMoreIcon} controller={readMore} />
-              <LineBreakToolbarIcon icon={CombinedShapeIcon} controller={linebreak} />
             </>
           );
         }}

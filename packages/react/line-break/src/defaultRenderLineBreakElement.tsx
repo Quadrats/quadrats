@@ -13,9 +13,12 @@ export const defaultRenderLineBreakElement = ({
   <span
     {...attributes}
     contentEditable={false}
-    style={{ color: 'black', userSelect: 'none' }}
+    style={{ userSelect: 'none', verticalAlign: 'middle' }}
   >
-    {/* {'<'} */}
-    <Icon icon={CombinedShape} />
+    <Icon
+      style={{ width: '24px', height: '24px', paddingTop: '6px' }}
+      icon={CombinedShape}
+      color="#C1C1C1"
+    />
   </span>
 );

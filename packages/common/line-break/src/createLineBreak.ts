@@ -1,18 +1,11 @@
+/* eslint-disable no-useless-return */
 import {
   Element,
-  // Editor,
-  // isNodesTypeIn,
   normalizeVoidElementChildren,
-  // toggleNodesType,
-  // isInline,
   getNodesByTypes,
-  // Path,
-  // createParagraphElement,
-  // normalizeVoidElementChildren,
-  // normalizeOnlyInlineOrTextInChildren,
-  // Text,
   Transforms,
   WithElementType,
+  Point,
 } from '@quadrats/core';
 import {
   LineBreak,
@@ -25,37 +18,25 @@ export type CreateHLineBreakOptions = Partial<WithElementType>;
 export function createLineBreak({
   type = LINE_BREAK_TYPE,
 }: CreateHLineBreakOptions): LineBreak {
-  const getLineBreakNodes: LineBreak['getLineBreakNodes'] = (editor, options = {}) => (
+  const getLineBreakNodes: LineBreak['getLineBreakNodes'] = (editor, options) => (
     getNodesByTypes(editor, [LINE_BREAK_TYPE], { at: [], ...options })
   );
 
-  const createLineBreakElement: LineBreak['createLineBreakElement'] = () => ({ type, children: [{ text: '' }] });
+  const createLineBreakElement = (): LineBreakElement => ({
+    type, text: '', children: [{ text: '' }],
+  });
 
   const isSelectionInLineBreak: LineBreak['isSelectionInLineBreak'] = (editor, options = {}) => {
     const [match] = getLineBreakNodes(editor, options);
-    console.log({ match });
-
     return !!match && match[0].type === type;
   };
   const toggleLineBreakNodes: LineBreak['toggleLineBreakNodes'] = (editor) => {
-    const isActive = isSelectionInLineBreak(editor);
-    const lineBreak: LineBreakElement = { type, children: [{ text: '' }] };
-
-    const at: any = editor?.selection?.focus ?? [];
-    // const nodes = Array.from(Editor.nodes(editor, { at }));
-
-    // clone to store selection
-    // const previousSelection = { ...editor.selection } as Location;
-
-    // Transforms.setNodes(editor, lineBreak, { at: [] });
-
-    // const root = editor.children
-
-    // console.log({ editor, selection: editor?.selection, at, isActive });
+    const at: Point = editor?.selection?.focus ?? { offset: 15, path: [] };
+    const isActive = isSelectionInLineBreak(editor, { at });
+    const lineBreak: LineBreakElement = createLineBreakElement();
 
     const start = at?.path?.[0] ?? 0;
-
-    const end = at?.offset ?? 1000;
+    const end = at?.offset ?? 15; // slate 預設 end 最高為 15
 
     if (isActive) {
       Transforms.removeNodes(editor, {
@@ -63,17 +44,14 @@ export function createLineBreak({
         match: (node) => node.type === type,
       });
     } else {
+      editor.insertBreak();
       Transforms.insertNodes(editor, lineBreak, {
         at: [start, end],
         match: (node) => node.type === 'p',
         hanging: true,
+        voids: true,
       });
-      // Transforms.move(editor);
     }
-
-    // restore selection
-    // Transforms.move(editor);
-    // Transforms.move(editor, {  });
   };
 
   return {
@@ -81,7 +59,6 @@ export function createLineBreak({
     getLineBreakNodes,
     isSelectionInLineBreak,
     toggleLineBreakNodes,
-    createLineBreakElement,
     with(editor) {
       const { isInline } = editor;
 
@@ -94,15 +71,9 @@ export function createLineBreak({
           /**
            * Set invalid level elements to default.
            */
-
-          console.log({ entry });
-
           if (normalizeVoidElementChildren(editor, [node, path])) {
-            // eslint-disable-next-line no-useless-return
             return;
           }
-
-          // normalizeNode(entry);
         }
       };
 
