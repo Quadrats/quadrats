@@ -16,6 +16,7 @@ export function useFootnoteTool(controller: ReactFootnote, options: UseFootnoteT
       confirm: (footnoteText) => {
         controller.upsertFootnoteAndUpdateIndex(editor, footnoteText, options);
       },
+      defaultValue: controller.getFootnoteText(editor),
     }),
   };
 }

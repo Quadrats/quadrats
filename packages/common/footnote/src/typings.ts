@@ -30,7 +30,8 @@ export interface FootnoteUpsertFootnoteOptions {
 }
 
 export interface Footnote extends WithElementType, Withable {
-  getFootnotes(editor: Editor): NodeEntry<Node>[];
+  getAllFootnotes(editor: Editor): NodeEntry<Node>[];
+  getFootnoteText(editor: Editor): string;
   isSelectionInFootnote(editor: Editor): boolean;
   unwrapFootnote(editor: Editor, options?: FootnoteUnwrapFootnoteOptions): void;
   updateFootnoteIndex(editor: Editor, options?: FootnoteUpdateFootnoteIndexOptions): void;

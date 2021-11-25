@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 import {
-  Editor,
   getNodes,
   isNodesTypeIn,
   Transforms,
@@ -11,28 +10,31 @@ import {
 import { Footnote, FootnoteElement } from './typings';
 import { FOOTNOTE_TYPE } from './constants';
 
-export interface CreateFootnoteOptions extends Partial<WithElementType> {
-  /**
-   * The types of void elements can be wrapped by footnote.
-   * Let footnote be block element if wrap some wrappable blocks.
-   */
-  wrappableVoidTypes?: string[];
-}
+export type CreateFootnoteOptions = Partial<WithElementType>;
 
 export function createFootnote({
   type = FOOTNOTE_TYPE,
-  wrappableVoidTypes,
 }: CreateFootnoteOptions = {}): Footnote {
   const isSelectionInFootnote: Footnote['isSelectionInFootnote'] = (editor) => isNodesTypeIn(editor, [type]);
 
-  // test
-  const getFootnotes: Footnote['getFootnotes'] = (editor) => {
+  const getAllFootnotes: Footnote['getAllFootnotes'] = (editor) => {
     const resultNodes = getNodes(editor, {
       at: [],
       match: (node) => node.type === FOOTNOTE_TYPE,
     });
 
     return Array.from(resultNodes);
+  };
+
+  const getFootnoteText: Footnote['getFootnoteText'] = (editor) => {
+    const at = editor.selection;
+
+    if (!at) {
+      return '';
+    }
+    const nodes = getNodes(editor, { at, match: (node) => node.type === type });
+
+    return Array.from(nodes)?.[0]?.[0]?.footnote as string;
   };
 
   const updateFootnoteIndex: Footnote['updateFootnoteIndex'] = (editor, options = { startAt: 1 }) => {
@@ -65,9 +67,14 @@ export function createFootnote({
       return;
     }
 
-    unwrapFootnote(editor, { at });
     if (footnoteText !== '') {
-      wrapFootnote(editor, footnoteText, { at });
+      if (isSelectionInFootnote(editor)) {
+        Transforms.setNodes(editor, { footnote: footnoteText }, { at, match: (node) => node.type === type });
+      } else {
+        wrapFootnote(editor, footnoteText, options);
+      }
+    } else {
+      unwrapFootnote(editor, { at });
     }
 
     updateFootnoteIndex(editor);
@@ -75,7 +82,8 @@ export function createFootnote({
 
   return {
     type,
-    getFootnotes,
+    getAllFootnotes,
+    getFootnoteText,
     isSelectionInFootnote,
     updateFootnoteIndex,
     unwrapFootnote,
@@ -84,21 +92,7 @@ export function createFootnote({
     with(editor) {
       const { isInline } = editor;
 
-      editor.isInline = (element) => {
-        if (element.type !== type) {
-          return isInline(element);
-        }
-
-        if (!wrappableVoidTypes) {
-          return true;
-        }
-
-        return !element.children.some(
-          (child) => Editor.isBlock(editor, child)
-          && Editor.isVoid(editor, child)
-          && wrappableVoidTypes.includes(child.type as string),
-        );
-      };
+      editor.isInline = (element) => element.type === type || isInline(element);
 
       return editor;
     },
