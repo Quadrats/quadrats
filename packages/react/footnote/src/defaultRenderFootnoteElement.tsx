@@ -23,12 +23,13 @@ export const defaultRenderFootnoteElement = ({
           {children}
         </a>
       </Tooltip>
-      <span
-        style={{ userSelect: 'none' }}
+      <sup
+        {...attributes}
+        style={{ color: 'var(--qdr-sup)', userSelect: 'none' }}
         contentEditable={false}
       >
         {`[${index ?? 1}]`}
-      </span>
+      </sup>
     </>
   );
 };

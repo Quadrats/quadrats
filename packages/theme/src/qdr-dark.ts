@@ -10,4 +10,5 @@ export const THEME_QDR_DARK: ThemeObject = {
   divider: '#636363',
   placeholder: '#e0e0e0',
   icon: '#9e9e9e',
+  sup: '#CB333B',
 };

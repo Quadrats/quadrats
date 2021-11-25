@@ -11,4 +11,5 @@ export const THEME_QDR: ThemeObject = {
   divider: '#c1c1c1',
   placeholder: '#4a4a4a',
   icon: '#7d7d7d',
+  sup: '#CB333B',
 };
