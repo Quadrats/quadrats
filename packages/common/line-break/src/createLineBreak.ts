@@ -33,7 +33,6 @@ export function createLineBreak({
   const toggleLineBreakNodes: LineBreak['toggleLineBreakNodes'] = (editor) => {
     const at: Point = editor?.selection?.focus ?? { offset: 15, path: [] };
     const isActive = isSelectionInLineBreak(editor, { at });
-    const lineBreak: LineBreakElement = createLineBreakElement();
 
     const start = at?.path?.[0] ?? 0;
     const end = at?.offset ?? 15; // slate 預設 end 最高為 15
@@ -44,6 +43,8 @@ export function createLineBreak({
         match: (node) => node.type === type,
       });
     } else {
+      const lineBreak: LineBreakElement = createLineBreakElement();
+
       editor.insertBreak();
       Transforms.insertNodes(editor, lineBreak, {
         at: [start, end],
@@ -71,9 +72,7 @@ export function createLineBreak({
           /**
            * Set invalid level elements to default.
            */
-          if (normalizeVoidElementChildren(editor, [node, path])) {
-            return;
-          }
+          normalizeVoidElementChildren(editor, [node, path]);
         }
       };
 
