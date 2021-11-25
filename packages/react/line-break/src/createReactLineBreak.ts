@@ -7,7 +7,7 @@ import { createOnKeyDownBreak } from '@quadrats/react/break';
 
 import { ReactLineBreak } from './typings';
 import { defaultRenderLineBreakElement } from './defaultRenderLineBreakElement';
-import { LINE_BREAK_HOTKEY, LINE_BREAK_INITIAL_KEYS } from './constants';
+import { LINE_BREAK_HOTKEY, LINE_BREAK_INITIAL_HOT_KEYS } from './constants';
 
 export function createReactLineBreak(
   options: CreateHLineBreakOptions = {},
@@ -34,6 +34,7 @@ export function createReactLineBreak(
 
       return {
         onKeyDown(event, editor, next) {
+          const isActive = core.isSelectionInLineBreak(editor);
           /**
            * Only toggle if the hotkey is fired and the key is the same as level.
            */
@@ -44,21 +45,29 @@ export function createReactLineBreak(
 
               // eslint-disable-next-line no-empty
             } catch {}
-          } else if (isHotkey(LINE_BREAK_INITIAL_KEYS, event as any)) {
+          } else if (
+            isHotkey(LINE_BREAK_INITIAL_HOT_KEYS, event as any)
+            && isActive
+          ) {
             const start = editor.selection?.focus?.path?.[0] ?? 0;
 
             Transforms.removeNodes(editor, {
               at: [start],
               match: (node) => node.type === type,
             });
+          } else if (isHotkey('shift+enter', event as any)) {
+            event.preventDefault();
+            editor.insertBreak();
           } else {
-            const start = editor.selection?.focus?.path?.[0] ?? 0;
+            if (isActive) {
+              const start = editor.selection?.focus?.path?.[0] ?? 0;
 
-            Transforms.moveNodes(editor, {
-              at: [start],
-              to: [start, 15],
-              match: (node) => node.type === type,
-            });
+              Transforms.moveNodes(editor, {
+                at: [start],
+                to: [start, 15],
+                match: (node) => node.type === type,
+              });
+            }
 
             onKeyDownBreak(event, editor, next);
           }

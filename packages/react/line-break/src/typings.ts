@@ -3,6 +3,11 @@ import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps } from 
 
 export type RenderLineBreakElementProps = RenderElementProps<LineBreakElement>;
 
+export interface ReactLineBreakIconElementProps {
+  attributes?: RenderElementProps['attributes'];
+  element: LineBreakElement;
+}
+
 export interface ReactLineBreakCreateHandlersOptions {
   /**
    * The hotkey to toggle line-break w/ specific level.

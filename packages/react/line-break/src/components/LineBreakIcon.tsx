@@ -1,11 +1,11 @@
 import React from 'react';
 import { CombinedShape } from '@quadrats/icons';
 import { Icon } from '@quadrats/react/components';
-import { RenderLineBreakElementProps } from '../typings';
+import { ReactLineBreakIconElementProps } from '../typings';
 
 function LineBreakIcon({
   attributes,
-}: RenderLineBreakElementProps) {
+}: ReactLineBreakIconElementProps) {
   return (
     <span
       {...attributes}

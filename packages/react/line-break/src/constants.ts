@@ -16,4 +16,4 @@ export const LINE_BREAK_HOTKEY = 'enter';
  *
  * @see [is-hotkey]{@link https://www.npmjs.com/package/is-hotkey}
  */
-export const LINE_BREAK_INITIAL_KEYS = ['Backspace', 'Meta+Backspace', 'ctrl+Backspace'];
+export const LINE_BREAK_INITIAL_HOT_KEYS = ['Backspace', 'Meta+Backspace', 'ctrl+Backspace'];
