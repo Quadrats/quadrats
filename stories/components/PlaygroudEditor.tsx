@@ -68,6 +68,8 @@ import { createReactLink } from '@quadrats/react/link';
 import { createReactList } from '@quadrats/react/list';
 import { createReactReadMore } from '@quadrats/react/read-more';
 import { createReactInputBlock } from '@quadrats/react/input-block';
+import { createReactLineBreak } from '@quadrats/react/line-break';
+
 import { Toolbar, TOOLBAR_DIVIDER } from '@quadrats/react/toolbar';
 import { ToggleMarkToolbarIcon } from '@quadrats/react/toggle-mark/toolbar';
 import { BlockquoteToolbarIcon } from '@quadrats/react/blockquote/toolbar';
@@ -95,6 +97,7 @@ const underline = createReactUnderline();
 const heading = createReactHeading({
   enabledLevels: [1, 2, 3],
 });
+const linebreak = createReactLineBreak();
 const blockquote = createReactBlockquote();
 const divider = createReactDivider();
 const embed = createReactEmbed({
@@ -129,6 +132,7 @@ const createPlaygroudEditor = () => pipe(
   embed.with,
   fileUploader.with,
   heading.with,
+  linebreak.with,
   inputBlock.with,
   link.with,
   /**
@@ -147,6 +151,7 @@ const createHandlers = composeHandlers([
   drama.createHandlers(),
   dance.createHandlers(),
   strikethrough.createHandlers(),
+  linebreak.createHandlers(),
   underline.createHandlers(),
   blockquote.createHandlers(),
   heading.createHandlers(),
@@ -173,6 +178,7 @@ const renderElement = composeRenderElements([
   }),
   fileUploader.createRenderElement(),
   heading.createRenderElement(),
+  linebreak.createRenderElement(),
   image.createRenderElement(),
   inputBlock.createRenderElement(),
   link.createRenderElement(),
