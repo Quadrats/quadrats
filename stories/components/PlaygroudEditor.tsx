@@ -21,6 +21,11 @@ import {
   Twitter as TwitterIcon,
   ReadMore as ReadMoreIcon,
   Fn as FnIcon,
+  SheetMusic as SheetMusicIcon,
+  Drama as DramaIcon,
+  Dance as DanceIcon,
+  PodcastApple as PodcastAppleIcon,
+  Spotify as SpotifyIcon,
 } from '@quadrats/icons';
 import { Theme } from '@quadrats/theme';
 import { LocaleDefinition } from '@quadrats/locales';
@@ -49,11 +54,13 @@ import { VimeoEmbedStrategy } from '@quadrats/common/embed/strategies/vimeo';
 import { InstagramEmbedStrategy } from '@quadrats/common/embed/strategies/instagram';
 import { FacebookEmbedStrategy } from '@quadrats/common/embed/strategies/facebook';
 import { TwitterEmbedStrategy } from '@quadrats/common/embed/strategies/twitter';
+import { PodcastAppleEmbedStrategy } from '@quadrats/common/embed/strategies/podcast-apple';
 import { defaultRenderYoutubeEmbedElement } from '@quadrats/react/embed/renderers/youtube';
 import { defaultRenderVimeoEmbedElement } from '@quadrats/react/embed/renderers/vimeo';
 import { defaultRenderInstagramEmbedElement } from '@quadrats/react/embed/renderers/instagram';
 import { defaultRenderFacebookEmbedElement } from '@quadrats/react/embed/renderers/facebook';
 import { defaultRenderTwitterEmbedElement } from '@quadrats/react/embed/renderers/twitter';
+import { defaultRenderPodcastAppleEmbedElement } from '@quadrats/react/embed/renderers/podcast-apple/src';
 import { createReactFileUploader } from '@quadrats/react/file-uploader';
 import { createReactHeading } from '@quadrats/react/heading';
 import { createReactImage } from '@quadrats/react/image';
@@ -61,6 +68,7 @@ import { createReactLink } from '@quadrats/react/link';
 import { createReactList } from '@quadrats/react/list';
 import { createReactReadMore } from '@quadrats/react/read-more';
 import { createReactInputBlock } from '@quadrats/react/input-block';
+import { createReactLineBreak } from '@quadrats/react/line-break';
 
 import { Toolbar, TOOLBAR_DIVIDER } from '@quadrats/react/toolbar';
 import { ToggleMarkToolbarIcon } from '@quadrats/react/toggle-mark/toolbar';
@@ -73,18 +81,25 @@ import { LinkToolbarIcon, UnlinkToolbarIcon } from '@quadrats/react/link/toolbar
 import { ListToolbarIcon } from '@quadrats/react/list/toolbar';
 import { FootnoteToolbarIcon } from '@quadrats/react/footnote/toolbar';
 import { ReadMoreToolbarIcon } from '@quadrats/react/read-more/toolbar';
+import { defaultRenderSpotifyEmbedElement } from '@quadrats/react/embed/renderers/spotify/src';
+import { SpotifyEmbedStrategy } from '@quadrats/common/embed/strategies/spotify/src';
 
 import { createReactFootnote } from '@quadrats/react/footnote';
 import { customRenderBlockquote } from '../custom-elements';
 
 const bold = createReactBold();
-const highlight = createReactHighlight();
 const italic = createReactItalic();
+const highlight = createReactHighlight();
+const sheetMusic = createReactHighlight('sheet-music');
+const drama = createReactHighlight('drama');
+const dance = createReactHighlight('dance');
+const footnote = createReactItalic(); // createFootnote();
 const strikethrough = createReactStrikethrough();
 const underline = createReactUnderline();
 const heading = createReactHeading({
   enabledLevels: [1, 2, 3],
 });
+const linebreak = createReactLineBreak();
 const blockquote = createReactBlockquote();
 const divider = createReactDivider();
 const embed = createReactEmbed({
@@ -94,6 +109,8 @@ const embed = createReactEmbed({
     instagram: InstagramEmbedStrategy,
     facebook: FacebookEmbedStrategy,
     twitter: TwitterEmbedStrategy,
+    podcastApple: PodcastAppleEmbedStrategy,
+    spotify: SpotifyEmbedStrategy,
   },
 });
 const fileUploader = createReactFileUploader();
@@ -118,6 +135,7 @@ const createPlaygroudEditor = () => pipe(
   embed.with,
   fileUploader.with,
   heading.with,
+  linebreak.with,
   inputBlock.with,
   link.with,
   footnote.with,
@@ -134,7 +152,11 @@ const createHandlers = composeHandlers([
   // footnote.createHandlers(),
   highlight.createHandlers(),
   italic.createHandlers(),
+  sheetMusic.createHandlers(),
+  drama.createHandlers(),
+  dance.createHandlers(),
   strikethrough.createHandlers(),
+  linebreak.createHandlers(),
   underline.createHandlers(),
   blockquote.createHandlers(),
   heading.createHandlers(),
@@ -156,10 +178,13 @@ const renderElement = composeRenderElements([
     instagram: defaultRenderInstagramEmbedElement,
     facebook: defaultRenderFacebookEmbedElement,
     twitter: defaultRenderTwitterEmbedElement,
+    podcastApple: defaultRenderPodcastAppleEmbedElement,
+    spotify: defaultRenderSpotifyEmbedElement,
   }),
   fileUploader.createRenderElement(),
   footnote.createRenderElement(),
   heading.createRenderElement(),
+  linebreak.createRenderElement(),
   image.createRenderElement(),
   inputBlock.createRenderElement(),
   link.createRenderElement(),
@@ -170,6 +195,9 @@ const renderLeaf = composeRenderLeafs([
   bold.createRenderLeaf(),
   highlight.createRenderLeaf(),
   italic.createRenderLeaf(),
+  sheetMusic.createRenderLeaf(),
+  drama.createRenderLeaf(),
+  dance.createRenderLeaf(),
   strikethrough.createRenderLeaf(),
   underline.createRenderLeaf(),
 ]);
@@ -200,6 +228,9 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
           if (expanded) {
             return (
               <>
+                <ToggleMarkToolbarIcon icon={SheetMusicIcon} controller={sheetMusic} />
+                <ToggleMarkToolbarIcon icon={DramaIcon} controller={drama} />
+                <ToggleMarkToolbarIcon icon={DanceIcon} controller={dance} />
                 <ToggleMarkToolbarIcon icon={BoldIcon} controller={bold} />
                 <ToggleMarkToolbarIcon icon={ItalicIcon} controller={italic} />
                 <ToggleMarkToolbarIcon icon={UnderlineIcon} controller={underline} />
@@ -279,6 +310,20 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
                 controller={embed}
                 providers={['twitter']}
                 getPlaceholder={(locale) => locale.editor.twitter.tweet.inputPlaceholder}
+                startToolInput={inputBlock.start}
+              />
+              <EmbedToolbarIcon
+                icon={PodcastAppleIcon}
+                controller={embed}
+                providers={['podcastApple']}
+                getPlaceholder={(locale) => locale.editor.podcastApple.inputPlaceholder}
+                startToolInput={inputBlock.start}
+              />
+              <EmbedToolbarIcon
+                icon={SpotifyIcon}
+                controller={embed}
+                providers={['spotify']}
+                getPlaceholder={(locale) => locale.editor.spotify.inputPlaceholder}
                 startToolInput={inputBlock.start}
               />
               <ReadMoreToolbarIcon icon={ReadMoreIcon} controller={readMore} />

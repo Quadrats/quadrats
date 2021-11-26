@@ -26,6 +26,7 @@ export * from './queries/isNodeMatch';
 export * from './queries/isNodesTypeIn';
 export * from './queries/isPathAtRoot';
 export * from './queries/isSelectionAtBlockEdge';
+export * from './queries/getVariantType';
 
 export * from './transforms/deleteSelectionFragmentIfExpanded';
 export * from './transforms/insertSoftBreak';
@@ -33,6 +34,7 @@ export * from './transforms/toggleNodesType';
 export * from './transforms/unhangRange';
 export * from './transforms/unwrapNodesByTypes';
 export * from './transforms/wrapNodesWithUnhangRange';
+export * from './transforms/marksGroupBy';
 
 export * from './normalizers/normalizeOnlyAtRoot';
 export * from './normalizers/normalizeOnlyInlineOrTextInChildren';

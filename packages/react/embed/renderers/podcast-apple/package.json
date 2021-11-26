@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/react/embed/renderers/podcast-apple",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "embed"
+    ]
+  }
+}
