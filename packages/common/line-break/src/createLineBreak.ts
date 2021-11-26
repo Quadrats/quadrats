@@ -10,6 +10,7 @@ import {
 import {
   LineBreak,
   LineBreakElement,
+  LineBreakVariant,
 } from './typings';
 import { LINE_BREAK_TYPE } from './constants';
 
@@ -22,8 +23,8 @@ export function createLineBreak({
     getNodesByTypes(editor, [LINE_BREAK_TYPE], { at: [], ...options })
   );
 
-  const createLineBreakElement = (): LineBreakElement => ({
-    type, text: '', children: [{ text: '' }],
+  const createLineBreakElement = (variant?: LineBreakVariant): LineBreakElement => ({
+    type, text: variant ?? '', children: [{ text: '' }],
   });
 
   const isSelectionInLineBreak: LineBreak['isSelectionInLineBreak'] = (editor, options = {}) => {
@@ -33,7 +34,7 @@ export function createLineBreak({
     const [match] = getLineBreakNodes(editor, { at: [start], ...options });
     return !!match && match[0].type === type;
   };
-  const toggleLineBreakNodes: LineBreak['toggleLineBreakNodes'] = (editor) => {
+  const toggleLineBreakNodes: LineBreak['toggleLineBreakNodes'] = (editor, variant) => {
     const at: Point = editor?.selection?.focus ?? { offset: 15, path: [] };
     const isActive = isSelectionInLineBreak(editor, { at });
 
@@ -46,7 +47,7 @@ export function createLineBreak({
         match: (node) => node.type === type,
       });
     } else {
-      const lineBreak: LineBreakElement = createLineBreakElement();
+      const lineBreak: LineBreakElement = createLineBreakElement(variant);
 
       editor.insertBreak();
       Transforms.insertNodes(editor, lineBreak, {

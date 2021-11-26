@@ -1,13 +1,13 @@
 import isHotkey from 'is-hotkey';
 import { Transforms } from 'slate';
 
-import { createLineBreak, CreateHLineBreakOptions } from '@quadrats/common/line-break';
+import { createLineBreak, CreateHLineBreakOptions, LineBreakVariant } from '@quadrats/common/line-break';
 import { createRenderElement } from '@quadrats/react';
 import { createOnKeyDownBreak } from '@quadrats/react/break';
 
 import { ReactLineBreak } from './typings';
 import { defaultRenderLineBreakElement } from './defaultRenderLineBreakElement';
-import { LINE_BREAK_HOTKEY, LINE_BREAK_INITIAL_HOT_KEYS } from './constants';
+import { LINE_BREAK_HOTKEY, LINE_BREAK_INITIAL_HOT_KEYS, LINE_BREAK_SHIFT_HOTKEY } from './constants';
 
 export function createReactLineBreak(
   options: CreateHLineBreakOptions = {},
@@ -41,7 +41,14 @@ export function createReactLineBreak(
           if (isHotkey(hotkey, event as any)) {
             try {
               event.preventDefault();
-              core.toggleLineBreakNodes(editor, type);
+              core.toggleLineBreakNodes(editor, LineBreakVariant.ENTER);
+
+              // eslint-disable-next-line no-empty
+            } catch {}
+          } else if (isHotkey(LINE_BREAK_SHIFT_HOTKEY, event as any)) {
+            try {
+              event.preventDefault();
+              core.toggleLineBreakNodes(editor, LineBreakVariant.SHIFT_ENTER);
 
               // eslint-disable-next-line no-empty
             } catch {}
@@ -55,9 +62,6 @@ export function createReactLineBreak(
               at: [start],
               match: (node) => node.type === type,
             });
-          } else if (isHotkey('shift+enter', event as any)) {
-            event.preventDefault();
-            editor.insertBreak();
           } else {
             if (isActive) {
               const start = editor.selection?.focus?.path?.[0] ?? 0;
