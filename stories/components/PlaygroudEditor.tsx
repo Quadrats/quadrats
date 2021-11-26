@@ -93,7 +93,6 @@ const highlight = createReactHighlight();
 const sheetMusic = createReactHighlight('sheet-music');
 const drama = createReactHighlight('drama');
 const dance = createReactHighlight('dance');
-const footnote = createReactItalic(); // createFootnote();
 const strikethrough = createReactStrikethrough();
 const underline = createReactUnderline();
 const heading = createReactHeading({
