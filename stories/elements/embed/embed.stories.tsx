@@ -7,6 +7,8 @@ import {
   Facebook as FacebookIcon,
   Instagram as InstagramIcon,
   Twitter as TwitterIcon,
+  PodcastApple as PodcastAppleIcon,
+  Spotify as SpotifyIcon,
 } from '@quadrats/icons';
 import { Node, PARAGRAPH_TYPE } from '@quadrats/core';
 import {
@@ -19,14 +21,17 @@ import { EMBED_TYPE } from '@quadrats/common/embed';
 import { createReactEmbed } from '@quadrats/react/embed';
 import { YoutubeEmbedStrategy } from '@quadrats/common/embed/strategies/youtube';
 import { VimeoEmbedStrategy } from '@quadrats/common/embed/strategies/vimeo';
-import { InstagramEmbedStrategy } from '@quadrats/common/embed/strategies/instagram';
 import { FacebookEmbedStrategy } from '@quadrats/common/embed/strategies/facebook';
+import { InstagramEmbedStrategy } from '@quadrats/common/embed/strategies/instagram';
+import { PodcastAppleEmbedStrategy } from '@quadrats/common/embed/strategies/podcast-apple';
+import { SpotifyEmbedStrategy } from '@quadrats/common/embed/strategies/spotify';
 import { TwitterEmbedStrategy } from '@quadrats/common/embed/strategies/twitter';
-import { defaultRenderYoutubeEmbedElement } from '@quadrats/react/embed/renderers/youtube';
-import { defaultRenderVimeoEmbedElement } from '@quadrats/react/embed/renderers/vimeo';
-import { defaultRenderInstagramEmbedElement } from '@quadrats/react/embed/renderers/instagram';
 import { defaultRenderFacebookEmbedElement } from '@quadrats/react/embed/renderers/facebook';
+import { defaultRenderInstagramEmbedElement } from '@quadrats/react/embed/renderers/instagram';
+import { defaultRenderPodcastAppleEmbedElement } from '@quadrats/react/embed/renderers/podcast-apple';
 import { defaultRenderTwitterEmbedElement } from '@quadrats/react/embed/renderers/twitter';
+import { defaultRenderVimeoEmbedElement } from '@quadrats/react/embed/renderers/vimeo';
+import { defaultRenderYoutubeEmbedElement } from '@quadrats/react/embed/renderers/youtube';
 import { EmbedToolbarIcon } from '@quadrats/react/embed/toolbar';
 import { Toolbar } from '@quadrats/react/toolbar';
 
@@ -44,6 +49,8 @@ export const Example = () => {
       instagram: InstagramEmbedStrategy,
       facebook: FacebookEmbedStrategy,
       twitter: TwitterEmbedStrategy,
+      podcastApple: PodcastAppleEmbedStrategy,
+      spotify: SpotifyEmbedStrategy,
     },
   });
   const renderElement = composeRenderElements([
@@ -53,6 +60,8 @@ export const Example = () => {
       instagram: defaultRenderInstagramEmbedElement,
       facebook: defaultRenderFacebookEmbedElement,
       twitter: defaultRenderTwitterEmbedElement,
+      podcastApple: defaultRenderPodcastAppleEmbedElement,
+      spotify: defaultRenderTwitterEmbedElement,
     }),
   ]);
   const initialValues: Node[] = [
@@ -106,6 +115,18 @@ export const Example = () => {
                 controller={embed}
                 providers={['twitter']}
                 getPlaceholder={(locale) => locale.editor.twitter.tweet.inputPlaceholder}
+              />
+              <EmbedToolbarIcon
+                icon={PodcastAppleIcon}
+                controller={embed}
+                providers={['podcastApple']}
+                getPlaceholder={(locale) => locale.editor.podcastApple.inputPlaceholder}
+              />
+              <EmbedToolbarIcon
+                icon={SpotifyIcon}
+                controller={embed}
+                providers={['spotify']}
+                getPlaceholder={(locale) => locale.editor.spotify.inputPlaceholder}
               />
             </>
           )}
