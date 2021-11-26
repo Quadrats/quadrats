@@ -10,5 +10,4 @@ export interface ReactFootnoteCreateRenderElementOptions {
 export interface ReactFootnote
   extends Omit<Footnote, 'with'>,
   WithCreateRenderElement<[ReactFootnoteCreateRenderElementOptions?]>,
-  // WithCreateHandlers,
   ReactWithable {}

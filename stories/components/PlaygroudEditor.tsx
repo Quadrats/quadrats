@@ -148,7 +148,6 @@ const createPlaygroudEditor = () => pipe(
 
 const createHandlers = composeHandlers([
   bold.createHandlers(),
-  // footnote.createHandlers(),
   highlight.createHandlers(),
   italic.createHandlers(),
   sheetMusic.createHandlers(),
