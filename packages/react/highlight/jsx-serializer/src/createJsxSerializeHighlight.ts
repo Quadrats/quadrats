@@ -4,5 +4,5 @@ import { defaultRenderHighlight } from './defaultRenderHighlight';
 
 export const createJsxSerializeHighlight = createJsxSerializeToggleMarkCreator({
   type: HIGHLIGHT_TYPE,
-  render: defaultRenderHighlight,
+  render: defaultRenderHighlight(),
 });

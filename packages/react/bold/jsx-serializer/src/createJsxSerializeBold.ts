@@ -4,5 +4,5 @@ import { defaultRenderBold } from './defaultRenderBold';
 
 export const createJsxSerializeBold = createJsxSerializeToggleMarkCreator({
   type: BOLD_TYPE,
-  render: defaultRenderBold,
+  render: defaultRenderBold(),
 });

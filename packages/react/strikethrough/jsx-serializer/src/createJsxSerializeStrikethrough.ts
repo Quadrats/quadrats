@@ -4,5 +4,5 @@ import { defaultRenderStrikethrough } from './defaultRenderStrikethrough';
 
 export const createJsxSerializeStrikethrough = createJsxSerializeToggleMarkCreator({
   type: STRIKETHROUGH_TYPE,
-  render: defaultRenderStrikethrough,
+  render: defaultRenderStrikethrough(),
 });
