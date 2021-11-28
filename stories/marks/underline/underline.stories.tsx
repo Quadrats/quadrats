@@ -23,7 +23,7 @@ export default {
 export const Example = () => {
   const type = text('type', UNDERLINE_TYPE);
   const hotkey = text('hotkey', UNDERLINE_HOTKEY);
-  const underline = createReactUnderline({ type });
+  const underline = createReactUnderline(type);
   const createHandlers = composeHandlers([underline.createHandlers({ hotkey })]);
   const renderLeaf = composeRenderLeafs([underline.createRenderLeaf()]);
   const initialValues: Node[] = [

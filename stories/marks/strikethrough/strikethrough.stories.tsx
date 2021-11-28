@@ -23,7 +23,7 @@ export default {
 export const Example = () => {
   const type = text('type', STRIKETHROUGH_TYPE);
   const hotkey = text('hotkey', STRIKETHROUGH_HOTKEY);
-  const strikethrough = createReactStrikethrough({ type });
+  const strikethrough = createReactStrikethrough(type);
   const createHandlers = composeHandlers([strikethrough.createHandlers({ hotkey })]);
   const renderLeaf = composeRenderLeafs([strikethrough.createRenderLeaf()]);
   const initialValues: Node[] = [

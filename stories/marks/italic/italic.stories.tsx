@@ -23,7 +23,7 @@ export default {
 export const Example = () => {
   const type = text('type', ITALIC_TYPE);
   const hotkey = text('hotkey', ITALIC_HOTKEY);
-  const italic = createReactItalic({ type });
+  const italic = createReactItalic(type);
   const createHandlers = composeHandlers([italic.createHandlers({ hotkey })]);
   const renderLeaf = composeRenderLeafs([italic.createRenderLeaf()]);
   const initialValues: Node[] = [

@@ -23,7 +23,7 @@ export default {
 export const Example = () => {
   const type = text('type', BOLD_TYPE);
   const hotkey = text('hotkey', BOLD_HOTKEY);
-  const bold = createReactBold({ type });
+  const bold = createReactBold(type);
   const createHandlers = composeHandlers([bold.createHandlers({ hotkey })]);
   const renderLeaf = composeRenderLeafs([bold.createRenderLeaf()]);
   const initialValues: Node[] = [

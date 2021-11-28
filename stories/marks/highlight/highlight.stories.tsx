@@ -23,7 +23,7 @@ export default {
 export const Example = () => {
   const type = text('type', HIGHLIGHT_TYPE);
   const hotkey = text('hotkey', HIGHLIGHT_HOTKEY);
-  const highlight = createReactHighlight({ type });
+  const highlight = createReactHighlight(type);
   const createHandlers = composeHandlers([highlight.createHandlers({ hotkey })]);
   const renderLeaf = composeRenderLeafs([highlight.createRenderLeaf()]);
   const initialValues: Node[] = [

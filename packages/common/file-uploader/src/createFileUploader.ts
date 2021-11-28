@@ -48,7 +48,7 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
 
         if (!sent) {
           sent = true;
-          xhr.send(getBody(file));
+          xhr.send(getBody(file) as XMLHttpRequestBodyInit);
         }
 
         return () => {
