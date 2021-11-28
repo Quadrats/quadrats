@@ -9,6 +9,7 @@ export interface ThemeObject {
   divider: string;
   placeholder: string;
   icon: string;
+  sup: string;
 }
 
 export type Theme = string | ThemeObject;

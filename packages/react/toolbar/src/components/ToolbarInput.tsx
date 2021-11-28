@@ -30,6 +30,7 @@ function ToolbarInput({ exit, toolInput }: ToolbarInputProps) {
   return (
     <div className="qdr-toolbar__input__wrapper">
       <input
+        defaultValue={toolInput.defaultValue}
         // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus
         className="qdr-toolbar__input"

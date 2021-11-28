@@ -12,6 +12,7 @@ export interface InputWidgetConfig {
    * Invoked after user confirming the input widget.
    */
   confirm(value: string): void;
+  defaultValue?: string;
 }
 
 export type SetInputWidgetConfig = (value: InputWidgetConfig | null) => void;

@@ -14,6 +14,9 @@ export interface LocaleDefinition {
     link: {
       inputPlaceholder: string;
     };
+    footnote: {
+      inputPlaceholder: string;
+    };
     readMore: string;
     twitter: {
       tweet: {

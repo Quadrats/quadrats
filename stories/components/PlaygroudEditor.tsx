@@ -20,10 +20,10 @@ import {
   Instagram as InstagramIcon,
   Twitter as TwitterIcon,
   ReadMore as ReadMoreIcon,
+  Fn as FnIcon,
   SheetMusic as SheetMusicIcon,
   Drama as DramaIcon,
   Dance as DanceIcon,
-  Fn as FnIcon,
   PodcastApple as PodcastAppleIcon,
   Spotify as SpotifyIcon,
 } from '@quadrats/icons';
@@ -79,10 +79,12 @@ import { FileUploaderToolbarIcon } from '@quadrats/react/file-uploader/toolbar';
 import { HeadingToolbarIcon } from '@quadrats/react/heading/toolbar';
 import { LinkToolbarIcon, UnlinkToolbarIcon } from '@quadrats/react/link/toolbar';
 import { ListToolbarIcon } from '@quadrats/react/list/toolbar';
+import { FootnoteToolbarIcon } from '@quadrats/react/footnote/toolbar';
 import { ReadMoreToolbarIcon } from '@quadrats/react/read-more/toolbar';
 import { defaultRenderSpotifyEmbedElement } from '@quadrats/react/embed/renderers/spotify/src';
 import { SpotifyEmbedStrategy } from '@quadrats/common/embed/strategies/spotify/src';
 
+import { createReactFootnote } from '@quadrats/react/footnote';
 import { customRenderBlockquote } from '../custom-elements';
 
 const bold = createReactBold();
@@ -91,7 +93,6 @@ const highlight = createReactHighlight();
 const sheetMusic = createReactHighlight('sheet-music');
 const drama = createReactHighlight('drama');
 const dance = createReactHighlight('dance');
-const footnote = createReactItalic(); // createFootnote();
 const strikethrough = createReactStrikethrough();
 const underline = createReactUnderline();
 const heading = createReactHeading({
@@ -122,6 +123,7 @@ const inputBlock = createReactInputBlock();
 const link = createReactLink({
   wrappableVoidTypes: [image.types.image],
 });
+const footnote = createReactFootnote();
 const list = createReactList();
 const readMore = createReactReadMore();
 
@@ -135,6 +137,7 @@ const createPlaygroudEditor = () => pipe(
   linebreak.with,
   inputBlock.with,
   link.with,
+  footnote.with,
   /**
      * The plugin order of image should higher then link.
      */
@@ -177,6 +180,7 @@ const renderElement = composeRenderElements([
     spotify: defaultRenderSpotifyEmbedElement,
   }),
   fileUploader.createRenderElement(),
+  footnote.createRenderElement(),
   heading.createRenderElement(),
   linebreak.createRenderElement(),
   image.createRenderElement(),
@@ -217,6 +221,7 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
           const linkTool = <LinkToolbarIcon icon={LinkIcon} controller={link} />;
           const unlinkTool = <UnlinkToolbarIcon icon={UnlinkIcon} controller={link} />;
           const blockquoteTool = <BlockquoteToolbarIcon icon={BlockquoteIcon} controller={blockquote} />;
+          const footnoteTool = <FootnoteToolbarIcon icon={FnIcon} controller={footnote} />;
 
           if (expanded) {
             return (
@@ -231,7 +236,7 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
                 <ToggleMarkToolbarIcon icon={HighlightIcon} controller={highlight} />
                 {linkTool}
                 {unlinkTool}
-                <ToggleMarkToolbarIcon icon={FnIcon} controller={footnote} />
+                {footnoteTool}
               </>
             );
           } if (image.isSelectionInImageCaption(editor)) {
@@ -241,6 +246,7 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
               <>
                 {linkTool}
                 {unlinkTool}
+                {footnoteTool}
               </>
             );
           } if (blockquote.isSelectionInBlockquote(editor)) {
