@@ -1,7 +1,7 @@
 import { IconDefinition } from './typings';
 
-export const LineBreakEnter: IconDefinition = {
-  name: 'line-break-enter',
+export const CombinedShape: IconDefinition = {
+  name: 'combined-shape',
   definition: {
     svg: {
       viewBox: '0 0 24 24',
