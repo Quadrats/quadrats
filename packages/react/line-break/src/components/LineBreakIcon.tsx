@@ -9,24 +9,31 @@ function LineBreakIcon({
 }: ReactLineBreakIconElementProps) {
   const ref = useRef<HTMLSpanElement | null>(null);
 
+  const isShiftEnter = useMemo(() => (
+    element.text === 'shift-enter'
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  ), []);
+
   const icon = useMemo(() => {
-    if (element.text === 'shift-enter') return LineBreakShiftEnter;
+    if (isShiftEnter) return LineBreakShiftEnter;
 
     return LineBreakEnter;
-  }, [element.text]);
+  }, [isShiftEnter]);
 
   useEffect(() => {
-    if (element.text !== 'shift-enter') return;
-
     const paragraphElement = ref.current?.parentElement;
 
-    if (paragraphElement) {
+    if (isShiftEnter && paragraphElement) {
       paragraphElement.setAttribute(
         'style',
         'margin-inline: 0; margin-block: 0;',
       );
     }
-  }, [element.text]);
+
+    if (!isShiftEnter && paragraphElement) {
+      paragraphElement.removeAttribute('style');
+    }
+  }, [isShiftEnter]);
 
   return (
     <span
