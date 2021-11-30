@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/Quadrats/quadrats/compare/v0.4.0...v0.4.1) (2021-11-30)
+
+### Bug Fixes
+
+- **line-break:** correct deps name for missing components ([da5dd76](https://github.com/Quadrats/quadrats/commit/da5dd7655290d076a643f77d29c521824a627f59))
+
 # [0.4.0](https://github.com/Quadrats/quadrats/compare/v0.2.0...v0.4.0) (2021-11-30)
 
 ### Features
