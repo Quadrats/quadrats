@@ -5,6 +5,7 @@ import {
   getNodesByTypes,
   Transforms,
   WithElementType,
+  Text,
   Point,
 } from '@quadrats/core';
 import {
@@ -27,35 +28,54 @@ export function createLineBreak({
     type, text: variant ?? '', children: [{ text: '' }],
   });
 
-  const isSelectionInLineBreak: LineBreak['isSelectionInLineBreak'] = (editor, options = {}) => {
+  const isSelectionInLineBreak: LineBreak['isSelectionInLineBreak'] = (editor, options = {}, variant) => {
     const at: Point = editor?.selection?.focus ?? { offset: 15, path: [] };
     const start = at?.path?.[0] ?? 0;
 
     const [match] = getLineBreakNodes(editor, { at: [start], ...options });
-    return !!match && match[0].type === type;
+    return !!match && match[0].type === type && match[0].text === variant;
   };
+
+  const getCurrentAt = (editor: any): Point => (
+    editor?.selection?.focus ?? { offset: 15, path: [] }
+  );
+
   const toggleLineBreakNodes: LineBreak['toggleLineBreakNodes'] = (editor, variant) => {
-    const at: Point = editor?.selection?.focus ?? { offset: 15, path: [] };
+    const at: Point = getCurrentAt(editor);
     const isActive = isSelectionInLineBreak(editor, { at });
-
     const start = at?.path?.[0] ?? 0;
-    const end = 15; // slate 預設 end 最高為 15
 
-    if (isActive) {
-      Transforms.removeNodes(editor, {
-        at: [start],
-        match: (node) => node.type === type,
-      });
-    } else {
+    if (variant === LineBreakVariant.ENTER) {
+      if (isActive) {
+        Transforms.removeNodes(editor, {
+          at: [start],
+          match: (node) => node.type === type,
+        });
+      } else {
+        const lineBreak: LineBreakElement = createLineBreakElement(variant);
+
+        editor.insertBreak();
+        Transforms.insertNodes(editor, lineBreak, {
+          at: [start, 15],
+          match: (node) => Text.isText(node),
+          hanging: true,
+          voids: true,
+        });
+      }
+    }
+    if (variant === LineBreakVariant.SHIFT_ENTER) {
       const lineBreak: LineBreakElement = createLineBreakElement(variant);
 
-      editor.insertBreak();
-      Transforms.insertNodes(editor, lineBreak, {
-        at: [start, end],
-        match: (node) => node.type === 'p',
-        hanging: true,
-        voids: true,
-      });
+      /**
+       * @INFO 在 line-break icon 後面放一個 null tag
+       * 使得 selection 可以在同層級之間進行跳行的動作
+       * 否則無法跳行。
+      */
+      Transforms.insertNodes(editor, [
+        lineBreak,
+        { text: '\0' },
+      ], { at });
+      Transforms.move(editor, { distance: 2 });
     }
   };
 
@@ -65,7 +85,7 @@ export function createLineBreak({
     isSelectionInLineBreak,
     toggleLineBreakNodes,
     with(editor) {
-      const { isInline } = editor;
+      const { isInline, normalizeNode } = editor;
 
       editor.isInline = (element) => element.type === type || isInline(element);
 
@@ -78,6 +98,8 @@ export function createLineBreak({
            */
           normalizeVoidElementChildren(editor, [node, path]);
         }
+
+        normalizeNode(entry);
       };
 
       return editor;

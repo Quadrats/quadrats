@@ -34,7 +34,8 @@ export function createReactLineBreak(
 
       return {
         onKeyDown(event, editor, next) {
-          const isActive = core.isSelectionInLineBreak(editor);
+          const lineBreakAlreadyExist = core.isSelectionInLineBreak(editor, {}, LineBreakVariant.ENTER);
+
           /**
            * Only toggle if the hotkey is fired and the key is the same as level.
            */
@@ -54,23 +55,29 @@ export function createReactLineBreak(
             } catch {}
           } else if (
             isHotkey(LINE_BREAK_INITIAL_HOT_KEYS, event as any)
-            && isActive
+            && lineBreakAlreadyExist
           ) {
-            const start = editor.selection?.focus?.path?.[0] ?? 0;
-
-            Transforms.removeNodes(editor, {
-              at: [start],
-              match: (node) => node.type === type,
-            });
-          } else {
-            if (isActive) {
+            try {
               const start = editor.selection?.focus?.path?.[0] ?? 0;
 
-              Transforms.moveNodes(editor, {
+              Transforms.removeNodes(editor, {
                 at: [start],
-                to: [start, 15],
                 match: (node) => node.type === type,
               });
+              // eslint-disable-next-line no-empty
+            } catch {}
+          } else {
+            if (lineBreakAlreadyExist) {
+              try {
+                const start = editor.selection?.focus?.path?.[0] ?? 0;
+
+                Transforms.moveNodes(editor, {
+                  at: [start],
+                  to: [start, 15],
+                  match: (node) => node.type === type,
+                });
+                // eslint-disable-next-line no-empty
+              } catch {}
             }
 
             onKeyDownBreak(event, editor, next);
