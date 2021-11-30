@@ -1,7 +1,7 @@
 import isHotkey from 'is-hotkey';
 import { createHeading, CreateHeadingOptions, HeadingLevel } from '@quadrats/common/heading';
 import { createRenderElement } from '@quadrats/react';
-import { createOnKeyDownBreak } from '@quadrats/react/break';
+import { createOnKeyDownBreak } from '@quadrats/react/line-break';
 import { ReactHeading } from './typings';
 import { HEADING_HOTKEY } from './constants';
 import { defaultRenderHeadingElement } from './defaultRenderHeadingElement';
