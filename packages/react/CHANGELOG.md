@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.2](https://github.com/Quadrats/quadrats/compare/v0.4.0...v0.4.2) (2021-11-30)
+
+### Bug Fixes
+
+- **footnote:** add missing footnote toolbar package ([14a2491](https://github.com/Quadrats/quadrats/commit/14a2491ea1b51fa929fc3a02715dc797046da6f4))
+- **line-break:** correct deps name for missing components ([9f3f7a6](https://github.com/Quadrats/quadrats/commit/9f3f7a6fcbf86f44355e79c7cfe029255ac04ffa))
+
 ## [0.4.1](https://github.com/Quadrats/quadrats/compare/v0.4.0...v0.4.1) (2021-11-30)
 
 ### Bug Fixes
