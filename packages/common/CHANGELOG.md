@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/Quadrats/quadrats/compare/v0.2.0...v0.3.0) (2021-11-30)
+
+### Features
+
+- **line-break:** refactor line break implement on paragraph element ([4dc544e](https://github.com/Quadrats/quadrats/commit/4dc544ebb4181720e985905abd8d77f3bb3abf70))
+
 # [0.2.0](https://github.com/Quadrats/quadrats/compare/v0.1.0...v0.2.0) (2021-11-30)
 
 ### Bug Fixes

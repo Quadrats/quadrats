@@ -1,6 +1,6 @@
 {
   "name": "@quadrats/common",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "",
   "author": "Rytass",
   "homepage": "https://github.com/Quadrats/quadrats#readme",
@@ -23,8 +23,8 @@
     "build": "npm run build:clean && node ../../scripts/build.js"
   },
   "dependencies": {
-    "@quadrats/core": "^0.2.0",
-    "@quadrats/locales": "^0.2.0",
-    "@quadrats/utils": "^0.2.0"
+    "@quadrats/core": "^0.3.0",
+    "@quadrats/locales": "^0.3.0",
+    "@quadrats/utils": "^0.3.0"
   }
 }
