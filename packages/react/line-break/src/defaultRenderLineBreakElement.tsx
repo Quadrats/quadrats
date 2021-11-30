@@ -1,7 +1,8 @@
 import React from 'react';
-import { ReactLineBreakIconElementProps } from './typings';
-import LineBreakIcon from './components/LineBreakIcon';
+import { RenderLineBreakElementProps } from './typings';
 
-export const defaultRenderLineBreakElement = (props: ReactLineBreakIconElementProps) => (
-  <LineBreakIcon {...props} />
+export const defaultRenderLineBreakElement = ({ attributes }: RenderLineBreakElementProps) => (
+  <span {...attributes} style={{ userSelect: 'none' }} contentEditable={false}>
+    <br />
+  </span>
 );

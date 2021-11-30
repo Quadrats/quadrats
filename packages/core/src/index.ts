@@ -6,6 +6,7 @@ export * from 'slate-history';
 export * from './adapter/slate';
 
 export * from './paragraph';
+export * from './line-break';
 
 export * from './queries/getAboveBlock';
 export * from './queries/getAboveByTypes';

@@ -1,4 +1,5 @@
 export * from './typings';
-export { LINE_BREAK_HOTKEY } from './constants';
-export { defaultRenderLineBreakElement } from './defaultRenderLineBreakElement';
-export { createReactLineBreak } from './createReactLineBreak';
+export { CreateOnKeyDownBreakOptions, createOnKeyDownBreak } from './createOnKeyDownBreak';
+export * from './commonBreak';
+export { CreateReactLineBreakOptions, createReactLineBreak } from './createReactLineBreak';
+export { renderLineBreakElementWithSymbol } from './renderLineBreakElementWithSymbol';

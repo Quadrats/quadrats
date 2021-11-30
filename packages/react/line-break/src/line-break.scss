@@ -1,0 +1,22 @@
+$qdr-image-resizer-size: 6px;
+
+.qdr-line-break {
+  &__with-symbol {
+    position: relative;
+
+    &::after {
+      content: '';
+      display: block;
+      width: 16px;
+      height: 16px;
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAxElEQVRoge2ZwQlCMRBEZ2xAS7ADLeGXklJSiiVpB5agFax8iCAfxMsuY2Ae7CWEzD42p4QRgZnZTd29Bf4AC6ixgBoLqLGAmjIBkp1kjOpVOZ6AGguosYAaC6ixgBoLqLGAGguomV4g9XWa5BXA6ce2W0Sc0zKTBQ4A7gD2X7Y8ARwj4pGVmXqFRmPLaHTLurZkNv8OTS8AbT16U60kq+LQIdE/BHpVTukXE8nLmHIry/AfmRgLqLGAGguosYAaC0gB8ALxmTRWAs9XmwAAAABJRU5ErkJggg==');
+      background-size: 16px;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: absolute;
+      right: -16px;
+      top: 0;
+      opacity: 0.5;
+    }
+  }
+}

@@ -1,90 +1,20 @@
-import isHotkey from 'is-hotkey';
-import { Transforms } from 'slate';
-
-import { createLineBreak, CreateHLineBreakOptions, LineBreakVariant } from '@quadrats/common/line-break';
+import { createLineBreak, CreateLineBreakOptions } from '@quadrats/core';
 import { createRenderElement } from '@quadrats/react';
-import { createOnKeyDownBreak } from '@quadrats/react/break';
-
-import { ReactLineBreak } from './typings';
+import { COMMON_ON_KEY_DOWN_BREAK } from './commonBreak';
 import { defaultRenderLineBreakElement } from './defaultRenderLineBreakElement';
-import { LINE_BREAK_HOTKEY, LINE_BREAK_INITIAL_HOT_KEYS, LINE_BREAK_SHIFT_HOTKEY } from './constants';
+import { ReactBreak } from './typings';
 
-export function createReactLineBreak(
-  options: CreateHLineBreakOptions = {},
-): ReactLineBreak {
+export type CreateReactLineBreakOptions = CreateLineBreakOptions;
+
+export function createReactLineBreak(options: CreateReactLineBreakOptions = {}): ReactBreak {
   const core = createLineBreak(options);
   const { type } = core;
 
   return {
     ...core,
-    createHandlers: ({ hotkey = LINE_BREAK_HOTKEY } = {}) => {
-      const onKeyDownBreak = createOnKeyDownBreak({
-        exitBreak: {
-          rules: [
-            {
-              hotkey: 'enter',
-              match: {
-                onlyAtEdge: true,
-                includeTypes: [type],
-              },
-            },
-          ],
-        },
-      });
-
-      return {
-        onKeyDown(event, editor, next) {
-          const lineBreakAlreadyExist = core.isSelectionInLineBreak(editor, {}, LineBreakVariant.ENTER);
-
-          /**
-           * Only toggle if the hotkey is fired and the key is the same as level.
-           */
-          if (isHotkey(hotkey, event as any)) {
-            try {
-              event.preventDefault();
-              core.toggleLineBreakNodes(editor, LineBreakVariant.ENTER);
-
-              // eslint-disable-next-line no-empty
-            } catch {}
-          } else if (isHotkey(LINE_BREAK_SHIFT_HOTKEY, event as any)) {
-            try {
-              event.preventDefault();
-              core.toggleLineBreakNodes(editor, LineBreakVariant.SHIFT_ENTER);
-
-              // eslint-disable-next-line no-empty
-            } catch {}
-          } else if (
-            isHotkey(LINE_BREAK_INITIAL_HOT_KEYS, event as any)
-            && lineBreakAlreadyExist
-          ) {
-            try {
-              const start = editor.selection?.focus?.path?.[0] ?? 0;
-
-              Transforms.removeNodes(editor, {
-                at: [start],
-                match: (node) => node.type === type,
-              });
-              // eslint-disable-next-line no-empty
-            } catch {}
-          } else {
-            if (lineBreakAlreadyExist) {
-              try {
-                const start = editor.selection?.focus?.path?.[0] ?? 0;
-
-                Transforms.moveNodes(editor, {
-                  at: [start],
-                  to: [start, 15],
-                  match: (node) => node.type === type,
-                });
-                // eslint-disable-next-line no-empty
-              } catch {}
-            }
-
-            onKeyDownBreak(event, editor, next);
-          }
-        },
-      };
-    },
+    createHandlers: () => ({
+      onKeyDown: COMMON_ON_KEY_DOWN_BREAK,
+    }),
     createRenderElement: ({ render = defaultRenderLineBreakElement } = {}) => createRenderElement({ type, render }),
   };
 }

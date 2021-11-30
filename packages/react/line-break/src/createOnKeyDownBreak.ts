@@ -74,6 +74,7 @@ export function createOnKeyDownBreak({ exitBreak, softBreak }: CreateOnKeyDownBr
         for (const { hotkey, match } of rules) {
           if (isHotkey(hotkey, event as any) && (!match || isNodeMatch(entry, match))) {
             event.preventDefault();
+
             insertSoftBreak(editor);
             return;
           }

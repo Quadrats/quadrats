@@ -1,5 +1,5 @@
 import React, { useRef, useMemo } from 'react';
-import { SpotifyEmbedElement } from '@quadrats/common/embed/strategies/spotify/src';
+import { SpotifyEmbedElement } from '@quadrats/common/embed/strategies/spotify';
 import { RenderElementProps } from '@quadrats/react';
 import { composeRefs } from '@quadrats/react/utils';
 

@@ -39,8 +39,8 @@ import {
   composeRenderLeafs,
   composeHandlers,
 } from '@quadrats/react';
-import { createRenderParagraphElement } from '@quadrats/react/paragraph';
-import { COMMON_ON_KEY_DOWN_BREAK } from '@quadrats/react/break';
+import { createRenderParagraphElement, renderParagraphElementWithSymbol } from '@quadrats/react/paragraph';
+import { createReactLineBreak, renderLineBreakElementWithSymbol } from '@quadrats/react/line-break';
 import { createReactBold } from '@quadrats/react/bold';
 import { createReactItalic } from '@quadrats/react/italic';
 import { createReactUnderline } from '@quadrats/react/underline';
@@ -60,7 +60,7 @@ import { defaultRenderVimeoEmbedElement } from '@quadrats/react/embed/renderers/
 import { defaultRenderInstagramEmbedElement } from '@quadrats/react/embed/renderers/instagram';
 import { defaultRenderFacebookEmbedElement } from '@quadrats/react/embed/renderers/facebook';
 import { defaultRenderTwitterEmbedElement } from '@quadrats/react/embed/renderers/twitter';
-import { defaultRenderPodcastAppleEmbedElement } from '@quadrats/react/embed/renderers/podcast-apple/src';
+import { defaultRenderPodcastAppleEmbedElement } from '@quadrats/react/embed/renderers/podcast-apple';
 import { createReactFileUploader } from '@quadrats/react/file-uploader';
 import { createReactHeading } from '@quadrats/react/heading';
 import { createReactImage } from '@quadrats/react/image';
@@ -68,7 +68,6 @@ import { createReactLink } from '@quadrats/react/link';
 import { createReactList } from '@quadrats/react/list';
 import { createReactReadMore } from '@quadrats/react/read-more';
 import { createReactInputBlock } from '@quadrats/react/input-block';
-import { createReactLineBreak } from '@quadrats/react/line-break';
 
 import { Toolbar, TOOLBAR_DIVIDER } from '@quadrats/react/toolbar';
 import { ToggleMarkToolbarIcon } from '@quadrats/react/toggle-mark/toolbar';
@@ -81,12 +80,13 @@ import { LinkToolbarIcon, UnlinkToolbarIcon } from '@quadrats/react/link/toolbar
 import { ListToolbarIcon } from '@quadrats/react/list/toolbar';
 import { FootnoteToolbarIcon } from '@quadrats/react/footnote/toolbar';
 import { ReadMoreToolbarIcon } from '@quadrats/react/read-more/toolbar';
-import { defaultRenderSpotifyEmbedElement } from '@quadrats/react/embed/renderers/spotify/src';
-import { SpotifyEmbedStrategy } from '@quadrats/common/embed/strategies/spotify/src';
+import { defaultRenderSpotifyEmbedElement } from '@quadrats/react/embed/renderers/spotify';
+import { SpotifyEmbedStrategy } from '@quadrats/common/embed/strategies/spotify';
 
 import { createReactFootnote } from '@quadrats/react/footnote';
 import { customRenderBlockquote } from '../custom-elements';
 
+const lineBreak = createReactLineBreak();
 const bold = createReactBold();
 const italic = createReactItalic();
 const highlight = createReactHighlight();
@@ -98,7 +98,7 @@ const underline = createReactUnderline();
 const heading = createReactHeading({
   enabledLevels: [1, 2, 3],
 });
-const linebreak = createReactLineBreak();
+// const linebreak = createReactLineBreak();
 const blockquote = createReactBlockquote();
 const divider = createReactDivider();
 const embed = createReactEmbed({
@@ -134,7 +134,7 @@ const createPlaygroudEditor = () => pipe(
   embed.with,
   fileUploader.with,
   heading.with,
-  linebreak.with,
+  lineBreak.with,
   inputBlock.with,
   link.with,
   footnote.with,
@@ -154,18 +154,17 @@ const createHandlers = composeHandlers([
   drama.createHandlers(),
   dance.createHandlers(),
   strikethrough.createHandlers(),
-  linebreak.createHandlers(),
   underline.createHandlers(),
   blockquote.createHandlers(),
   heading.createHandlers(),
   list.createHandlers(),
   image.createHandlers(),
-  {
-    onKeyDown: COMMON_ON_KEY_DOWN_BREAK,
-  },
+  lineBreak.createHandlers(),
 ]);
 const renderElement = composeRenderElements([
-  createRenderParagraphElement(),
+  createRenderParagraphElement({
+    render: renderParagraphElementWithSymbol,
+  }),
   blockquote.createRenderElement({
     render: customRenderBlockquote,
   }),
@@ -182,7 +181,9 @@ const renderElement = composeRenderElements([
   fileUploader.createRenderElement(),
   footnote.createRenderElement(),
   heading.createRenderElement(),
-  linebreak.createRenderElement(),
+  lineBreak.createRenderElement({
+    render: renderLineBreakElementWithSymbol,
+  }),
   image.createRenderElement(),
   inputBlock.createRenderElement(),
   link.createRenderElement(),

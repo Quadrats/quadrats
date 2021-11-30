@@ -1,9 +1,5 @@
 import {
-  Editor,
   Element,
-  GetNodesOptions,
-  Node,
-  NodeEntry,
   Withable,
   Text,
   WithElementType,
@@ -19,7 +15,5 @@ export enum LineBreakVariant {
 }
 
 export interface LineBreak extends WithElementType, Withable {
-  getLineBreakNodes(editor: Editor, options?: GetNodesOptions): Generator<NodeEntry<Node>>;
-  isSelectionInLineBreak(editor: Editor, options?: GetNodesOptions, variant?: LineBreakVariant): boolean;
-  toggleLineBreakNodes(editor: Editor, variant?: LineBreakVariant): void;
+
 }

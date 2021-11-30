@@ -1,9 +1,15 @@
 {
   "name": "@quadrats/react/paragraph",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
   "quadratsConfig": {
     "deps": [
       "__ROOT__"
-    ]
+    ],
+    "styles": {
+      "paragraph": "paragraph"
+    }
   }
 }

@@ -5,6 +5,8 @@
 @import '../packages/react/file-uploader/src/components/file-uploader';
 @import '../packages/react/image/src/components/image';
 @import '../packages/react/read-more/src/components/read-more';
+@import '../packages/react/paragraph/src/paragraph';
+@import '../packages/react/line-break/src/line-break';
 
 @mixin stories-editable {
   color: var(--qdr-text);

@@ -30,8 +30,6 @@ export { Underline } from './underline';
 export { Unlink } from './unlink';
 export { UnorderedList } from './unordered-list';
 export { Video } from './video';
-export { LineBreakEnter } from './line-break-enter';
-export { LineBreakShiftEnter } from './line-break-shift-enter';
 export { SheetMusic } from './sheet-music';
 export { Drama } from './drama';
 export { Dance } from './dance';

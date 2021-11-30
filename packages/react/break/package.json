@@ -1,9 +1,0 @@
-{
-  "name": "@quadrats/react/break",
-  "sideEffects": false,
-  "quadratsConfig": {
-    "deps": [
-      "__ROOT__"
-    ]
-  }
-}
