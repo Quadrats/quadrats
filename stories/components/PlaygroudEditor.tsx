@@ -98,7 +98,6 @@ const underline = createReactUnderline();
 const heading = createReactHeading({
   enabledLevels: [1, 2, 3],
 });
-// const linebreak = createReactLineBreak();
 const blockquote = createReactBlockquote();
 const divider = createReactDivider();
 const embed = createReactEmbed({

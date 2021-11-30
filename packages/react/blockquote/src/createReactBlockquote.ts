@@ -1,7 +1,7 @@
 import isHotkey from 'is-hotkey';
 import { CreateBlockquoteOptions, createBlockquote } from '@quadrats/common/blockquote';
 import { createRenderElement } from '@quadrats/react';
-import { createOnKeyDownBreak } from '@quadrats/react/break';
+import { createOnKeyDownBreak } from '@quadrats/react/line-break';
 import { ReactBlockquote } from './typings';
 import { BLOCKQUOTE_HOTKEY } from './constants';
 import { defaultRenderBlockquoteElement } from './defaultRenderBlockquoteElement';

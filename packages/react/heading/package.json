@@ -4,7 +4,7 @@
   "quadratsConfig": {
     "deps": [
       "__ROOT__",
-      "break"
+      "line-break"
     ]
   }
 }
