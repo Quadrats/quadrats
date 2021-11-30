@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.3](https://github.com/Quadrats/quadrats/compare/v0.4.2...v0.4.3) (2021-11-30)
+
+### Bug Fixes
+
+- **heading:** build issue for line-break ([49e6f19](https://github.com/Quadrats/quadrats/commit/49e6f19bb0d25de725aeb8e484683e8d4ea9992e))
+
 ## [0.4.2](https://github.com/Quadrats/quadrats/compare/v0.4.0...v0.4.2) (2021-11-30)
 
 ### Bug Fixes
