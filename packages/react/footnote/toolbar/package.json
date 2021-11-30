@@ -1,0 +1,10 @@
+{
+  "name": "@quadrats/react/footnote/toolbar",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "toolbar",
+      "footnote"
+    ]
+  }
+}
