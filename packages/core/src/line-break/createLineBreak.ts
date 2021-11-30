@@ -1,11 +1,9 @@
 /* eslint-disable no-useless-return */
-import {
-  Element,
-  normalizeVoidElementChildren,
-  WithElementType,
-} from '@quadrats/core';
+import { Element } from 'slate';
 import { LineBreak } from './typings';
 import { LINE_BREAK_TYPE } from './constants';
+import { WithElementType } from '../adapter/slate';
+import { normalizeVoidElementChildren } from '../normalizers/normalizeVoidElementChildren';
 
 export type CreateLineBreakOptions = Partial<WithElementType>;
 

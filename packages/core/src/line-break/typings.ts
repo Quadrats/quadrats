@@ -1,9 +1,8 @@
 import {
   Element,
-  Withable,
   Text,
-  WithElementType,
-} from '@quadrats/core';
+} from 'slate';
+import { Withable, WithElementType } from '../adapter/slate';
 
 export interface LineBreakElement extends Element, WithElementType, Text {
   children: [Text];
