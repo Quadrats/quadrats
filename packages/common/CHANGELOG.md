@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.4](https://github.com/Quadrats/quadrats/compare/v0.4.3...v0.4.4) (2021-12-04)
+
+### Bug Fixes
+
+- **link:** prevent empty link wrap caused crash with cjk input method ([268efad](https://github.com/Quadrats/quadrats/commit/268efadc1dafe078b3cb3247e701576bda7de909))
+
 # [0.4.0](https://github.com/Quadrats/quadrats/compare/v0.2.0...v0.4.0) (2021-11-30)
 
 ### Features
