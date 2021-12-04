@@ -188,6 +188,16 @@ export function createLink({
             Transforms.unwrapNodes(editor, { at: path });
             return;
           }
+
+          /**
+           * Remove empty content.
+           */
+          if (Text.isTextList(node.children)) {
+            if (node.children.every((textNode) => !textNode.text)) {
+              Transforms.unwrapNodes(editor, { at: path });
+              return;
+            }
+          }
         }
 
         normalizeNode(entry);
