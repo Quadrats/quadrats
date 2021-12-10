@@ -35,7 +35,14 @@ export function createInputBlock(options: CreateInputBlockOptions = {}): InputBl
     confirm,
     with(editor) {
       const { isVoid } = editor;
-      editor.isVoid = (element) => element.type === type || isVoid(element);
+
+      editor.isVoid = (element) => {
+        // invalidate unfinished input_block from storage
+        if (element.type === type && typeof element.getPlaceholder !== 'function') return false;
+
+        return element.type === type || isVoid(element);
+      };
+
       return editor;
     },
   };

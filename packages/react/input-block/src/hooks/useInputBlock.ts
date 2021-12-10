@@ -6,7 +6,7 @@ export function useInputBlock({ confirm, element, remove }: RenderInputBlockElem
   const inputRef = useRef<HTMLInputElement>(null);
   const editor = useQuadrats();
   const locale = useLocale();
-  const placeholder = element.getPlaceholder(locale);
+  const placeholder = element.getPlaceholder?.(locale) ?? '';
   /**
    * Since keying `Enter` or `Escape` will also cause input blurred
    * Add a `removeable` flag to avoid.
