@@ -16,21 +16,6 @@ export function createReactFootnote(options: CreateReactFootnoteOptions = {}): R
     ...core,
     createRenderElement: ({ render = defaultRenderFootnoteElement } = {}) => createRenderElement({ type, render }),
     with(editor) {
-      const { insertData, insertText } = editor;
-
-      editor.insertData = (data) => {
-        const text = data.getData('text/plain');
-
-        if (text) {
-          if (core.isSelectionInFootnote(editor)) {
-            insertText(text);
-            return;
-          }
-        }
-
-        insertData(data);
-      };
-
       return core.with(editor);
     },
   };

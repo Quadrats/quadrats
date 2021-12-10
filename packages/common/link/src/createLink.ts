@@ -110,6 +110,8 @@ export function createLink({
           if (wrappableVoid) {
             unwrapLink(editor, { at: wrappableVoidPath });
             wrapLink(editor, url, { at: wrappableVoidPath });
+          } else {
+            insertLink(editor, url, { at });
           }
 
           return;
