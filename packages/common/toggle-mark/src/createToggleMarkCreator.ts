@@ -1,19 +1,28 @@
-import { getMark, WithMarkType, marksGroupBy } from '@quadrats/core';
+import { getMark, WithMarkType } from '@quadrats/core';
 import { ToggleMark } from './typings';
 
 export type CreateToggleMarkCreatorOptions = WithMarkType & {
-  parentType?: string;
+  variant?: string;
 };
 
 export type CreateToggleMarkOptions = Partial<CreateToggleMarkCreatorOptions> & {
-  parentType?: string;
+  variant?: string;
 };
 
 export function createToggleMarkCreator(defaults: CreateToggleMarkCreatorOptions) {
-  return ({ type = defaults.type, parentType = defaults.parentType }: CreateToggleMarkOptions = {}): ToggleMark => {
+  return ({ type = defaults.type, variant = defaults.variant }: CreateToggleMarkOptions = {}): ToggleMark => {
     const isToggleMarkActive: ToggleMark['isToggleMarkActive'] = (editor) => {
       const mark = getMark<boolean>(editor, type);
-      return mark === true;
+
+      if (mark !== true) return false;
+
+      const nowVariant = getMark<string>(editor, `${type}Variant`) || '';
+
+      if (variant) {
+        return nowVariant === variant;
+      }
+
+      return !nowVariant;
     };
 
     const toggleMark: ToggleMark['toggleMark'] = (editor) => {
@@ -21,23 +30,18 @@ export function createToggleMarkCreator(defaults: CreateToggleMarkCreatorOptions
 
       if (isActive) {
         editor.removeMark(type);
-      } else {
-        if (parentType) {
-          marksGroupBy(
-            editor,
-            (_mark) => {
-              if (_mark.match(parentType)) {
-                editor.removeMark(_mark);
 
-                return true;
-              }
-
-              return false;
-            },
-          );
+        if (variant) {
+          editor.removeMark(`${type}Variant`);
         }
-
+      } else {
         editor.addMark(type, true);
+
+        if (variant) {
+          editor.addMark(`${type}Variant`, variant);
+        } else {
+          editor.removeMark(`${type}Variant`);
+        }
       }
     };
 

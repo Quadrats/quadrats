@@ -6,6 +6,6 @@ import { UNDERLINE_HOTKEY } from './constants';
 export const createReactUnderline = (variant?: string) => createReactToggleMarkCreator(
   createUnderline(variant), {
     hotkey: UNDERLINE_HOTKEY,
-    render: defaultRenderUnderline(variant),
+    render: defaultRenderUnderline,
   },
 )();

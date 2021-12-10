@@ -6,6 +6,6 @@ import { ITALIC_HOTKEY } from './constants';
 export const createReactItalic = (variant?: string) => createReactToggleMarkCreator(
   createItalic(variant), {
     hotkey: ITALIC_HOTKEY,
-    render: defaultRenderItalic(variant),
+    render: defaultRenderItalic,
   },
 )();

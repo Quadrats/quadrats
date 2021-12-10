@@ -6,6 +6,6 @@ import { defaultRenderBold } from './defaultRenderBold';
 export const createReactBold = (variant?: string) => createReactToggleMarkCreator(
   createBold(variant), {
     hotkey: BOLD_HOTKEY,
-    render: defaultRenderBold(variant),
+    render: defaultRenderBold,
   },
 )();

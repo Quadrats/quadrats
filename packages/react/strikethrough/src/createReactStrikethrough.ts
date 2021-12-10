@@ -6,6 +6,6 @@ import { STRIKETHROUGH_HOTKEY } from './constants';
 export const createReactStrikethrough = (variant?: string) => createReactToggleMarkCreator(
   createStrikethrough(variant), {
     hotkey: STRIKETHROUGH_HOTKEY,
-    render: defaultRenderStrikethrough(variant),
+    render: defaultRenderStrikethrough,
   },
 )();

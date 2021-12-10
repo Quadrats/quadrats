@@ -1,10 +1,12 @@
 import React from 'react';
+import { BOLD_TYPE } from '@quadrats/common/bold';
 import { RenderMarkPropsBase } from '@quadrats/react/_internal';
+import { BoldLeaf } from './typings';
 
-export const defaultRenderBold = (variant?: string) => (
-  ({ children }: RenderMarkPropsBase<boolean>) => (
-    <strong className={variant ?? ''}>
-      {children}
-    </strong>
-  )
+export const defaultRenderBold = ({ children, leaf }: RenderMarkPropsBase<boolean>) => (
+  <strong className={(leaf as BoldLeaf).boldVariant
+    ? `${BOLD_TYPE}.${leaf.boldVariant}` : `${BOLD_TYPE}`}
+  >
+    {children}
+  </strong>
 );
