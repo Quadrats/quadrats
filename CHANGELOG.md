@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.5](https://github.com/Quadrats/quadrats/compare/v0.4.4...v0.4.5) (2021-12-13)
+
+### Bug Fixes
+
+- **input_block:** invalidate unfinished stored input_block element crash the editor ([a002e78](https://github.com/Quadrats/quadrats/commit/a002e783c16d68cb9a57e07d62a3e73e3ba03146))
+- **link:** empty link paste issue ([4a107fd](https://github.com/Quadrats/quadrats/commit/4a107fdda2dedc4e0f4b06e0cc2268054a29363f))
+
+### Features
+
+- add useFootnotes and useFootnotesFromNodes for get all footnotes ([9f2e4ee](https://github.com/Quadrats/quadrats/commit/9f2e4eebc2b3b612d9f3e67cbc4b1c7342659679))
+
 ## [0.4.4](https://github.com/Quadrats/quadrats/compare/v0.4.3...v0.4.4) (2021-12-04)
 
 ### Bug Fixes
