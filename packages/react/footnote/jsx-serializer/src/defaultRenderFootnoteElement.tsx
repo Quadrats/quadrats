@@ -3,7 +3,7 @@ import { JsxSerializeFootnoteElementProps } from './typings';
 
 export const defaultRenderFootnoteElement = ({ children, element }: JsxSerializeFootnoteElementProps) => (
   <>
-    <a href="./#">{children}</a>
+    <span style={{ textDecoration: 'underline' }}>{children}</span>
     <sup style={{ color: 'var(--qdr-sup)' }}>
       {`[${element.index ?? 1}]`}
     </sup>

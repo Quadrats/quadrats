@@ -31,6 +31,7 @@ import { createJsxSerializeImage } from '@quadrats/react/image/jsx-serializer';
 import { createJsxSerializeLink } from '@quadrats/react/link/jsx-serializer';
 import { createJsxSerializeList } from '@quadrats/react/list/jsx-serializer';
 import { createJsxSerializeReadMore } from '@quadrats/react/read-more/jsx-serializer';
+import { createJsxSerializeFootnote } from '@quadrats/react/footnote/jsx-serializer';
 
 import { customRenderBlockquote } from '../../custom-elements';
 import PlaygroudEditor, { PlaygroudEditorProps } from '../../components/PlaygroudEditor';
@@ -72,6 +73,7 @@ const jsxSerializer = createJsxSerializer({
     createJsxSerializeLink(),
     createJsxSerializeList(),
     createJsxSerializeReadMore(),
+    createJsxSerializeFootnote(),
   ],
 });
 
