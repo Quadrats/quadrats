@@ -6,9 +6,13 @@ import {
   UnwrapNodeByTypesOptions,
   TransformsWrapNodesOptions,
   Withable,
-  NodeEntry,
-  Node,
 } from '@quadrats/core';
+
+export interface FootnoteData {
+  footnote: string,
+  index: number,
+  wrapperText: string,
+}
 
 export interface FootnoteElement extends Element, WithElementType {
   footnote: string;
@@ -30,7 +34,6 @@ export interface FootnoteUpsertFootnoteOptions {
 }
 
 export interface Footnote extends WithElementType, Withable {
-  getAllFootnotes(editor: Editor): NodeEntry<Node>[];
   getFootnoteText(editor: Editor): string;
   isSelectionInFootnote(editor: Editor): boolean;
   unwrapFootnote(editor: Editor, options?: FootnoteUnwrapFootnoteOptions): void;

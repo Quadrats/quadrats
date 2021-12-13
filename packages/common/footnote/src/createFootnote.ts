@@ -17,24 +17,17 @@ export function createFootnote({
 }: CreateFootnoteOptions = {}): Footnote {
   const isSelectionInFootnote: Footnote['isSelectionInFootnote'] = (editor) => isNodesTypeIn(editor, [type]);
 
-  const getAllFootnotes: Footnote['getAllFootnotes'] = (editor) => {
-    const resultNodes = getNodes(editor, {
-      at: [],
-      match: (node) => node.type === FOOTNOTE_TYPE,
-    });
-
-    return Array.from(resultNodes);
-  };
-
   const getFootnoteText: Footnote['getFootnoteText'] = (editor) => {
     const at = editor.selection;
 
     if (!at) {
       return '';
     }
-    const nodes = getNodes(editor, { at, match: (node) => node.type === type });
+    const firstNode = Array.from(
+      getNodes(editor, { at, match: (node) => node.type === type }),
+    )?.[0]?.[0];
 
-    return Array.from(nodes)?.[0]?.[0]?.footnote as string;
+    return (firstNode as FootnoteElement)?.footnote as string;
   };
 
   const updateFootnoteIndex: Footnote['updateFootnoteIndex'] = (editor, options = { startAt: 1 }) => {
@@ -82,7 +75,6 @@ export function createFootnote({
 
   return {
     type,
-    getAllFootnotes,
     getFootnoteText,
     isSelectionInFootnote,
     updateFootnoteIndex,

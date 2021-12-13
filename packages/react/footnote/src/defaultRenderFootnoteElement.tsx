@@ -19,9 +19,9 @@ export const defaultRenderFootnoteElement = ({
   return (
     <>
       <Tooltip placement={placement} popup={footnote}>
-        <a {...attributes} href="./#" target="_blank">
+        <span style={{ textDecoration: 'underline' }} {...attributes}>
           {children}
-        </a>
+        </span>
       </Tooltip>
       <sup
         {...attributes}
