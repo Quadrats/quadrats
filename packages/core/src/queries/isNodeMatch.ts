@@ -1,4 +1,5 @@
 import { Node, NodeEntry } from 'slate';
+import { QuadratsElement } from '../typings';
 
 export interface IsNodeMatchOptions {
   filter?: (entry: NodeEntry<Node>) => boolean;
@@ -21,7 +22,7 @@ export function isNodeMatch(
 
   return (
     (!filter || filter(entry))
-    && (!includeTypes.length || includeTypes.includes(node.type as string))
-    && !(excludeTypes.length && excludeTypes.includes(node.type as string))
+    && (!includeTypes.length || includeTypes.includes((node as QuadratsElement).type as string))
+    && !(excludeTypes.length && excludeTypes.includes((node as QuadratsElement).type as string))
   );
 }

@@ -14,7 +14,7 @@ import {
   composeRenderElements,
   composeHandlers,
 } from '@quadrats/react';
-import { Node, PARAGRAPH_TYPE } from '@quadrats/core';
+import { Descendant, PARAGRAPH_TYPE, QuadratsElement } from '@quadrats/core';
 import { HEADING_TYPE } from '@quadrats/common/heading';
 import { HEADING_HOTKEY, createReactHeading } from '@quadrats/react/heading';
 import { HeadingToolbarIcon } from '@quadrats/react/heading/toolbar';
@@ -30,7 +30,7 @@ export const Example = () => {
   const heading = createReactHeading({ type, enabledLevels: [1, 2, 3] });
   const createHandlers = composeHandlers([heading.createHandlers({ hotkey })]);
   const renderElement = composeRenderElements([heading.createRenderElement()]);
-  const initialValues: Node[] = [
+  const initialValues: Descendant[] = [
     {
       type: heading.type,
       level: 1,
@@ -39,7 +39,7 @@ export const Example = () => {
           text: 'Heading 1',
         },
       ],
-    },
+    } as QuadratsElement,
     {
       type: heading.type,
       level: 2,
@@ -48,7 +48,7 @@ export const Example = () => {
           text: 'Heading 2',
         },
       ],
-    },
+    } as QuadratsElement,
     {
       type: heading.type,
       level: 3,
@@ -57,7 +57,7 @@ export const Example = () => {
           text: 'Heading 3',
         },
       ],
-    },
+    } as QuadratsElement,
     {
       type: PARAGRAPH_TYPE,
       children: [

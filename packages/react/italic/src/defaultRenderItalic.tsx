@@ -5,7 +5,7 @@ import { ItalicLeaf } from './typings';
 
 export const defaultRenderItalic = ({ children, leaf }: RenderMarkPropsBase<boolean>) => (
   <i className={(leaf as ItalicLeaf).italicVariant
-    ? `${ITALIC_TYPE}.${leaf.italicVariant}` : `${ITALIC_TYPE}`}
+    ? `${ITALIC_TYPE}.${(leaf as ItalicLeaf).italicVariant}` : `${ITALIC_TYPE}`}
   >
     {children}
   </i>

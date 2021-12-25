@@ -1,5 +1,4 @@
 import { ReactEditor } from 'slate-react';
-import { HistoryEditor } from '@quadrats/core';
 import {
   EventHandlerName,
   EventHandlers,
@@ -8,7 +7,7 @@ import {
 } from './typings/handler';
 
 function createEventHandler(
-  editor: ReactEditor & HistoryEditor,
+  editor: ReactEditor,
   handlers: Handler<any>[],
 ): (event: GetEventByName<any>) => void {
   const [handler, ...restHandlers] = handlers;
@@ -26,7 +25,7 @@ export function composeHandlers<H extends EventHandlerName>(
   handlersList: {
     [HH in H]?: Handler<HH>;
   }[],
-): (editor: ReactEditor & HistoryEditor) => EventHandlers {
+): (editor: ReactEditor) => EventHandlers {
   const handlersListRecord = handlersList.reduce(
     (acc, handlers) => {
       Object.entries(handlers).forEach(([key, value]) => {

@@ -3,7 +3,7 @@ import { text } from '@storybook/addon-knobs';
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { Divider as DividerIcon } from '@quadrats/icons';
-import { Node, PARAGRAPH_TYPE } from '@quadrats/core';
+import { Descendant, PARAGRAPH_TYPE } from '@quadrats/core';
 import {
   Quadrats,
   Editable,
@@ -23,7 +23,7 @@ export const Example = () => {
   const type = text('type', DIVIDER_TYPE);
   const divider = createReactDivider({ type });
   const renderElement = composeRenderElements([divider.createRenderElement()]);
-  const initialValues: Node[] = [
+  const initialValues: Descendant[] = [
     {
       type: PARAGRAPH_TYPE,
       children: [

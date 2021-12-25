@@ -1,6 +1,6 @@
 import React from 'react';
 import { Transforms } from '@quadrats/core';
-import { ReactEditor, useEditor } from '@quadrats/react';
+import { ReactEditor, useSlateStatic } from '@quadrats/react';
 import { RenderImageElementProps } from '../typings';
 import { useImageResizer } from '../hooks/useImageResizer';
 
@@ -10,7 +10,7 @@ function Image(props: RenderImageElementProps) {
     children,
     element, resizeImage, src,
   } = props;
-  const editor = useEditor();
+  const editor = useSlateStatic();
   const { focusedAndSelected, imageRef, onResizeStart } = useImageResizer(element, resizeImage);
 
   return (

@@ -2,7 +2,7 @@ import React, { CompositionEvent, useCallback, useState } from 'react';
 import { Editable as SlateEditable, useSlate } from 'slate-react';
 import { EditableProps as SlateEditableProps } from 'slate-react/dist/components/editable';
 import clsx from 'clsx';
-import { Editor, isAncestorEmpty } from '@quadrats/core';
+import { BaseRange, Editor, isAncestorEmpty } from '@quadrats/core';
 import { useLocale, useTheme } from '@quadrats/react/configs';
 import DefaultLeaf from './DefaultLeaf';
 
@@ -38,7 +38,7 @@ function Editable(props: EditableProps) {
           [PLACEHOLDER_KEY]: true,
           anchor: start,
           focus: start,
-        });
+        } as BaseRange);
       }
 
       return result;
@@ -66,7 +66,9 @@ function Editable(props: EditableProps) {
     (props) => {
       const children = renderLeafProp ? renderLeafProp(props) : <DefaultLeaf {...props} />;
 
-      if (placeholderShowable && props.leaf[PLACEHOLDER_KEY]) {
+      const { leaf } = props;
+
+      if (placeholderShowable && leaf[PLACEHOLDER_KEY]) {
         return (
           <>
             <span className="qdr-editable__placeholder" contentEditable={false}>

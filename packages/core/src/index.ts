@@ -1,12 +1,11 @@
 import { createEditor as createSlateEditor } from 'slate';
-import { withHistory } from 'slate-history';
 
 export * from 'slate';
-export * from 'slate-history';
 export * from './adapter/slate';
 
 export * from './paragraph';
 export * from './line-break';
+export * from './typings';
 
 export * from './queries/getAboveBlock';
 export * from './queries/getAboveByTypes';
@@ -40,5 +39,5 @@ export * from './normalizers/normalizeOnlyInlineOrTextInChildren';
 export * from './normalizers/normalizeVoidElementChildren';
 
 export function createEditor() {
-  return withHistory(createSlateEditor());
+  return createSlateEditor();
 }

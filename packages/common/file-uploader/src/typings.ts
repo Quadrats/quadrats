@@ -1,7 +1,6 @@
 import {
   Editor,
   Element,
-  HistoryEditor,
   Path,
   TransformsInsertNodesOptions,
   Withable,
@@ -49,9 +48,9 @@ TransformsInsertNodesOptions;
 export interface FileUploader extends Withable {
   type: string;
   createFileUploaderElement(
-    editor: Editor & HistoryEditor,
+    editor: Editor,
     file: File,
     options: FileUploaderCreateFileUploaderElementOptions
   ): Promise<FileUploaderElement | undefined>;
-  upload(editor: Editor & HistoryEditor, options: FileUploaderUploadOptions): Promise<void>;
+  upload(editor: Editor, options: FileUploaderUploadOptions): Promise<void>;
 }

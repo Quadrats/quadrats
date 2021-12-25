@@ -5,7 +5,7 @@ import { BoldLeaf } from './typings';
 
 export const defaultRenderBold = ({ children, leaf }: RenderMarkPropsBase<boolean>) => (
   <strong className={(leaf as BoldLeaf).boldVariant
-    ? `${BOLD_TYPE}.${leaf.boldVariant}` : `${BOLD_TYPE}`}
+    ? `${BOLD_TYPE}.${(leaf as BoldLeaf).boldVariant}` : `${BOLD_TYPE}`}
   >
     {children}
   </strong>

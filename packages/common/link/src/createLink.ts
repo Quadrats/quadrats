@@ -186,7 +186,7 @@ export function createLink({
           /**
            * Remove invalid url.
            */
-          if (!isUrl(node.url as string)) {
+          if (!isUrl((node as LinkElement).url as string)) {
             Transforms.unwrapNodes(editor, { at: path });
             return;
           }

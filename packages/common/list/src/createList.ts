@@ -12,6 +12,7 @@ import {
   NodeEntry,
   PARAGRAPH_TYPE,
   Path,
+  QuadratsElement,
   Range,
   Transforms,
   unwrapNodesByTypes,
@@ -28,8 +29,9 @@ export function createList(options: CreateListOptions = {}): List {
   const types: ListTypes = { ...LIST_TYPES, ...options.types };
   const isListElement: List['isListElement'] = (
     node,
-  ): node is Element => [types.ol, types.ul].includes(node.type as string);
-  const isListItemElement: List['isListElement'] = (node): node is Element => node.type === types.li;
+  ): node is Element => [types.ol, types.ul].includes((node as QuadratsElement).type as string);
+  const isListItemElement: List['isListElement'] = (node): node is Element => (
+    node as QuadratsElement).type === types.li;
   const isSelectionInList: List['isSelectionInList'] = (
     editor,
     listTypeKey,
@@ -49,8 +51,8 @@ export function createList(options: CreateListOptions = {}): List {
 
         if (parentOfListItemEntry && isListElement(parentOfListItemEntry[0])) {
           return {
-            list: parentOfListItemEntry,
-            listItem: parentEntry,
+            list: parentOfListItemEntry as NodeEntry<Element>,
+            listItem: parentEntry as NodeEntry<Element>,
           };
         }
       }
@@ -96,7 +98,7 @@ export function createList(options: CreateListOptions = {}): List {
 
       if (previousEntry) {
         const [previousNode, previousPath] = previousEntry;
-        const lastNodeOfPreviousNode = previousNode.children[previousNode.children.length - 1];
+        const lastNodeOfPreviousNode = (previousNode?.children ?? [])[(previousNode?.children ?? []).length - 1];
 
         /**
          * Move list item next to the last node of previous node of list item.
@@ -104,7 +106,11 @@ export function createList(options: CreateListOptions = {}): List {
         if (isListElement(lastNodeOfPreviousNode)) {
           Transforms.moveNodes(editor, {
             at: listItemPath,
-            to: [...previousPath, previousNode.children.length - 1, lastNodeOfPreviousNode.children.length],
+            to: [
+              ...previousPath,
+              (previousNode?.children ?? []).length - 1,
+              (lastNodeOfPreviousNode?.children ?? []).length,
+            ],
           });
           /**
            * Wrap list item by a new list and move the new list next to the last node of previous node.
@@ -115,7 +121,7 @@ export function createList(options: CreateListOptions = {}): List {
           Transforms.wrapNodes(editor, newSubListElement, { at: listItemPath });
           Transforms.moveNodes(editor, {
             at: listItemPath,
-            to: [...previousPath, previousNode.children.length],
+            to: [...previousPath, (previousNode?.children ?? []).length],
           });
         }
       }
@@ -137,7 +143,7 @@ export function createList(options: CreateListOptions = {}): List {
 
     const newListItemPath = Path.next(listParentPath);
     const listItemIndex = listItemPath[listItemPath.length - 1];
-    const nextSiblingListItems = listNode.children.slice(listItemIndex + 1, listNode.children.length);
+    const nextSiblingListItems = (listNode?.children ?? []).slice(listItemIndex + 1, (listNode?.children ?? []).length);
 
     Transforms.moveNodes(editor, {
       at: listItemPath,
@@ -149,7 +155,7 @@ export function createList(options: CreateListOptions = {}): List {
      */
     if (nextSiblingListItems.length) {
       const newSubListElement = { type: listNode.type, children: [] };
-      const newSubListPath = [...newListItemPath, listItemNode.children.length];
+      const newSubListPath = [...newListItemPath, (listItemNode?.children ?? []).length];
 
       Transforms.insertNodes(editor, newSubListElement, { at: newSubListPath });
       nextSiblingListItems.forEach((_, index) => {
@@ -179,7 +185,7 @@ export function createList(options: CreateListOptions = {}): List {
     } = entries;
     const [listParentNode] = Editor.parent(editor, listPath);
 
-    if (listParentNode.type !== types.li) {
+    if ((listParentNode as QuadratsElement).type !== types.li) {
       unwrapList(editor);
     } else {
       decreaseListItemDepth(editor, entries);

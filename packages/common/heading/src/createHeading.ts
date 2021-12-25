@@ -22,7 +22,7 @@ export function createHeading<L extends HeadingLevel = HeadingLevel>({
 }: CreateHeadingOptions<L> = {}): Heading<L> {
   const getHeadingNodes: Heading<L>['getHeadingNodes'] = (editor, level, options = {}) => getNodes(editor, {
     ...options,
-    match: (node) => node.type === type && node.level === level,
+    match: (node) => (node as HeadingElement).type === type && (node as HeadingElement).level === level,
   });
 
   const isSelectionInHeading: Heading<L>['isSelectionInHeading'] = (editor, level, options = {}) => {
@@ -58,7 +58,7 @@ export function createHeading<L extends HeadingLevel = HeadingLevel>({
           /**
            * Set invalid level elements to default.
            */
-          if (!enabledLevels.includes(node.level as L)) {
+          if (!enabledLevels.includes((node as HeadingElement).level as L)) {
             Transforms.setNodes(editor, { type: PARAGRAPH_TYPE }, { at: path });
             return;
           }

@@ -199,7 +199,7 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
               return;
             }
           } else if (node.type === types.image) {
-            const { src, width, hosting } = node;
+            const { src, width, hosting } = node as (ImageElement & ImageFigureElement);
 
             if (
               typeof src !== 'string'

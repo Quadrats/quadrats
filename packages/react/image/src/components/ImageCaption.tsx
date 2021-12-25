@@ -1,12 +1,12 @@
 import React from 'react';
 import clsx from 'clsx';
 import { Editor } from '@quadrats/core';
-import { ReactEditor, useEditor, useLocale } from '@quadrats/react';
+import { ReactEditor, useSlateStatic, useLocale } from '@quadrats/react';
 import { RenderImageCaptionElementProps } from '../typings';
 
 function ImageCaption(props: RenderImageCaptionElementProps) {
   const { attributes, children, element } = props;
-  const editor = useEditor();
+  const editor = useSlateStatic();
   const path = ReactEditor.findPath(editor, element);
   const text = Editor.string(editor, path);
   const isEmpty = !text;

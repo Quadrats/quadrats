@@ -6,7 +6,7 @@ export function createRenderMarkBase<M, P extends RenderMarkPropsBase<M>>(
   const { type, render } = options;
   return (props) => {
     const { children, leaf } = props;
-    const mark = leaf[type] as M | undefined;
+    const mark = (leaf as any)[type] as M | undefined;
 
     if (mark != null && leaf.text) {
       return render({ ...props, mark } as P);

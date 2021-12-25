@@ -2,7 +2,7 @@ import { boolean } from '@storybook/addon-knobs';
 
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
-import { Node, PARAGRAPH_TYPE } from '@quadrats/core';
+import { Descendant, PARAGRAPH_TYPE } from '@quadrats/core';
 import {
   Quadrats,
   Editable,
@@ -18,7 +18,7 @@ export default {
 export const Example = () => {
   const enable = boolean('enable', true);
   const renderElement = enable ? composeRenderElements([createRenderParagraphElement()]) : undefined;
-  const initialValues: Node[] = [
+  const initialValues: Descendant[] = [
     {
       type: PARAGRAPH_TYPE,
       children: [

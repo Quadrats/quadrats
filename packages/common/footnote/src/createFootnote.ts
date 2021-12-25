@@ -24,7 +24,7 @@ export function createFootnote({
       return '';
     }
     const firstNode = Array.from(
-      getNodes(editor, { at, match: (node) => node.type === type }),
+      getNodes(editor, { at, match: (node) => (node as FootnoteElement).type === type }),
     )?.[0]?.[0];
 
     return (firstNode as FootnoteElement)?.footnote as string;
@@ -33,8 +33,8 @@ export function createFootnote({
   const updateFootnoteIndex: Footnote['updateFootnoteIndex'] = (editor, options = { startAt: 1 }) => {
     let footnoteCount: number = options?.startAt ?? 1;
 
-    for (const [, path] of getNodes(editor, { at: [], match: (node) => node.type === FOOTNOTE_TYPE })) {
-      Transforms.setNodes(editor, { index: footnoteCount }, { at: path });
+    for (const [, path] of getNodes(editor, { at: [], match: (node) => (node as FootnoteElement).type === FOOTNOTE_TYPE })) {
+      Transforms.setNodes(editor, { index: footnoteCount } as FootnoteElement, { at: path });
       footnoteCount += 1;
     }
   };
@@ -62,7 +62,7 @@ export function createFootnote({
 
     if (footnoteText !== '') {
       if (isSelectionInFootnote(editor)) {
-        Transforms.setNodes(editor, { footnote: footnoteText }, { at, match: (node) => node.type === type });
+        Transforms.setNodes(editor, { footnote: footnoteText } as FootnoteElement, { at, match: (node) => (node as FootnoteElement).type === type });
       } else {
         wrapFootnote(editor, footnoteText, options);
       }

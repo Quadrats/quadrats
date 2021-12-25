@@ -5,7 +5,7 @@ import { StrikethroughLeaf } from './typings';
 
 export const defaultRenderStrikethrough = ({ children, leaf }: RenderMarkPropsBase<boolean>) => (
   <del className={(leaf as StrikethroughLeaf).strikethroughVariant
-    ? `${STRIKETHROUGH_TYPE}.${leaf.strikethroughVariant}` : `${STRIKETHROUGH_TYPE}`}
+    ? `${STRIKETHROUGH_TYPE}.${(leaf as StrikethroughLeaf).strikethroughVariant}` : `${STRIKETHROUGH_TYPE}`}
   >
     {children}
   </del>

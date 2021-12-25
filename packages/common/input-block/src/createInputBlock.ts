@@ -38,7 +38,7 @@ export function createInputBlock(options: CreateInputBlockOptions = {}): InputBl
 
       editor.isVoid = (element) => {
         // invalidate unfinished input_block from storage
-        if (element.type === type && typeof element.getPlaceholder !== 'function') return false;
+        if (element.type === type && typeof (element as InputBlockElement).getPlaceholder !== 'function') return false;
 
         return element.type === type || isVoid(element);
       };

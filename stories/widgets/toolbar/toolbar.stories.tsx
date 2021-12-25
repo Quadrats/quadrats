@@ -2,7 +2,7 @@ import { text } from '@storybook/addon-knobs';
 
 import React, { useState, useMemo } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
-import { Node, PARAGRAPH_TYPE } from '@quadrats/core';
+import { Descendant, PARAGRAPH_TYPE } from '@quadrats/core';
 import { Quadrats, Editable, createReactEditor } from '@quadrats/react';
 import { Toolbar, TOOLBAR_DIVIDER } from '@quadrats/react/toolbar';
 
@@ -15,7 +15,7 @@ export const Example = () => {
   const collapsedText = text('text on collapsed', 'collapsed');
   const Editor = () => {
     const editor = useMemo(() => createReactEditor(), []);
-    const [value, setValue] = useState<Node[]>([
+    const [value, setValue] = useState<Descendant[]>([
       {
         type: PARAGRAPH_TYPE,
         children: [{ text: '' }],

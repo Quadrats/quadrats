@@ -5,6 +5,7 @@ import {
   Text,
   Transforms,
 } from 'slate';
+import { QuadratsText, QuadratsElement } from '../typings';
 
 export function normalizeVoidElementChildren(editor: Editor, entry: NodeEntry<Element>): boolean {
   const [element, path] = entry;
@@ -12,7 +13,9 @@ export function normalizeVoidElementChildren(editor: Editor, entry: NodeEntry<El
   /**
    * Only accept single empty text inside void element.
    */
-  if (!(element.children.length === 1 && Text.isText(element.children[0]) && element.children[0].text === '')) {
+  if (!((element as QuadratsElement).children?.length === 1
+    && Text.isText((element as QuadratsElement)?.children?.[0])
+    && ((element as QuadratsElement).children?.[0] as QuadratsText | undefined)?.text === '')) {
     Editor.withoutNormalizing(editor, () => {
       Transforms.removeNodes(editor, { at: path });
       Transforms.insertNodes(editor, { ...element, children: [{ text: '' }] }, { at: path });

@@ -3,7 +3,7 @@ import { THEME_QDR } from '@quadrats/theme';
 import {
   Fn as FnIcon,
 } from '@quadrats/icons';
-import { Node, PARAGRAPH_TYPE } from '@quadrats/core';
+import { Descendant, PARAGRAPH_TYPE, QuadratsElement } from '@quadrats/core';
 import {
   Quadrats,
   Editable,
@@ -45,7 +45,7 @@ const FootnoteList = () => {
 };
 
 export const Example = () => {
-  const initialValues: Node[] = [
+  const initialValues: Descendant[] = [
     {
       type: PARAGRAPH_TYPE,
       children: [
@@ -61,7 +61,7 @@ export const Example = () => {
               text: 'text',
             },
           ],
-        },
+        } as QuadratsElement,
         {
           text: 'consectetur adipisicing elit.',
         },
@@ -82,7 +82,7 @@ export const Example = () => {
               text: 'footnote2',
             },
           ],
-        },
+        } as QuadratsElement,
       ],
     },
   ];

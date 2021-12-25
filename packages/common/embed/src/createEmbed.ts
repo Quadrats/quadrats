@@ -48,7 +48,8 @@ export function createEmbed<P extends string>(options: CreateEmbedOptions<P>): E
         const [node, path] = entry;
 
         if (Element.isElement(node) && node.type === type) {
-          const strategy = node.provider ? strategies[node.provider as P] : undefined;
+          const strategy = (node as EmbedElement).provider
+            ? strategies[(node as EmbedElement).provider as P] : undefined;
 
           if (!strategy || !strategy.isElementDataValid(node as Record<string, unknown>)) {
             Transforms.removeNodes(editor, { at: path });

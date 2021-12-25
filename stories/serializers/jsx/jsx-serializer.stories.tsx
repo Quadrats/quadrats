@@ -3,7 +3,7 @@ import { boolean, select } from '@storybook/addon-knobs';
 import React, { useState } from 'react';
 import { THEME_QDR, THEME_QDR_DARK } from '@quadrats/theme';
 import { enUS, zhTW } from '@quadrats/locales';
-import { Node, PARAGRAPH_TYPE } from '@quadrats/core';
+import { Descendant, PARAGRAPH_TYPE } from '@quadrats/core';
 import { ConfigsProvider } from '@quadrats/react/configs';
 import { YoutubeEmbedStrategy } from '@quadrats/common/embed/strategies/youtube';
 import { VimeoEmbedStrategy } from '@quadrats/common/embed/strategies/vimeo';
@@ -85,7 +85,7 @@ export const Example = () => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const locale = locales.find(({ locale: name }) => name === localeName)!;
   const Display = ({ theme, locale }: Pick<PlaygroudEditorProps, 'theme' | 'locale'>) => {
-    const [value, setValue] = useState<Node[]>([
+    const [value, setValue] = useState<Descendant[]>([
       {
         type: PARAGRAPH_TYPE,
         children: [{ text: '' }],

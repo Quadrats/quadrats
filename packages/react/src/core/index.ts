@@ -1,5 +1,8 @@
+import { BaseEditor, QuadratsElement, QuadratsText } from '@quadrats/core';
+import { ReactEditor } from 'slate-react';
+
 export {
-  useEditor,
+  useSlateStatic,
   useFocused,
   useReadOnly,
   useSelected,
@@ -23,3 +26,11 @@ export { createReactEditor } from './createReactEditor';
 export { createRenderElement } from './createRenderElement';
 export { createRenderElements } from './createRenderElements';
 export { createRenderMark } from './createRenderMark';
+
+declare module 'slate' {
+  interface CustomTypes {
+    Editor: BaseEditor & ReactEditor
+    Element: QuadratsElement
+    Text: QuadratsText
+  }
+}

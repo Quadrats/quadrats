@@ -14,6 +14,7 @@ import {
   ImageTypeKey,
   IMAGE_TYPES,
 } from '@quadrats/common/image';
+import { Descendant } from '@quadrats/core';
 import { CreateJsxSerializeElementOptions, createJsxSerializeElements } from '@quadrats/react/jsx-serializer';
 import { defaultRenderImageElements } from './defaultRenderImageElements';
 import {
@@ -60,11 +61,11 @@ export function createJsxSerializeImage<H extends string>(options: CreateJsxSeri
         const { children } = props;
         const element = props.element as ImageElement & WithElementParent;
         const figure = getFirstAncestor<ImageFigureElement>(element, (node) => node.type === figureType);
-        const caption = figure?.children[1];
+        const caption = figure?.children?.[1];
 
         return renderImage({
           ...getImageElementCommonProps(element, hostingResolvers),
-          caption: caption?.type === captionType ? getMergedNodeTexts(caption) : '',
+          caption: (caption as ImageElement)?.type === captionType ? getMergedNodeTexts(caption as Descendant) : '',
           children,
           element,
         });

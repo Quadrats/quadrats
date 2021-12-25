@@ -10,7 +10,7 @@ import {
   PodcastApple as PodcastAppleIcon,
   Spotify as SpotifyIcon,
 } from '@quadrats/icons';
-import { Node, PARAGRAPH_TYPE } from '@quadrats/core';
+import { Descendant, PARAGRAPH_TYPE } from '@quadrats/core';
 import {
   Quadrats,
   Editable,
@@ -64,7 +64,7 @@ export const Example = () => {
       spotify: defaultRenderTwitterEmbedElement,
     }),
   ]);
-  const initialValues: Node[] = [
+  const initialValues: Descendant[] = [
     {
       type: PARAGRAPH_TYPE,
       children: [

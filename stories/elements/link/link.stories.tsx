@@ -3,7 +3,7 @@ import { text } from '@storybook/addon-knobs';
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { Link as LinkIcon, Unlink as UnlinkIcon } from '@quadrats/icons';
-import { Node, PARAGRAPH_TYPE } from '@quadrats/core';
+import { Descendant, PARAGRAPH_TYPE, QuadratsElement } from '@quadrats/core';
 import {
   Quadrats,
   Editable,
@@ -23,7 +23,7 @@ export const Example = () => {
   const type = text('type', LINK_TYPE);
   const link = createReactLink({ type });
   const renderElement = composeRenderElements([link.createRenderElement()]);
-  const initialValues: Node[] = [
+  const initialValues: Descendant[] = [
     {
       type: PARAGRAPH_TYPE,
       children: [
@@ -38,7 +38,7 @@ export const Example = () => {
               text: 'Quadrats',
             },
           ],
-        },
+        } as QuadratsElement,
         {
           text: ' Lorem ipsum dolor sit amet consectetur adipisicing elit.',
         },

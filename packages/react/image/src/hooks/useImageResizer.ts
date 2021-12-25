@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ImageElement } from '@quadrats/common/image';
 import {
   ReactEditor,
-  useEditor,
+  useSlateStatic,
   useFocused,
   useSelected,
 } from '@quadrats/react';
@@ -34,7 +34,7 @@ interface ImageResizeStartPoint {
 }
 
 export function useImageResizer(element: ImageElement, resizeImage: ReactImage<any>['resizeImage']) {
-  const editor = useEditor();
+  const editor = useSlateStatic();
   const focused = useFocused();
   const selected = useSelected();
   const focusedAndSelected = focused && selected;

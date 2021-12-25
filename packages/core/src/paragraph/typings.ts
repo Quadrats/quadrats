@@ -1,13 +1,11 @@
-import { Element } from 'slate';
+import { QuadratsElement } from '../typings';
 
 export type ParagraphType = 'p';
 
-export interface WithParagraphElementType {
+export interface ParagraphElement extends QuadratsElement {
   /**
    * The default element in slate is paragraph element.
    * Not customizable.
    */
   type: ParagraphType;
 }
-
-export interface ParagraphElement extends Element, WithParagraphElementType {}

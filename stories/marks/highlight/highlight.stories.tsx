@@ -3,7 +3,7 @@ import { text } from '@storybook/addon-knobs';
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { Highlight as HighlightIcon } from '@quadrats/icons';
-import { Node, PARAGRAPH_TYPE } from '@quadrats/core';
+import { Descendant, PARAGRAPH_TYPE } from '@quadrats/core';
 import {
   Quadrats,
   Editable,
@@ -26,7 +26,7 @@ export const Example = () => {
   const highlight = createReactHighlight(type);
   const createHandlers = composeHandlers([highlight.createHandlers({ hotkey })]);
   const renderLeaf = composeRenderLeafs([highlight.createRenderLeaf()]);
-  const initialValues: Node[] = [
+  const initialValues: Descendant[] = [
     {
       type: PARAGRAPH_TYPE,
       children: [

@@ -3,7 +3,7 @@ import { text, boolean } from '@storybook/addon-knobs';
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { Blockquote as BlockquoteIcon } from '@quadrats/icons';
-import { Node, PARAGRAPH_TYPE } from '@quadrats/core';
+import { Descendant, PARAGRAPH_TYPE } from '@quadrats/core';
 import {
   Quadrats,
   Editable,
@@ -28,7 +28,7 @@ export const Example = () => {
   const blockquote = createReactBlockquote({ type });
   const createHandlers = composeHandlers([blockquote.createHandlers({ hotkey })]);
   const renderElement = composeRenderElements([blockquote.createRenderElement({ render })]);
-  const initialValues: Node[] = [
+  const initialValues: Descendant[] = [
     {
       type: PARAGRAPH_TYPE,
       children: [

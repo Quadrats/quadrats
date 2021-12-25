@@ -5,7 +5,7 @@ import { HighlightLeaf } from './typings';
 
 export const defaultRenderHighlight = ({ children, leaf }: RenderMarkPropsBase<boolean>) => (
   <mark className={(leaf as HighlightLeaf).highlightVariant
-    ? `${HIGHLIGHT_TYPE}.${leaf.highlightVariant}` : `${HIGHLIGHT_TYPE}`}
+    ? `${HIGHLIGHT_TYPE}.${(leaf as HighlightLeaf).highlightVariant}` : `${HIGHLIGHT_TYPE}`}
   >
     {children}
   </mark>

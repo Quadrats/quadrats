@@ -3,6 +3,7 @@ import {
   Editor,
   NodeEntry,
 } from 'slate';
+import { QuadratsElement } from '../typings';
 import { EditorAboveOptions } from '../adapter/slate';
 
 export type GetAboveByTypesOptions = EditorAboveOptions;
@@ -18,6 +19,6 @@ export function getAboveByTypes<T extends Ancestor>(
   const { match } = options;
   return Editor.above<T>(editor, {
     ...options,
-    match: (node) => types.includes(node.type as string) && (!match || match(node)),
+    match: (node, path) => types.includes((node as QuadratsElement).type as string) && (!match || match(node, path)),
   });
 }

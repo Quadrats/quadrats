@@ -3,7 +3,7 @@ import { text } from '@storybook/addon-knobs';
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { Underline as UnderlineIcon } from '@quadrats/icons';
-import { Node, PARAGRAPH_TYPE } from '@quadrats/core';
+import { Descendant, PARAGRAPH_TYPE } from '@quadrats/core';
 import {
   Quadrats,
   Editable,
@@ -26,7 +26,7 @@ export const Example = () => {
   const underline = createReactUnderline(type);
   const createHandlers = composeHandlers([underline.createHandlers({ hotkey })]);
   const renderLeaf = composeRenderLeafs([underline.createRenderLeaf()]);
-  const initialValues: Node[] = [
+  const initialValues: Descendant[] = [
     {
       type: PARAGRAPH_TYPE,
       children: [

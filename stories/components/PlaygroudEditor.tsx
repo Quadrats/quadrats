@@ -30,7 +30,7 @@ import {
 import { Theme } from '@quadrats/theme';
 import { LocaleDefinition } from '@quadrats/locales';
 import { pipe } from '@quadrats/utils';
-import { Node } from '@quadrats/core';
+import { Descendant } from '@quadrats/core';
 import {
   Quadrats,
   Editable,
@@ -203,8 +203,8 @@ const renderLeaf = composeRenderLeafs([
 export interface PlaygroudEditorProps {
   theme: Theme;
   locale: LocaleDefinition;
-  value: Node[];
-  setValue: (nodes: Node[]) => void;
+  value: Descendant[];
+  setValue: (nodes: Descendant[]) => void;
 }
 
 function PlaygroudEditor(props: PlaygroudEditorProps) {

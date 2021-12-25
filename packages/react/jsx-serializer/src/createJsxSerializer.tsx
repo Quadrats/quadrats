@@ -1,5 +1,5 @@
 import React, { cloneElement, CSSProperties, ReactElement } from 'react';
-import { Element, Node } from '@quadrats/core';
+import { Descendant, Element } from '@quadrats/core';
 import { isText, WithElementParent } from '@quadrats/core/serializers';
 import { composeRenderElementsBase, composeRenderLeafsBase } from '@quadrats/react/_internal';
 import { JsxSerializeElementProps, JsxSerializeLeafProps } from './typings';
@@ -38,14 +38,14 @@ export function createJsxSerializer(options: CreateJsxSerializerOptioons) {
     whiteSpace: 'pre-wrap',
   };
 
-  function serializeNode(node: Node & WithElementParent): JSX.Element {
+  function serializeNode(node: Descendant & WithElementParent): JSX.Element {
     const { parent } = node;
     let result: JSX.Element;
 
     if (!isText(node)) {
       result = serializeElement({
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        children: serializeNodes(node.children, node),
+        children: serializeNodes(node.children as Descendant[], node),
         element: {
           ...node,
           parent,
@@ -70,11 +70,11 @@ export function createJsxSerializer(options: CreateJsxSerializerOptioons) {
     return addKey(result);
   }
 
-  function serializeNodes(nodes: Node[], parent: (Element & WithElementParent) | undefined): JSX.Element {
+  function serializeNodes(nodes: Descendant[], parent: (Element & WithElementParent) | undefined): JSX.Element {
     return <>{nodes.map((node) => serializeNode({ ...node, parent }))}</>;
   }
 
   return {
-    serialize: (nodes: Node[]) => serializeNodes(nodes, undefined),
+    serialize: (nodes: Descendant[]) => serializeNodes(nodes, undefined),
   };
 }

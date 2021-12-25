@@ -1,6 +1,6 @@
 import { Editor } from '@quadrats/core';
 import { InputWidgetConfig } from '@quadrats/common/input-widget';
-import { useEditor } from '@quadrats/react';
+import { useSlateStatic } from '@quadrats/react';
 import { ReactEmbed } from '@quadrats/react/embed';
 import { StartToolInput, useStartToolInput } from '@quadrats/react/toolbar';
 
@@ -10,7 +10,7 @@ export function useEmbedTool<P extends string>(
   getPlaceholder: InputWidgetConfig['getPlaceholder'],
   startToolInput?: (editor: Editor, inputConfig: InputWidgetConfig) => void,
 ) {
-  const editor = useEditor();
+  const editor = useSlateStatic();
   const defaultStartToolInput = useStartToolInput();
   const start: StartToolInput = startToolInput
     ? (inputConfig) => startToolInput(editor, inputConfig)

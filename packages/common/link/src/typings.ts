@@ -8,9 +8,10 @@ import {
   UnwrapNodeByTypesOptions,
   TransformsWrapNodesOptions,
   Withable,
+  QuadratsElement,
 } from '@quadrats/core';
 
-export interface LinkElement extends Element, WithElementType {
+export interface LinkElement extends Element, WithElementType, QuadratsElement {
   url: string;
 }
 

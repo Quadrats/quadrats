@@ -5,7 +5,7 @@ import { UnderlineLeaf } from './typings';
 
 export const defaultRenderUnderline = ({ children, leaf }: RenderMarkPropsBase<boolean>) => (
   <u className={(leaf as UnderlineLeaf).underlineVariant
-    ? `${UNDERLINE_TYPE}.${leaf.underlineVariant}` : `${UNDERLINE_TYPE}`}
+    ? `${UNDERLINE_TYPE}.${(leaf as UnderlineLeaf).underlineVariant}` : `${UNDERLINE_TYPE}`}
   >
     {children}
   </u>
