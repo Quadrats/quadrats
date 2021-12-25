@@ -1,5 +1,3 @@
-import { text } from '@storybook/addon-knobs';
-
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { UnorderedList as UnorderedListIcon, OrderedList as OrderedListIcon } from '@quadrats/icons';
@@ -20,15 +18,16 @@ export default {
   title: 'Elements/List',
 };
 
-export const Example = () => {
-  const types = (['ul', 'ol', 'li'] as const).reduce(
-    (acc, key) => {
-      const type = text(key, LIST_TYPES[key], 'types');
-      acc[key] = type;
-      return acc;
-    },
-    { ...LIST_TYPES },
-  );
+export const Example = ({
+  ul,
+  ol,
+  li,
+}: {
+  ul: string;
+  ol: string;
+  li: string;
+}) => {
+  const types = { ul, ol, li };
   const list = createReactList({ types });
   const createHandlers = composeHandlers([list.createHandlers()]);
   const renderElement = composeRenderElements([list.createRenderElement()]);
@@ -144,4 +143,10 @@ export const Example = () => {
   };
 
   return <Editor />;
+};
+
+Example.args = {
+  ul: LIST_TYPES.ul,
+  ol: LIST_TYPES.ol,
+  li: LIST_TYPES.li,
 };

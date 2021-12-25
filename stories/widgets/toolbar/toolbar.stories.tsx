@@ -1,5 +1,3 @@
-import { text } from '@storybook/addon-knobs';
-
 import React, { useState, useMemo } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { Descendant, PARAGRAPH_TYPE } from '@quadrats/core';
@@ -10,9 +8,7 @@ export default {
   title: 'Widgets/Toolbar',
 };
 
-export const Example = () => {
-  const expandedText = text('text on expanded', 'expanded');
-  const collapsedText = text('text on collapsed', 'collapsed');
+export const Example = ({ expandedText, collapsedText }: { expandedText: string; collapsedText: string }) => {
   const Editor = () => {
     const editor = useMemo(() => createReactEditor(), []);
     const [value, setValue] = useState<Descendant[]>([
@@ -39,4 +35,9 @@ export const Example = () => {
   };
 
   return <Editor />;
+};
+
+Example.args = {
+  expandedText: 'expanded',
+  collapsedText: 'collapsed',
 };

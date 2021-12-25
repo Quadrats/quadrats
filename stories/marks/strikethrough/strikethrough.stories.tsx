@@ -1,5 +1,3 @@
-import { text } from '@storybook/addon-knobs';
-
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { Strikethrough as StrikethroughIcon } from '@quadrats/icons';
@@ -20,9 +18,7 @@ export default {
   title: 'Marks/Strikethrough',
 };
 
-export const Example = () => {
-  const type = text('type', STRIKETHROUGH_TYPE);
-  const hotkey = text('hotkey', STRIKETHROUGH_HOTKEY);
+export const Example = ({ type, hotkey }: { type: string, hotkey: string }) => {
   const strikethrough = createReactStrikethrough(type);
   const createHandlers = composeHandlers([strikethrough.createHandlers({ hotkey })]);
   const renderLeaf = composeRenderLeafs([strikethrough.createRenderLeaf()]);
@@ -59,4 +55,9 @@ export const Example = () => {
   };
 
   return <Editor />;
+};
+
+Example.args = {
+  type: STRIKETHROUGH_TYPE,
+  hotkey: STRIKETHROUGH_HOTKEY,
 };

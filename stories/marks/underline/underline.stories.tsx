@@ -1,5 +1,3 @@
-import { text } from '@storybook/addon-knobs';
-
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { Underline as UnderlineIcon } from '@quadrats/icons';
@@ -20,9 +18,7 @@ export default {
   title: 'Marks/Underline',
 };
 
-export const Example = () => {
-  const type = text('type', UNDERLINE_TYPE);
-  const hotkey = text('hotkey', UNDERLINE_HOTKEY);
+export const Example = ({ type, hotkey }: { type: string; hotkey: string }) => {
   const underline = createReactUnderline(type);
   const createHandlers = composeHandlers([underline.createHandlers({ hotkey })]);
   const renderLeaf = composeRenderLeafs([underline.createRenderLeaf()]);
@@ -59,4 +55,9 @@ export const Example = () => {
   };
 
   return <Editor />;
+};
+
+Example.args = {
+  type: UNDERLINE_TYPE,
+  hotkey: UNDERLINE_HOTKEY,
 };

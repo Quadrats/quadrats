@@ -1,5 +1,3 @@
-import { text } from '@storybook/addon-knobs';
-
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { Highlight as HighlightIcon } from '@quadrats/icons';
@@ -20,9 +18,7 @@ export default {
   title: 'Marks/Highlight',
 };
 
-export const Example = () => {
-  const type = text('type', HIGHLIGHT_TYPE);
-  const hotkey = text('hotkey', HIGHLIGHT_HOTKEY);
+export const Example = ({ type, hotkey }: { type: string, hotkey: string }) => {
   const highlight = createReactHighlight(type);
   const createHandlers = composeHandlers([highlight.createHandlers({ hotkey })]);
   const renderLeaf = composeRenderLeafs([highlight.createRenderLeaf()]);
@@ -59,4 +55,9 @@ export const Example = () => {
   };
 
   return <Editor />;
+};
+
+Example.args = {
+  type: HIGHLIGHT_TYPE,
+  hotkey: HIGHLIGHT_HOTKEY,
 };

@@ -1,5 +1,3 @@
-import { text } from '@storybook/addon-knobs';
-
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { Bold as BoldIcon } from '@quadrats/icons';
@@ -20,9 +18,7 @@ export default {
   title: 'Marks/Bold',
 };
 
-export const Example = () => {
-  const type = text('type', BOLD_TYPE);
-  const hotkey = text('hotkey', BOLD_HOTKEY);
+export const Example = ({ type, hotkey }: { type: string, hotkey: string }) => {
   const bold = createReactBold(type);
   const createHandlers = composeHandlers([bold.createHandlers({ hotkey })]);
   const renderLeaf = composeRenderLeafs([bold.createRenderLeaf()]);
@@ -59,4 +55,9 @@ export const Example = () => {
   };
 
   return <Editor />;
+};
+
+Example.args = {
+  type: BOLD_TYPE,
+  hotkey: BOLD_HOTKEY,
 };

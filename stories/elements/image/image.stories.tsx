@@ -1,5 +1,3 @@
-import { text, array, boolean } from '@storybook/addon-knobs';
-
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { Descendant, PARAGRAPH_TYPE, QuadratsElement } from '@quadrats/core';
@@ -17,17 +15,20 @@ export default {
   title: 'Elements/Image',
 };
 
-export const Example = () => {
-  const types = (['figure', 'image', 'caption'] as const).reduce(
-    (acc, key) => {
-      const type = text(key, IMAGE_TYPES[key], 'types');
-      acc[key] = type;
-      return acc;
-    },
-    { ...IMAGE_TYPES },
-  );
-  const enableSizeSteps = boolean('enable', true, 'size steps');
-  const sizeStepStrings = array('values', ['25', '50', '75'], ',', 'size steps');
+export const Example = ({
+  figure,
+  image: typeImage,
+  caption,
+  enableSizeSteps,
+  sizeStepStrings,
+}: {
+  figure: string;
+  image: string;
+  caption: string;
+  enableSizeSteps: boolean;
+  sizeStepStrings: string[];
+}) => {
+  const types = { figure, image: typeImage, caption };
   const sizeSteps = enableSizeSteps ? sizeStepStrings.map((s) => +s).filter((s) => !Number.isNaN(s)) : undefined;
   const image = createReactImage({ types, sizeSteps });
   const createHandlers = composeHandlers([image.createHandlers()]);
@@ -80,4 +81,12 @@ export const Example = () => {
   };
 
   return <Editor />;
+};
+
+Example.args = {
+  figure: IMAGE_TYPES.figure,
+  image: IMAGE_TYPES.image,
+  caption: IMAGE_TYPES.caption,
+  enableSizeSteps: true,
+  sizeStepStrings: ['25', '50', '75'],
 };

@@ -1,5 +1,3 @@
-import { text } from '@storybook/addon-knobs';
-
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import {
@@ -39,8 +37,7 @@ export default {
   title: 'Elements/Embed',
 };
 
-export const Example = () => {
-  const type = text('type', EMBED_TYPE);
+export const Example = ({ type }: { type: string }) => {
   const embed = createReactEmbed({
     type,
     strategies: {
@@ -137,4 +134,8 @@ export const Example = () => {
   };
 
   return <Editor />;
+};
+
+Example.args = {
+  type: EMBED_TYPE,
 };

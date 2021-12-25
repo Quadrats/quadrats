@@ -1,5 +1,3 @@
-import { text } from '@storybook/addon-knobs';
-
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import {
@@ -24,9 +22,7 @@ export default {
   title: 'Elements/Heading',
 };
 
-export const Example = () => {
-  const type = text('type', HEADING_TYPE);
-  const hotkey = text('hotkey', HEADING_HOTKEY);
+export const Example = ({ type, hotkey }: { type: string; hotkey: string; }) => {
   const heading = createReactHeading({ type, enabledLevels: [1, 2, 3] });
   const createHandlers = composeHandlers([heading.createHandlers({ hotkey })]);
   const renderElement = composeRenderElements([heading.createRenderElement()]);
@@ -90,4 +86,9 @@ export const Example = () => {
   };
 
   return <Editor />;
+};
+
+Example.args = {
+  type: HEADING_TYPE,
+  hotkey: HEADING_HOTKEY,
 };

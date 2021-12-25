@@ -12,7 +12,7 @@ module.exports = {
     builder: 'webpack5',
   },
   stories: ['../stories/**/*.stories.@(tsx|mdx)'],
-  addons: ['@storybook/addon-knobs', '@storybook/addon-docs/preset', '@storybook/addon-storysource'],
+  addons: ['@storybook/addon-controls', '@storybook/addon-docs/preset', '@storybook/addon-storysource'],
   webpackFinal: config => {
     config.module.rules.push(
       {

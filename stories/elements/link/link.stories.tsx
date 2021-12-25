@@ -1,5 +1,3 @@
-import { text } from '@storybook/addon-knobs';
-
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { Link as LinkIcon, Unlink as UnlinkIcon } from '@quadrats/icons';
@@ -19,8 +17,7 @@ export default {
   title: 'Elements/Link',
 };
 
-export const Example = () => {
-  const type = text('type', LINK_TYPE);
+export const Example = ({ type }: { type: string }) => {
   const link = createReactLink({ type });
   const renderElement = composeRenderElements([link.createRenderElement()]);
   const initialValues: Descendant[] = [
@@ -66,4 +63,8 @@ export const Example = () => {
   };
 
   return <Editor />;
+};
+
+Example.args = {
+  type: LINK_TYPE,
 };

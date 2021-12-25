@@ -1,5 +1,3 @@
-import { text } from '@storybook/addon-knobs';
-
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { Divider as DividerIcon } from '@quadrats/icons';
@@ -19,8 +17,7 @@ export default {
   title: 'Elements/Divider',
 };
 
-export const Example = () => {
-  const type = text('type', DIVIDER_TYPE);
+export const Example = ({ type }: { type: string }) => {
   const divider = createReactDivider({ type });
   const renderElement = composeRenderElements([divider.createRenderElement()]);
   const initialValues: Descendant[] = [
@@ -59,4 +56,8 @@ export const Example = () => {
   };
 
   return <Editor />;
+};
+
+Example.args = {
+  type: DIVIDER_TYPE,
 };

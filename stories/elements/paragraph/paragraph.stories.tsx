@@ -1,5 +1,3 @@
-import { boolean } from '@storybook/addon-knobs';
-
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { Descendant, PARAGRAPH_TYPE } from '@quadrats/core';
@@ -15,8 +13,7 @@ export default {
   title: 'Elements/Paragraph',
 };
 
-export const Example = () => {
-  const enable = boolean('enable', true);
+export const Example = ({ enable }: { enable: boolean }) => {
   const renderElement = enable ? composeRenderElements([createRenderParagraphElement()]) : undefined;
   const initialValues: Descendant[] = [
     {
@@ -49,4 +46,8 @@ export const Example = () => {
   };
 
   return <Editor />;
+};
+
+Example.args = {
+  enable: true,
 };

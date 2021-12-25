@@ -1,5 +1,3 @@
-import { text } from '@storybook/addon-knobs';
-
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { ReadMore as ReadMoreIcon } from '@quadrats/icons';
@@ -19,8 +17,7 @@ export default {
   title: 'Elements/ReadMore',
 };
 
-export const Example = () => {
-  const type = text('type', READ_MORE_TYPE);
+export const Example = ({ type }: { type: string }) => {
   const readMore = createReactReadMore({ type });
   const renderElement = composeRenderElements([readMore.createRenderElement()]);
   const initialValues: Descendant[] = [
@@ -59,4 +56,8 @@ export const Example = () => {
   };
 
   return <Editor />;
+};
+
+Example.args = {
+  type: READ_MORE_TYPE,
 };

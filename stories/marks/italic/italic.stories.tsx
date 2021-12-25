@@ -1,5 +1,3 @@
-import { text } from '@storybook/addon-knobs';
-
 import React, { useMemo, useState } from 'react';
 import { THEME_QDR } from '@quadrats/theme';
 import { Italic as ItalicIcon } from '@quadrats/icons';
@@ -20,9 +18,7 @@ export default {
   title: 'Marks/Italic',
 };
 
-export const Example = () => {
-  const type = text('type', ITALIC_TYPE);
-  const hotkey = text('hotkey', ITALIC_HOTKEY);
+export const Example = ({ type, hotkey }: { type: string, hotkey: string }) => {
   const italic = createReactItalic(type);
   const createHandlers = composeHandlers([italic.createHandlers({ hotkey })]);
   const renderLeaf = composeRenderLeafs([italic.createRenderLeaf()]);
@@ -59,4 +55,9 @@ export const Example = () => {
   };
 
   return <Editor />;
+};
+
+Example.args = {
+  type: ITALIC_TYPE,
+  hotkey: ITALIC_HOTKEY,
 };
