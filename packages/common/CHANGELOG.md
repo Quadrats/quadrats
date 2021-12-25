@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/Quadrats/quadrats/compare/v0.4.5...v0.5.0) (2021-12-25)
+
+**Note:** Version bump only for package @quadrats/common
+
 ## [0.4.5](https://github.com/Quadrats/quadrats/compare/v0.4.4...v0.4.5) (2021-12-13)
 
 ### Bug Fixes

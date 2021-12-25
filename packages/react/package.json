@@ -1,6 +1,6 @@
 {
   "name": "@quadrats/react",
-  "version": "0.4.5",
+  "version": "0.5.0",
   "description": "",
   "author": "Rytass",
   "homepage": "https://github.com/Quadrats/quadrats#readme",
@@ -34,12 +34,12 @@
     "build": "npm run build:clean && node ../../scripts/build.js"
   },
   "dependencies": {
-    "@quadrats/common": "^0.4.5",
-    "@quadrats/core": "^0.4.5",
-    "@quadrats/icons": "^0.4.0",
-    "@quadrats/locales": "^0.4.0",
-    "@quadrats/theme": "^0.4.0",
-    "@quadrats/utils": "^0.4.0",
+    "@quadrats/common": "^0.5.0",
+    "@quadrats/core": "^0.5.0",
+    "@quadrats/icons": "^0.5.0",
+    "@quadrats/locales": "^0.5.0",
+    "@quadrats/theme": "^0.5.0",
+    "@quadrats/utils": "^0.5.0",
     "@types/is-hotkey": "^0.1.7",
     "@types/react-transition-group": "^4.4.4",
     "clsx": "^1.1.1",
