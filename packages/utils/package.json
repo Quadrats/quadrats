@@ -23,6 +23,6 @@
     "build": "npm run build:clean && node ../../scripts/build.js"
   },
   "dependencies": {
-    "tslib": "^2.0.3"
+    "tslib": "^2.3.1"
   }
 }

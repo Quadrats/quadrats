@@ -23,7 +23,7 @@
     "build": "npm run build:clean && node ../../scripts/build.js"
   },
   "dependencies": {
-    "slate": "^0.72.1",
-    "tslib": "^2.0.3"
+    "slate": "^0.72.3",
+    "tslib": "^2.3.1"
   }
 }
