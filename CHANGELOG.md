@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.4](https://github.com/Quadrats/quadrats/compare/v0.5.3...v0.5.4) (2021-12-26)
+
+### Bug Fixes
+
+- **typescript:** correct declare ([e6f21b0](https://github.com/Quadrats/quadrats/commit/e6f21b03784435e4c7aaa01539e9d4a0da1680fe))
+
 ## [0.5.3](https://github.com/Quadrats/quadrats/compare/v0.5.2...v0.5.3) (2021-12-26)
 
 ### Bug Fixes
