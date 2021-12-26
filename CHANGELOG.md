@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.6](https://github.com/Quadrats/quadrats/compare/v0.5.5...v0.5.6) (2021-12-26)
+
+### Bug Fixes
+
+- **typescript:** typings of Editor ([f31a4a2](https://github.com/Quadrats/quadrats/commit/f31a4a27f1fcd0224b4868ee1ce976cefa6751bc))
+
 ## [0.5.5](https://github.com/Quadrats/quadrats/compare/v0.5.4...v0.5.5) (2021-12-26)
 
 ### Bug Fixes
