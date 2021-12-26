@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.5](https://github.com/Quadrats/quadrats/compare/v0.5.4...v0.5.5) (2021-12-26)
+
+### Bug Fixes
+
+- **component:** quadratsProps type ([2c3b563](https://github.com/Quadrats/quadrats/commit/2c3b5637d477e2aa9e4290463c3586d82e9f5c4d))
+
 ## [0.5.4](https://github.com/Quadrats/quadrats/compare/v0.5.3...v0.5.4) (2021-12-26)
 
 ### Bug Fixes
