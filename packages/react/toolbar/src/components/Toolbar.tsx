@@ -21,7 +21,9 @@ import ToolbarInput from './ToolbarInput';
 function roundNumber(value: number, min: number, max: number) {
   if (value < min) {
     return min;
-  } if (value > max) {
+  }
+
+  if (value > max) {
     return max;
   }
 
@@ -66,12 +68,13 @@ function Toolbar(props: ToolbarProps) {
   const { selection } = editor;
   const [toolInput, setToolInput] = useState<ToolInputConfig>();
   const startToolInput: StartToolInput = useCallback(
-    (inputConfig) => setToolInput({
+    inputConfig => setToolInput({
       ...inputConfig,
       currentSelection: selection,
     }),
     [selection],
   );
+
   let renderExpandedStatus: boolean | undefined;
 
   if (toolInput) {

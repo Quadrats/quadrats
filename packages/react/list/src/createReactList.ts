@@ -11,7 +11,7 @@ export function createReactList(options: CreateReactListOptions = {}): ReactList
   return {
     ...core,
     createRenderElement: (options = {}) => createRenderElements(
-      (['ol', 'ul', 'li'] as ListTypeKey[]).map((key) => ({
+      (['ol', 'ul', 'li'] as ListTypeKey[]).map(key => ({
         type: core.types[key],
         render: options[key] || defaultRenderListElements[key],
       })),
@@ -24,6 +24,7 @@ export function createReactList(options: CreateReactListOptions = {}): ReactList
           if (entries) {
             event.preventDefault();
             (event.shiftKey ? core.decreaseListItemDepth : core.increaseListItemDepth)(editor, entries);
+
             return;
           }
         }

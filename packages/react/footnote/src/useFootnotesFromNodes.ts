@@ -10,6 +10,7 @@ function deepSearchFootnoteFromNodes(nodes: Descendant[]): FootnoteElement[] {
   const result = nodes.flatMap((element) => {
     const curNode = Node.isNode(element)
       && (element as FootnoteElement).type === FOOTNOTE_TYPE ? (element as FootnoteElement) : null;
+
     const child = Node.isNodeList((element as QuadratsElement)?.children)
       ? deepSearchFootnoteFromNodes((element as QuadratsElement)?.children ?? []) : null;
 
@@ -22,8 +23,8 @@ function deepSearchFootnoteFromNodes(nodes: Descendant[]): FootnoteElement[] {
 export function useFootnotesFromNodes(nodes: Descendant[]): FootnoteData[] {
   const filter = deepSearchFootnoteFromNodes(nodes);
 
-  return filter.map((element) => ({
-    wrapperText: (element?.children)?.map((childNode) => (childNode as QuadratsText).text as string).join(''),
+  return filter.map(element => ({
+    wrapperText: (element?.children)?.map(childNode => (childNode as QuadratsText).text as string).join(''),
     footnote: element.footnote,
     index: element.index,
   } as FootnoteData));

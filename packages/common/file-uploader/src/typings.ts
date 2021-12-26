@@ -45,12 +45,12 @@ export type FileUploaderUploadOptions = FileUploaderCreateFileUploaderElementOpt
 GetFilesFromInputOptions &
 TransformsInsertNodesOptions;
 
-export interface FileUploader extends Withable {
+export interface FileUploader<T extends Editor = Editor> extends Withable {
   type: string;
   createFileUploaderElement(
-    editor: Editor,
+    editor: T,
     file: File,
     options: FileUploaderCreateFileUploaderElementOptions
   ): Promise<FileUploaderElement | undefined>;
-  upload(editor: Editor, options: FileUploaderUploadOptions): Promise<void>;
+  upload(editor: T, options: FileUploaderUploadOptions): Promise<void>;
 }

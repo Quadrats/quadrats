@@ -1,7 +1,6 @@
 import { KeyboardEvent } from 'react';
 import isHotkey from 'is-hotkey';
 import {
-  Editor,
   Path,
   Transforms,
   PARAGRAPH_TYPE,
@@ -10,7 +9,7 @@ import {
   isNodeMatch,
   isSelectionAtBlockEdge,
 } from '@quadrats/core';
-import { Handler } from '@quadrats/react';
+import { Handler, ReactEditor } from '@quadrats/react';
 import { ExitBreakRule, SoftBreakRule } from './typings';
 
 export interface CreateOnKeyDownBreakOptions {
@@ -23,7 +22,7 @@ export interface CreateOnKeyDownBreakOptions {
 }
 
 export function createOnKeyDownBreak({ exitBreak, softBreak }: CreateOnKeyDownBreakOptions): Handler<'onKeyDown'> {
-  return (event: KeyboardEvent, editor: Editor, next) => {
+  return (event: KeyboardEvent, editor: ReactEditor, next) => {
     const { selection } = editor;
 
     if (selection) {
@@ -63,6 +62,7 @@ export function createOnKeyDownBreak({ exitBreak, softBreak }: CreateOnKeyDownBr
                 select: true,
               },
             );
+
             return;
           }
         }
@@ -76,6 +76,7 @@ export function createOnKeyDownBreak({ exitBreak, softBreak }: CreateOnKeyDownBr
             event.preventDefault();
 
             insertSoftBreak(editor);
+
             return;
           }
         }

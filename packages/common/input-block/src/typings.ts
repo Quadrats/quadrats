@@ -10,9 +10,9 @@ export interface InputBlockElement extends QuadratsElement, InputWidgetConfig {
   type: string;
 }
 
-export interface InputBlock extends Withable {
+export interface InputBlock<T extends Editor = Editor> extends Withable {
   type: string;
-  start(editor: Editor, config: InputWidgetConfig): void;
-  remove(editor: Editor, entry: NodeEntry<InputBlockElement>, foucs: VoidFunction): void;
+  start(editor: T, config: InputWidgetConfig): void;
+  remove(editor: T, entry: NodeEntry<InputBlockElement>, foucs: VoidFunction): void;
   confirm(element: InputBlockElement, value: string, remove: VoidFunction): void;
 }

@@ -11,7 +11,7 @@ export interface ReactInputBlockCreateRenderElementOptions {
 }
 
 export interface ReactInputBlock
-  extends Omit<InputBlock, 'remove' | 'confirm'>,
+  extends Omit<InputBlock<ReactEditor>, 'remove' | 'confirm'>,
   WithCreateRenderElement<[ReactInputBlockCreateRenderElementOptions?]> {
   remove(editor: ReactEditor, element: InputBlockElement): void;
   confirm(editor: ReactEditor, element: InputBlockElement, value: string): void;

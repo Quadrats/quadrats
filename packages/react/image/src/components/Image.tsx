@@ -10,16 +10,16 @@ function Image(props: RenderImageElementProps) {
     children,
     element, resizeImage, src,
   } = props;
+
   const editor = useSlateStatic();
   const { focusedAndSelected, imageRef, onResizeStart } = useImageResizer(element, resizeImage);
 
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
     <div
       {...attributes}
       className="qdr-image"
       onClick={() => Transforms.select(editor, ReactEditor.findPath(editor, element))}
-      onMouseDown={(event) => event.preventDefault()}
+      onMouseDown={event => event.preventDefault()}
       role="img"
     >
       <div className="qdr-image__spacer">{children}</div>

@@ -12,8 +12,9 @@ function createEventHandler(
 ): (event: GetEventByName<any>) => void {
   const [handler, ...restHandlers] = handlers;
 
-  return (event) => handler(event, editor, () => {
+  return event => handler(event, editor, () => {
     const next = restHandlers.length > 0 ? createEventHandler(editor, restHandlers) : () => {};
+
     next(event);
   });
 }
@@ -46,10 +47,12 @@ export function composeHandlers<H extends EventHandlerName>(
       [HH in H]?: Handler<HH>[];
     },
   );
+
   const handlersEntries = Object.entries(handlersListRecord) as [H, Handler<any>[]][];
 
-  return (editor) => handlersEntries.reduce((acc, [name, handlers]) => {
+  return editor => handlersEntries.reduce((acc, [name, handlers]) => {
     acc[name] = createEventHandler(editor, handlers);
+
     return acc;
   }, {} as EventHandlers);
 }

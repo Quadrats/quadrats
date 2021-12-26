@@ -10,5 +10,6 @@ export interface CreateRenderParagraphElementOptions {
 
 export function createRenderParagraphElement(options: CreateRenderParagraphElementOptions = {}) {
   const { render = defaultRenderParagraphElement } = options;
+
   return createRenderElement({ type: PARAGRAPH_TYPE, render });
 }

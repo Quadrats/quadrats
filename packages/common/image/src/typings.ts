@@ -54,7 +54,7 @@ export type ImageSizeSteps = ReadonlyArray<number>;
 export type ImageGetAboveImageFigureOptions = GetAboveByTypesOptions;
 export type ImageGetAboveImageCaptionOptions = GetAboveByTypesOptions;
 
-export interface Image<Hosting extends string> extends Withable {
+export interface Image<Hosting extends string, T extends Editor = Editor> extends Withable {
   /**
    * An object which keys are `figure`, `image`, 'caption` and values are the corresponding element types.
    */
@@ -69,24 +69,24 @@ export interface Image<Hosting extends string> extends Withable {
   sizeSteps?: ImageSizeSteps;
   isImageUrl(url: string): boolean;
   getAboveImageFigure(
-    editor: Editor,
+    editor: T,
     options?: ImageGetAboveImageFigureOptions
   ): NodeEntry<ImageFigureElement> | undefined;
   getAboveImageCaption(
-    editor: Editor,
+    editor: T,
     options?: ImageGetAboveImageCaptionOptions
   ): NodeEntry<ImageCaptionElement> | undefined;
-  isSelectionInImage(editor: Editor): boolean;
-  isSelectionInImageCaption(editor: Editor): boolean;
-  isCollapsedOnImage(editor: Editor): boolean;
+  isSelectionInImage(editor: T): boolean;
+  isSelectionInImageCaption(editor: T): boolean;
+  isCollapsedOnImage(editor: T): boolean;
   createImageElement(src: string, hosting?: Hosting): ImageFigureElement;
   insertImage(
-    editor: Editor,
+    editor: T,
     src: string,
     options?: {
       hosting?: Hosting;
       at?: Location;
     }
   ): void;
-  resizeImage(editor: Editor, entry: NodeEntry<QuadratsElement>, width: number): void;
+  resizeImage(editor: T, entry: NodeEntry<QuadratsElement>, width: number): void;
 }

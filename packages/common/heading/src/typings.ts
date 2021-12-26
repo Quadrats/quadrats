@@ -21,8 +21,11 @@ export interface WithEnabledHeadingLevels<L extends HeadingLevel> {
   enabledLevels: ReadonlyArray<L>;
 }
 
-export interface Heading<L extends HeadingLevel> extends WithElementType, Withable, WithEnabledHeadingLevels<L> {
-  getHeadingNodes(editor: Editor, level: L, options?: GetNodesOptions): Generator<NodeEntry<Node>>;
-  isSelectionInHeading(editor: Editor, level: L, options?: GetNodesOptions): boolean;
-  toggleHeadingNodes(editor: Editor, level: L, defaultType?: string): void;
+export interface Heading<
+  L extends HeadingLevel,
+  T extends Editor = Editor,
+> extends WithElementType, Withable, WithEnabledHeadingLevels<L> {
+  getHeadingNodes(editor: T, level: L, options?: GetNodesOptions): Generator<NodeEntry<Node>>;
+  isSelectionInHeading(editor: T, level: L, options?: GetNodesOptions): boolean;
+  toggleHeadingNodes(editor: T, level: L, defaultType?: string): void;
 }

@@ -9,5 +9,5 @@ import DefaultElement from './components/DefaultElement';
 export function composeRenderElements(
   renderElements: ((props: RenderElementProps) => JSX.Element | null | undefined)[],
 ) {
-  return composeRenderElementsBase((props) => <DefaultElement {...props} />, renderElements);
+  return composeRenderElementsBase(props => <DefaultElement {...props} />, renderElements);
 }

@@ -33,11 +33,11 @@ export interface FootnoteUpsertFootnoteOptions {
   at?: Range;
 }
 
-export interface Footnote extends WithElementType, Withable {
-  getFootnoteText(editor: Editor): string;
-  isSelectionInFootnote(editor: Editor): boolean;
-  unwrapFootnote(editor: Editor, options?: FootnoteUnwrapFootnoteOptions): void;
-  updateFootnoteIndex(editor: Editor, options?: FootnoteUpdateFootnoteIndexOptions): void;
-  upsertFootnoteAndUpdateIndex(editor: Editor, footnote: string, options?: FootnoteUpsertFootnoteOptions): void;
-  wrapFootnote(editor: Editor, footnote: string, options?: FootnoteWrapFootnoteOptions): void;
+export interface Footnote<T extends Editor = Editor> extends WithElementType, Withable {
+  getFootnoteText(editor: T): string;
+  isSelectionInFootnote(editor: T): boolean;
+  unwrapFootnote(editor: T, options?: FootnoteUnwrapFootnoteOptions): void;
+  updateFootnoteIndex(editor: T, options?: FootnoteUpdateFootnoteIndexOptions): void;
+  upsertFootnoteAndUpdateIndex(editor: T, footnote: string, options?: FootnoteUpsertFootnoteOptions): void;
+  wrapFootnote(editor: T, footnote: string, options?: FootnoteWrapFootnoteOptions): void;
 }

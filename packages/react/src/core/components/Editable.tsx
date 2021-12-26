@@ -22,6 +22,7 @@ function Editable(props: EditableProps) {
     style,
     ...slateEditableProps
   } = props;
+
   const { props: themeProps } = useTheme();
   const editor = useSlate();
   const isEditorEmpty = isAncestorEmpty(editor);
@@ -45,6 +46,7 @@ function Editable(props: EditableProps) {
     },
     [decorateProp, isEditorEmpty],
   );
+
   const onCompositionEnd = useCallback(
     (event: CompositionEvent<HTMLDivElement>) => {
       onCompositionEndProp?.(event);
@@ -52,6 +54,7 @@ function Editable(props: EditableProps) {
     },
     [onCompositionEndProp],
   );
+
   const onCompositionStart = useCallback(
     (event: CompositionEvent<HTMLDivElement>) => {
       onCompositionStartProp?.(event);
@@ -62,6 +65,7 @@ function Editable(props: EditableProps) {
     },
     [onCompositionStartProp, isEditorEmpty],
   );
+
   const renderLeaf = useCallback(
     (props) => {
       const children = renderLeafProp ? renderLeafProp(props) : <DefaultLeaf {...props} />;

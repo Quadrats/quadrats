@@ -13,6 +13,7 @@ function ToolbarInput({ exit, toolInput }: ToolbarInputProps) {
     event.preventDefault();
     exit();
   };
+
   const onKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
     const isEnter = event.key === 'Enter';
 
@@ -24,6 +25,7 @@ function ToolbarInput({ exit, toolInput }: ToolbarInputProps) {
       }
     }
   };
+
   const locale = useLocale();
   const placeholder = getPlaceholder(locale);
 
@@ -31,7 +33,6 @@ function ToolbarInput({ exit, toolInput }: ToolbarInputProps) {
     <div className="qdr-toolbar__input__wrapper">
       <input
         defaultValue={toolInput.defaultValue}
-        // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus
         className="qdr-toolbar__input"
         placeholder={placeholder}

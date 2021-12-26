@@ -31,7 +31,7 @@ export interface EmbedStrategy<EmbedData extends Record<string, unknown>, Render
 
 export type EmbedStrategies<Provider extends string> = Record<Provider, EmbedStrategy<any, any>>;
 
-export interface Embed<P extends string> extends WithElementType, Withable {
+export interface Embed<P extends string, T extends Editor = Editor> extends WithElementType, Withable {
   strategies: EmbedStrategies<P>;
-  insertEmbed(editor: Editor, providers: P[], embedCode: string, defaultNode?: Node | string): void;
+  insertEmbed(editor: T, providers: P[], embedCode: string, defaultNode?: Node | string): void;
 }

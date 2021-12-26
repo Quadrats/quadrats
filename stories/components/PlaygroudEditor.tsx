@@ -98,6 +98,7 @@ const underline = createReactUnderline();
 const heading = createReactHeading({
   enabledLevels: [1, 2, 3],
 });
+
 const blockquote = createReactBlockquote();
 const divider = createReactDivider();
 const embed = createReactEmbed({
@@ -111,17 +112,20 @@ const embed = createReactEmbed({
     spotify: SpotifyEmbedStrategy,
   },
 });
+
 const fileUploader = createReactFileUploader();
 const image = createReactImage({
   sizeSteps: [25, 50, 75],
   hostingResolvers: {
-    GCLOUD_STORAGE: (name) => `http://mmagym-static.rytass.com/${name}`,
+    GCLOUD_STORAGE: name => `http://mmagym-static.rytass.com/${name}`,
   },
 });
+
 const inputBlock = createReactInputBlock();
 const link = createReactLink({
   wrappableVoidTypes: [image.types.image],
 });
+
 const footnote = createReactFootnote();
 const list = createReactList();
 const readMore = createReactReadMore();
@@ -160,6 +164,7 @@ const createHandlers = composeHandlers([
   image.createHandlers(),
   lineBreak.createHandlers(),
 ]);
+
 const renderElement = composeRenderElements([
   createRenderParagraphElement({
     render: renderParagraphElementWithSymbol,
@@ -189,6 +194,7 @@ const renderElement = composeRenderElements([
   list.createRenderElement(),
   readMore.createRenderElement(),
 ]);
+
 const renderLeaf = composeRenderLeafs([
   bold.createRenderLeaf(),
   highlight.createRenderLeaf(),
@@ -211,6 +217,7 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
   const {
     theme, locale, value, setValue,
   } = props;
+
   const editor = useMemo(() => createPlaygroudEditor(), []);
   const handlers = useMemo(() => createHandlers(editor), [editor]);
 
@@ -239,9 +246,11 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
                 {footnoteTool}
               </>
             );
-          } if (image.isSelectionInImageCaption(editor)) {
-            return null;
-          } if (image.isCollapsedOnImage(editor)) {
+          }
+
+          if (image.isSelectionInImageCaption(editor)) return null;
+
+          if (image.isCollapsedOnImage(editor)) {
             return (
               <>
                 {linkTool}
@@ -249,7 +258,9 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
                 {footnoteTool}
               </>
             );
-          } if (blockquote.isSelectionInBlockquote(editor)) {
+          }
+
+          if (blockquote.isSelectionInBlockquote(editor)) {
             return blockquoteTool;
           }
 
@@ -270,58 +281,58 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
                   accept: ['image/*'],
                   createElement: {
                     image: {
-                      dataURL: (dataURL) => image.createImageElement(dataURL),
-                      response: (response) => image.createImageElement(JSON.parse(response).filename, 'GCLOUD_STORAGE'),
+                      dataURL: dataURL => image.createImageElement(dataURL),
+                      response: response => image.createImageElement(JSON.parse(response).filename, 'GCLOUD_STORAGE'),
                     },
                   },
-                  getBody: (file) => file,
-                  getHeaders: (file) => ({
+                  getBody: file => file,
+                  getHeaders: file => ({
                     Authorization: 'Bearer <Your OAuth2 Token>',
                     'Content-Type': file.type,
                   }),
-                  getUrl: (file) => `https://storage.googleapis.com/upload/storage/v1/b/<Your Bucket Name>/o?uploadType=media&name=${file.name}`,
+                  getUrl: file => `https://storage.googleapis.com/upload/storage/v1/b/<Your Bucket Name>/o?uploadType=media&name=${file.name}`,
                 }}
               />
               <EmbedToolbarIcon
                 icon={VideoIcon}
                 controller={embed}
                 providers={['youtube', 'vimeo']}
-                getPlaceholder={(locale) => locale.editor.video.inputPlaceholder}
+                getPlaceholder={locale => locale.editor.video.inputPlaceholder}
                 startToolInput={inputBlock.start}
               />
               <EmbedToolbarIcon
                 icon={InstagramIcon}
                 controller={embed}
                 providers={['instagram']}
-                getPlaceholder={(locale) => locale.editor.instagram.inputPlaceholder}
+                getPlaceholder={locale => locale.editor.instagram.inputPlaceholder}
                 startToolInput={inputBlock.start}
               />
               <EmbedToolbarIcon
                 icon={FacebookIcon}
                 controller={embed}
                 providers={['facebook']}
-                getPlaceholder={(locale) => locale.editor.facebook.inputPlaceholder}
+                getPlaceholder={locale => locale.editor.facebook.inputPlaceholder}
                 startToolInput={inputBlock.start}
               />
               <EmbedToolbarIcon
                 icon={TwitterIcon}
                 controller={embed}
                 providers={['twitter']}
-                getPlaceholder={(locale) => locale.editor.twitter.tweet.inputPlaceholder}
+                getPlaceholder={locale => locale.editor.twitter.tweet.inputPlaceholder}
                 startToolInput={inputBlock.start}
               />
               <EmbedToolbarIcon
                 icon={PodcastAppleIcon}
                 controller={embed}
                 providers={['podcastApple']}
-                getPlaceholder={(locale) => locale.editor.podcastApple.inputPlaceholder}
+                getPlaceholder={locale => locale.editor.podcastApple.inputPlaceholder}
                 startToolInput={inputBlock.start}
               />
               <EmbedToolbarIcon
                 icon={SpotifyIcon}
                 controller={embed}
                 providers={['spotify']}
-                getPlaceholder={(locale) => locale.editor.spotify.inputPlaceholder}
+                getPlaceholder={locale => locale.editor.spotify.inputPlaceholder}
                 startToolInput={inputBlock.start}
               />
               <ReadMoreToolbarIcon icon={ReadMoreIcon} controller={readMore} />

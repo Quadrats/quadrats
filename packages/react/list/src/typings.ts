@@ -1,5 +1,5 @@
 import { List, ListElement, ListTypeKey } from '@quadrats/common/list';
-import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps } from '@quadrats/react';
+import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps, ReactEditor } from '@quadrats/react';
 
 export type RenderListElementProps = RenderElementProps<ListElement>;
 
@@ -8,6 +8,6 @@ export type ReactListCreateRenderElementOptions = {
 };
 
 export interface ReactList
-  extends List,
+  extends List<ReactEditor>,
   WithCreateHandlers,
   WithCreateRenderElement<[ReactListCreateRenderElementOptions?]> {}

@@ -1,5 +1,5 @@
 import { readFileAsDataURL } from '@quadrats/utils';
-import { createParagraphElement, Transforms } from '@quadrats/core';
+import { createParagraphElement, Editor, Transforms } from '@quadrats/core';
 import { FileUploader, FileUploaderElement } from './typings';
 import { FILE_UPLOADER_TYPE } from './constants';
 import { getFilesFromInput } from './getFilesFromInput';
@@ -8,9 +8,13 @@ export interface CreateFileUploaderOptions {
   type?: string;
 }
 
-export function createFileUploader(options: CreateFileUploaderOptions = {}): FileUploader {
+export function createFileUploader(options: CreateFileUploaderOptions = {}): FileUploader<Editor> {
   const { type = FILE_UPLOADER_TYPE } = options;
-  const createFileUploaderElement: FileUploader['createFileUploaderElement'] = async (editor, file, options) => {
+  const createFileUploaderElement: FileUploader<Editor>['createFileUploaderElement'] = async (
+    editor,
+    file,
+    options,
+  ) => {
     const {
       createElement, getBody, getHeaders, getUrl,
     } = options;
@@ -42,6 +46,7 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
             throw xhr.response;
           }
         };
+
         xhr.upload.onprogress = ({ loaded, total }) => onProgress((loaded * 100) / total);
 
         if (!sent) {
@@ -67,7 +72,8 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
 
     return fileUploaderElement;
   };
-  const upload: FileUploader['upload'] = async (editor, options) => {
+
+  const upload: FileUploader<Editor>['upload'] = async (editor, options) => {
     const { accept, multiple } = options;
     const files = await getFilesFromInput({ accept, multiple });
 
@@ -77,6 +83,7 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
 
     files.reduce(async (prev, file) => {
       await prev;
+
       return createFileUploaderElement(editor, file, options).then((fileUploaderElement) => {
         if (fileUploaderElement) {
           Transforms.insertNodes(editor, [fileUploaderElement, createParagraphElement()], options);
@@ -91,8 +98,6 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
     createFileUploaderElement,
     upload,
     with(editor) {
-      // const { isVoid } = editor;
-      // editor.isVoid = element => element.type === type || isVoid(element);
       return editor;
     },
   };

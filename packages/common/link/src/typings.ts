@@ -26,15 +26,15 @@ export interface LinkUpsertLinkOptions {
   at?: Range;
 }
 
-export interface Link extends WithElementType, Withable {
+export interface Link<T extends Editor = Editor> extends WithElementType, Withable {
   isUrl(value: string): boolean;
   /**
    * To get the first previous text which is url and its range.
    */
-  getFirstPrevTextAsUrlAndRange(editor: Editor, at: Location): { url: string; at: Range } | undefined;
-  isSelectionInLink(editor: Editor): boolean;
-  insertLink(editor: Editor, url: string, options?: LinkInsertLinkOptions): void;
-  unwrapLink(editor: Editor, options?: LinkUnwrapLinkOptions): void;
-  wrapLink(editor: Editor, url: string, options?: LinkWrapLinkOptions): void;
-  upsertLink(editor: Editor, url: string, options?: LinkUpsertLinkOptions): void;
+  getFirstPrevTextAsUrlAndRange(editor: T, at: Location): { url: string; at: Range } | undefined;
+  isSelectionInLink(editor: T): boolean;
+  insertLink(editor: T, url: string, options?: LinkInsertLinkOptions): void;
+  unwrapLink(editor: T, options?: LinkUnwrapLinkOptions): void;
+  wrapLink(editor: T, url: string, options?: LinkWrapLinkOptions): void;
+  upsertLink(editor: T, url: string, options?: LinkUpsertLinkOptions): void;
 }

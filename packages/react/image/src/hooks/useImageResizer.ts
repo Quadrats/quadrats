@@ -10,6 +10,7 @@ import { ReactImage } from '../typings';
 
 function isTouchEvent<M, T>(event: M | T): event is T {
   const { touches } = event as any;
+
   return !!(touches && touches.length);
 }
 
@@ -85,6 +86,7 @@ export function useImageResizer(element: ImageElement, resizeImage: ReactImage<a
         height,
         ratio,
       } = startPoint;
+
       let left; let
         top;
 
@@ -102,6 +104,7 @@ export function useImageResizer(element: ImageElement, resizeImage: ReactImage<a
         newWidth = width + left;
       } else {
         const newHeight = height + top;
+
         newWidth = newHeight * ratio;
       }
 
@@ -114,12 +117,12 @@ export function useImageResizer(element: ImageElement, resizeImage: ReactImage<a
       setStartPoint(undefined);
     }
 
-    moveEvents.forEach((moveEvent) => document.addEventListener(moveEvent, onResize));
-    endEvents.forEach((endEvent) => document.addEventListener(endEvent, onCancelResize));
+    moveEvents.forEach(moveEvent => document.addEventListener(moveEvent, onResize));
+    endEvents.forEach(endEvent => document.addEventListener(endEvent, onCancelResize));
 
     return () => {
-      moveEvents.forEach((moveEvent) => document.removeEventListener(moveEvent, onResize));
-      endEvents.forEach((endEvent) => document.removeEventListener(endEvent, onCancelResize));
+      moveEvents.forEach(moveEvent => document.removeEventListener(moveEvent, onResize));
+      endEvents.forEach(endEvent => document.removeEventListener(endEvent, onCancelResize));
     };
   }, [editor, element, focusedAndSelected, resizeImage, startPoint]);
 

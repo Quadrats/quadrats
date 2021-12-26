@@ -24,30 +24,30 @@ export interface ListGetAboveListEntriesOptions {
   at?: Location;
 }
 
-export interface List extends Withable {
+export interface List<T extends Editor = Editor> extends Withable {
   /**
    * An object which keys are `ul`, `ol`, `li` and values are the corresponding element types.
    */
   types: ListTypes;
   isListElement(node: Node): node is QuadratsElement;
   isListItemElement(node: Node): node is QuadratsElement;
-  isSelectionInList(editor: Editor, listTypeKey: ListRootTypeKey): boolean;
+  isSelectionInList(editor: T, listTypeKey: ListRootTypeKey): boolean;
   /**
    * If expanded, get the list wrapping the location.
    */
-  getAboveListAndItem(editor: Editor, options?: ListGetAboveListEntriesOptions): ListAboveListAndItem | undefined;
-  unwrapList(editor: Editor): void;
-  toggleList(editor: Editor, listTypeKey: ListRootTypeKey, defaultType?: string): void;
+  getAboveListAndItem(editor: T, options?: ListGetAboveListEntriesOptions): ListAboveListAndItem | undefined;
+  unwrapList(editor: T): void;
+  toggleList(editor: T, listTypeKey: ListRootTypeKey, defaultType?: string): void;
   /**
    * Increase the depth of the first item in the location if increasable.
    */
-  increaseListItemDepth(editor: Editor, entries: ListAboveListAndItem): void;
+  increaseListItemDepth(editor: T, entries: ListAboveListAndItem): void;
   /**
    * Decrease the depth of the first item in the location if decreasable.
    */
-  decreaseListItemDepth(editor: Editor, entries: ListAboveListAndItem): void;
+  decreaseListItemDepth(editor: T, entries: ListAboveListAndItem): void;
   /**
    * Unwrap the list if at root, or decrease the depth of list item.
    */
-  decreaseListItemDepthOrUnwrapIfNeed(editor: Editor, entries: ListAboveListAndItem): void;
+  decreaseListItemDepthOrUnwrapIfNeed(editor: T, entries: ListAboveListAndItem): void;
 }

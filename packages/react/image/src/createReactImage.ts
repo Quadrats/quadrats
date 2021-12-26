@@ -30,6 +30,7 @@ export function createReactImage<Hosting extends string>(
 
           if (figurePath) {
             Transforms.removeNodes(editor, { at: figurePath });
+
             return;
           }
         }
@@ -44,6 +45,7 @@ export function createReactImage<Hosting extends string>(
           if (isHotkey('mod+a', event as any)) {
             event.preventDefault();
             Transforms.select(editor, captionPath);
+
             return;
           }
         }
@@ -103,6 +105,7 @@ export function createReactImage<Hosting extends string>(
         if (text) {
           if (core.isImageUrl(text)) {
             core.insertImage(editor, text);
+
             return;
           }
         }
@@ -114,12 +117,15 @@ export function createReactImage<Hosting extends string>(
           [...files]
             .filter((file) => {
               const [mime] = file.type.split('/');
+
               return mime === 'image';
             })
             .reduce(async (prev, imageFile) => {
               await prev;
-              return readFileAsDataURL(imageFile).then((dataURL) => core.insertImage(editor, dataURL));
+
+              return readFileAsDataURL(imageFile).then(dataURL => core.insertImage(editor, dataURL));
             }, Promise.resolve());
+
           return;
         }
 

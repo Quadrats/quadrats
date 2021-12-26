@@ -1,5 +1,5 @@
 import { BlockquoteElement, Blockquote } from '@quadrats/common/blockquote';
-import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps } from '@quadrats/react';
+import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps, ReactEditor } from '@quadrats/react';
 
 export type RenderBlockquoteElementProps = RenderElementProps<BlockquoteElement>;
 
@@ -15,6 +15,6 @@ export interface ReactBlockquoteCreateRenderElementOptions {
 }
 
 export interface ReactBlockquote
-  extends Blockquote,
+  extends Blockquote<ReactEditor>,
   WithCreateHandlers<[ReactBlockquoteCreateHandlersOptions?]>,
   WithCreateRenderElement<[ReactBlockquoteCreateRenderElementOptions?]> {}

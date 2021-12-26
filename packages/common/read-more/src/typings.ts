@@ -10,7 +10,7 @@ export interface ReadMoreElement extends QuadratsElement, WithElementType {
   children: [Text];
 }
 
-export interface ReadMore extends WithElementType, Withable {
+export interface ReadMore<T extends Editor = Editor> extends WithElementType, Withable {
   createReadMoreElement(): ReadMoreElement;
-  insertReadMore(editor: Editor): void;
+  insertReadMore(editor: T): void;
 }

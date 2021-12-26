@@ -1,5 +1,5 @@
 import { Link, LinkElement } from '@quadrats/common/link';
-import { RenderElementProps, ReactWithable, WithCreateRenderElement } from '@quadrats/react';
+import { RenderElementProps, ReactWithable, WithCreateRenderElement, ReactEditor } from '@quadrats/react';
 
 export type RenderLinkElementProps = RenderElementProps<LinkElement>;
 
@@ -8,6 +8,6 @@ export interface ReactLinkCreateRenderElementOptions {
 }
 
 export interface ReactLink
-  extends Omit<Link, 'with'>,
+  extends Omit<Link<ReactEditor>, 'with'>,
   WithCreateRenderElement<[ReactLinkCreateRenderElementOptions?]>,
   ReactWithable {}

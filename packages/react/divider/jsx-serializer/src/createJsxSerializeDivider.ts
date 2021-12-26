@@ -7,5 +7,6 @@ export type CreateJsxSerializeDividerOptions = Partial<CreateJsxSerializeElement
 
 export function createJsxSerializeDivider(options: CreateJsxSerializeDividerOptions = {}) {
   const { type = DIVIDER_TYPE, render = defaultRenderDividerElement } = options;
+
   return createJsxSerializeElement({ type, render });
 }

@@ -1,5 +1,5 @@
 import { Heading, HeadingElement, HeadingLevel } from '@quadrats/common/heading';
-import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps } from '@quadrats/react';
+import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps, ReactEditor } from '@quadrats/react';
 
 export type RenderHeadingElementProps = RenderElementProps<HeadingElement>;
 
@@ -15,6 +15,6 @@ export interface ReactHeadingCreateRenderElementOptions {
 }
 
 export interface ReactHeading<Level extends HeadingLevel>
-  extends Heading<Level>,
+  extends Heading<Level, ReactEditor>,
   WithCreateHandlers<[ReactHeadingCreateHandlersOptions?]>,
   WithCreateRenderElement<[ReactHeadingCreateRenderElementOptions?]> {}
