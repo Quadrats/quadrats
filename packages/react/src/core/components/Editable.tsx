@@ -5,10 +5,14 @@ import clsx from 'clsx';
 import { BaseRange, Editor, isAncestorEmpty } from '@quadrats/core';
 import { useLocale, useTheme } from '@quadrats/react/configs';
 import DefaultLeaf from './DefaultLeaf';
+import { RenderElementProps, RenderLeafProps } from '../typings/renderer';
 
 const PLACEHOLDER_KEY = '__quadrats-placeholder__';
 
-export type EditableProps = SlateEditableProps;
+export type EditableProps = Omit<SlateEditableProps, 'renderLeaf' | 'renderElement'> & {
+  renderLeaf?: (props: RenderLeafProps) => JSX.Element;
+  renderElement?: (props: RenderElementProps) => JSX.Element;
+};
 
 function Editable(props: EditableProps) {
   const locale = useLocale();
