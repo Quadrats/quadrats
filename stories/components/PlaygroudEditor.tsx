@@ -30,7 +30,6 @@ import {
 import { Theme } from '@quadrats/theme';
 import { LocaleDefinition } from '@quadrats/locales';
 import { pipe } from '@quadrats/utils';
-import { Descendant } from '@quadrats/core';
 import {
   Quadrats,
   Editable,
@@ -38,6 +37,7 @@ import {
   composeRenderElements,
   composeRenderLeafs,
   composeHandlers,
+  Descendant,
 } from '@quadrats/react';
 import { createRenderParagraphElement, renderParagraphElementWithSymbol } from '@quadrats/react/paragraph';
 import { createReactLineBreak, renderLineBreakElementWithSymbol } from '@quadrats/react/line-break';
