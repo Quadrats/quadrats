@@ -1,9 +1,13 @@
 import React from 'react';
 import { Slate } from 'slate-react';
 import { ConfigsProvider, ConfigsProviderProps } from '@quadrats/react/configs';
+import { Descendant } from '..';
 
-export type QuadratsProps = Pick<Parameters<typeof Slate>[0], 'children' | 'editor' | 'onChange' | 'value'> &
-Omit<ConfigsProviderProps, 'children'>;
+export type QuadratsProps = Pick<Parameters<typeof Slate>[0], 'children' | 'editor'> &
+Omit<ConfigsProviderProps, 'children'> & {
+  onChange: (value: Descendant[]) => void;
+  value: Descendant[];
+};
 
 /**
  * Provide configs of quadrats and control the value.
