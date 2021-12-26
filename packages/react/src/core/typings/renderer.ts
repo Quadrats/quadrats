@@ -2,7 +2,7 @@ import {
   RenderElementProps as SlateReactRenderElementProps,
   RenderLeafProps as SlateRenderLeafProps,
 } from 'slate-react';
-import { Element } from '@quadrats/core';
+import { QuadratsElement } from '@quadrats/core';
 import {
   CreateRenderElementOptionsBase,
   CreateRenderMarkOptionsBase,
@@ -15,12 +15,13 @@ export type RenderLeafProps = RenderLeafPropsBase & Pick<SlateRenderLeafProps, '
 
 export type RenderMarkProps<M> = RenderMarkPropsBase<M>;
 
-export type RenderElementProps<E extends Element = Element> = RenderElementPropsBase<E> &
+export type RenderElementProps<E extends QuadratsElement = QuadratsElement> = RenderElementPropsBase<E> &
 Pick<SlateReactRenderElementProps, 'attributes'>;
 
 export type CreateRenderMarkOptions<M> = CreateRenderMarkOptionsBase<M, RenderMarkProps<M>>;
 
-export type CreateRenderElementOptions<P extends RenderElementProps<Element>> = CreateRenderElementOptionsBase<P>;
+export type CreateRenderElementOptions<P extends RenderElementProps<QuadratsElement>>
+  = CreateRenderElementOptionsBase<P>;
 
 export interface WithCreateRenderLeaf<P extends any[] = []> {
   createRenderLeaf: (...params: P) => (props: RenderLeafProps) => JSX.Element;

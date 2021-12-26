@@ -1,12 +1,12 @@
 import {
   Editor,
-  Element,
+  QuadratsElement,
   NodeEntry,
   Withable,
 } from '@quadrats/core';
 import { InputWidgetConfig } from '@quadrats/common/input-widget';
 
-export interface InputBlockElement extends Element, InputWidgetConfig {
+export interface InputBlockElement extends QuadratsElement, InputWidgetConfig {
   type: string;
 }
 

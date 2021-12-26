@@ -1,13 +1,13 @@
 import {
   Editor,
-  Element,
+  QuadratsElement,
   Node,
   Text,
   Withable,
   WithElementType,
 } from '@quadrats/core';
 
-export interface EmbedElement extends Element, WithElementType {
+export interface EmbedElement extends QuadratsElement, WithElementType {
   /**
    * The embed provider.
    *

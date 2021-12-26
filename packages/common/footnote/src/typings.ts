@@ -1,7 +1,7 @@
 import {
   Editor,
   Range,
-  Element,
+  QuadratsElement,
   WithElementType,
   UnwrapNodeByTypesOptions,
   TransformsWrapNodesOptions,
@@ -14,7 +14,7 @@ export interface FootnoteData {
   wrapperText: string,
 }
 
-export interface FootnoteElement extends Element, WithElementType {
+export interface FootnoteElement extends QuadratsElement, WithElementType {
   footnote: string;
   index?: number;
 }

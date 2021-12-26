@@ -3,6 +3,7 @@ import {
   getNodes,
   normalizeOnlyInlineOrTextInChildren,
   PARAGRAPH_TYPE,
+  QuadratsElement,
   Transforms,
   WithElementType,
 } from '@quadrats/core';
@@ -22,13 +23,15 @@ export function createHeading<L extends HeadingLevel = HeadingLevel>({
 }: CreateHeadingOptions<L> = {}): Heading<L> {
   const getHeadingNodes: Heading<L>['getHeadingNodes'] = (editor, level, options = {}) => getNodes(editor, {
     ...options,
-    match: (node) => (node as HeadingElement).type === type && (node as HeadingElement).level === level,
+    match: node => (node as HeadingElement).type === type && (node as HeadingElement).level === level,
   });
 
   const isSelectionInHeading: Heading<L>['isSelectionInHeading'] = (editor, level, options = {}) => {
     const [match] = getHeadingNodes(editor, level, options);
+
     return !!match;
   };
+
   const toggleHeadingNodes: Heading<L>['toggleHeadingNodes'] = (editor, level, defaultType = PARAGRAPH_TYPE) => {
     if (enabledLevels.includes(level)) {
       const isActive = isSelectionInHeading(editor, level);
@@ -36,7 +39,7 @@ export function createHeading<L extends HeadingLevel = HeadingLevel>({
       const heading: HeadingElement = { type, level, children: [] };
       const node = isActive ? defaultNode : heading;
 
-      Transforms.setNodes(editor, node);
+      Transforms.setNodes(editor, node as QuadratsElement);
     } else {
       throw new Error(`Only ${enabledLevels} levels are enabled.`);
     }
@@ -54,12 +57,13 @@ export function createHeading<L extends HeadingLevel = HeadingLevel>({
       editor.normalizeNode = (entry) => {
         const [node, path] = entry;
 
-        if (Element.isElement(node) && node.type === type) {
+        if (Element.isElement(node) && (node as QuadratsElement).type === type) {
           /**
            * Set invalid level elements to default.
            */
           if (!enabledLevels.includes((node as HeadingElement).level as L)) {
-            Transforms.setNodes(editor, { type: PARAGRAPH_TYPE }, { at: path });
+            Transforms.setNodes(editor, { type: PARAGRAPH_TYPE } as QuadratsElement, { at: path });
+
             return;
           }
 

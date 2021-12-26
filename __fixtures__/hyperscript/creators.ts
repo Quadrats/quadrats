@@ -4,6 +4,7 @@ import {
   Editor,
   Element,
   Node,
+  QuadratsElement,
   Range,
   Text,
 } from '@quadrats/core';
@@ -36,6 +37,7 @@ const resolveDescendants = (children: any[]): Descendant[] => {
 
     if (typeof child === 'string') {
       const text = { text: child };
+
       STRINGS.add(text);
       child = text;
     }
@@ -95,7 +97,7 @@ export function createCursor(tagName: string, attributes: { [key: string]: any }
  * Create an `Element` object.
  */
 
-export function createElement(tagName: string, attributes: { [key: string]: any }, children: any[]): Element {
+export function createElement(tagName: string, attributes: { [key: string]: any }, children: any[]): QuadratsElement {
   return { ...attributes, children: resolveDescendants(children) };
 }
 
@@ -120,8 +122,8 @@ export function createFragment(tagName: string, attributes: { [key: string]: any
  */
 
 export function createSelection(tagName: string, attributes: { [key: string]: any }, children: any[]): Range {
-  const anchor: AnchorToken = children.find((c) => c instanceof AnchorToken);
-  const focus: FocusToken = children.find((c) => c instanceof FocusToken);
+  const anchor: AnchorToken = children.find(c => c instanceof AnchorToken);
+  const focus: FocusToken = children.find(c => c instanceof FocusToken);
 
   if (!anchor || !anchor.offset || !anchor.path) {
     throw new Error(
@@ -176,6 +178,7 @@ export function createText(tagName: string, attributes: { [key: string]: any }, 
   STRINGS.delete(node);
 
   Object.assign(node, attributes);
+
   return node;
 }
 
@@ -198,6 +201,7 @@ export function createEditor(tagName: string, attributes: { [key: string]: any }
   const descendants = resolveDescendants(otherChildren);
   const selection: Partial<Range> = {};
   const editor = makeEditor();
+
   Object.assign(editor, attributes);
   editor.children = descendants;
 
@@ -209,11 +213,13 @@ export function createEditor(tagName: string, attributes: { [key: string]: any }
 
     if (anchor != null) {
       const [offset] = anchor;
+
       selection.anchor = { path, offset };
     }
 
     if (focus != null) {
       const [offset] = focus;
+
       selection.focus = { path, offset };
     }
   }

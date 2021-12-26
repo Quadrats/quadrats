@@ -6,6 +6,7 @@ import {
   getRangeBefore,
   getRangeBeforeFromAboveBlockStart,
   isNodesTypeIn,
+  QuadratsElement,
   Range,
   Text,
   Transforms,
@@ -74,7 +75,8 @@ export function createLink({
       }
     }
   };
-  const isSelectionInLink: Link['isSelectionInLink'] = (editor) => isNodesTypeIn(editor, [type]);
+
+  const isSelectionInLink: Link['isSelectionInLink'] = editor => isNodesTypeIn(editor, [type]);
   const insertLink: Link['insertLink'] = (editor, url, options = {}) => {
     const { text = url } = options;
     const link: LinkElement = {
@@ -85,12 +87,14 @@ export function createLink({
 
     Transforms.insertNodes(editor, link, options);
   };
+
   const unwrapLink: Link['unwrapLink'] = (editor, options = {}) => unwrapNodesByTypes(editor, [type], options);
   const wrapLink: Link['wrapLink'] = (editor, url, options = {}) => {
     const link: LinkElement = { type, url, children: [] };
 
     wrapNodesWithUnhangRange(editor, link, { ...options, split: true });
   };
+
   const upsertLink: Link['upsertLink'] = (editor, url, options = {}) => {
     const { at = editor.selection } = options;
 
@@ -165,7 +169,7 @@ export function createLink({
       }
 
       editor.isInline = (element) => {
-        if (element.type !== type) {
+        if ((element as QuadratsElement).type !== type) {
           return isInline(element);
         }
 
@@ -174,20 +178,22 @@ export function createLink({
         }
 
         return !element.children.some(
-          (child) => Editor.isBlock(editor, child)
+          child => Editor.isBlock(editor, child)
           && Editor.isVoid(editor, child)
-          && wrappableVoidTypes.includes(child.type as string),
+          && wrappableVoidTypes.includes((child as QuadratsElement).type as string),
         );
       };
+
       editor.normalizeNode = (entry) => {
         const [node, path] = entry;
 
-        if (Element.isElement(node) && node.type === type) {
+        if (Element.isElement(node) && (node as QuadratsElement).type === type) {
           /**
            * Remove invalid url.
            */
           if (!isUrl((node as LinkElement).url as string)) {
             Transforms.unwrapNodes(editor, { at: path });
+
             return;
           }
 
@@ -195,8 +201,9 @@ export function createLink({
            * Remove empty content.
            */
           if (Text.isTextList(node.children)) {
-            if (node.children.every((textNode) => !textNode.text)) {
+            if (node.children.every(textNode => !textNode.text)) {
               Transforms.unwrapNodes(editor, { at: path });
+
               return;
             }
           }

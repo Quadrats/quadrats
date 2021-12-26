@@ -1,10 +1,8 @@
-import {
-  Element,
-  Text,
-} from 'slate';
+import { Text } from 'slate';
+import { QuadratsElement } from '..';
 import { Withable, WithElementType } from '../adapter/slate';
 
-export interface LineBreakElement extends Element, WithElementType, Text {
+export interface LineBreakElement extends QuadratsElement, WithElementType, Text {
   children: [Text];
 }
 

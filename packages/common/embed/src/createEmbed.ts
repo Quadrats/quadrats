@@ -2,6 +2,7 @@ import {
   Element,
   normalizeVoidElementChildren,
   PARAGRAPH_TYPE,
+  QuadratsElement,
   Transforms,
 } from '@quadrats/core';
 import {
@@ -30,8 +31,10 @@ export function createEmbed<P extends string>(options: CreateEmbedOptions<P>): E
 
       Transforms.insertNodes(editor, [
         embedElement,
-        typeof defaultNode === 'string' ? { type: defaultNode, children: [{ text: '' }] } : defaultNode,
+        typeof defaultNode === 'string'
+          ? { type: defaultNode, children: [{ text: '' }] } as QuadratsElement : defaultNode,
       ]);
+
       Transforms.move(editor);
     }
   };
@@ -43,20 +46,21 @@ export function createEmbed<P extends string>(options: CreateEmbedOptions<P>): E
     with(editor) {
       const { isVoid, normalizeNode } = editor;
 
-      editor.isVoid = (element) => element.type === type || isVoid(element);
+      editor.isVoid = element => (element as QuadratsElement).type === type || isVoid(element);
       editor.normalizeNode = (entry) => {
         const [node, path] = entry;
 
-        if (Element.isElement(node) && node.type === type) {
+        if (Element.isElement(node) && (node as QuadratsElement).type === type) {
           const strategy = (node as EmbedElement).provider
             ? strategies[(node as EmbedElement).provider as P] : undefined;
 
-          if (!strategy || !strategy.isElementDataValid(node as Record<string, unknown>)) {
+          if (!strategy || !strategy.isElementDataValid(node as QuadratsElement as Record<string, unknown>)) {
             Transforms.removeNodes(editor, { at: path });
+
             return;
           }
 
-          if (normalizeVoidElementChildren(editor, [node, path])) {
+          if (normalizeVoidElementChildren(editor, [node as QuadratsElement, path])) {
             return;
           }
         }

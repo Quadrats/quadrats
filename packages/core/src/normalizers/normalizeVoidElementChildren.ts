@@ -1,13 +1,12 @@
 import {
   Editor,
-  Element,
   NodeEntry,
   Text,
   Transforms,
 } from 'slate';
 import { QuadratsText, QuadratsElement } from '../typings';
 
-export function normalizeVoidElementChildren(editor: Editor, entry: NodeEntry<Element>): boolean {
+export function normalizeVoidElementChildren(editor: Editor, entry: NodeEntry<QuadratsElement>): boolean {
   const [element, path] = entry;
 
   /**
@@ -20,6 +19,7 @@ export function normalizeVoidElementChildren(editor: Editor, entry: NodeEntry<El
       Transforms.removeNodes(editor, { at: path });
       Transforms.insertNodes(editor, { ...element, children: [{ text: '' }] }, { at: path });
     });
+
     return true;
   }
 

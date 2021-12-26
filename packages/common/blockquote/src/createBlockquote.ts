@@ -2,6 +2,7 @@ import {
   Element,
   isNodesTypeIn,
   normalizeOnlyInlineOrTextInChildren,
+  QuadratsElement,
   toggleNodesType,
   WithElementType,
 } from '@quadrats/core';
@@ -13,15 +14,15 @@ export type CreateBlockquoteOptions = Partial<WithElementType>;
 export function createBlockquote({ type = BLOCKQUOTE_TYPE }: CreateBlockquoteOptions = {}): Blockquote {
   return {
     type,
-    isSelectionInBlockquote: (editor) => isNodesTypeIn(editor, [type]),
-    toggleBlockquote: (editor) => toggleNodesType(editor, type),
+    isSelectionInBlockquote: editor => isNodesTypeIn(editor, [type]),
+    toggleBlockquote: editor => toggleNodesType(editor, type),
     with(editor) {
       const { normalizeNode } = editor;
 
       editor.normalizeNode = (entry) => {
         const [node] = entry;
 
-        if (Element.isElement(node) && node.type === type) {
+        if (Element.isElement(node) && (node as QuadratsElement).type === type) {
           if (normalizeOnlyInlineOrTextInChildren(editor, entry)) {
             return;
           }

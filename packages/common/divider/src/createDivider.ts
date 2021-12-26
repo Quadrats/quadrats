@@ -2,6 +2,7 @@ import {
   createParagraphElement,
   Element,
   normalizeVoidElementChildren,
+  QuadratsElement,
   Transforms,
   WithElementType,
 } from '@quadrats/core';
@@ -25,15 +26,15 @@ export function createDivider(options: CreateDividerOptions = {}): Divider {
     with(editor) {
       const { isVoid, normalizeNode } = editor;
 
-      editor.isVoid = (element) => element.type === type || isVoid(element);
+      editor.isVoid = element => (element as QuadratsElement).type === type || isVoid(element);
       editor.normalizeNode = (entry) => {
         const [node, path] = entry;
 
         /**
          * Only accept single empty text inside void element.
          */
-        if (Element.isElement(node) && node.type === type) {
-          if (normalizeVoidElementChildren(editor, [node, path])) {
+        if (Element.isElement(node) && (node as QuadratsElement).type === type) {
+          if (normalizeVoidElementChildren(editor, [node as QuadratsElement, path])) {
             return;
           }
         }

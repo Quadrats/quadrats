@@ -1,5 +1,6 @@
 import { Editor, Transforms } from 'slate';
 import { LINE_BREAK_TYPE } from '../line-break';
+import { QuadratsElement } from '../typings';
 
 export function insertSoftBreak(editor: Editor) {
   let originPath;
@@ -8,7 +9,7 @@ export function insertSoftBreak(editor: Editor) {
     originPath = editor.selection.focus.path;
   }
 
-  editor.insertNode({ type: LINE_BREAK_TYPE, children: [{ text: '\n' }] });
+  editor.insertNode({ type: LINE_BREAK_TYPE, children: [{ text: '\n' }] } as QuadratsElement);
 
   if (originPath) {
     Transforms.select(editor, {

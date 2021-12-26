@@ -1,5 +1,5 @@
-import { Element } from 'slate';
+import { QuadratsElement } from '@quadrats/core';
 
 export interface WithElementParent {
-  parent: (Element & WithElementParent) | undefined;
+  parent: (QuadratsElement & WithElementParent) | undefined;
 }

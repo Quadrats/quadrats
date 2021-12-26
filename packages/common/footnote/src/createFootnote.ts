@@ -2,6 +2,7 @@
 import {
   getNodes,
   isNodesTypeIn,
+  QuadratsElement,
   Transforms,
   unwrapNodesByTypes,
   WithElementType,
@@ -15,7 +16,7 @@ export type CreateFootnoteOptions = Partial<WithElementType>;
 export function createFootnote({
   type = FOOTNOTE_TYPE,
 }: CreateFootnoteOptions = {}): Footnote {
-  const isSelectionInFootnote: Footnote['isSelectionInFootnote'] = (editor) => isNodesTypeIn(editor, [type]);
+  const isSelectionInFootnote: Footnote['isSelectionInFootnote'] = editor => isNodesTypeIn(editor, [type]);
 
   const getFootnoteText: Footnote['getFootnoteText'] = (editor) => {
     const at = editor.selection;
@@ -23,8 +24,9 @@ export function createFootnote({
     if (!at) {
       return '';
     }
+
     const firstNode = Array.from(
-      getNodes(editor, { at, match: (node) => (node as FootnoteElement).type === type }),
+      getNodes(editor, { at, match: node => (node as FootnoteElement).type === type }),
     )?.[0]?.[0];
 
     return (firstNode as FootnoteElement)?.footnote as string;
@@ -33,7 +35,7 @@ export function createFootnote({
   const updateFootnoteIndex: Footnote['updateFootnoteIndex'] = (editor, options = { startAt: 1 }) => {
     let footnoteCount: number = options?.startAt ?? 1;
 
-    for (const [, path] of getNodes(editor, { at: [], match: (node) => (node as FootnoteElement).type === FOOTNOTE_TYPE })) {
+    for (const [, path] of getNodes(editor, { at: [], match: node => (node as FootnoteElement).type === FOOTNOTE_TYPE })) {
       Transforms.setNodes(editor, { index: footnoteCount } as FootnoteElement, { at: path });
       footnoteCount += 1;
     }
@@ -53,6 +55,7 @@ export function createFootnote({
 
     wrapNodesWithUnhangRange(editor, footnote, { ...options, split: true });
   };
+
   const upsertFootnoteAndUpdateIndex: Footnote['upsertFootnoteAndUpdateIndex'] = (editor, footnoteText, options = {}) => {
     const { at = editor.selection } = options;
 
@@ -62,7 +65,7 @@ export function createFootnote({
 
     if (footnoteText !== '') {
       if (isSelectionInFootnote(editor)) {
-        Transforms.setNodes(editor, { footnote: footnoteText } as FootnoteElement, { at, match: (node) => (node as FootnoteElement).type === type });
+        Transforms.setNodes(editor, { footnote: footnoteText } as FootnoteElement, { at, match: node => (node as FootnoteElement).type === type });
       } else {
         wrapFootnote(editor, footnoteText, options);
       }
@@ -84,7 +87,7 @@ export function createFootnote({
     with(editor) {
       const { isInline } = editor;
 
-      editor.isInline = (element) => element.type === type || isInline(element);
+      editor.isInline = element => (element as QuadratsElement).type === type || isInline(element);
 
       return editor;
     },

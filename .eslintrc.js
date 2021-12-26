@@ -241,7 +241,6 @@ module.exports = {
         },
       },
       extends: [
-        'airbnb/hooks',
         'plugin:react/recommended',
       ],
       plugins: [

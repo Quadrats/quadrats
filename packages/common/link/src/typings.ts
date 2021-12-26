@@ -2,7 +2,6 @@ import {
   Editor,
   Location,
   Range,
-  Element,
   WithElementType,
   TransformsInsertNodesOptions,
   UnwrapNodeByTypesOptions,
@@ -11,7 +10,7 @@ import {
   QuadratsElement,
 } from '@quadrats/core';
 
-export interface LinkElement extends Element, WithElementType, QuadratsElement {
+export interface LinkElement extends QuadratsElement, WithElementType {
   url: string;
 }
 

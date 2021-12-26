@@ -1,6 +1,6 @@
 import {
   Editor,
-  Element,
+  QuadratsElement,
   Path,
   TransformsInsertNodesOptions,
   Withable,
@@ -11,7 +11,7 @@ export interface XHRUploadHeaders {
   [name: string]: string;
 }
 
-export interface FileUploaderElement extends Element {
+export interface FileUploaderElement extends QuadratsElement {
   type: string;
   register: (getPath: () => Path | undefined, onProgress: (percentage: number) => void) => VoidFunction;
 }
@@ -19,11 +19,11 @@ export interface FileUploaderElement extends Element {
 /**
  * For creating temorary element while uploading.
  */
-export type FileUploaderCreateElementByDataURL = (dataURL: string) => Element;
+export type FileUploaderCreateElementByDataURL = (dataURL: string) => QuadratsElement;
 /**
  * For create element after uploaded.
  */
-export type FileUploaderCreateElementByResponse = (response: any) => Element;
+export type FileUploaderCreateElementByResponse = (response: any) => QuadratsElement;
 
 export type FileUploaderGetBody = (file: File) => BodyInit;
 export type FileUploaderGetHeaders = (file: File) => XHRUploadHeaders | Promise<XHRUploadHeaders>;

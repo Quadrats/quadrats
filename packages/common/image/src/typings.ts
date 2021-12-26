@@ -1,6 +1,6 @@
 import {
   Editor,
-  Element,
+  QuadratsElement,
   GetAboveByTypesOptions,
   Location,
   NodeEntry,
@@ -15,11 +15,11 @@ export type ImageCaptionTypeKey = 'caption';
 
 export type ImageTypes = Record<ImageFigureTypeKey | ImageTypeKey | ImageCaptionTypeKey, string>;
 
-export interface ImageFigureElement extends Element, WithElementType {
+export interface ImageFigureElement extends QuadratsElement, WithElementType {
   width?: number;
 }
 
-export interface ImageElement extends Element, WithElementType {
+export interface ImageElement extends QuadratsElement, WithElementType {
   children: [Text];
   src: string;
   /**
@@ -29,7 +29,7 @@ export interface ImageElement extends Element, WithElementType {
   hosting?: string;
 }
 
-export interface ImageCaptionElement extends Element, WithElementType {}
+export interface ImageCaptionElement extends QuadratsElement, WithElementType {}
 
 /**
  * Indicate how to resolve the `src` and `hosting` of image element.
@@ -88,5 +88,5 @@ export interface Image<Hosting extends string> extends Withable {
       at?: Location;
     }
   ): void;
-  resizeImage(editor: Editor, entry: NodeEntry<Element>, width: number): void;
+  resizeImage(editor: Editor, entry: NodeEntry<QuadratsElement>, width: number): void;
 }

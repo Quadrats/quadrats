@@ -1,7 +1,7 @@
 import {
   deleteSelectionFragmentIfExpanded,
   Editor,
-  Element,
+  QuadratsElement,
   getAboveByTypes,
   getNodesByTypes,
   getParent,
@@ -12,7 +12,6 @@ import {
   NodeEntry,
   PARAGRAPH_TYPE,
   Path,
-  QuadratsElement,
   Range,
   Transforms,
   unwrapNodesByTypes,
@@ -29,13 +28,16 @@ export function createList(options: CreateListOptions = {}): List {
   const types: ListTypes = { ...LIST_TYPES, ...options.types };
   const isListElement: List['isListElement'] = (
     node,
-  ): node is Element => [types.ol, types.ul].includes((node as QuadratsElement).type as string);
-  const isListItemElement: List['isListElement'] = (node): node is Element => (
+  ): node is QuadratsElement => [types.ol, types.ul].includes((node as QuadratsElement).type as string);
+
+  const isListItemElement: List['isListElement'] = (node): node is QuadratsElement => (
     node as QuadratsElement).type === types.li;
+
   const isSelectionInList: List['isSelectionInList'] = (
     editor,
     listTypeKey,
   ) => isNodesTypeIn(editor, [types[listTypeKey]]);
+
   const getAboveListAndItem: List['getAboveListAndItem'] = (editor, options = {}) => {
     const { at = editor.selection } = options;
 
@@ -43,7 +45,7 @@ export function createList(options: CreateListOptions = {}): List {
      * (ul|ol) > li > p
      */
     if (at && isNodesTypeIn(editor, [types.li])) {
-      const parentEntry = getAboveByTypes<Element>(editor, [types.li]) || getParent(editor, at);
+      const parentEntry = getAboveByTypes<QuadratsElement>(editor, [types.li]) || getParent(editor, at);
 
       if (parentEntry && isListItemElement(parentEntry[0])) {
         const [, listItemPath] = parentEntry;
@@ -51,17 +53,19 @@ export function createList(options: CreateListOptions = {}): List {
 
         if (parentOfListItemEntry && isListElement(parentOfListItemEntry[0])) {
           return {
-            list: parentOfListItemEntry as NodeEntry<Element>,
-            listItem: parentEntry as NodeEntry<Element>,
+            list: parentOfListItemEntry as NodeEntry<QuadratsElement>,
+            listItem: parentEntry as NodeEntry<QuadratsElement>,
           };
         }
       }
     }
   };
+
   const unwrapList: List['unwrapList'] = (editor) => {
     unwrapNodesByTypes(editor, [types.li]);
     unwrapNodesByTypes(editor, [types.ol, types.ul], { split: true });
   };
+
   const toggleList: List['toggleList'] = (editor, listTypeKey, defaultType = PARAGRAPH_TYPE) => {
     if (!editor.selection) {
       return;
@@ -72,10 +76,10 @@ export function createList(options: CreateListOptions = {}): List {
     unwrapList(editor);
     Transforms.setNodes(editor, {
       type: defaultType,
-    });
+    } as QuadratsElement);
 
     if (!isActive) {
-      wrapNodesWithUnhangRange(editor, { type: types[listTypeKey], children: [] });
+      wrapNodesWithUnhangRange(editor, { type: types[listTypeKey], children: [] } as QuadratsElement);
 
       const nodeEntries = getNodesByTypes(editor, [defaultType]);
       const listItem = { type: types.li, children: [] };
@@ -87,6 +91,7 @@ export function createList(options: CreateListOptions = {}): List {
       }
     }
   };
+
   const increaseListItemDepth: List['increaseListItemDepth'] = (editor, entries) => {
     const {
       list: [listNode],
@@ -94,7 +99,7 @@ export function createList(options: CreateListOptions = {}): List {
     } = entries;
 
     if (!isFirstChild(listItemPath)) {
-      const previousEntry = Editor.node(editor, Path.previous(listItemPath)) as NodeEntry<Element>;
+      const previousEntry = Editor.node(editor, Path.previous(listItemPath)) as NodeEntry<QuadratsElement>;
 
       if (previousEntry) {
         const [previousNode, previousPath] = previousEntry;
@@ -116,7 +121,7 @@ export function createList(options: CreateListOptions = {}): List {
            * Wrap list item by a new list and move the new list next to the last node of previous node.
            */
         } else {
-          const newSubListElement = { type: listNode.type, children: [] };
+          const newSubListElement = { type: (listNode as QuadratsElement).type, children: [] };
 
           Transforms.wrapNodes(editor, newSubListElement, { at: listItemPath });
           Transforms.moveNodes(editor, {
@@ -127,11 +132,13 @@ export function createList(options: CreateListOptions = {}): List {
       }
     }
   };
+
   const decreaseListItemDepth: List['decreaseListItemDepth'] = (editor, entries) => {
     const {
       list: [listNode, listPath],
       listItem: [listItemNode, listItemPath],
     } = entries;
+
     const [listParentNode, listParentPath] = Editor.parent(editor, listPath);
 
     /**
@@ -154,7 +161,7 @@ export function createList(options: CreateListOptions = {}): List {
      * After list item moved to parent list, if there are some sibling list items next to list item, move them to a new list in list item.
      */
     if (nextSiblingListItems.length) {
-      const newSubListElement = { type: listNode.type, children: [] };
+      const newSubListElement = { type: (listNode as QuadratsElement).type, children: [] };
       const newSubListPath = [...newListItemPath, (listItemNode?.children ?? []).length];
 
       Transforms.insertNodes(editor, newSubListElement, { at: newSubListPath });
@@ -179,10 +186,12 @@ export function createList(options: CreateListOptions = {}): List {
       });
     }
   };
+
   const decreaseListItemDepthOrUnwrapIfNeed: List['decreaseListItemDepthOrUnwrapIfNeed'] = (editor, entries) => {
     const {
       list: [, listPath],
     } = entries;
+
     const [listParentNode] = Editor.parent(editor, listPath);
 
     if ((listParentNode as QuadratsElement).type !== types.li) {
@@ -214,12 +223,14 @@ export function createList(options: CreateListOptions = {}): List {
 
           if (entries && isSelectionAtBlockEdge(editor) === 'start') {
             decreaseListItemDepthOrUnwrapIfNeed(editor, entries);
+
             return;
           }
         }
 
         deleteBackward(unit);
       };
+
       editor.insertBreak = () => {
         const entries = getAboveListAndItem(editor);
 

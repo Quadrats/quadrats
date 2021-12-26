@@ -1,6 +1,6 @@
 import {
   Editor,
-  Element,
+  QuadratsElement,
   Location,
   Node,
   NodeEntry,
@@ -13,11 +13,11 @@ export type ListItemTypeKey = 'li';
 export type ListTypeKey = ListRootTypeKey | ListItemTypeKey;
 export type ListTypes = Record<ListTypeKey, string>;
 
-export interface ListElement extends Element, WithElementType {}
+export interface ListElement extends QuadratsElement, WithElementType {}
 
 export interface ListAboveListAndItem {
-  list: NodeEntry<Element>;
-  listItem: NodeEntry<Element>;
+  list: NodeEntry<QuadratsElement>;
+  listItem: NodeEntry<QuadratsElement>;
 }
 
 export interface ListGetAboveListEntriesOptions {
@@ -29,8 +29,8 @@ export interface List extends Withable {
    * An object which keys are `ul`, `ol`, `li` and values are the corresponding element types.
    */
   types: ListTypes;
-  isListElement(node: Node): node is Element;
-  isListItemElement(node: Node): node is Element;
+  isListElement(node: Node): node is QuadratsElement;
+  isListItemElement(node: Node): node is QuadratsElement;
   isSelectionInList(editor: Editor, listTypeKey: ListRootTypeKey): boolean;
   /**
    * If expanded, get the list wrapping the location.

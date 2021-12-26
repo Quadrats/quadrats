@@ -9,6 +9,7 @@ import {
   IsNodesTypeInOptions,
   normalizeOnlyInlineOrTextInChildren,
   normalizeVoidElementChildren,
+  QuadratsElement,
   Range,
   Transforms,
 } from '@quadrats/core';
@@ -23,7 +24,7 @@ import {
 import { IMAGE_TYPES } from './constants';
 
 function resolveSizeSteps(steps: ImageSizeSteps): ImageSizeSteps {
-  let sortedSteps = steps.filter((step) => step > 0 && step < 100).sort();
+  let sortedSteps = steps.filter(step => step > 0 && step < 100).sort();
 
   if (!sortedSteps.includes(100)) {
     sortedSteps = [...sortedSteps, 100];
@@ -44,27 +45,32 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
     sizeSteps: unresolvedSizeSteps,
     isImageUrl = defaultIsImageUrl,
   } = options;
+
   const types: ImageTypes = { ...IMAGE_TYPES, ...typesOptions };
   const sizeSteps = unresolvedSizeSteps && resolveSizeSteps(unresolvedSizeSteps);
   const getAboveImageFigure: Image<Hosting>['getAboveImageFigure'] = (
     editor: Editor,
     options?: GetAboveByTypesOptions,
   ) => getAboveByTypes<ImageFigureElement>(editor, [types.figure], options);
+
   const getAboveImageCaption: Image<Hosting>['getAboveImageCaption'] = (
     editor,
     options,
   ) => getAboveByTypes(editor, [types.caption], options);
+
   const isNodesInImage = (
     editor: Editor,
     options?: IsNodesTypeInOptions,
   ) => isNodesTypeIn(editor, [types.image], options);
-  const isSelectionInImage: Image<Hosting>['isSelectionInImage'] = (editor) => isNodesInImage(editor);
-  const isSelectionInImageCaption: Image<Hosting>['isSelectionInImageCaption'] = (
-    editor,
-  ) => isNodesTypeIn(editor, [types.caption]);
-  const isCollapsedOnImage: Image<Hosting>['isCollapsedOnImage'] = (
-    editor,
-  ) => !!editor.selection && Range.isCollapsed(editor.selection) && isSelectionInImage(editor);
+
+  const isSelectionInImage: Image<Hosting>['isSelectionInImage'] = editor => isNodesInImage(editor);
+
+  const isSelectionInImageCaption: Image<Hosting>['isSelectionInImageCaption']
+    = editor => isNodesTypeIn(editor, [types.caption]);
+
+  const isCollapsedOnImage: Image<Hosting>['isCollapsedOnImage']
+    = editor => !!editor.selection && Range.isCollapsed(editor.selection) && isSelectionInImage(editor);
+
   const createImageElement: Image<Hosting>['createImageElement'] = (src, hosting) => {
     const imageElement: ImageElement = {
       type: types.image,
@@ -72,6 +78,7 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
       hosting,
       children: [{ text: '' }],
     };
+
     const captionElement: ImageCaptionElement = {
       type: types.caption,
       children: [{ text: '' }],
@@ -83,12 +90,14 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
       children: [imageElement, captionElement],
     };
   };
+
   const insertImage: Image<Hosting>['insertImage'] = (editor, src, options = {}) => {
     const { hosting, at } = options;
     const imageElement = createImageElement(src, hosting);
 
     Transforms.insertNodes(editor, [imageElement, createParagraphElement()], { at });
   };
+
   const adjustWidthPercentage = (percentage: number) => {
     if (percentage < 0) {
       percentage = 0;
@@ -100,7 +109,7 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
       return percentage;
     }
 
-    const lowerIndex = sizeSteps.findIndex((step) => step >= percentage) - 1;
+    const lowerIndex = sizeSteps.findIndex(step => step >= percentage) - 1;
     const upperIndex = lowerIndex + 1;
 
     if (lowerIndex < 0) {
@@ -117,6 +126,7 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
 
     return Math.abs(percentage - lower) <= Math.abs(upper - percentage) ? lower : upper;
   };
+
   const resizeImage: Image<Hosting>['resizeImage'] = (editor, [, path], width) => {
     const [figure, figurePath] = getAboveImageFigure(editor, { at: path }) || [];
 
@@ -153,6 +163,7 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
       const {
         deleteBackward, deleteForward, insertBreak, isVoid, normalizeNode,
       } = editor;
+
       const deleteCollapsed = (origin: VoidFunction, isEdgeMethodName: 'isStart' | 'isEnd') => {
         const { selection } = editor;
 
@@ -173,9 +184,11 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
       editor.deleteBackward = (unit) => {
         deleteCollapsed(() => deleteBackward(unit), 'isStart');
       };
+
       editor.deleteForward = (unit) => {
         deleteCollapsed(() => deleteForward(unit), 'isEnd');
       };
+
       editor.insertBreak = () => {
         const captionEntry = getAboveImageCaption(editor);
 
@@ -188,17 +201,19 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
 
         insertBreak();
       };
-      editor.isVoid = (element) => element.type === types.image || isVoid(element);
+
+      editor.isVoid = element => (element as QuadratsElement).type === types.image || isVoid(element);
       editor.normalizeNode = (entry) => {
         const [node, path] = entry;
 
         if (Element.isElement(node)) {
-          if (node.type === types.figure) {
+          if ((node as QuadratsElement).type === types.figure) {
             if (!isNodesInImage(editor, { at: path })) {
               Transforms.removeNodes(editor, { at: path });
+
               return;
             }
-          } else if (node.type === types.image) {
+          } else if ((node as QuadratsElement).type === types.image) {
             const { src, width, hosting } = node as (ImageElement & ImageFigureElement);
 
             if (
@@ -210,14 +225,15 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
 
               if (figurePath) {
                 Transforms.removeNodes(editor, { at: figurePath });
+
                 return;
               }
             }
 
-            if (normalizeVoidElementChildren(editor, [node, path])) {
+            if (normalizeVoidElementChildren(editor, [node as QuadratsElement, path])) {
               return;
             }
-          } else if (node.type === types.caption) {
+          } else if ((node as QuadratsElement).type === types.caption) {
             if (normalizeOnlyInlineOrTextInChildren(editor, entry)) {
               return;
             }

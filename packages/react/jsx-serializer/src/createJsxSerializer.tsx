@@ -1,5 +1,5 @@
 import React, { cloneElement, CSSProperties, ReactElement } from 'react';
-import { Descendant, Element } from '@quadrats/core';
+import { Descendant, QuadratsElement } from '@quadrats/core';
 import { isText, WithElementParent } from '@quadrats/core/serializers';
 import { composeRenderElementsBase, composeRenderLeafsBase } from '@quadrats/react/_internal';
 import { JsxSerializeElementProps, JsxSerializeLeafProps } from './typings';
@@ -32,6 +32,7 @@ export function createJsxSerializer(options: CreateJsxSerializerOptioons) {
     elements: serializeElements = [],
     leafs: serializeLeafs = [],
   } = options;
+
   const serializeElement = composeRenderElementsBase(defaultSerializeElement, serializeElements);
   const serializeLeaf = composeRenderLeafsBase(defaultSerializeLeaf, serializeLeafs);
   const leafStyle: CSSProperties = {
@@ -45,9 +46,12 @@ export function createJsxSerializer(options: CreateJsxSerializerOptioons) {
     if (!isText(node)) {
       result = serializeElement({
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        children: serializeNodes(node.children as Descendant[], node),
+        children: serializeNodes(
+          node.children as Descendant[],
+          node as ((QuadratsElement & WithElementParent) | undefined),
+        ),
         element: {
-          ...node,
+          ...(node as unknown as QuadratsElement),
           parent,
         },
       });
@@ -58,7 +62,7 @@ export function createJsxSerializer(options: CreateJsxSerializerOptioons) {
           <span style={leafStyle}>
             {node.text
               .split('\n')
-              .map((t) => t || ' ')
+              .map(t => t || ' ')
               .join('\n')}
           </span>
         ),
@@ -70,8 +74,8 @@ export function createJsxSerializer(options: CreateJsxSerializerOptioons) {
     return addKey(result);
   }
 
-  function serializeNodes(nodes: Descendant[], parent: (Element & WithElementParent) | undefined): JSX.Element {
-    return <>{nodes.map((node) => serializeNode({ ...node, parent }))}</>;
+  function serializeNodes(nodes: Descendant[], parent: (QuadratsElement & WithElementParent) | undefined): JSX.Element {
+    return <>{nodes.map(node => serializeNode({ ...node, parent }))}</>;
   }
 
   return {

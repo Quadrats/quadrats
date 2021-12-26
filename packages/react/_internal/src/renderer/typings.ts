@@ -1,5 +1,5 @@
 import {
-  Element,
+  QuadratsElement,
   Text,
   WithElementType,
   WithMarkType,
@@ -14,7 +14,7 @@ export interface RenderMarkPropsBase<M> extends RenderLeafPropsBase {
   mark: M;
 }
 
-export interface RenderElementPropsBase<E extends Element = Element> {
+export interface RenderElementPropsBase<E extends QuadratsElement = QuadratsElement> {
   children: any;
   element: E;
 }
@@ -23,6 +23,7 @@ export interface CreateRenderMarkOptionsBase<M, P extends RenderMarkPropsBase<M>
   render: (props: P) => JSX.Element;
 }
 
-export interface CreateRenderElementOptionsBase<P extends RenderElementPropsBase<Element>> extends WithElementType {
+export interface CreateRenderElementOptionsBase<P extends
+RenderElementPropsBase<QuadratsElement>> extends WithElementType {
   render: (props: P) => JSX.Element | null | undefined;
 }

@@ -1,12 +1,12 @@
 import {
   Editor,
-  Element,
+  QuadratsElement,
   Text,
   Withable,
   WithElementType,
 } from '@quadrats/core';
 
-export interface ReadMoreElement extends Element, WithElementType {
+export interface ReadMoreElement extends QuadratsElement, WithElementType {
   children: [Text];
 }
 
