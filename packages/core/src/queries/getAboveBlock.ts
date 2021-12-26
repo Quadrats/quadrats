@@ -17,5 +17,6 @@ export function getAboveBlock<T extends Ancestor>(editor: Editor, options: GetAb
     ...options,
     match: (node, path) => Editor.isBlock(editor, node) && (!match || match(node, path)),
   });
+
   return (aboveBlock || [editor, []]) as NodeEntry<T>;
 }

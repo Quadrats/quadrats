@@ -1,9 +1,12 @@
 import {
+  createParagraphElement,
+  Editor,
   Element,
   isNodesTypeIn,
   normalizeOnlyInlineOrTextInChildren,
   QuadratsElement,
   toggleNodesType,
+  Transforms,
   WithElementType,
 } from '@quadrats/core';
 import { Blockquote } from './typings';
@@ -15,7 +18,28 @@ export function createBlockquote({ type = BLOCKQUOTE_TYPE }: CreateBlockquoteOpt
   return {
     type,
     isSelectionInBlockquote: editor => isNodesTypeIn(editor, [type]),
-    toggleBlockquote: editor => toggleNodesType(editor, type),
+    toggleBlockquote: (editor) => {
+      const actived = isNodesTypeIn(editor, [type]);
+
+      toggleNodesType(editor, type);
+
+      if (!actived) {
+        if (editor.selection) {
+          // Select to line end
+          const originPoint = Editor.point(editor, editor.selection.focus);
+
+          Transforms.move(editor, { unit: 'line', edge: 'end' });
+          Transforms.collapse(editor, { edge: 'end' });
+
+          // Only last block add paragraph automatically
+          if (!Editor.next(editor)) {
+            Transforms.insertNodes(editor, [createParagraphElement()]);
+          }
+
+          Transforms.select(editor, originPoint);
+        }
+      }
+    },
     with(editor) {
       const { normalizeNode } = editor;
 
