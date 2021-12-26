@@ -27,7 +27,7 @@
     "storybook:build": "build-storybook",
     "storybook:deploy": "storybook-to-ghpages --out ./public",
     "commit": "git-cz",
-    "release": "lerna version && npm run build && lerna publish from-package",
+    "release": "lerna version patch && npm run build && lerna publish from-package",
     "prepare": "husky install"
   },
   "devDependencies": {
