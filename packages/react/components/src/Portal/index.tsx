@@ -7,6 +7,7 @@ export interface PortalProps {
 
 const Portal: FC<PortalProps> = ({ getContainer, children }) => {
   const container = getContainer ? getContainer() : document.body;
+
   return ReactDOM.createPortal(children, container);
 };
 

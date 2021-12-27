@@ -56,6 +56,10 @@ export interface ToolbarProps {
    * A render props which provide a flag `expanded` which useful for rendering different things between collapsed and expanded.
    */
   children: (expanded: boolean) => JSX.Element | null | undefined;
+  /**
+   * Toolbar container
+   */
+  containerRef?: React.MutableRefObject<HTMLElement | undefined>;
 }
 
 function Toolbar(props: ToolbarProps) {
@@ -124,6 +128,14 @@ function Toolbar(props: ToolbarProps) {
     });
   });
 
+  const getPortalContainer = useCallback(() => {
+    if (props.containerRef?.current) {
+      return props.containerRef.current;
+    }
+
+    return document.body;
+  }, [props.containerRef]);
+
   if (!shouldRender || (disabledElementTypes && isNodesTypeIn(editor, disabledElementTypes, { mode: 'all' }))) {
     return null;
   }
@@ -136,7 +148,7 @@ function Toolbar(props: ToolbarProps) {
   }
 
   return (
-    <Portal>
+    <Portal getContainer={getPortalContainer}>
       <div
         ref={toolbarRef}
         className={clsx(
