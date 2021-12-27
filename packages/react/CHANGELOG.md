@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.7](https://github.com/Quadrats/quadrats/compare/v0.5.6...v0.5.7) (2021-12-27)
+
+### Features
+
+- **toolbar:** add containerRef to limitation toolbar portal container ([fddd63f](https://github.com/Quadrats/quadrats/commit/fddd63f0d8dc0c7db0318ec85609cff743c70494))
+
 ## [0.5.6](https://github.com/Quadrats/quadrats/compare/v0.5.5...v0.5.6) (2021-12-26)
 
 ### Bug Fixes
