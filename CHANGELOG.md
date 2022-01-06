@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.8](https://github.com/Quadrats/quadrats/compare/v0.5.7...v0.5.8) (2022-01-06)
+
+### Bug Fixes
+
+- **line-break:** add serializer ([d5126ae](https://github.com/Quadrats/quadrats/commit/d5126ae1f33728dc045ea7f7e6a24655ea5b8915))
+
 ## [0.5.7](https://github.com/Quadrats/quadrats/compare/v0.5.6...v0.5.7) (2021-12-27)
 
 ### Features
