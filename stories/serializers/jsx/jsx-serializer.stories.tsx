@@ -30,6 +30,7 @@ import { createJsxSerializeLink } from '@quadrats/react/link/jsx-serializer';
 import { createJsxSerializeList } from '@quadrats/react/list/jsx-serializer';
 import { createJsxSerializeReadMore } from '@quadrats/react/read-more/jsx-serializer';
 import { createJsxSerializeFootnote } from '@quadrats/react/footnote/jsx-serializer';
+import { createJsxSerializeLineBreak } from '@quadrats/react/line-break/jsx-serializer';
 
 import { customRenderBlockquote } from '../../custom-elements';
 import PlaygroudEditor, { PlaygroudEditorProps } from '../../components/PlaygroudEditor';
@@ -47,6 +48,7 @@ const jsxSerializer = createJsxSerializer({
     createJsxSerializeUnderline(),
   ],
   elements: [
+    createJsxSerializeLineBreak(),
     createJsxSerializeParagraph(),
     createJsxSerializeBlockquote({ render: customRenderBlockquote }),
     createJsxSerializeDivider(),

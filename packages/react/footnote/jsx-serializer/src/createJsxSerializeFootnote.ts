@@ -8,5 +8,6 @@ export type CreateJsxSerializeFootnoteOptions = Partial<CreateJsxSerializeElemen
 
 export function createJsxSerializeFootnote(options: CreateJsxSerializeFootnoteOptions = {}) {
   const { type = FOOTNOTE_TYPE, render = defaultRenderFootnoteElement } = options;
+
   return createJsxSerializeElement({ type, render });
 }
