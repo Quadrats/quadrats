@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.9](https://github.com/Quadrats/quadrats/compare/v0.5.8...v0.5.9) (2022-01-25)
+
+### Bug Fixes
+
+- line-break null child issue ([17c299a](https://github.com/Quadrats/quadrats/commit/17c299a0616b9228bcd683f73f6513e700055bdb))
+
 ## [0.5.8](https://github.com/Quadrats/quadrats/compare/v0.5.7...v0.5.8) (2022-01-06)
 
 ### Bug Fixes
