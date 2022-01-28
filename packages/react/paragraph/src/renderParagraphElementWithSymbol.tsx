@@ -8,7 +8,7 @@ export const renderParagraphElementWithSymbol = ({
   attributes?: RenderElementProps['attributes'];
   children: any;
 }) => (
-  <p {...attributes} className="qdr-paragraph__with-line-break-symbol">
+  <p {...attributes} className="qdr-paragraph qdr-paragraph__with-line-break-symbol">
     {children}
   </p>
 );

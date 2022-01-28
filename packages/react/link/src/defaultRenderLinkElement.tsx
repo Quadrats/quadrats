@@ -19,7 +19,7 @@ export const defaultRenderLinkElement = ({
 
   return (
     <Tooltip placement={placement} popup={url}>
-      <a {...attributes} href={url} target={target}>
+      <a {...attributes} className="qdr-link" href={url} target={target}>
         {children}
       </a>
     </Tooltip>

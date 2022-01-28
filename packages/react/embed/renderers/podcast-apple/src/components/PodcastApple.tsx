@@ -1,21 +1,25 @@
-import React, { useRef } from 'react';
+import React, { PropsWithChildren, useRef } from 'react';
 import { PodcastAppleEmbedElement } from '@quadrats/common/embed/strategies/podcast-apple';
 import { RenderElementProps } from '@quadrats/react';
 import { composeRefs } from '@quadrats/react/utils';
 
 export interface PodcastAppleProps {
   attributes?: RenderElementProps['attributes'];
-  children?: any;
   data: string;
   element: PodcastAppleEmbedElement;
 }
 
-function PodcastApple({ attributes, children, data: src }: PodcastAppleProps) {
+function PodcastApple({ attributes, children, data: src }: PropsWithChildren<PodcastAppleProps>) {
   const containerRef = useRef<HTMLElement | null>(null);
   const composedRef = composeRefs([attributes?.ref, containerRef]);
 
   return (
-    <div {...attributes} ref={composedRef} contentEditable={false}>
+    <div
+      {...attributes}
+      className="qdr-embed-podcast-apple"
+      ref={composedRef}
+      contentEditable={false}
+    >
       <iframe
         title={src}
         src={src}

@@ -50,6 +50,7 @@ export const Example = ({ type }: { type: string }) => {
       spotify: SpotifyEmbedStrategy,
     },
   });
+
   const renderElement = composeRenderElements([
     embed.createRenderElement({
       youtube: defaultRenderYoutubeEmbedElement,
@@ -61,6 +62,7 @@ export const Example = ({ type }: { type: string }) => {
       spotify: defaultRenderTwitterEmbedElement,
     }),
   ]);
+
   const initialValues: Descendant[] = [
     {
       type: PARAGRAPH_TYPE,
@@ -93,37 +95,37 @@ export const Example = ({ type }: { type: string }) => {
                 icon={VideoIcon}
                 controller={embed}
                 providers={['youtube', 'vimeo']}
-                getPlaceholder={(locale) => locale.editor.video.inputPlaceholder}
+                getPlaceholder={locale => locale.editor.video.inputPlaceholder}
               />
               <EmbedToolbarIcon
                 icon={InstagramIcon}
                 controller={embed}
                 providers={['instagram']}
-                getPlaceholder={(locale) => locale.editor.instagram.inputPlaceholder}
+                getPlaceholder={locale => locale.editor.instagram.inputPlaceholder}
               />
               <EmbedToolbarIcon
                 icon={FacebookIcon}
                 controller={embed}
                 providers={['facebook']}
-                getPlaceholder={(locale) => locale.editor.facebook.inputPlaceholder}
+                getPlaceholder={locale => locale.editor.facebook.inputPlaceholder}
               />
               <EmbedToolbarIcon
                 icon={TwitterIcon}
                 controller={embed}
                 providers={['twitter']}
-                getPlaceholder={(locale) => locale.editor.twitter.tweet.inputPlaceholder}
+                getPlaceholder={locale => locale.editor.twitter.tweet.inputPlaceholder}
               />
               <EmbedToolbarIcon
                 icon={PodcastAppleIcon}
                 controller={embed}
                 providers={['podcastApple']}
-                getPlaceholder={(locale) => locale.editor.podcastApple.inputPlaceholder}
+                getPlaceholder={locale => locale.editor.podcastApple.inputPlaceholder}
               />
               <EmbedToolbarIcon
                 icon={SpotifyIcon}
                 controller={embed}
                 providers={['spotify']}
-                getPlaceholder={(locale) => locale.editor.spotify.inputPlaceholder}
+                getPlaceholder={locale => locale.editor.spotify.inputPlaceholder}
               />
             </>
           )}

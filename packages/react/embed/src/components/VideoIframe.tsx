@@ -11,13 +11,22 @@ export interface VideoIframeProps<E extends EmbedElement> {
   element: E;
 }
 
-function VideoIframe<E extends EmbedElement>({ attributes, children, data: src }: VideoIframeProps<E>) {
+function VideoIframe<E extends EmbedElement>({
+  attributes,
+  children,
+  data: src,
+}: VideoIframeProps<E>) {
   const { ref } = attributes || {};
   const { ref: containerRef, size } = useVideoIframeSize<HTMLDivElement>();
   const composedRef = ref ? composeRefs([ref, containerRef]) : containerRef;
 
   return (
-    <div {...attributes} ref={composedRef} contentEditable={false}>
+    <div
+      {...attributes}
+      ref={composedRef}
+      className="qdr-embed-video"
+      contentEditable={false}
+    >
       <div style={size}>
         <iframe title={src} src={src} frameBorder="0" width="100%" height="100%" />
       </div>

@@ -22,6 +22,7 @@ function Spotify({ attributes, children, data: src }: SpotifyProps) {
     <div
       {...attributes}
       ref={composedRef}
+      className="qdr-embed-spotify"
       contentEditable={false}
     >
       <iframe
