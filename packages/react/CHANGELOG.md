@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.10](https://github.com/Quadrats/quadrats/compare/v0.5.9...v0.5.10) (2022-01-28)
+
+### Features
+
+- add className to all plugins ([fde11ea](https://github.com/Quadrats/quadrats/commit/fde11ea75c7b792b5135402ead1d271fb1a0696b))
+
 ## [0.5.9](https://github.com/Quadrats/quadrats/compare/v0.5.8...v0.5.9) (2022-01-25)
 
 ### Bug Fixes

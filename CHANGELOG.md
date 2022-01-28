@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.10](https://github.com/Quadrats/quadrats/compare/v0.5.9...v0.5.10) (2022-01-28)
+
+### Bug Fixes
+
+- podcast language use same as input language ([12e42b0](https://github.com/Quadrats/quadrats/commit/12e42b0d82f7d3fb35b20619df8fd2f5ca2a8cf5))
+
+### Features
+
+- add className to all plugins ([fde11ea](https://github.com/Quadrats/quadrats/commit/fde11ea75c7b792b5135402ead1d271fb1a0696b))
+
 ## [0.5.9](https://github.com/Quadrats/quadrats/compare/v0.5.8...v0.5.9) (2022-01-25)
 
 ### Bug Fixes
