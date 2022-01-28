@@ -11,7 +11,7 @@ export interface FacebookProps {
 
 function Facebook({ attributes, children, data: { url, width, height } }: FacebookProps) {
   return (
-    <div {...attributes} contentEditable={false}>
+    <div {...attributes} className="qdr-embed-facebook" contentEditable={false}>
       <iframe
         title={url}
         src={url}

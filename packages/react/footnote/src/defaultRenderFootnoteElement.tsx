@@ -19,12 +19,13 @@ export const defaultRenderFootnoteElement = ({
   return (
     <>
       <Tooltip placement={placement} popup={footnote}>
-        <span style={{ textDecoration: 'underline' }} {...attributes}>
+        <span style={{ textDecoration: 'underline' }} {...attributes} className="qdr-footnote-text">
           {children}
         </span>
       </Tooltip>
       <sup
         {...attributes}
+        className="qdr-footnote-sup"
         style={{ color: 'var(--qdr-sup)', userSelect: 'none' }}
         contentEditable={false}
       >

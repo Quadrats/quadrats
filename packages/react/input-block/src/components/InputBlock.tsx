@@ -15,6 +15,7 @@ function InputBlock(props: RenderInputBlockElementProps) {
       style={{
         display: 'flex',
       }}
+      className="qdr-input-block"
     >
       <input
         ref={inputRef}

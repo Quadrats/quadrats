@@ -26,5 +26,5 @@ export const defaultRenderHeadingElement = ({
     return null;
   }
 
-  return <Component {...attributes}>{children}</Component>;
+  return <Component {...attributes} className={`qdr-${Component}`}>{children}</Component>;
 };

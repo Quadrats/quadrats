@@ -8,7 +8,7 @@ export const defaultRenderParagraphElement = ({
   attributes?: RenderElementProps['attributes'];
   children: any;
 }) => (
-  <p {...attributes}>
+  <p {...attributes} className="qdr-paragraph">
     {children}
   </p>
 );

@@ -7,4 +7,4 @@ export const defaultRenderBlockquoteElement = ({
 }: {
   attributes?: RenderElementProps['attributes'];
   children: RenderElementProps['children'];
-}) => <blockquote {...attributes}>{children}</blockquote>;
+}) => <blockquote {...attributes} className="qdr-blockquote">{children}</blockquote>;

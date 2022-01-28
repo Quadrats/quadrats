@@ -16,6 +16,7 @@ function Instagram({ attributes, children, data: permalink }: InstagramProps) {
   return (
     <div
       {...attributes}
+      className="qdr-embed-instagram"
       contentEditable={false}
       style={{
         display: 'flex',
