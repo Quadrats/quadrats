@@ -9,7 +9,7 @@ import {
   isNodeMatch,
   isSelectionAtBlockEdge,
 } from '@quadrats/core';
-import { Handler, ReactEditor } from '@quadrats/react';
+import { Handler, Editor } from '@quadrats/react';
 import { ExitBreakRule, SoftBreakRule } from './typings';
 
 export interface CreateOnKeyDownBreakOptions {
@@ -22,7 +22,7 @@ export interface CreateOnKeyDownBreakOptions {
 }
 
 export function createOnKeyDownBreak({ exitBreak, softBreak }: CreateOnKeyDownBreakOptions): Handler<'onKeyDown'> {
-  return (event: KeyboardEvent, editor: ReactEditor, next) => {
+  return (event: KeyboardEvent, editor: Editor, next) => {
     const { selection } = editor;
 
     if (selection) {

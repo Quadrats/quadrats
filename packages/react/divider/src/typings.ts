@@ -1,5 +1,6 @@
 import { Divider, DividerElement } from '@quadrats/common/divider';
-import { WithCreateRenderElement, RenderElementProps, ReactEditor } from '@quadrats/react';
+import { Editor } from '@quadrats/core';
+import { WithCreateRenderElement, RenderElementProps } from '@quadrats/react';
 
 export type RenderDividerElementProps = RenderElementProps<DividerElement>;
 
@@ -8,4 +9,4 @@ export interface ReactDividerCreateRenderElementOptions {
 }
 
 export interface ReactDivider
-  extends Divider<ReactEditor>, WithCreateRenderElement<[ReactDividerCreateRenderElementOptions?]> {}
+  extends Divider<Editor>, WithCreateRenderElement<[ReactDividerCreateRenderElementOptions?]> {}

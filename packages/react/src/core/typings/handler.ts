@@ -1,5 +1,5 @@
+import { Editor } from '@quadrats/core';
 import { DOMAttributes, EventHandler } from 'react';
-import { ReactEditor } from 'slate-react';
 
 export type EventHandlerName = {
   [K in keyof Required<DOMAttributes<HTMLElement>>]: NonNullable<DOMAttributes<HTMLElement>[K]> extends EventHandler<
@@ -19,7 +19,7 @@ export type GetEventByName<H extends EventHandlerName> = GetEventHandlerByName<H
 
 export type Handler<H extends EventHandlerName> = (
   event: GetEventByName<H>,
-  editor: ReactEditor,
+  editor: Editor,
   next: VoidFunction
 ) => void;
 

@@ -1,5 +1,5 @@
 import { InputBlock, InputBlockElement } from '@quadrats/common/input-block';
-import { ReactEditor, RenderElementProps, WithCreateRenderElement } from '@quadrats/react';
+import { Editor, RenderElementProps, WithCreateRenderElement } from '@quadrats/react';
 
 export type RenderInputBlockElementProps = RenderElementProps<InputBlockElement> &
 Pick<ReactInputBlock, 'remove' | 'confirm'>;
@@ -11,8 +11,8 @@ export interface ReactInputBlockCreateRenderElementOptions {
 }
 
 export interface ReactInputBlock
-  extends Omit<InputBlock<ReactEditor>, 'remove' | 'confirm'>,
+  extends Omit<InputBlock<Editor>, 'remove' | 'confirm'>,
   WithCreateRenderElement<[ReactInputBlockCreateRenderElementOptions?]> {
-  remove(editor: ReactEditor, element: InputBlockElement): void;
-  confirm(editor: ReactEditor, element: InputBlockElement, value: string): void;
+  remove(editor: Editor, element: InputBlockElement): void;
+  confirm(editor: Editor, element: InputBlockElement, value: string): void;
 }

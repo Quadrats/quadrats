@@ -1,5 +1,5 @@
 import { Embed, EmbedElement } from '@quadrats/common/embed';
-import { WithCreateRenderElement, RenderElementProps, ReactEditor } from '@quadrats/react';
+import { WithCreateRenderElement, RenderElementProps, Editor } from '@quadrats/react';
 
 export interface WithEmbedRenderData<RenderData> {
   /**
@@ -18,5 +18,5 @@ Provider,
 >;
 
 export interface ReactEmbed<Provider extends string>
-  extends Embed<Provider, ReactEditor>,
+  extends Embed<Provider, Editor>,
   WithCreateRenderElement<[ReactEmbedCreateRenderElementOptions<Provider>]> {}

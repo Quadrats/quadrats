@@ -1,5 +1,5 @@
 import { Footnote, FootnoteElement } from '@quadrats/common/footnote';
-import { RenderElementProps, ReactWithable, WithCreateRenderElement, ReactEditor } from '@quadrats/react';
+import { RenderElementProps, ReactWithable, WithCreateRenderElement, Editor } from '@quadrats/react';
 
 export type RenderFootnoteElementProps = RenderElementProps<FootnoteElement>;
 
@@ -8,6 +8,6 @@ export interface ReactFootnoteCreateRenderElementOptions {
 }
 
 export interface ReactFootnote
-  extends Omit<Footnote<ReactEditor>, 'with'>,
+  extends Omit<Footnote<Editor>, 'with'>,
   WithCreateRenderElement<[ReactFootnoteCreateRenderElementOptions?]>,
   ReactWithable {}

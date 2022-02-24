@@ -1,5 +1,5 @@
 import { FileUploader, FileUploaderElement } from '@quadrats/common/file-uploader';
-import { ReactEditor, RenderElementProps, WithCreateRenderElement } from '@quadrats/react';
+import { Editor, RenderElementProps, WithCreateRenderElement } from '@quadrats/react';
 
 export type RenderFileUploaderElementProps = RenderElementProps<FileUploaderElement>;
 
@@ -9,5 +9,5 @@ export interface FileUploaderCreateRenderElementOptions {
   render?: RenderFileUploaderElement;
 }
 
-export type ReactFileUploader = FileUploader<ReactEditor>
+export type ReactFileUploader = FileUploader<Editor>
 & WithCreateRenderElement<[FileUploaderCreateRenderElementOptions?]>;

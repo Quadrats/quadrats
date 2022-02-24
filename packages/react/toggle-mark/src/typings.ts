@@ -1,7 +1,7 @@
 import { ToggleMark } from '@quadrats/common/toggle-mark';
 import {
   CreateRenderMarkOptions,
-  ReactEditor,
+  Editor,
   RenderMarkProps,
   WithCreateHandlers,
   WithCreateRenderLeaf,
@@ -19,6 +19,6 @@ export interface ReactToggleMarkCreateHandlersOptions {
 export type ReactToggleMarkCreateRenderLeafOptions = Partial<Omit<CreateRenderMarkOptions<boolean>, 'type'>>;
 
 export interface ReactToggleMark
-  extends ToggleMark<ReactEditor>,
+  extends ToggleMark<Editor>,
   WithCreateHandlers<[ReactToggleMarkCreateHandlersOptions?]>,
   WithCreateRenderLeaf<[ReactToggleMarkCreateRenderLeafOptions?]> {}
