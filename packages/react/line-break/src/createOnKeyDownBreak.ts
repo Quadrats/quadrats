@@ -54,6 +54,7 @@ export function createOnKeyDownBreak({ exitBreak, softBreak }: CreateOnKeyDownBr
             }
 
             event.preventDefault();
+
             Transforms.insertNodes(
               editor,
               { type: defaultType, children: [{ text: '' }] },
