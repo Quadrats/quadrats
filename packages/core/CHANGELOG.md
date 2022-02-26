@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/Quadrats/quadrats/compare/v0.5.10...v0.6.0) (2022-02-26)
+
+### Bug Fixes
+
+- **core:** enable slate history ([95ee0fd](https://github.com/Quadrats/quadrats/commit/95ee0fd491cb8da6c0be1db6a7cebcc4628e0268))
+
 ## [0.5.9](https://github.com/Quadrats/quadrats/compare/v0.5.8...v0.5.9) (2022-01-25)
 
 ### Bug Fixes

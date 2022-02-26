@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/Quadrats/quadrats/compare/v0.5.10...v0.6.0) (2022-02-26)
+
+### Bug Fixes
+
+- **common/file-uploader:** revert undo feature ([d8f638c](https://github.com/Quadrats/quadrats/commit/d8f638c9588654cb5c985dbbda6edd678e55dbf6))
+
+### Features
+
+- **common/block-quote:** support line-break in quote ([245420f](https://github.com/Quadrats/quadrats/commit/245420fefb4163e8bd127992b80fa2238756953c))
+- **core/link:** move selection after insertLink ([4b4aa7f](https://github.com/Quadrats/quadrats/commit/4b4aa7ff38d560475210d0818e2c06f12e87d420))
+
 ## [0.5.10](https://github.com/Quadrats/quadrats/compare/v0.5.9...v0.5.10) (2022-01-28)
 
 ### Bug Fixes

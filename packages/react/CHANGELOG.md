@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/Quadrats/quadrats/compare/v0.5.10...v0.6.0) (2022-02-26)
+
+### Features
+
+- **core/link:** move selection after insertLink ([8e37529](https://github.com/Quadrats/quadrats/commit/8e37529c5167e127125cd310e75bd01e725175b0))
+- **react/block-quote:** support line-break in quote ([d9f5ed9](https://github.com/Quadrats/quadrats/commit/d9f5ed9846ccd5f81cd8181680b4a6c429eb34cf))
+- **react:** support HistoryEditor ([6c25055](https://github.com/Quadrats/quadrats/commit/6c250553d92498f8061baeda49cfdd61d61d8724))
+
 ## [0.5.10](https://github.com/Quadrats/quadrats/compare/v0.5.9...v0.5.10) (2022-01-28)
 
 ### Features
