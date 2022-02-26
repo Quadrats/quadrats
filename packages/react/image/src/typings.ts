@@ -12,7 +12,7 @@ import {
   WithCreateRenderElement,
   RenderElementProps,
   ReactWithable,
-  ReactEditor,
+  Editor,
 } from '@quadrats/react';
 
 export interface RenderImageFigureElementProps extends RenderElementProps<ImageFigureElement> {
@@ -40,7 +40,7 @@ export type ReactImageCreateRenderElementOptions = {
 };
 
 export interface ReactImage<Hosting extends string>
-  extends Omit<Image<Hosting, ReactEditor>, 'with'>,
+  extends Omit<Image<Hosting, Editor>, 'with'>,
   WithCreateHandlers,
   WithCreateRenderElement<[ReactImageCreateRenderElementOptions?]>,
   ReactWithable {}

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ImageElement } from '@quadrats/common/image';
 import {
   ReactEditor,
+  Editor,
   useSlateStatic,
   useFocused,
   useSelected,
@@ -14,7 +15,7 @@ function isTouchEvent<M, T>(event: M | T): event is T {
   return !!(touches && touches.length);
 }
 
-function getEditorWidth(editor: ReactEditor) {
+function getEditorWidth(editor: Editor) {
   const el = ReactEditor.toDOMNode(editor, editor);
   const computedStyle = window.getComputedStyle(el);
   const paddingX = parseFloat(computedStyle.paddingLeft) + parseFloat(computedStyle.paddingRight);

@@ -1,4 +1,4 @@
-import { ReactEditor } from 'slate-react';
+import { Editor } from '@quadrats/react';
 import {
   EventHandlerName,
   EventHandlers,
@@ -7,7 +7,7 @@ import {
 } from './typings/handler';
 
 function createEventHandler(
-  editor: ReactEditor,
+  editor: Editor,
   handlers: Handler<any>[],
 ): (event: GetEventByName<any>) => void {
   const [handler, ...restHandlers] = handlers;
@@ -26,7 +26,7 @@ export function composeHandlers<H extends EventHandlerName>(
   handlersList: {
     [HH in H]?: Handler<HH>;
   }[],
-): (editor: ReactEditor) => EventHandlers {
+): (editor: Editor) => EventHandlers {
   const handlersListRecord = handlersList.reduce(
     (acc, handlers) => {
       Object.entries(handlers).forEach(([key, value]) => {

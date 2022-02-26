@@ -1,12 +1,12 @@
 import {
+  Editor,
   getNodes,
   QuadratsElement,
   QuadratsText,
 } from '@quadrats/core';
 import { FootnoteData, FootnoteElement, FOOTNOTE_TYPE } from '@quadrats/common/footnote';
-import { ReactEditor } from 'slate-react';
 
-export function useFootnotes(editor: ReactEditor): FootnoteData[] {
+export function useFootnotes(editor: Editor): FootnoteData[] {
   const footnoteNodes = Array.from(getNodes(editor, {
     at: [],
     match: node => (node as QuadratsElement).type === FOOTNOTE_TYPE,

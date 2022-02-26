@@ -29,11 +29,13 @@ export function createReactLink(options: CreateReactLinkOptions = {}): ReactLink
         if (text) {
           if (core.isSelectionInLink(editor)) {
             insertText(text);
+
             return;
           }
 
           if (pastedUrlToLink && isUrl(text)) {
             core.upsertLink(editor, text);
+
             return;
           }
         }

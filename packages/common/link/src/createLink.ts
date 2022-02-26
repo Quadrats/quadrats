@@ -116,6 +116,7 @@ export function createLink({
             wrapLink(editor, url, { at: wrappableVoidPath });
           } else {
             insertLink(editor, url, { at });
+            Transforms.move(editor, { distance: url.length });
           }
 
           return;
