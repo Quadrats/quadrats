@@ -39,7 +39,7 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
             const path = getPath();
 
             if (path) {
-              HistoryEditor.withoutSaving(editor, () => {
+              HistoryEditor.withoutSaving(editor as HistoryEditor, () => {
                 Transforms.removeNodes(editor, { at: path });
                 Transforms.insertNodes(editor, createElementByResponse(xhr.response), { at: path });
               });
