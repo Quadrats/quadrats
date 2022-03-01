@@ -1,4 +1,4 @@
-import { Editor } from '@quadrats/react';
+import { QuadratsReactEditor } from '..';
 import {
   EventHandlerName,
   EventHandlers,
@@ -7,7 +7,7 @@ import {
 } from './typings/handler';
 
 function createEventHandler(
-  editor: Editor,
+  editor: QuadratsReactEditor,
   handlers: Handler<any>[],
 ): (event: GetEventByName<any>) => void {
   const [handler, ...restHandlers] = handlers;
@@ -26,7 +26,7 @@ export function composeHandlers<H extends EventHandlerName>(
   handlersList: {
     [HH in H]?: Handler<HH>;
   }[],
-): (editor: Editor) => EventHandlers {
+): (editor: QuadratsReactEditor) => EventHandlers {
   const handlersListRecord = handlersList.reduce(
     (acc, handlers) => {
       Object.entries(handlers).forEach(([key, value]) => {

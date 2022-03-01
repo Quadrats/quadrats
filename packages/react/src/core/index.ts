@@ -1,4 +1,4 @@
-import { BaseEditor, HistoryEditor, QuadratsElement, QuadratsText } from '@quadrats/core';
+import { QuadratsEditor, QuadratsElement, QuadratsText } from '@quadrats/core';
 import { ReactEditor } from 'slate-react';
 
 export {
@@ -30,9 +30,11 @@ export { createRenderElement } from './createRenderElement';
 export { createRenderElements } from './createRenderElements';
 export { createRenderMark } from './createRenderMark';
 
+export interface QuadratsReactEditor extends QuadratsEditor, ReactEditor {}
+
 declare module 'slate' {
   interface CustomTypes {
-    Editor: HistoryEditor & ReactEditor & BaseEditor
+    Editor: QuadratsReactEditor
     Element: QuadratsElement
     Text: QuadratsText
   }

@@ -1,3 +1,4 @@
+import { QuadratsEditor } from './typings';
 import { createEditor as createSlateEditor } from 'slate';
 import { withHistory as withSlateHistory } from 'slate-history';
 
@@ -41,5 +42,5 @@ export * from './normalizers/normalizeOnlyInlineOrTextInChildren';
 export * from './normalizers/normalizeVoidElementChildren';
 
 export function createEditor() {
-  return withSlateHistory(createSlateEditor());
+  return withSlateHistory(createSlateEditor()) as QuadratsEditor;
 }
