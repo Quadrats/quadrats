@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/Quadrats/quadrats/compare/v0.6.0...v0.6.1) (2022-03-01)
+
+### Bug Fixes
+
+- **core:** QuadratsEditor type ([59cb642](https://github.com/Quadrats/quadrats/commit/59cb6426b6c587e07727f217fae90b7ac70bb032))
+- **react:** QuadratsReactEditor type ([7167dd3](https://github.com/Quadrats/quadrats/commit/7167dd3b8935f7d5c79d20adeccefb635daad635))
+
 # [0.6.0](https://github.com/Quadrats/quadrats/compare/v0.5.10...v0.6.0) (2022-02-26)
 
 ### Bug Fixes
