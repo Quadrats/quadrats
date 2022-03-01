@@ -1,5 +1,5 @@
-import { Editor } from '@quadrats/react';
+import { QuadratsReactEditor } from '..';
 
 export interface ReactWithable<R = undefined> {
-  with: <T extends Editor>(editor: T) => R extends undefined ? T : T & R;
+  with: <T extends QuadratsReactEditor>(editor: T) => R extends undefined ? T : T & R;
 }
