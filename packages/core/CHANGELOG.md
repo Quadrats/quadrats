@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.2](https://github.com/Quadrats/quadrats/compare/v0.6.1...v0.6.2) (2022-03-02)
+
+### Bug Fixes
+
+- **typings:** quadrats type extends ([619c879](https://github.com/Quadrats/quadrats/commit/619c879fad085ed966d9b17c75c802feda080f8c))
+
 ## [0.6.1](https://github.com/Quadrats/quadrats/compare/v0.6.0...v0.6.1) (2022-03-01)
 
 ### Bug Fixes
