@@ -32,7 +32,7 @@ export { createRenderMark } from './createRenderMark';
 
 export interface QuadratsReactEditor extends QuadratsEditor, ReactEditor {}
 
-declare module 'slate' {
+declare module '@quadrats/core' {
   interface CustomTypes {
     Editor: QuadratsReactEditor
     Element: QuadratsElement
