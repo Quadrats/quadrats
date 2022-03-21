@@ -71,6 +71,22 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
   const isCollapsedOnImage: Image<Hosting>['isCollapsedOnImage']
     = editor => !!editor.selection && Range.isCollapsed(editor.selection) && isSelectionInImage(editor);
 
+  const previousNodeIsCaption = (editor: Editor): boolean => {
+    const previous = Editor.previous(editor);
+
+    if (!previous) return false;
+
+    const [, previousLocation] = previous;
+
+    const previousWrapper = Editor.parent(editor, previousLocation);
+
+    if (!previousWrapper) return false;
+
+    const [previousWrapperNode] = previousWrapper;
+
+    return (previousWrapperNode as QuadratsElement).type === types.caption;
+  };
+
   const createImageElement: Image<Hosting>['createImageElement'] = (src, hosting) => {
     const imageElement: ImageElement = {
       type: types.image,
@@ -173,7 +189,8 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
         if (selection && Range.isCollapsed(selection)) {
           const [, captionPath] = getAboveImageCaption(editor) || [];
 
-          if (captionPath && Editor[isEdgeMethodName](editor, selection.focus, captionPath)) {
+          if ((captionPath && Editor[isEdgeMethodName](editor, selection.focus, captionPath))
+            || previousNodeIsCaption(editor)) {
             return;
           }
         }

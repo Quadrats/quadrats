@@ -9,5 +9,6 @@ export type IsAboveBlockEmptyOptions = GetAboveBlockOptions;
  */
 export function isAboveBlockEmpty(editor: Editor, options: IsAboveBlockEmptyOptions = {}) {
   const [block] = getAboveBlock(editor, options);
+
   return isAncestorEmpty(block);
 }
