@@ -16,7 +16,7 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
     options,
   ) => {
     const {
-      createElement, getBody, getHeaders, getUrl,
+      createElement, getBody, getHeaders, getUrl, uploader,
     } = options;
 
     const [mime] = file.type.split('/');
@@ -27,10 +27,13 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
     }
 
     const { dataURL: createElementByDataURL, response: createElementByResponse } = createByMime;
+
     const headers = await getHeaders?.(file);
-    const xhr = new XMLHttpRequest();
+    const xhr = uploader || new XMLHttpRequest();
     const dataURL = await readFileAsDataURL(file);
+
     let sent = false;
+
     const fileUploaderElement: FileUploaderElement = {
       type,
       register: (getPath, onProgress) => {
@@ -49,7 +52,8 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
           }
         };
 
-        xhr.upload.onprogress = ({ loaded, total }) => onProgress((loaded * 100) / total);
+        xhr.upload.onprogress = ({ loaded, total }: { loaded: number; total: number }) =>
+          onProgress((loaded * 100) / total);
 
         if (!sent) {
           sent = true;

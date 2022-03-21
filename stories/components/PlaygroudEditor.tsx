@@ -85,6 +85,7 @@ import { SpotifyEmbedStrategy } from '@quadrats/common/embed/strategies/spotify'
 
 import { createReactFootnote } from '@quadrats/react/footnote';
 import { customRenderBlockquote } from '../custom-elements';
+import getLocalFileUploaderOptions from '../helper/local-file-uploader-options';
 
 const lineBreak = createReactLineBreak();
 const bold = createReactBold();
@@ -277,21 +278,7 @@ function PlaygroudEditor(props: PlaygroudEditorProps) {
               <FileUploaderToolbarIcon
                 icon={ImageIcon}
                 controller={fileUploader}
-                options={{
-                  accept: ['image/*'],
-                  createElement: {
-                    image: {
-                      dataURL: dataURL => image.createImageElement(dataURL),
-                      response: response => image.createImageElement(JSON.parse(response).filename, 'GCLOUD_STORAGE'),
-                    },
-                  },
-                  getBody: file => file,
-                  getHeaders: file => ({
-                    Authorization: 'Bearer <Your OAuth2 Token>',
-                    'Content-Type': file.type,
-                  }),
-                  getUrl: file => `https://storage.googleapis.com/upload/storage/v1/b/<Your Bucket Name>/o?uploadType=media&name=${file.name}`,
-                }}
+                options={getLocalFileUploaderOptions(image)}
               />
               <EmbedToolbarIcon
                 icon={VideoIcon}

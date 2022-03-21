@@ -29,6 +29,25 @@ export type FileUploaderGetBody = (file: File) => BodyInit;
 export type FileUploaderGetHeaders = (file: File) => XHRUploadHeaders | Promise<XHRUploadHeaders>;
 export type FileUploaderGetUrl = (file: File) => string;
 
+interface FileUploaderUploadImplementOnProgressArgs {
+  loaded: number;
+  total: number;
+}
+
+interface FileUploaderUploadImplement {
+  onprogress: ((options: FileUploaderUploadImplementOnProgressArgs) => void) | null;
+}
+
+interface FileUploaderImplement {
+  onload: (() => void) | null;
+  open: (method: string, url: string | URL) => void;
+  setRequestHeader: (key: string, value: string) => void;
+  send(body?: Document | XMLHttpRequestBodyInit | null): void;
+  readonly status: number;
+  readonly response: any;
+  readonly upload: FileUploaderUploadImplement;
+}
+
 export interface FileUploaderCreateFileUploaderElementOptions {
   createElement: {
     [mime in string]?: {
@@ -39,6 +58,7 @@ export interface FileUploaderCreateFileUploaderElementOptions {
   getBody: FileUploaderGetBody;
   getHeaders?: FileUploaderGetHeaders;
   getUrl: FileUploaderGetUrl;
+  uploader?: FileUploaderImplement;
 }
 
 export type FileUploaderUploadOptions = FileUploaderCreateFileUploaderElementOptions &
