@@ -213,6 +213,19 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
          * Avoid from splitting children of caption.
          */
         if (captionEntry) {
+          const [, captionLocation] = captionEntry;
+
+          const imageEntry = Editor.parent(editor, captionLocation);
+
+          if (imageEntry) {
+            const [imageElement, imagePosition] = imageEntry;
+
+            if ((imageElement as QuadratsElement).type === types.figure) {
+              Transforms.insertNodes(editor, createParagraphElement(), { at: Editor.after(editor, imagePosition) });
+              Transforms.move(editor);
+            }
+          }
+
           return;
         }
 
