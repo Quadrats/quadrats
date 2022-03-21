@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.5](https://github.com/Quadrats/quadrats/compare/v0.6.4...v0.6.5) (2022-03-21)
+
+### Bug Fixes
+
+- **image:** remove image element when backwards from external ([808c865](https://github.com/Quadrats/quadrats/commit/808c865f24b8b2e95a1b3206e77c20b9d9c77d0d))
+- **images:** prevent multiline data paste into image caption ([547dada](https://github.com/Quadrats/quadrats/commit/547dada90d626254e5d2f823cda1de377542dd2c))
+
 ## [0.6.4](https://github.com/Quadrats/quadrats/compare/v0.6.3...v0.6.4) (2022-03-18)
 
 ### Features
