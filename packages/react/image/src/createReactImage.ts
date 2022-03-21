@@ -129,6 +129,18 @@ export function createReactImage<Hosting extends string>(
           return;
         }
 
+        const inCaption = core.isSelectionInImageCaption(editor);
+
+        if (inCaption) {
+          const inlineData = new DataTransfer();
+
+          inlineData.setData('text', data.getData('text').replace(/\r?\n/g, ''));
+
+          insertData(inlineData);
+
+          return;
+        }
+
         insertData(data);
       };
 
