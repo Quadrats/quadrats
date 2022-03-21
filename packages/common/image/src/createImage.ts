@@ -161,7 +161,7 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
     resizeImage,
     with(editor) {
       const {
-        deleteBackward, deleteForward, insertBreak, isVoid, normalizeNode,
+        deleteBackward, deleteForward, insertBreak, isVoid, normalizeNode, insertData,
       } = editor;
 
       const deleteCollapsed = (origin: VoidFunction, isEdgeMethodName: 'isStart' | 'isEnd') => {
@@ -203,6 +203,23 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
       };
 
       editor.isVoid = element => (element as QuadratsElement).type === types.image || isVoid(element);
+
+      editor.insertData = (data) => {
+        const inCaption = isSelectionInImageCaption(editor);
+
+        if (inCaption) {
+          const inlineData = new DataTransfer();
+
+          inlineData.setData('text', data.getData('text').replace(/\r?\n/g, ''));
+
+          insertData(inlineData);
+
+          return;
+        }
+
+        insertData(data);
+      };
+
       editor.normalizeNode = (entry) => {
         const [node, path] = entry;
 

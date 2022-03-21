@@ -17,6 +17,7 @@ export function getAboveByTypes<T extends Ancestor>(
   options: GetAboveByTypesOptions = {},
 ): NodeEntry<T> | undefined {
   const { match } = options;
+
   return Editor.above<T>(editor, {
     ...options,
     match: (node, path) => types.includes((node as QuadratsElement).type as string) && (!match || match(node, path)),

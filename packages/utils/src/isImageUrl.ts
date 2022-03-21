@@ -122,6 +122,7 @@ const imageExtensions = [
   'sun',
   'tga',
 ];
+
 const imageExtensionsOr = imageExtensions.join('|');
 const dataUrlRegex = new RegExp(`^data:image/(${imageExtensionsOr}).*`);
 const imageUrlRegex = new RegExp(`.*.(${imageExtensionsOr})$`);

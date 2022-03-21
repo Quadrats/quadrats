@@ -11,7 +11,7 @@ export function createReactEmbed<P extends string>(options: CreateReactEmbedOpti
 
   return {
     ...core,
-    createRenderElement: (options) => createRenderElement<RenderEmbedElementProps<any, any>>({
+    createRenderElement: options => createRenderElement<RenderEmbedElementProps<any, any>>({
       type,
       render: createRenderEmbedElementBase({ strategies, renderers: options }),
     }),
