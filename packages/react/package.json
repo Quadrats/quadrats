@@ -1,6 +1,6 @@
 {
   "name": "@quadrats/react",
-  "version": "0.6.5",
+  "version": "0.6.6",
   "description": "",
   "author": "Rytass",
   "homepage": "https://github.com/Quadrats/quadrats#readme",
@@ -34,7 +34,7 @@
     "build": "npm run build:clean && node ../../scripts/build.js"
   },
   "dependencies": {
-    "@quadrats/common": "^0.6.5",
+    "@quadrats/common": "^0.6.6",
     "@quadrats/core": "^0.6.5",
     "@quadrats/icons": "^0.6.0",
     "@quadrats/locales": "^0.6.0",

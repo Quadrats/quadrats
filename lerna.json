@@ -3,7 +3,7 @@
   "npmClient": "yarn",
   "npmClientArgs": ["--no-lockfile"],
   "useWorkspaces": true,
-  "version": "0.6.5",
+  "version": "0.6.6",
   "command": {
     "version": {
       "ignoreChanges": ["**/__fixtures__/**", "**/__mocks__/**", "**/__tests__/**", "*.spec.*", "**/*.md"],
