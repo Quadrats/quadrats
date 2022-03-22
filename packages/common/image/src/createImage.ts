@@ -213,11 +213,7 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
               if (imageContainer) {
                 const [imageElement, imageLocation] = imageContainer;
 
-                console.log(imageLocation, imageContainer);
-
                 if ((imageElement as QuadratsElement).type === types.figure) {
-                  console.log('???');
-
                   Transforms.removeNodes(editor, { at: imageLocation });
                 }
               }

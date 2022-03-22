@@ -42,7 +42,7 @@ interface FileUploaderImplement {
   onload: (() => void) | null;
   open: (method: string, url: string | URL) => void;
   setRequestHeader: (key: string, value: string) => void;
-  send(body?: Document | XMLHttpRequestBodyInit | null): void;
+  send(body?: Document | BodyInit | null): void;
   readonly status: number;
   readonly response: any;
   readonly upload: FileUploaderUploadImplement;
