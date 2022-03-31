@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.7](https://github.com/Quadrats/quadrats/compare/v0.6.6...v0.6.7) (2022-03-31)
+
+### Features
+
+- **link:** trim url space ([40f9a06](https://github.com/Quadrats/quadrats/commit/40f9a06c9cd359953de98239d4043c5e9edb834d))
+
 ## [0.6.6](https://github.com/Quadrats/quadrats/compare/v0.6.5...v0.6.6) (2022-03-22)
 
 ### Bug Fixes
