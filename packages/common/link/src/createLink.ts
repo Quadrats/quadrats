@@ -81,7 +81,7 @@ export function createLink({
     const { text = url } = options;
     const link: LinkElement = {
       type,
-      url,
+      url: url.trim(),
       children: [{ text }],
     };
 
@@ -90,7 +90,7 @@ export function createLink({
 
   const unwrapLink: Link['unwrapLink'] = (editor, options = {}) => unwrapNodesByTypes(editor, [type], options);
   const wrapLink: Link['wrapLink'] = (editor, url, options = {}) => {
-    const link: LinkElement = { type, url, children: [] };
+    const link: LinkElement = { type, url: url.trim(), children: [] };
 
     wrapNodesWithUnhangRange(editor, link, { ...options, split: true });
   };
