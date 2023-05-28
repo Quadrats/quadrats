@@ -179,8 +179,8 @@ export function createLink({
         }
 
         return !element.children.some(
-          child => Editor.isBlock(editor, child)
-          && Editor.isVoid(editor, child)
+          child => Editor.isBlock(editor, child as QuadratsElement)
+          && Editor.isVoid(editor, child as QuadratsElement)
           && wrappableVoidTypes.includes((child as QuadratsElement).type as string),
         );
       };

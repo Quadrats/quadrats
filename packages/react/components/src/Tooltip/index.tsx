@@ -56,6 +56,7 @@ function Tooltip({
       delayTimer.current = NaN;
     }
   }, []);
+
   const delaySetVisible = useCallback(
     (setVisibleAction: SetStateAction<boolean>, delay: number) => {
       clearDelayTimer();
@@ -71,6 +72,7 @@ function Tooltip({
     },
     [clearDelayTimer],
   );
+
   const triggerRef = useRef<HTMLElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
   const [firstPlacement, secondPlacement] = placement.split('-');
@@ -80,7 +82,7 @@ function Tooltip({
 
   if (triggers.includes('click')) {
     triggerProps.onClick = (event) => {
-      delaySetVisible((prevVisible) => !prevVisible, 0);
+      delaySetVisible(prevVisible => !prevVisible, 0);
       child.props.onClick?.(event);
     };
   }
@@ -92,10 +94,12 @@ function Tooltip({
         delaySetVisible(false, mouseLeaveDelay);
       }
     };
+
     triggerProps.onMouseEnter = (event) => {
       delaySetVisible(true, mouseEnterDelay);
       child.props.onMouseEnter?.(event);
     };
+
     triggerProps.onMouseLeave = (event) => {
       delaySetVisible(false, mouseLeaveDelay);
       child.props.onMouseLeave?.(event);

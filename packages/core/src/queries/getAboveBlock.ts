@@ -1,11 +1,12 @@
 import {
   Ancestor,
   Editor,
+  EditorAboveOptions,
   NodeEntry,
 } from 'slate';
-import { EditorAboveOptions } from '../adapter/slate';
+import { QuadratsElement } from '../typings';
 
-export type GetAboveBlockOptions = EditorAboveOptions;
+export type GetAboveBlockOptions = EditorAboveOptions<Ancestor>;
 
 /**
  * Get the block above a location.
@@ -15,7 +16,7 @@ export function getAboveBlock<T extends Ancestor>(editor: Editor, options: GetAb
   const { match } = options;
   const aboveBlock = Editor.above<T>(editor, {
     ...options,
-    match: (node, path) => Editor.isBlock(editor, node) && (!match || match(node, path)),
+    match: (node, path) => Editor.isBlock(editor, node as QuadratsElement) && (!match || match(node, path)),
   });
 
   return (aboveBlock || [editor, []]) as NodeEntry<T>;

@@ -1,10 +1,10 @@
 import {
   Editor,
+  EditorBeforeOptions,
   Location,
   Path,
   Point,
 } from 'slate';
-import { EditorBeforeOptions } from '../adapter/slate';
 
 interface StackItemForUnitOffset {
   point: Point;
@@ -57,9 +57,11 @@ export function getPointBefore(editor: Editor, at: Location, options: GetPointBe
   const pointAndTextStackForUnitOffset = unit === 'offset'
     ? Array<StackItemForUnitOffset | undefined>(lengthOfPointAndTextStackForUnitOffset)
     : undefined;
+
   const matchFn: GetPointBeforeOptionsMatchFn = typeof match === 'string'
     ? ({ beforeString }) => beforeString === match
     : match;
+
   let beforeAt = at;
   let previousBeforePoint = Editor.point(editor, at, { edge: 'end' });
 
@@ -84,10 +86,12 @@ export function getPointBefore(editor: Editor, at: Location, options: GetPointBe
         point: beforePoint,
         text: beforeString,
       });
+
       pointAndTextStackForUnitOffset.pop();
+
       beforeString = pointAndTextStackForUnitOffset
         .slice(0, -1)
-        .map((item) => item?.text || '')
+        .map(item => item?.text || '')
         .join('');
     }
 

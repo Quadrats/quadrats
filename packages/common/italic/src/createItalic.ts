@@ -1,7 +1,10 @@
 import { createToggleMarkCreator } from '@quadrats/common/toggle-mark';
 import { ITALIC_TYPE } from './constants';
+import { Editor } from '@quadrats/core';
 
-export const createItalic = (variant?: string) => createToggleMarkCreator({
-  type: ITALIC_TYPE,
-  variant,
-});
+export function createItalic<E extends Editor = Editor>(variant?: string) {
+  return createToggleMarkCreator<E>({
+    type: ITALIC_TYPE,
+    variant,
+  });
+}

@@ -1,4 +1,4 @@
-import { Editor } from '@quadrats/core';
+import { Editor } from 'slate';
 import { DOMAttributes, EventHandler } from 'react';
 
 export type EventHandlerName = {

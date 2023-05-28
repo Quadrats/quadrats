@@ -3,8 +3,8 @@ import {
   Editor,
   Location,
   NodeEntry,
+  EditorParentOptions,
 } from 'slate';
-import { EditorParentOptions } from '../adapter/slate';
 
 /**
  * Returns `undefined` if there is no parent instead of throwing error.

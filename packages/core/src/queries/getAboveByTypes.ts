@@ -1,12 +1,12 @@
 import {
   Ancestor,
   Editor,
+  EditorAboveOptions,
   NodeEntry,
 } from 'slate';
 import { QuadratsElement } from '../typings';
-import { EditorAboveOptions } from '../adapter/slate';
 
-export type GetAboveByTypesOptions = EditorAboveOptions;
+export type GetAboveByTypesOptions = EditorAboveOptions<Ancestor>;
 
 /**
  * Get the element above a location by types.

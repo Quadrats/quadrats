@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { CSSTransitionClassNames } from 'react-transition-group/CSSTransition';
 import { PortalProps } from '../Portal';
 
@@ -15,7 +15,7 @@ export type TooltipPlacement =
 export type TooltipTrigger = 'hover' | 'click';
 
 export interface TooltipProps {
-  children?: ReactElement;
+  children?: React.ReactNode;
   triggers?: TooltipTrigger[];
   popup?: ReactNode;
   getContainer?: PortalProps['getContainer'];

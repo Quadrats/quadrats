@@ -1,7 +1,7 @@
 const path = require('path');
 const fse = require('fs-extra');
 const { execSync } = require('child_process');
-const glob = require('glob');
+const { glob } = require('glob');
 const { rollup } = require('rollup');
 const ts = require('rollup-plugin-typescript2');
 
@@ -32,36 +32,32 @@ const ROOT_SYMBOL = '__ROOT__';
 const DEPS_SET_RECORD = {};
 const TRIGGERS_SET_RECORD = {};
 
-function getPackagesInfos() {
-  return new Promise((resolve, reject) => {
-    glob('**/package.json', (_, files)=> {
-      resolve(
-        files.reduce((acc, file) => {
-          const packageJsonPath = path.resolve(rootPackagePath, file);
-          const packageJson = require(packageJsonPath);
-          const dirs = file
-            .replace(/package\.json|\/package\.json/, '')
-            .split('/')
-            .filter(Boolean);
+async function getPackagesInfos() {
+  const files = await glob('**/package.json');
 
-          const name = [rootPackageName, ...dirs].join('/');
+  return files.reduce((acc, file) => {
+    const packageJsonPath = path.resolve(rootPackagePath, file);
+    const packageJson = require(packageJsonPath);
+    const dirs = file
+      .replace(/package\.json|\/package\.json/, '')
+      .split('/')
+      .filter(Boolean);
 
-          if (packageJson.name !== name) {
-            reject(`Package name '${name}' should equal '${packageJson.name}'`);
-          }
+    const name = [rootPackageName, ...dirs].join('/');
 
-          const packageSymbol = dirs.join('/') || ROOT_SYMBOL;
+    if (packageJson.name !== name) {
+      throw new Error(`Package name '${name}' should equal '${packageJson.name}'`);
+    }
 
-          acc[packageSymbol] = {
-            packageJson,
-            dirs,
-          };
+    const packageSymbol = dirs.join('/') || ROOT_SYMBOL;
 
-          return acc;
-        }, {})
-      );
-    });
-  });
+    acc[packageSymbol] = {
+      packageJson,
+      dirs,
+    };
+
+    return acc;
+  }, {});
 }
 
 function isExternal(id) {

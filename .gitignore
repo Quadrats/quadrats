@@ -53,3 +53,6 @@ Thumbs.db
 
 # typescript types
 *.d.ts
+
+# storybook
+storybook-static

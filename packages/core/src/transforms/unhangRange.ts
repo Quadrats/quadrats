@@ -2,8 +2,8 @@ import {
   Editor,
   Location,
   Range,
+  EditorUnhangRangeOptions,
 } from 'slate';
-import { EditorUnhangRangeOptions } from '../adapter/slate';
 
 export interface UnhangRangeOptions extends EditorUnhangRangeOptions {
   at?: Location;

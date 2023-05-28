@@ -1,4 +1,4 @@
-import { getMark, WithMarkType } from '@quadrats/core';
+import { Editor, getMark, WithMarkType } from '@quadrats/core';
 import { ToggleMark } from './typings';
 
 export type CreateToggleMarkCreatorOptions = WithMarkType & {
@@ -9,8 +9,8 @@ export type CreateToggleMarkOptions = Partial<CreateToggleMarkCreatorOptions> & 
   variant?: string;
 };
 
-export function createToggleMarkCreator(defaults: CreateToggleMarkCreatorOptions) {
-  return ({ type = defaults.type, variant = defaults.variant }: CreateToggleMarkOptions = {}): ToggleMark => {
+export function createToggleMarkCreator<E extends Editor = Editor>(defaults: CreateToggleMarkCreatorOptions) {
+  return ({ type = defaults.type, variant = defaults.variant }: CreateToggleMarkOptions = {}): ToggleMark<E> => {
     const isToggleMarkActive: ToggleMark['isToggleMarkActive'] = (editor) => {
       const mark = getMark<boolean>(editor, type);
 

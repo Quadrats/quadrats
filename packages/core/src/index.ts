@@ -31,9 +31,7 @@ export * from './queries/isPathAtRoot';
 export * from './queries/isSelectionAtBlockEdge';
 
 export * from './transforms/deleteSelectionFragmentIfExpanded';
-export * from './transforms/insertSoftBreak';
 export * from './transforms/toggleNodesType';
-export * from './transforms/unhangRange';
 export * from './transforms/unwrapNodesByTypes';
 export * from './transforms/wrapNodesWithUnhangRange';
 
@@ -41,6 +39,6 @@ export * from './normalizers/normalizeOnlyAtRoot';
 export * from './normalizers/normalizeOnlyInlineOrTextInChildren';
 export * from './normalizers/normalizeVoidElementChildren';
 
-export function createEditor() {
-  return withSlateHistory(createSlateEditor()) as QuadratsEditor;
+export function createEditor(): QuadratsEditor {
+  return withSlateHistory(createSlateEditor());
 }

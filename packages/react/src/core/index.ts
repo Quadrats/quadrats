@@ -10,13 +10,12 @@ export {
   ReactEditor,
 } from 'slate-react';
 
-export { Editor } from '@quadrats/core';
-
 export * from './typings/handler';
 export * from './typings/renderer';
 export * from './typings/with';
 export * from './typings/descendant';
 
+export { Editor } from '@quadrats/core';
 export { default as Editable, EditableProps } from './components/Editable';
 export { default as DefaultElement } from './components/DefaultElement';
 export { default as DefaultLeaf } from './components/DefaultLeaf';
@@ -30,12 +29,16 @@ export { createRenderElement } from './createRenderElement';
 export { createRenderElements } from './createRenderElements';
 export { createRenderMark } from './createRenderMark';
 
-export interface QuadratsReactEditor extends QuadratsEditor, ReactEditor {}
+export type QuadratsReactEditor = QuadratsEditor & ReactEditor;
+
+export const PLACEHOLDER_KEY = '__quadrats-placeholder__';
 
 declare module '@quadrats/core' {
   interface CustomTypes {
-    Editor: QuadratsReactEditor
-    Element: QuadratsElement
-    Text: QuadratsText
+    Editor: QuadratsReactEditor;
+    Element: QuadratsElement;
+    Text: QuadratsText & {
+      [PLACEHOLDER_KEY]?: boolean;
+    };
   }
 }

@@ -1,12 +1,12 @@
-@import '../packages/react/components/src/Progress/progress';
-@import '../packages/react/components/src/Tooltip/tooltip';
-@import '../packages/react/src/core/components/editable';
-@import '../packages/react/toolbar/src/components/toolbar';
-@import '../packages/react/file-uploader/src/components/file-uploader';
-@import '../packages/react/image/src/components/image';
-@import '../packages/react/read-more/src/components/read-more';
-@import '../packages/react/paragraph/src/paragraph';
-@import '../packages/react/line-break/src/line-break';
+@import url('../packages/react/components/src/Progress/progress.scss');
+@import url('../packages/react/components/src/Tooltip/tooltip.scss');
+@import url('../packages/react/src/core/components/editable.scss');
+@import url('../packages/react/toolbar/src/components/toolbar.scss');
+@import url('../packages/react/file-uploader/src/components/file-uploader.scss');
+@import url('../packages/react/image/src/components/image.scss');
+@import url('../packages/react/read-more/src/components/read-more.scss');
+@import url('../packages/react/paragraph/src/paragraph.scss');
+@import url('../packages/react/line-break/src/line-break.scss');
 
 @mixin stories-editable {
   color: var(--qdr-text);
@@ -61,7 +61,7 @@
   }
 
   &__examples {
-    &__playgroud {
+    &__playground {
       &__serializer-jsx {
         display: grid;
         grid-template-columns: repeat(2, 1fr);

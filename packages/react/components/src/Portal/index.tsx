@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 export interface PortalProps {
   getContainer?: () => HTMLElement;
+  children?: React.ReactNode;
 }
 
 const Portal: FC<PortalProps> = ({ getContainer, children }) => {

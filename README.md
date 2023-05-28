@@ -1,13 +1,13 @@
 # Quadrats
 
-A complete rich text editor.  
+A complete rich text editor.
 Currently based on [Slate](https://github.com/ianstormtaylor/slate) framework.
 
 [![npm package](https://img.shields.io/npm/v/@quadrats/react.svg?maxAge=60)](https://www.npmjs.com/package/@quadrats/react)
 [![npm downloads](https://img.shields.io/npm/dt/@quadrats/react.svg?maxAge=60)](https://www.npmjs.com/package/@quadrats/react)
 [![Licence](https://img.shields.io/github/license/Quadrats/quadrats.svg?maxAge=60)](https://github.com/Quadrats/quadrats/blob/main/LICENSE)
 
-[Try out our plugins](./?path=/story/examples-playgroud--all).
+[Try out our plugins](./?path=/story/examples-playground--all).
 
 ## Documentation
 

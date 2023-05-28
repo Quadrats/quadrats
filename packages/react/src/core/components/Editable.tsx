@@ -6,8 +6,7 @@ import { BaseRange, Editor, isAncestorEmpty } from '@quadrats/core';
 import { useLocale, useTheme } from '@quadrats/react/configs';
 import DefaultLeaf from './DefaultLeaf';
 import { RenderElementProps, RenderLeafProps } from '../typings/renderer';
-
-const PLACEHOLDER_KEY = '__quadrats-placeholder__';
+import { PLACEHOLDER_KEY } from '..';
 
 export type EditableProps = Omit<SlateEditableProps, 'renderLeaf' | 'renderElement'> & {
   renderLeaf?: (props: RenderLeafProps) => JSX.Element;
@@ -31,6 +30,7 @@ function Editable(props: EditableProps) {
   const editor = useSlate();
   const isEditorEmpty = isAncestorEmpty(editor);
   const [placeholderShowable, setPlaceholderShowable] = useState(isEditorEmpty);
+
   const decorate: NonNullable<EditableProps['decorate']> = useCallback(
     (entry) => {
       const result = decorateProp ? decorateProp(entry) : [];
@@ -71,12 +71,10 @@ function Editable(props: EditableProps) {
   );
 
   const renderLeaf = useCallback(
-    (props) => {
+    (props: RenderLeafProps) => {
       const children = renderLeafProp ? renderLeafProp(props) : <DefaultLeaf {...props} />;
 
-      const { leaf } = props;
-
-      if (placeholderShowable && leaf[PLACEHOLDER_KEY]) {
+      if (placeholderShowable && props.leaf[PLACEHOLDER_KEY]) {
         return (
           <>
             <span className="qdr-editable__placeholder" contentEditable={false}>
