@@ -6,6 +6,6 @@ import { HIGHLIGHT_HOTKEY } from './constants';
 export const createReactHighlight = (variant?: string) => createReactToggleMarkCreator(
   createHighlight(variant), {
     hotkey: HIGHLIGHT_HOTKEY,
-    render: defaultRenderHighlight,
+    render: defaultRenderHighlight(variant),
   },
 )();

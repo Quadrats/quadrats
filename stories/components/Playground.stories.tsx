@@ -30,6 +30,7 @@ import {
   PodcastApple as PodcastAppleIcon,
   Spotify as SpotifyIcon,
 } from '@quadrats/icons';
+import { ConfigsProvider } from '@quadrats/react/configs';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Theme, THEME_QDR, THEME_QDR_DARK } from '@quadrats/theme';
 import { LocaleDefinition, zhTW, enUS } from '@quadrats/locales';
@@ -93,6 +94,26 @@ import type { EmbedStrategies } from '@quadrats/common/embed';
 import { PARAGRAPH_TYPE } from '@quadrats/core';
 import { customRenderBlockquote } from '../custom-elements';
 import getLocalFileUploaderOptions from '../helper/local-file-uploader-options';
+
+import { createJsxSerializeBold } from '@quadrats/react/bold/jsx-serializer';
+import { createJsxSerializeItalic } from '@quadrats/react/italic/jsx-serializer';
+import { createJsxSerializeUnderline } from '@quadrats/react/underline/jsx-serializer';
+import { createJsxSerializeStrikethrough } from '@quadrats/react/strikethrough/jsx-serializer';
+import { createJsxSerializeHighlight } from '@quadrats/react/highlight/jsx-serializer';
+import { createJsxSerializeLineBreak } from '@quadrats/react/line-break/jsx-serializer/src/createJsxSerializeLineBreak';
+import { createJsxSerializeParagraph } from '@quadrats/react/paragraph/jsx-serializer/src/createJsxSerializeParagraph';
+import { createJsxSerializeBlockquote } from '@quadrats/react/blockquote/jsx-serializer/src/createJsxSerializeBlockquote';
+import { createJsxSerializeHeading } from '@quadrats/react/heading/jsx-serializer/src/createJsxSerializeHeading';
+import { createJsxSerializeList } from '@quadrats/react/list/jsx-serializer/src/createJsxSerializeList';
+import { createJsxSerializeDivider } from '@quadrats/react/divider/jsx-serializer/src/createJsxSerializeDivider';
+import { createJsxSerializeFootnote } from '@quadrats/react/footnote/jsx-serializer/src/createJsxSerializeFootnote';
+import { createJsxSerializeLink } from '@quadrats/react/link/jsx-serializer';
+import { createJsxSerializeReadMore } from '@quadrats/react/read-more/jsx-serializer';
+import { createJsxSerializeImage } from '@quadrats/react/image/jsx-serializer';
+import { createJsxSerializeEmbed } from '@quadrats/react/embed/jsx-serializer/src/createJsxSerializeEmbed';
+import { createJsxSerializer } from '@quadrats/react/jsx-serializer';
+
+import JSONPretty from 'react-json-pretty';
 
 // Default
 const lineBreak = createReactLineBreak();
@@ -205,7 +226,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withTitles,
   ]);
 
-  const embed = useMemo(() => {
+  const embedStrategies = useMemo(() => {
     const strategies: EmbedStrategies<string> = {};
 
     if (~withEmbeds.indexOf('youtube')) strategies.youtube = YoutubeEmbedStrategy;
@@ -216,10 +237,12 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     if (~withEmbeds.indexOf('podcastApple')) strategies.podcastApple = PodcastAppleEmbedStrategy;
     if (~withEmbeds.indexOf('spotify')) strategies.spotify = SpotifyEmbedStrategy;
 
-    return createReactEmbed({
-      strategies,
-    });
+    return strategies;
   }, [withEmbeds]);
+
+  const embed = useMemo(() => createReactEmbed({
+    strategies: embedStrategies,
+  }), [embedStrategies]);
 
   const editor = useMemo(() => (() => {
     const editorWithOptions = [
@@ -506,25 +529,111 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withImage,
   ]);
 
+  const jsxSerializer = useMemo(() => {
+    const leafs = [];
+
+    const elements = [
+      createJsxSerializeLineBreak(),
+      createJsxSerializeParagraph(),
+    ];
+
+    // Leafs
+    if (withBold) leafs.push(createJsxSerializeBold());
+    if (withItalic) leafs.push(createJsxSerializeItalic());
+    if (withUnderline) leafs.push(createJsxSerializeUnderline());
+    if (withStrikethrough) leafs.push(createJsxSerializeStrikethrough());
+    if (withHighlight) leafs.push(createJsxSerializeHighlight());
+    if (~withCustomHighlights.indexOf('sheet-music')) leafs.push(createJsxSerializeHighlight('sheet-music'));
+    if (~withCustomHighlights.indexOf('drama')) leafs.push(createJsxSerializeHighlight('drama'));
+    if (~withCustomHighlights.indexOf('dance')) leafs.push(createJsxSerializeHighlight('dance'));
+
+    // Elements
+    if (withBlockquote) elements.push(createJsxSerializeBlockquote({ render: customRenderBlockquote }));
+    if (withTitles.length) elements.push(createJsxSerializeHeading());
+    if (withLists.length) elements.push(createJsxSerializeList());
+    if (withDivider) elements.push(createJsxSerializeDivider());
+    if (withFootnote) elements.push(createJsxSerializeFootnote());
+    if (withLink) elements.push(createJsxSerializeLink());
+    if (withImage) elements.push(createJsxSerializeImage());
+    if (withReadMore) elements.push(createJsxSerializeReadMore());
+
+    if (withEmbeds.length) {
+      const embedElements: Record<string, (props: any) => React.JSX.Element> = {};
+
+      if (~withEmbeds.indexOf('youtube')) embedElements.youtube = defaultRenderYoutubeEmbedElement;
+      if (~withEmbeds.indexOf('vimeo')) embedElements.vimeo = defaultRenderVimeoEmbedElement;
+      if (~withEmbeds.indexOf('instagram')) embedElements.instagram = defaultRenderInstagramEmbedElement;
+      if (~withEmbeds.indexOf('facebook')) embedElements.facebook = defaultRenderFacebookEmbedElement;
+      if (~withEmbeds.indexOf('twitter')) embedElements.twitter = defaultRenderTwitterEmbedElement;
+      if (~withEmbeds.indexOf('podcastApple')) embedElements.podcastApple = defaultRenderPodcastAppleEmbedElement;
+      if (~withEmbeds.indexOf('spotify')) embedElements.spotify = defaultRenderSpotifyEmbedElement;
+
+      elements.push(createJsxSerializeEmbed({
+        strategies: embedStrategies,
+        renderers: embedElements,
+      }));
+    }
+
+    return createJsxSerializer({
+      leafs,
+      elements,
+    });
+  }, [
+    embedStrategies,
+    withTitles,
+    withBlockquote,
+    withLists,
+    withDivider,
+    withEmbeds,
+    withBold,
+    withItalic,
+    withUnderline,
+    withStrikethrough,
+    withHighlight,
+    withCustomHighlights,
+    withFootnote,
+    withLink,
+    withImage,
+    withReadMore,
+  ]);
+
   return (
-    <Quadrats
-      editor={editor}
-      locale={editorLocale}
-      theme={editorTheme}
-      value={value}
-      key={Math.random()} // Fixed Slate bug on re-create editor
-      onChange={(v: Descendant[]) => setValue(v)}
-    >
-      <Toolbar>
-        {toolbarRenderer}
-      </Toolbar>
-      <Editable
-        {...handlers}
-        className="stories__custom-elements stories__editable"
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
-      />
-    </Quadrats>
+    <div>
+      <div className="stories__examples__playground__serializer-jsx">
+        <Quadrats
+          editor={editor}
+          locale={editorLocale}
+          theme={editorTheme}
+          value={value}
+          key={Math.random()} // Fixed Slate bug on re-create editor
+          onChange={(v: Descendant[]) => setValue(v)}
+        >
+          <Toolbar>
+            {toolbarRenderer}
+          </Toolbar>
+          <Editable
+            {...handlers}
+            className="stories__custom-elements stories__editable"
+            renderElement={renderElement}
+            renderLeaf={renderLeaf}
+          />
+        </Quadrats>
+        <ConfigsProvider theme={editorTheme} locale={editorLocale}>
+          {({
+            theme: {
+              props: { style },
+            },
+          }) => (
+            <div className="stories__custom-elements" style={style}>
+              {jsxSerializer.serialize(value)}
+            </div>
+          )}
+        </ConfigsProvider>
+      </div>
+      <div className="stories__examples__playground__json-block">
+        <JSONPretty data={value} />
+      </div>
+    </div>
   );
 }
 
