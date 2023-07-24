@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.1](https://github.com/Quadrats/quadrats/compare/v0.7.0...v0.7.1) (2023-07-24)
+
+### Bug Fixes
+
+- **utils:** correct isImageUrl regex ([927912e](https://github.com/Quadrats/quadrats/commit/927912eecda5c32b7455c127cac7f6940d66fc03))
+
 # [0.7.0](https://github.com/Quadrats/quadrats/compare/v0.6.7...v0.7.0) (2023-05-29)
 
 **Note:** Version bump only for package @quadrats/utils

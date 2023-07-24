@@ -1,6 +1,6 @@
 {
   "name": "@quadrats/common",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "",
   "author": "Rytass",
   "homepage": "https://github.com/Quadrats/quadrats#readme",
@@ -25,6 +25,6 @@
   "dependencies": {
     "@quadrats/core": "^0.7.0",
     "@quadrats/locales": "^0.7.0",
-    "@quadrats/utils": "^0.7.0"
+    "@quadrats/utils": "^0.7.1"
   }
 }
