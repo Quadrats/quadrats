@@ -125,7 +125,11 @@ const imageExtensions = [
 
 const imageExtensionsOr = imageExtensions.join('|');
 const dataUrlRegex = new RegExp(`^data:image/(${imageExtensionsOr}).*`);
-const imageUrlRegex = new RegExp(`.*.(${imageExtensionsOr})$`);
+/**
+ * \. is necessary escape for image url regex, so disabled eslint rule.
+ */
+// eslint-disable-next-line no-useless-escape
+const imageUrlRegex = new RegExp(`/.*\.(?:${imageExtensionsOr})$/`);
 
 export function isImageUrl(url: string) {
   return dataUrlRegex.test(url) || (isUrl(url) && imageUrlRegex.test(url));
