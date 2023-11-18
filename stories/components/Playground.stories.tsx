@@ -100,17 +100,17 @@ import { createJsxSerializeItalic } from '@quadrats/react/italic/jsx-serializer'
 import { createJsxSerializeUnderline } from '@quadrats/react/underline/jsx-serializer';
 import { createJsxSerializeStrikethrough } from '@quadrats/react/strikethrough/jsx-serializer';
 import { createJsxSerializeHighlight } from '@quadrats/react/highlight/jsx-serializer';
-import { createJsxSerializeLineBreak } from '@quadrats/react/line-break/jsx-serializer/src/createJsxSerializeLineBreak';
-import { createJsxSerializeParagraph } from '@quadrats/react/paragraph/jsx-serializer/src/createJsxSerializeParagraph';
-import { createJsxSerializeBlockquote } from '@quadrats/react/blockquote/jsx-serializer/src/createJsxSerializeBlockquote';
-import { createJsxSerializeHeading } from '@quadrats/react/heading/jsx-serializer/src/createJsxSerializeHeading';
-import { createJsxSerializeList } from '@quadrats/react/list/jsx-serializer/src/createJsxSerializeList';
-import { createJsxSerializeDivider } from '@quadrats/react/divider/jsx-serializer/src/createJsxSerializeDivider';
-import { createJsxSerializeFootnote } from '@quadrats/react/footnote/jsx-serializer/src/createJsxSerializeFootnote';
+import { createJsxSerializeLineBreak } from '@quadrats/react/line-break/jsx-serializer';
+import { createJsxSerializeParagraph } from '@quadrats/react/paragraph/jsx-serializer';
+import { createJsxSerializeBlockquote } from '@quadrats/react/blockquote/jsx-serializer';
+import { createJsxSerializeHeading } from '@quadrats/react/heading/jsx-serializer';
+import { createJsxSerializeList } from '@quadrats/react/list/jsx-serializer';
+import { createJsxSerializeDivider } from '@quadrats/react/divider/jsx-serializer';
+import { createJsxSerializeFootnote } from '@quadrats/react/footnote/jsx-serializer';
 import { createJsxSerializeLink } from '@quadrats/react/link/jsx-serializer';
 import { createJsxSerializeReadMore } from '@quadrats/react/read-more/jsx-serializer';
 import { createJsxSerializeImage } from '@quadrats/react/image/jsx-serializer';
-import { createJsxSerializeEmbed } from '@quadrats/react/embed/jsx-serializer/src/createJsxSerializeEmbed';
+import { createJsxSerializeEmbed } from '@quadrats/react/embed/jsx-serializer';
 import { createJsxSerializer } from '@quadrats/react/jsx-serializer';
 
 import JSONPretty from 'react-json-pretty';
