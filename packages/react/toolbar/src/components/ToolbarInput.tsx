@@ -14,7 +14,11 @@ function ToolbarInput({ exit, toolInput }: ToolbarInputProps) {
     exit();
   };
 
+  let composing = false;
+
   const onKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
+    if (composing) return;
+
     const isEnter = event.key === 'Enter';
 
     if (isEnter || event.key === 'Escape') {
@@ -29,11 +33,21 @@ function ToolbarInput({ exit, toolInput }: ToolbarInputProps) {
   const locale = useLocale();
   const placeholder = getPlaceholder(locale);
 
+  const onCompositionStart = () => {
+    composing = true;
+  };
+
+  const onCompositionEnd = () => {
+    composing = false;
+  };
+
   return (
     <div className="qdr-toolbar__input__wrapper">
       <input
         defaultValue={toolInput.defaultValue}
         autoFocus
+        onCompositionStart={onCompositionStart}
+        onCompositionEnd={onCompositionEnd}
         className="qdr-toolbar__input"
         placeholder={placeholder}
         onKeyDown={onKeyDown}

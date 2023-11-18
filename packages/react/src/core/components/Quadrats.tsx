@@ -19,7 +19,7 @@ function Quadrats(props: QuadratsProps) {
 
   return (
     <ConfigsProvider theme={theme} locale={locale}>
-      <Slate editor={editor} onChange={onChange} value={value}>
+      <Slate editor={editor} onValueChange={onChange} initialValue={value}>
         {children}
       </Slate>
     </ConfigsProvider>

@@ -9,5 +9,6 @@ CreateJsxSerializeElementOptions<JsxSerializeBlockquoteElementProps>
 
 export function createJsxSerializeBlockquote(options: CreateJsxSerializeBlockquoteOptions = {}) {
   const { type = BLOCKQUOTE_TYPE, render = defaultRenderBlockquoteElement } = options;
+
   return createJsxSerializeElement<JsxSerializeBlockquoteElementProps>({ type, render });
 }
