@@ -2,7 +2,6 @@
   "packages": ["packages/*"],
   "npmClient": "yarn",
   "npmClientArgs": ["--no-lockfile"],
-  "useWorkspaces": true,
   "version": "0.7.1",
   "command": {
     "version": {
@@ -14,5 +13,6 @@
     "publish": {
       "contents": "dist"
     }
-  }
+  },
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
 }

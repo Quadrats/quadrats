@@ -40,13 +40,13 @@
     "@quadrats/locales": "^0.7.0",
     "@quadrats/theme": "^0.7.0",
     "@quadrats/utils": "^0.7.1",
-    "@types/is-hotkey": "^0.1.7",
-    "@types/react-transition-group": "^4.4.4",
-    "clsx": "^1.1.1",
+    "@types/is-hotkey": "^0.1.9",
+    "@types/react-transition-group": "^4.4.9",
+    "clsx": "^2.0.0",
     "is-hotkey": "^0.2.0",
-    "react-transition-group": "^4.4.2",
-    "slate-react": "^0.94.2",
-    "tslib": "^2.3.1"
+    "react-transition-group": "^4.4.5",
+    "slate-react": "^0.101.0",
+    "tslib": "^2.6.2"
   },
   "peerDependencies": {
     "react": "^18.2.0",
