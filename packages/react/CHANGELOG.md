@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.2](https://github.com/Quadrats/quadrats/compare/v0.7.1...v0.7.2) (2023-11-18)
+
+### Bug Fixes
+
+- add missing jsx serielizer default class name to resolve [#26](https://github.com/Quadrats/quadrats/issues/26) ([50bec1f](https://github.com/Quadrats/quadrats/commit/50bec1f8b89fcbd2e5213ff786dad2f0d0164ab9))
+- **footnote:** composition issue when text replacement to resolve [#27](https://github.com/Quadrats/quadrats/issues/27) ([77c6f49](https://github.com/Quadrats/quadrats/commit/77c6f49f1e273fa7d09cbfabf8b17edcf3cdfcfd))
+- **react:** on change update stored value ([8172930](https://github.com/Quadrats/quadrats/commit/8172930b3141d0131412b936c10bdce2613dbd6e))
+
 ## [0.7.1](https://github.com/Quadrats/quadrats/compare/v0.7.0...v0.7.1) (2023-07-24)
 
 ### Features
