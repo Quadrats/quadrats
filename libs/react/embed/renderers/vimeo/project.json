@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/embed/renderers/vimeo",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/embed/renderers/vimeo/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/embed/renderers/vimeo",
+        "main": "libs/react/embed/renderers/vimeo/src/index.ts",
+        "tsConfig": "libs/react/embed/renderers/vimeo/tsconfig.build.json",
+        "assets": ["libs/react/embed/renderers/vimeo/*.md"]
+      }
+    }
+  }
+}

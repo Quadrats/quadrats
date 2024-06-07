@@ -1,9 +1,0 @@
-{
-  "name": "@quadrats/common/bold",
-  "sideEffects": false,
-  "quadratsConfig": {
-    "deps": [
-      "toggle-mark"
-    ]
-  }
-}

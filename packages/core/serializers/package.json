@@ -1,9 +1,0 @@
-{
-  "name": "@quadrats/core/serializers",
-  "sideEffects": false,
-  "quadratsConfig": {
-    "deps": [
-      "__ROOT__"
-    ]
-  }
-}

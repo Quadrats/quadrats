@@ -1,9 +1,0 @@
-{
-  "name": "@quadrats/react/divider",
-  "sideEffects": false,
-  "quadratsConfig": {
-    "deps": [
-      "__ROOT__"
-    ]
-  }
-}

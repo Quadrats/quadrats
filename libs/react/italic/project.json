@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/italic",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/italic/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/italic",
+        "main": "libs/react/italic/src/index.ts",
+        "tsConfig": "libs/react/italic/tsconfig.build.json",
+        "assets": ["libs/react/italic/*.md"]
+      }
+    }
+  }
+}

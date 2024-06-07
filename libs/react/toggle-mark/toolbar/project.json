@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/toggle-mark/toolbar",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/toggle-mark/toolbar/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/toggle-mark/toolbar",
+        "main": "libs/react/toggle-mark/toolbar/src/index.ts",
+        "tsConfig": "libs/react/toggle-mark/toolbar/tsconfig.build.json",
+        "assets": ["libs/react/toggle-mark/toolbar/*.md"]
+      }
+    }
+  }
+}

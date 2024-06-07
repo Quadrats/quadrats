@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/highlight",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/highlight/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/highlight",
+        "main": "libs/react/highlight/src/index.ts",
+        "tsConfig": "libs/react/highlight/tsconfig.build.json",
+        "assets": ["libs/react/highlight/*.md"]
+      }
+    }
+  }
+}

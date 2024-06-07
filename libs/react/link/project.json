@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/link",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/link/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/link",
+        "main": "libs/react/link/src/index.ts",
+        "tsConfig": "libs/react/link/tsconfig.build.json",
+        "assets": ["libs/react/link/*.md"]
+      }
+    }
+  }
+}

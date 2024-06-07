@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/embed/jsx-serializer/spotify",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/embed/jsx-serializer/spotify/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/embed/jsx-serializer/spotify",
+        "main": "libs/react/embed/jsx-serializer/spotify/src/index.ts",
+        "tsConfig": "libs/react/embed/jsx-serializer/spotify/tsconfig.build.json",
+        "assets": ["libs/react/embed/jsx-serializer/spotify/*.md"]
+      }
+    }
+  }
+}

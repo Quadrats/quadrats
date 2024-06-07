@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/embed/jsx-serializer/podcast-apple",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/embed/jsx-serializer/podcast-apple/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/embed/jsx-serializer/podcast-apple",
+        "main": "libs/react/embed/jsx-serializer/podcast-apple/src/index.ts",
+        "tsConfig": "libs/react/embed/jsx-serializer/podcast-apple/tsconfig.build.json",
+        "assets": ["libs/react/embed/jsx-serializer/podcast-apple/*.md"]
+      }
+    }
+  }
+}

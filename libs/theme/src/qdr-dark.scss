@@ -1,0 +1,4 @@
+@import url('../theming/register');
+@import url('../theming/palettes');
+
+@include qdr-theme('qdr-dark', $qdr-palette-qdr-dark);

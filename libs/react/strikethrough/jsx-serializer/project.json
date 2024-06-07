@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/strikethrough/jsx-serializer",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/strikethrough/jsx-serializer/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/strikethrough/jsx-serializer",
+        "main": "libs/react/strikethrough/jsx-serializer/src/index.ts",
+        "tsConfig": "libs/react/strikethrough/jsx-serializer/tsconfig.build.json",
+        "assets": ["libs/react/strikethrough/jsx-serializer/*.md"]
+      }
+    }
+  }
+}

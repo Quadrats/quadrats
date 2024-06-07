@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/embed/jsx-serializer/vimeo",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/embed/jsx-serializer/vimeo/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/embed/jsx-serializer/vimeo",
+        "main": "libs/react/embed/jsx-serializer/vimeo/src/index.ts",
+        "tsConfig": "libs/react/embed/jsx-serializer/vimeo/tsconfig.build.json",
+        "assets": ["libs/react/embed/jsx-serializer/vimeo/*.md"]
+      }
+    }
+  }
+}

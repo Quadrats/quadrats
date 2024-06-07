@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/paragraph",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/paragraph/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/paragraph",
+        "main": "libs/react/paragraph/src/index.ts",
+        "tsConfig": "libs/react/paragraph/tsconfig.build.json",
+        "assets": ["libs/react/paragraph/*.md"]
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/input-block",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/input-block/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/input-block",
+        "main": "libs/react/input-block/src/index.ts",
+        "tsConfig": "libs/react/input-block/tsconfig.build.json",
+        "assets": ["libs/react/input-block/*.md"]
+      }
+    }
+  }
+}

@@ -1,9 +1,0 @@
-{
-  "name": "@quadrats/common/embed/strategies/twitter",
-  "sideEffects": false,
-  "quadratsConfig": {
-    "deps": [
-      "embed"
-    ]
-  }
-}

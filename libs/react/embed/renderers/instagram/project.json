@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/embed/renderers/instagram",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/embed/renderers/instagram/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/embed/renderers/instagram",
+        "main": "libs/react/embed/renderers/instagram/src/index.ts",
+        "tsConfig": "libs/react/embed/renderers/instagram/tsconfig.build.json",
+        "assets": ["libs/react/embed/renderers/instagram/*.md"]
+      }
+    }
+  }
+}

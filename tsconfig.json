@@ -1,18 +1,7 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "baseUrl": "./packages",
-    "paths": {
-      "@quadrats/common/*": ["common/*/src"],
-      "@quadrats/core": ["core/src"],
-      "@quadrats/core/*": ["core/*/src"],
-      "@quadrats/icons": ["icons/src"],
-      "@quadrats/locales": ["locales/src"],
-      "@quadrats/react": ["react/src"],
-      "@quadrats/react/*": ["react/*/src"],
-      "@quadrats/theme": ["theme/src"],
-      "@quadrats/utils": ["utils/src"]
-    }
+    "baseUrl": "./packages"
   },
   "references": [
     {

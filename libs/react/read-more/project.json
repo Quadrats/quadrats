@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/read-more",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/read-more/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/read-more",
+        "main": "libs/react/read-more/src/index.ts",
+        "tsConfig": "libs/react/read-more/tsconfig.build.json",
+        "assets": ["libs/react/read-more/*.md"]
+      }
+    }
+  }
+}

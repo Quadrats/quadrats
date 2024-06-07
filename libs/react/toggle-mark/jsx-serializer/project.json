@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/toggle-mark/jsx-serializer",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/toggle-mark/jsx-serializer/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/toggle-mark/jsx-serializer",
+        "main": "libs/react/toggle-mark/jsx-serializer/src/index.ts",
+        "tsConfig": "libs/react/toggle-mark/jsx-serializer/tsconfig.build.json",
+        "assets": ["libs/react/toggle-mark/jsx-serializer/*.md"]
+      }
+    }
+  }
+}

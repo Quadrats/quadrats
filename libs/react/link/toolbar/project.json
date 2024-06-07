@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/link/toolbar",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/link/toolbar/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/link/toolbar",
+        "main": "libs/react/link/toolbar/src/index.ts",
+        "tsConfig": "libs/react/link/toolbar/tsconfig.build.json",
+        "assets": ["libs/react/link/toolbar/*.md"]
+      }
+    }
+  }
+}

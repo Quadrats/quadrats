@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/list",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/list/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/list",
+        "main": "libs/react/list/src/index.ts",
+        "tsConfig": "libs/react/list/tsconfig.build.json",
+        "assets": ["libs/react/list/*.md"]
+      }
+    }
+  }
+}

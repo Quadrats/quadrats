@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/link/jsx-serializer",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/link/jsx-serializer/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/link/jsx-serializer",
+        "main": "libs/react/link/jsx-serializer/src/index.ts",
+        "tsConfig": "libs/react/link/jsx-serializer/tsconfig.build.json",
+        "assets": ["libs/react/link/jsx-serializer/*.md"]
+      }
+    }
+  }
+}

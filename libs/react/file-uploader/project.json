@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/file-uploader",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/file-uploader/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/file-uploader",
+        "main": "libs/react/file-uploader/src/index.ts",
+        "tsConfig": "libs/react/file-uploader/tsconfig.build.json",
+        "assets": ["libs/react/file-uploader/*.md"]
+      }
+    }
+  }
+}

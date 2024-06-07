@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/embed/renderers/youtube",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/embed/renderers/youtube/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/embed/renderers/youtube",
+        "main": "libs/react/embed/renderers/youtube/src/index.ts",
+        "tsConfig": "libs/react/embed/renderers/youtube/tsconfig.build.json",
+        "assets": ["libs/react/embed/renderers/youtube/*.md"]
+      }
+    }
+  }
+}

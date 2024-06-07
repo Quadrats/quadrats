@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/read-more/toolbar",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/read-more/toolbar/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/read-more/toolbar",
+        "main": "libs/react/read-more/toolbar/src/index.ts",
+        "tsConfig": "libs/react/read-more/toolbar/tsconfig.build.json",
+        "assets": ["libs/react/read-more/toolbar/*.md"]
+      }
+    }
+  }
+}

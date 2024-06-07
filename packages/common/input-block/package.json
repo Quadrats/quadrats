@@ -1,9 +1,0 @@
-{
-  "name": "@quadrats/common/input-block",
-  "sideEffects": false,
-  "quadratsConfig": {
-    "deps": [
-      "input-widget"
-    ]
-  }
-}

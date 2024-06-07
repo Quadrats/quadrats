@@ -1,0 +1,19 @@
+{
+  "name": "@quadrats/react/embed/renderers/spotify",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/embed/renderers/spotify/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/react/embed/renderers/spotify",
+        "main": "libs/react/embed/renderers/spotify/src/index.ts",
+        "tsConfig": "libs/react/embed/renderers/spotify/tsconfig.build.json",
+        "assets": ["libs/react/embed/renderers/spotify/*.md"]
+      }
+    }
+  }
+}
