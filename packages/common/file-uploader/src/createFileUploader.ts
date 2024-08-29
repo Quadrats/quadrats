@@ -1,5 +1,5 @@
 import { readFileAsDataURL } from '@quadrats/utils';
-import { createParagraphElement, Editor, HistoryEditor, Transforms } from '@quadrats/core';
+import { createParagraphElement, Editor, HistoryEditor, isAboveBlockEmpty, Transforms } from '@quadrats/core';
 import { FileUploader, FileUploaderElement } from './typings';
 import { FILE_UPLOADER_TYPE } from './constants';
 import { getFilesFromInput } from './getFilesFromInput';
@@ -92,7 +92,17 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
 
       return createFileUploaderElement(editor, file, options).then((fileUploaderElement) => {
         if (fileUploaderElement) {
-          Transforms.insertNodes(editor, [fileUploaderElement, createParagraphElement()], options);
+          // Clear empty node
+          if (isAboveBlockEmpty(editor)) {
+            Transforms.removeNodes(editor, {
+              at: editor.selection?.anchor,
+            });
+          }
+
+          Transforms.insertNodes(editor, [fileUploaderElement, createParagraphElement()], {
+            at: editor.selection?.anchor.path.length ? [editor.selection?.anchor.path[0] + 1] : undefined,
+          });
+
           Transforms.move(editor);
         }
       });
