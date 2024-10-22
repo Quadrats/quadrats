@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $qdr-palette-qdr: (
   primary-light: #c1eef2,
   primary: #1cc1d0,
@@ -11,7 +13,7 @@ $qdr-palette-qdr: (
   icon: #7d7d7d
 );
 
-$qdr-palette-qdr-dark: map-merge(
+$qdr-palette-qdr-dark: map.merge(
   $qdr-palette-qdr,
   (
     background: #212121,
