@@ -2,7 +2,7 @@
   "packages": ["packages/*"],
   "npmClient": "yarn",
   "npmClientArgs": ["--no-lockfile"],
-  "version": "0.7.4",
+  "version": "0.7.5",
   "command": {
     "version": {
       "ignoreChanges": ["**/__fixtures__/**", "**/__mocks__/**", "**/__tests__/**", "*.spec.*", "**/*.md"],

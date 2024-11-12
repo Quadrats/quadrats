@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.5](https://github.com/Quadrats/quadrats/compare/v0.7.4...v0.7.5) (2024-11-12)
+
+### Bug Fixes
+
+- **react:** file uploader render error ([d91d301](https://github.com/Quadrats/quadrats/commit/d91d30110244fa223e36cdbf49e53520375aad90))
+
 ## [0.7.4](https://github.com/Quadrats/quadrats/compare/v0.7.3...v0.7.4) (2024-10-22)
 
 **Note:** Version bump only for package @quadrats/react
