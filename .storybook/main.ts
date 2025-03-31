@@ -1,5 +1,5 @@
 import { StorybookConfig } from '@storybook/react-webpack5';
-import { resolve } from 'path';
+import { resolve, dirname, join } from 'path';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 
 const ROOT_PATH = resolve(__dirname, '..');
@@ -8,22 +8,20 @@ const STORIES_PATH = resolve(ROOT_PATH, 'stories');
 const TS_CONFIG = resolve(ROOT_PATH, 'tsconfig.dev.json');
 
 const config: StorybookConfig = {
-  framework: '@storybook/react-webpack5',
+  framework: getAbsolutePath("@storybook/react-webpack5"),
   stories: ['../stories/**/*.stories.@(tsx|mdx)'],
-  addons: [
-    '@storybook/addon-essentials',
-    {
-      name: '@storybook/addon-styling',
-      options: {
-        sass: {
-          implementation: require('sass'),
-        },
+
+  addons: [getAbsolutePath("@storybook/addon-essentials"), {
+    name: '@storybook/addon-styling',
+    options: {
+      sass: {
+        implementation: require('sass'),
       },
     },
-  ],
-  docs: {
-    autodocs: 'tag',
-  },
+  }, getAbsolutePath("@storybook/addon-webpack5-compiler-babel")],
+
+  docs: {},
+
   webpackFinal(config) {
     config.module!.rules = [
       ...(config.module?.rules ?? []),
@@ -39,6 +37,10 @@ const config: StorybookConfig = {
       },
     ];
 
+    config.resolve!.alias = {
+      'react': resolve(__dirname, '../node_modules/react')
+    }
+
     config.resolve!.plugins = [
       new TsconfigPathsPlugin({
         configFile: TS_CONFIG,
@@ -47,6 +49,14 @@ const config: StorybookConfig = {
 
     return config;
   },
+
+  typescript: {
+    reactDocgen: 'react-docgen-typescript'
+  }
 };
 
 export default config;
+
+function getAbsolutePath(value: string): any {
+  return dirname(require.resolve(join(value, "package.json")));
+}
