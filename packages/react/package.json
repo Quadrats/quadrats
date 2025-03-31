@@ -45,7 +45,8 @@
     "clsx": "^2.0.0",
     "is-hotkey": "^0.2.0",
     "react-transition-group": "^4.4.5",
-    "slate-react": "^0.101.0",
+    "slate-dom": "^0.112.2",
+    "slate-react": "^0.112.1",
     "tslib": "^2.6.2"
   },
   "peerDependencies": {
