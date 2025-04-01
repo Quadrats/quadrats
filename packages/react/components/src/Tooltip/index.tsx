@@ -83,7 +83,7 @@ function Tooltip({
   if (triggers.includes('click')) {
     triggerProps.onClick = (event) => {
       delaySetVisible(prevVisible => !prevVisible, 0);
-      child.props.onClick?.(event);
+      (child.props as any).onClick?.(event);
     };
   }
 
@@ -97,16 +97,16 @@ function Tooltip({
 
     triggerProps.onMouseEnter = (event) => {
       delaySetVisible(true, mouseEnterDelay);
-      child.props.onMouseEnter?.(event);
+      (child.props as any).onMouseEnter?.(event);
     };
 
     triggerProps.onMouseLeave = (event) => {
       delaySetVisible(false, mouseLeaveDelay);
-      child.props.onMouseLeave?.(event);
+      (child.props as any).onMouseLeave?.(event);
     };
   }
 
-  const trigger = cloneElement(child, { ...triggerProps, ref: composeRefs([triggerRef, (child as any).ref]) });
+  const trigger = cloneElement(child, ({ ...triggerProps, ref: composeRefs([triggerRef, (child as any).ref]) } as any));
 
   useLayoutEffect(() => {
     const triggerEl = triggerRef.current;

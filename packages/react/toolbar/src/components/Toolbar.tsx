@@ -67,7 +67,7 @@ function Toolbar(props: ToolbarProps) {
   const { props: themeProps } = useContext(ThemeContext);
   const editor = useQuadrats();
   const toolbarRef = useRef<HTMLDivElement>(null);
-  const lastNativeRangeRef = useRef<Range>();
+  const lastNativeRangeRef = useRef<Range>(undefined);
   const focused = ReactEditor.isFocused(editor);
   const { selection } = editor;
   const [toolInput, setToolInput] = useState<ToolInputConfig>();
