@@ -8,22 +8,22 @@ const STORIES_PATH = resolve(ROOT_PATH, 'stories');
 const TS_CONFIG = resolve(ROOT_PATH, 'tsconfig.dev.json');
 
 const config: StorybookConfig = {
-  framework: '@storybook/react-webpack5',
+  framework: "@storybook/react-webpack5",
   stories: ['../stories/**/*.stories.@(tsx|mdx)'],
-  addons: [
-    '@storybook/addon-essentials',
-    {
-      name: '@storybook/addon-styling',
-      options: {
-        sass: {
-          implementation: require('sass'),
-        },
+
+  addons: ["@storybook/addon-essentials", {
+    name: '@storybook/addon-styling',
+    options: {
+      sass: {
+        implementation: require('sass'),
       },
     },
-  ],
+  }, "@storybook/addon-webpack5-compiler-babel"],
+
   docs: {
     autodocs: 'tag',
   },
+
   webpackFinal(config) {
     config.module!.rules = [
       ...(config.module?.rules ?? []),
@@ -39,6 +39,10 @@ const config: StorybookConfig = {
       },
     ];
 
+    config.resolve!.alias = {
+      'react': resolve(__dirname, '../node_modules/react')
+    }
+
     config.resolve!.plugins = [
       new TsconfigPathsPlugin({
         configFile: TS_CONFIG,
@@ -47,6 +51,10 @@ const config: StorybookConfig = {
 
     return config;
   },
+
+  typescript: {
+    reactDocgen: 'react-docgen-typescript'
+  }
 };
 
 export default config;

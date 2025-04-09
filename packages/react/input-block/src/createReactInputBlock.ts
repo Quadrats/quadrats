@@ -13,6 +13,7 @@ export function createReactInputBlock(options: CreateInputBlockOptions = {}): Re
     [element, ReactEditor.findPath(editor, element)],
     () => ReactEditor.focus(editor),
   );
+
   const confirm: ReactInputBlock['confirm'] = (editor, element, value) => core.confirm(
     element,
     value,
@@ -27,7 +28,7 @@ export function createReactInputBlock(options: CreateInputBlockOptions = {}): Re
       render = defaultRenderInputBlockElement,
     } = {}) => createRenderElement<RenderInputBlockElementProps>({
       type,
-      render: (props) => render({ ...props, remove, confirm }),
+      render: props => render({ ...props, remove, confirm }),
     }),
   };
 }
