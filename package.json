@@ -30,6 +30,7 @@
     "release": "lerna version patch && npm run build && lerna publish from-package",
     "prepare": "husky install"
   },
+  "packageManager": "yarn@4.7.0",
   "devDependencies": {
     "@babel/preset-env": "^7.26.9",
     "@babel/preset-react": "^7.26.3",
