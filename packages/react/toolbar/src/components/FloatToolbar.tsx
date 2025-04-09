@@ -47,7 +47,7 @@ function setPosition(el: HTMLElement, range: Range) {
   el.style.left = `${left}px`;
 }
 
-export interface ToolbarProps {
+export interface FloatToolbarProps {
   /**
    * If there are any nodes which type match it, toolbar will hide.
    */
@@ -62,7 +62,7 @@ export interface ToolbarProps {
   containerRef?: React.MutableRefObject<HTMLElement | undefined>;
 }
 
-function FloatToolbar(props: ToolbarProps) {
+function FloatToolbar(props: FloatToolbarProps) {
   const { children, disabledElementTypes } = props;
   const { props: themeProps } = useContext(ThemeContext);
   const editor = useQuadrats();
