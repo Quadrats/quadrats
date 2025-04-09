@@ -62,7 +62,7 @@ export interface ToolbarProps {
   containerRef?: React.MutableRefObject<HTMLElement | undefined>;
 }
 
-function Toolbar(props: ToolbarProps) {
+function FloatToolbar(props: ToolbarProps) {
   const { children, disabledElementTypes } = props;
   const { props: themeProps } = useContext(ThemeContext);
   const editor = useQuadrats();
@@ -153,6 +153,7 @@ function Toolbar(props: ToolbarProps) {
         ref={toolbarRef}
         className={clsx(
           'qdr-toolbar__wrapper',
+          'qdr-toolbar__wrapper--float',
           { 'qdr-toolbar__wrapper--inputting': toolInput },
           themeProps.className,
         )}
@@ -182,4 +183,4 @@ function Toolbar(props: ToolbarProps) {
   );
 }
 
-export default Toolbar;
+export default FloatToolbar;

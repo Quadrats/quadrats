@@ -74,7 +74,7 @@ import { createReactList } from '@quadrats/react/list';
 import { createReactReadMore } from '@quadrats/react/read-more';
 import { createReactInputBlock } from '@quadrats/react/input-block';
 
-import { Toolbar, TOOLBAR_DIVIDER } from '@quadrats/react/toolbar';
+import { FloatToolbar, TOOLBAR_DIVIDER } from '@quadrats/react/toolbar';
 import { ToggleMarkToolbarIcon } from '@quadrats/react/toggle-mark/toolbar';
 import { BlockquoteToolbarIcon } from '@quadrats/react/blockquote/toolbar';
 import { DividerToolbarIcon } from '@quadrats/react/divider/toolbar';
@@ -608,9 +608,9 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
           key={Math.random()} // Fixed Slate bug on re-create editor
           onChange={(v: Descendant[]) => setValue(v)}
         >
-          <Toolbar>
+          <FloatToolbar>
             {toolbarRenderer}
-          </Toolbar>
+          </FloatToolbar>
           <Editable
             {...handlers}
             className="stories__custom-elements stories__editable"
