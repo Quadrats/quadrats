@@ -613,7 +613,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
           </FloatToolbar>
           <Editable
             {...handlers}
-            className="stories__custom-elements stories__editable"
+            className="stories__custom-elements stories__block"
             renderElement={renderElement}
             renderLeaf={renderLeaf}
           />
@@ -624,7 +624,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
               props: { style },
             },
           }) => (
-            <div className="stories__custom-elements" style={style}>
+            <div className="stories__custom-elements stories__block" style={style}>
               {jsxSerializer.serialize(value)}
             </div>
           )}
