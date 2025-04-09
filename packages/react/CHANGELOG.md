@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.6](https://github.com/Quadrats/quadrats/compare/v0.7.5...v0.7.6) (2025-04-09)
+
+### Bug Fixes
+
+- **react:** soft break behavior ([bbdfb61](https://github.com/Quadrats/quadrats/commit/bbdfb618cff648cf9d1ddd473fbefd8f37983f4e))
+
 ## [0.7.5](https://github.com/Quadrats/quadrats/compare/v0.7.4...v0.7.5) (2024-11-12)
 
 ### Bug Fixes
