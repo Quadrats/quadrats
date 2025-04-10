@@ -18,12 +18,18 @@ $qdr-toolbar-input-cross-size: 14px;
 
   &__wrapper {
     box-sizing: content-box;
+    height: $qdr-toolbar-height;
+
+    &--fixed {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
 
     &--float {
       position: absolute;
       z-index: 1;
       padding-bottom: $qdr-toolbar-popup-gap;
-      height: $qdr-toolbar-height;
     }
 
     &--inputting {

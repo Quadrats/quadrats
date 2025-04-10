@@ -60,10 +60,14 @@ export interface FloatToolbarProps {
    * Toolbar container
    */
   containerRef?: React.MutableRefObject<HTMLElement | undefined>;
+  /**
+   * only render expanded case toolbar or not.
+   */
+  onlyRenderExpanded?: boolean;
 }
 
 function FloatToolbar(props: FloatToolbarProps) {
-  const { children, disabledElementTypes } = props;
+  const { children, disabledElementTypes, onlyRenderExpanded = false } = props;
   const { props: themeProps } = useContext(ThemeContext);
   const editor = useQuadrats();
   const toolbarRef = useRef<HTMLDivElement>(null);
@@ -142,6 +146,10 @@ function FloatToolbar(props: FloatToolbarProps) {
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const tools = children(renderExpandedStatus!);
+
+  if (onlyRenderExpanded && !renderExpandedStatus) {
+    return null;
+  }
 
   if (!tools) {
     return null;

@@ -4,6 +4,7 @@ import { EditableProps as SlateEditableProps } from 'slate-react/dist/components
 import clsx from 'clsx';
 import { BaseRange, Editor, isAncestorEmpty } from '@quadrats/core';
 import { useLocale, useTheme } from '@quadrats/react/configs';
+import { FixedToolbar } from '@quadrats/react/toolbar';
 import DefaultLeaf from './DefaultLeaf';
 import { RenderElementProps, RenderLeafProps } from '../typings/renderer';
 import { PLACEHOLDER_KEY } from '..';
@@ -11,6 +12,7 @@ import { PLACEHOLDER_KEY } from '..';
 export type EditableProps = Omit<SlateEditableProps, 'renderLeaf' | 'renderElement'> & {
   renderLeaf?: (props: RenderLeafProps) => JSX.Element;
   renderElement?: (props: RenderElementProps) => JSX.Element;
+  renderToolbar?: () => React.JSX.Element | null
 };
 
 function Editable(props: EditableProps) {
@@ -22,6 +24,7 @@ function Editable(props: EditableProps) {
     onCompositionStart: onCompositionStartProp,
     placeholder = locale.editor.placeholder,
     renderLeaf: renderLeafProp,
+    renderToolbar,
     style,
     ...slateEditableProps
   } = props;
@@ -91,15 +94,22 @@ function Editable(props: EditableProps) {
   );
 
   return (
-    <SlateEditable
-      {...slateEditableProps}
-      className={clsx('qdr-editable', themeProps.className, className)}
-      decorate={decorate}
-      onCompositionStart={onCompositionStart}
-      onCompositionEnd={onCompositionEnd}
-      renderLeaf={renderLeaf}
-      style={{ ...themeProps.style, ...style }}
-    />
+    <div style={{ position: 'relative' }}>
+      {renderToolbar && (
+        <FixedToolbar>
+          {renderToolbar}
+        </FixedToolbar>
+      )}
+      <SlateEditable
+        {...slateEditableProps}
+        className={clsx('qdr-editable', themeProps.className, className)}
+        decorate={decorate}
+        onCompositionStart={onCompositionStart}
+        onCompositionEnd={onCompositionEnd}
+        renderLeaf={renderLeaf}
+        style={{ ...themeProps.style, ...style }}
+      />
+    </div>
   );
 }
 

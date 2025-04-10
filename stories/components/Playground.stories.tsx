@@ -363,7 +363,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withCustomHighlights,
   ]);
 
-  const toolbarRenderer = useCallback((expanded: boolean) => {
+  const toolbarRenderer = useCallback((expanded?: boolean) => {
     const linkTool = <LinkToolbarIcon icon={LinkIcon} controller={link} />;
     const unlinkTool = <UnlinkToolbarIcon icon={UnlinkIcon} controller={link} />;
     const blockquoteTool = <BlockquoteToolbarIcon icon={BlockquoteIcon} controller={blockquote} />;
@@ -608,7 +608,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
           key={Math.random()} // Fixed Slate bug on re-create editor
           onChange={(v: Descendant[]) => setValue(v)}
         >
-          <FloatToolbar>
+          <FloatToolbar onlyRenderExpanded>
             {toolbarRenderer}
           </FloatToolbar>
           <Editable
@@ -616,6 +616,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
             className="stories__custom-elements stories__block"
             renderElement={renderElement}
             renderLeaf={renderLeaf}
+            renderToolbar={toolbarRenderer}
           />
         </Quadrats>
         <ConfigsProvider theme={editorTheme} locale={editorLocale}>
