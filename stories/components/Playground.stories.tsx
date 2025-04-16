@@ -600,31 +600,36 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
   return (
     <div>
       <div className="stories__examples__playground__serializer-jsx">
-        <Quadrats
-          editor={editor}
-          locale={editorLocale}
-          theme={editorTheme}
-          value={value}
-          key={Math.random()} // Fixed Slate bug on re-create editor
-          onChange={(v: Descendant[]) => setValue(v)}
-        >
-          <Toolbar>
-            {toolbarRenderer}
-          </Toolbar>
-          <Editable
-            {...handlers}
-            className="stories__custom-elements stories__editable"
-            renderElement={renderElement}
-            renderLeaf={renderLeaf}
-          />
-        </Quadrats>
+        <div>
+          <Quadrats
+            editor={editor}
+            locale={editorLocale}
+            theme={editorTheme}
+            value={value}
+            key={Math.random()} // Fixed Slate bug on re-create editor
+            onChange={(v: Descendant[]) => setValue(v)}
+          >
+            <Toolbar fixed>
+              {toolbarRenderer}
+            </Toolbar>
+            <Toolbar onlyRenderExpanded>
+              {toolbarRenderer}
+            </Toolbar>
+            <Editable
+              {...handlers}
+              className="stories__custom-elements stories__block"
+              renderElement={renderElement}
+              renderLeaf={renderLeaf}
+            />
+          </Quadrats>
+        </div>
         <ConfigsProvider theme={editorTheme} locale={editorLocale}>
           {({
             theme: {
               props: { style },
             },
           }) => (
-            <div className="stories__custom-elements" style={style}>
+            <div className="stories__custom-elements stories__block" style={style}>
               {jsxSerializer.serialize(value)}
             </div>
           )}

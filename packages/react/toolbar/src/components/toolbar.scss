@@ -1,27 +1,44 @@
-$qdr-toolbar-popup-gap: 10px;
+$qdr-toolbar-popup-gap: 8px;
 $qdr-toolbar-arrow-size: $qdr-toolbar-popup-gap;
-$qdr-toolbar-height: 40px;
+$qdr-toolbar-height: 48px;
 $qdr-toolbar-padding-vertical: 8px;
-$qdr-toolbar-padding-horizontal: 10px;
+$qdr-toolbar-padding-horizontal: 8px;
 $qdr-toolbar-input-cross-size: 14px;
 
 .qdr-toolbar {
   display: flex;
   align-items: center;
+  gap: 8px;
   font-size: 24px;
   height: $qdr-toolbar-height;
   padding: $qdr-toolbar-padding-vertical $qdr-toolbar-padding-horizontal;
   background-color: var(--qdr-surface);
   border: 1px solid var(--qdr-border);
-  border-radius: 4px;
   box-sizing: border-box;
 
+  &--radius {
+    border-radius: 8px;
+  }
+
+  &--shadow {
+    box-shadow: 0 4px 8px -2px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 4%);
+  }
+
   &__wrapper {
-    position: absolute;
-    z-index: 1;
-    padding-bottom: $qdr-toolbar-popup-gap;
-    height: $qdr-toolbar-height;
     box-sizing: content-box;
+    height: $qdr-toolbar-height;
+
+    &--fixed {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    &--float {
+      position: absolute;
+      z-index: 1;
+      padding-bottom: $qdr-toolbar-popup-gap;
+    }
 
     &--inputting {
       min-width: 250px;
@@ -57,10 +74,9 @@ $qdr-toolbar-input-cross-size: 14px;
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    margin: 0 9px;
     border: 0;
     background-color: transparent;
-    padding: 0;
+    padding: 4px;
     outline: none;
     box-shadow: none;
     border-radius: 0;

@@ -60,10 +60,18 @@ export interface ToolbarProps {
    * Toolbar container
    */
   containerRef?: React.MutableRefObject<HTMLElement | undefined>;
+  /**
+   * only render expanded case toolbar or not.
+   */
+  onlyRenderExpanded?: boolean;
+  /**
+   * fix main toolbar or not.
+   */
+  fixed?: boolean;
 }
 
 function Toolbar(props: ToolbarProps) {
-  const { children, disabledElementTypes } = props;
+  const { children, disabledElementTypes, onlyRenderExpanded = false, fixed = false } = props;
   const { props: themeProps } = useContext(ThemeContext);
   const editor = useQuadrats();
   const toolbarRef = useRef<HTMLDivElement>(null);
@@ -136,12 +144,49 @@ function Toolbar(props: ToolbarProps) {
     return document.body;
   }, [props.containerRef]);
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const tools = children(renderExpandedStatus! && !fixed);
+
+  if (fixed) {
+    return (
+      <div
+        className={clsx(
+          'qdr-toolbar__wrapper',
+          'qdr-toolbar__wrapper--fixed',
+          { 'qdr-toolbar__wrapper--inputting': toolInput },
+          themeProps.className,
+        )}
+        style={themeProps.style}
+      >
+        <div className="qdr-toolbar">
+          <StartToolInputContext.Provider value={startToolInput}>{tools}</StartToolInputContext.Provider>
+          {toolInput && (
+            <ToolbarInput
+              exit={() => {
+                const { currentSelection } = toolInput;
+
+                if (currentSelection) {
+                  Transforms.select(editor, currentSelection);
+                }
+
+                ReactEditor.focus(editor);
+                setToolInput(undefined);
+              }}
+              toolInput={toolInput}
+            />
+          )}
+        </div>
+      </div>
+    );
+  }
+
   if (!shouldRender || (disabledElementTypes && isNodesTypeIn(editor, disabledElementTypes, { mode: 'all' }))) {
     return null;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const tools = children(renderExpandedStatus!);
+  if (onlyRenderExpanded && !renderExpandedStatus) {
+    return null;
+  }
 
   if (!tools) {
     return null;
@@ -153,13 +198,13 @@ function Toolbar(props: ToolbarProps) {
         ref={toolbarRef}
         className={clsx(
           'qdr-toolbar__wrapper',
+          'qdr-toolbar__wrapper--float',
           { 'qdr-toolbar__wrapper--inputting': toolInput },
           themeProps.className,
         )}
         style={themeProps.style}
       >
-        <div className="qdr-toolbar__arrow" />
-        <div className="qdr-toolbar">
+        <div className="qdr-toolbar qdr-toolbar--radius qdr-toolbar--shadow">
           <StartToolInputContext.Provider value={startToolInput}>{tools}</StartToolInputContext.Provider>
           {toolInput && (
             <ToolbarInput
