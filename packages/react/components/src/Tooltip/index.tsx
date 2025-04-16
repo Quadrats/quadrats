@@ -50,6 +50,7 @@ function Tooltip({
   const { props: themeProps } = useContext(ThemeContext);
   const [visible, setVisible] = useState(false);
   const delayTimer = useRef(NaN);
+  const nodeRef = useRef(null);
   const clearDelayTimer = useCallback(() => {
     if (delayTimer.current) {
       window.clearTimeout(delayTimer.current);
@@ -155,8 +156,8 @@ function Tooltip({
   return (
     <>
       <Portal getContainer={getContainer}>
-        <CSSTransition in={visible} classNames={transitionClassNames} timeout={200} unmountOnExit>
-          <div className={`${clsPrefix}__mask`}>
+        <CSSTransition nodeRef={nodeRef} in={visible} classNames={transitionClassNames} timeout={200} unmountOnExit>
+          <div ref={nodeRef} className={`${clsPrefix}__mask`}>
             <div
               className={clsx(themeProps.className, `${clsPrefix}__popup`, `${clsPrefix}__popup--${firstPlacement}`)}
               ref={popupRef}
