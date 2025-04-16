@@ -147,6 +147,27 @@ function Toolbar(props: ToolbarProps) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const tools = children(renderExpandedStatus! && !fixed);
 
+  const toolbarBody = (
+    <>
+      <StartToolInputContext.Provider value={startToolInput}>{tools}</StartToolInputContext.Provider>
+      {toolInput && (
+        <ToolbarInput
+          exit={() => {
+            const { currentSelection } = toolInput;
+
+            if (currentSelection) {
+              Transforms.select(editor, currentSelection);
+            }
+
+            ReactEditor.focus(editor);
+            setToolInput(undefined);
+          }}
+          toolInput={toolInput}
+        />
+      )}
+    </>
+  );
+
   if (fixed) {
     return (
       <div
@@ -159,22 +180,7 @@ function Toolbar(props: ToolbarProps) {
         style={themeProps.style}
       >
         <div className="qdr-toolbar">
-          <StartToolInputContext.Provider value={startToolInput}>{tools}</StartToolInputContext.Provider>
-          {toolInput && (
-            <ToolbarInput
-              exit={() => {
-                const { currentSelection } = toolInput;
-
-                if (currentSelection) {
-                  Transforms.select(editor, currentSelection);
-                }
-
-                ReactEditor.focus(editor);
-                setToolInput(undefined);
-              }}
-              toolInput={toolInput}
-            />
-          )}
+          {toolbarBody}
         </div>
       </div>
     );
@@ -205,22 +211,7 @@ function Toolbar(props: ToolbarProps) {
         style={themeProps.style}
       >
         <div className="qdr-toolbar qdr-toolbar--radius qdr-toolbar--shadow">
-          <StartToolInputContext.Provider value={startToolInput}>{tools}</StartToolInputContext.Provider>
-          {toolInput && (
-            <ToolbarInput
-              exit={() => {
-                const { currentSelection } = toolInput;
-
-                if (currentSelection) {
-                  Transforms.select(editor, currentSelection);
-                }
-
-                ReactEditor.focus(editor);
-                setToolInput(undefined);
-              }}
-              toolInput={toolInput}
-            />
-          )}
+          {toolbarBody}
         </div>
       </div>
     </Portal>
