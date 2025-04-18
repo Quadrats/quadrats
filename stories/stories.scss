@@ -8,7 +8,7 @@
 @import url('../packages/react/paragraph/src/paragraph.scss');
 @import url('../packages/react/line-break/src/line-break.scss');
 
-@mixin stories-editable {
+@mixin stories-block {
   color: var(--qdr-text);
   padding: 36px 40px;
   width: 100%;
@@ -17,8 +17,12 @@
 }
 
 .stories {
-  &__editable {
-    @include stories-editable;
+  &__block {
+    background-color: var(--qdr-background);
+    overflow: hidden;
+    overflow-wrap: break-word;
+
+    @include stories-block;
   }
 
   &__custom-elements {
@@ -73,15 +77,6 @@
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         column-gap: 24px;
-        overflow: hidden;
-
-        > * {
-          background-color: var(--qdr-background);
-          overflow: hidden;
-          overflow-wrap: break-word;
-
-          @include stories-editable;
-        }
       }
     }
   }
