@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { composeRenderLeafsBase } from '@quadrats/react/_internal';
 import { RenderLeafProps } from './typings/renderer';
 import DefaultLeaf from './components/DefaultLeaf';

@@ -1,5 +1,6 @@
 /** @jsx jsx */
 
+import { JSX } from 'react';
 import { pipe } from '@quadrats/utils';
 import { createEditor, Editor } from '@quadrats/core';
 import { expectEditorEqualOutput, jsx, withTest } from '../../../../__fixtures__/hyperscript';

@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { Link, LinkElement } from '@quadrats/common/link';
 import { RenderElementProps, ReactWithable, WithCreateRenderElement, Editor } from '@quadrats/react';
 

@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { ReadMore, ReadMoreElement } from '@quadrats/common/read-more';
 import { WithCreateRenderElement, RenderElementProps, Editor } from '@quadrats/react';
 

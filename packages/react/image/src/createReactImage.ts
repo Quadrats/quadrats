@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import isHotkey from 'is-hotkey';
 import { readFileAsDataURL } from '@quadrats/utils';
 import { Transforms } from '@quadrats/core';

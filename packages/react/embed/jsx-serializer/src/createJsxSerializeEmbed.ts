@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { EmbedStrategies, EMBED_TYPE } from '@quadrats/common/embed';
 import { createRenderEmbedElementBase } from '@quadrats/react/embed';
 import { createJsxSerializeElement } from '@quadrats/react/jsx-serializer';

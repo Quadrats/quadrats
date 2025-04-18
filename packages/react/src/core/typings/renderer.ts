@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import {
   RenderElementProps as SlateReactRenderElementProps,
   RenderLeafProps as SlateRenderLeafProps,

@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { Editor } from '@quadrats/core';
 
 export function expectEditorEqualOutput(editor: Editor, output: JSX.Element) {

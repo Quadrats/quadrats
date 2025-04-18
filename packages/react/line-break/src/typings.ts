@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { IsNodeMatchOptions, LineBreak, LineBreakElement } from '@quadrats/core';
 import { WithCreateRenderElement, RenderElementProps, WithCreateHandlers } from '@quadrats/react';
 
