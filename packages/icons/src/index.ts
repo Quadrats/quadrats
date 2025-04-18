@@ -9,6 +9,7 @@ export { AlignRight } from './align-right';
 export { ArrowDown } from './arrow-down';
 export { Blockquote } from './blockquote';
 export { Bold } from './bold';
+export { Check } from './check';
 export { Divider } from './divider';
 export { Erase } from './erase';
 export { Facebook } from './facebook';
