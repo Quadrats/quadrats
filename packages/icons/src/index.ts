@@ -3,9 +3,10 @@ export { IconDefinition } from './typings';
 /**
  * icons
  */
-export { AlighLeft } from './align-left';
-export { AlighCenter } from './align-center';
-export { AlighRight } from './align-right';
+export { AlignLeft } from './align-left';
+export { AlignCenter } from './align-center';
+export { AlignRight } from './align-right';
+export { ArrowDown } from './arrow-down';
 export { Blockquote } from './blockquote';
 export { Bold } from './bold';
 export { Divider } from './divider';

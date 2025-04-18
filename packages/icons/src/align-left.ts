@@ -1,6 +1,6 @@
 import { IconDefinition } from './typings';
 
-export const AlighLeft: IconDefinition = {
+export const AlignLeft: IconDefinition = {
   name: 'align-left',
   definition: {
     svg: {

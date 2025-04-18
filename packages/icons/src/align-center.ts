@@ -1,6 +1,6 @@
 import { IconDefinition } from './typings';
 
-export const AlighCenter: IconDefinition = {
+export const AlignCenter: IconDefinition = {
   name: 'align-center',
   definition: {
     svg: {
