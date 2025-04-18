@@ -50,6 +50,7 @@ function Tooltip({
   const { props: themeProps } = useContext(ThemeContext);
   const [visible, setVisible] = useState(false);
   const delayTimer = useRef(NaN);
+  const nodeRef = useRef(null);
   const clearDelayTimer = useCallback(() => {
     if (delayTimer.current) {
       window.clearTimeout(delayTimer.current);
@@ -83,7 +84,7 @@ function Tooltip({
   if (triggers.includes('click')) {
     triggerProps.onClick = (event) => {
       delaySetVisible(prevVisible => !prevVisible, 0);
-      child.props.onClick?.(event);
+      (child.props as any).onClick?.(event);
     };
   }
 
@@ -97,16 +98,16 @@ function Tooltip({
 
     triggerProps.onMouseEnter = (event) => {
       delaySetVisible(true, mouseEnterDelay);
-      child.props.onMouseEnter?.(event);
+      (child.props as any).onMouseEnter?.(event);
     };
 
     triggerProps.onMouseLeave = (event) => {
       delaySetVisible(false, mouseLeaveDelay);
-      child.props.onMouseLeave?.(event);
+      (child.props as any).onMouseLeave?.(event);
     };
   }
 
-  const trigger = cloneElement(child, { ...triggerProps, ref: composeRefs([triggerRef, (child as any).ref]) });
+  const trigger = cloneElement(child, ({ ...triggerProps, ref: composeRefs([triggerRef, (child as any).ref]) } as any));
 
   useLayoutEffect(() => {
     const triggerEl = triggerRef.current;
@@ -155,8 +156,8 @@ function Tooltip({
   return (
     <>
       <Portal getContainer={getContainer}>
-        <CSSTransition in={visible} classNames={transitionClassNames} timeout={200} unmountOnExit>
-          <div className={`${clsPrefix}__mask`}>
+        <CSSTransition nodeRef={nodeRef} in={visible} classNames={transitionClassNames} timeout={200} unmountOnExit>
+          <div ref={nodeRef} className={`${clsPrefix}__mask`}>
             <div
               className={clsx(themeProps.className, `${clsPrefix}__popup`, `${clsPrefix}__popup--${firstPlacement}`)}
               ref={popupRef}

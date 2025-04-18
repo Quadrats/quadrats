@@ -23,8 +23,8 @@
     "build": "npm run build:clean && node ../../scripts/build.js"
   },
   "dependencies": {
-    "slate": "^0.100.0",
-    "slate-history": "^0.100.0",
+    "slate": "^0.112.0",
+    "slate-history": "^0.110.3",
     "tslib": "^2.6.2"
   }
 }
