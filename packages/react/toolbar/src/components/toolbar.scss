@@ -87,6 +87,30 @@ $qdr-toolbar-input-cross-size: 14px;
     &--active {
       color: var(--qdr-primary);
     }
+
+    &__wrapper {
+      position: relative;
+    }
+
+    &__menu {
+      opacity: 0;
+      position: absolute;
+      background: var(--qdr-surface);
+      border: 1px solid var(--qdr-border);
+      top: 56px;
+      left: 0;
+      padding: 4px 0;
+      width: 200px;
+      max-height: 309px;
+      box-shadow: 0 24px 48px -12px rgb(0 0 0 / 18%), 0 4px 8px 2px rgb(0 0 0 / 4%);
+      pointer-events: none;
+      transition: opacity 0.2s ease-out;
+
+      &--expanded {
+        pointer-events: auto;
+        opacity: 1;
+      }
+    }
   }
 
   &__input {

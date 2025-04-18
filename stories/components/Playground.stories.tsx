@@ -7,6 +7,7 @@ import {
   Highlight as HighlightIcon,
   Link as LinkIcon,
   Unlink as UnlinkIcon,
+  Paragraph as ParagraphIcon,
   Heading1 as Heading1Icon,
   Heading2 as Heading2Icon,
   Heading3 as Heading3Icon,
@@ -74,7 +75,7 @@ import { createReactList } from '@quadrats/react/list';
 import { createReactReadMore } from '@quadrats/react/read-more';
 import { createReactInputBlock } from '@quadrats/react/input-block';
 
-import { Toolbar, TOOLBAR_DIVIDER } from '@quadrats/react/toolbar';
+import { Toolbar, ToolbarIcon, TOOLBAR_DIVIDER } from '@quadrats/react/toolbar';
 import { ToggleMarkToolbarIcon } from '@quadrats/react/toggle-mark/toolbar';
 import { BlockquoteToolbarIcon } from '@quadrats/react/blockquote/toolbar';
 import { DividerToolbarIcon } from '@quadrats/react/divider/toolbar';
@@ -405,6 +406,10 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
 
     return (
       <>
+        <ToolbarIcon icon={ParagraphIcon} withArrow isMoreButton>
+          <HeadingToolbarIcon icon={Heading1Icon} controller={heading} level={1} />
+          <HeadingToolbarIcon icon={Heading2Icon} controller={heading} level={2} />
+        </ToolbarIcon>
         {~withTitles.indexOf('h1') ? <HeadingToolbarIcon icon={Heading1Icon} controller={heading} level={1} /> : null}
         {~withTitles.indexOf('h2') ? <HeadingToolbarIcon icon={Heading2Icon} controller={heading} level={2} /> : null}
         {~withTitles.indexOf('h3') ? <HeadingToolbarIcon icon={Heading3Icon} controller={heading} level={3} /> : null}
