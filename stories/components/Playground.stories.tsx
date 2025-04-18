@@ -7,7 +7,7 @@ import {
   Highlight as HighlightIcon,
   Link as LinkIcon,
   Unlink as UnlinkIcon,
-  Paragraph as ParagraphIcon,
+  // Paragraph as ParagraphIcon,
   Heading1 as Heading1Icon,
   Heading2 as Heading2Icon,
   Heading3 as Heading3Icon,
@@ -406,7 +406,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
 
     return (
       <>
-        <ToolbarIcon icon={ParagraphIcon} withArrow isMoreButton>
+        <ToolbarIcon icon={Heading1Icon} withArrow isMoreButton>
           <HeadingToolbarIcon icon={Heading1Icon} controller={heading} level={1} name="Heading 1" />
           <HeadingToolbarIcon icon={Heading2Icon} controller={heading} level={2} name="Heading 2" />
           <HeadingToolbarIcon icon={Heading3Icon} controller={heading} level={3} name="Heading 3" />

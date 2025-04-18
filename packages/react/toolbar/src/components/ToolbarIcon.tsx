@@ -1,7 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import clsx from 'clsx';
 import { ArrowDown, Check } from '@quadrats/icons';
 import { Icon, IconProps } from '@quadrats/react/components';
+import { useClickAway } from '@quadrats/react/utils';
 
 export interface ToolbarIconProps extends Omit<IconProps, 'ref' | 'onClick' | 'onMouseDown'> {
   active?: boolean;
@@ -25,7 +26,22 @@ function ToolbarIcon(props: ToolbarIconProps) {
     ...rest
   } = props;
 
+  const menuRef = useRef<HTMLDivElement | null>(null);
   const [menuExpanded, setMenuExpanded] = useState<boolean>(false);
+
+  useClickAway(
+    () => {
+      if (!menuExpanded) {
+        return;
+      }
+
+      return () => {
+        setMenuExpanded(false);
+      };
+    },
+    menuRef,
+    [menuExpanded, menuRef],
+  );
 
   const onClick = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (isMoreButton) {
@@ -73,7 +89,7 @@ function ToolbarIcon(props: ToolbarIconProps) {
   }
 
   return (
-    <div className="qdr-toolbar__icon__wrapper">
+    <div ref={menuRef} className="qdr-toolbar__icon__wrapper">
       <div
         className={clsx('qdr-toolbar__icon', { 'qdr-toolbar__icon--active': active }, className)}
         onClick={onClick}
