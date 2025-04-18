@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { FileUploader, FileUploaderElement } from '@quadrats/common/file-uploader';
 import { Editor, RenderElementProps, WithCreateRenderElement } from '@quadrats/react';
 

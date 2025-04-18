@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { RenderElementPropsBase } from './typings';
 
 export function composeRenderElementsBase<P extends RenderElementPropsBase>(

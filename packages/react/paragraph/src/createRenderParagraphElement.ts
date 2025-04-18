@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { ParagraphElement, PARAGRAPH_TYPE } from '@quadrats/core';
 import { createRenderElement, RenderElementProps } from '@quadrats/react';
 import { defaultRenderParagraphElement } from './defaultRenderParagraphElement';

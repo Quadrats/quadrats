@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { InputBlock, InputBlockElement } from '@quadrats/common/input-block';
 import { Editor, RenderElementProps, WithCreateRenderElement } from '@quadrats/react';
 

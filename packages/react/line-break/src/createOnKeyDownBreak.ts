@@ -5,7 +5,6 @@ import {
   Transforms,
   PARAGRAPH_TYPE,
   getAboveBlock,
-  insertSoftBreak,
   isNodeMatch,
   isSelectionAtBlockEdge,
 } from '@quadrats/core';
@@ -76,7 +75,7 @@ export function createOnKeyDownBreak({ exitBreak, softBreak }: CreateOnKeyDownBr
           if (isHotkey(hotkey, event as any) && (!match || isNodeMatch(entry, match))) {
             event.preventDefault();
 
-            insertSoftBreak(editor);
+            editor.insertText('\n');
 
             return;
           }

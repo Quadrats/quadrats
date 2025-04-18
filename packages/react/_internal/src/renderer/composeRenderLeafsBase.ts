@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { RenderLeafPropsBase } from './typings';
 
 export function composeRenderLeafsBase<P extends RenderLeafPropsBase>(

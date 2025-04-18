@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { composeRenderElementsBase } from '@quadrats/react/_internal';
 import { RenderElementProps } from './typings/renderer';
 import DefaultElement from './components/DefaultElement';

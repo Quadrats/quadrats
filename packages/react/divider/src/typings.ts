@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { Divider, DividerElement } from '@quadrats/common/divider';
 import { Editor } from '@quadrats/core';
 import { WithCreateRenderElement, RenderElementProps } from '@quadrats/react';

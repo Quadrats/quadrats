@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { Footnote, FootnoteElement } from '@quadrats/common/footnote';
 import { RenderElementProps, ReactWithable, WithCreateRenderElement, Editor } from '@quadrats/react';
 

@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { Heading, HeadingElement, HeadingLevel } from '@quadrats/common/heading';
 import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps, Editor } from '@quadrats/react';
 

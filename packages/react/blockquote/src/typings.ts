@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { BlockquoteElement, Blockquote } from '@quadrats/common/blockquote';
 import { Editor } from '@quadrats/core';
 import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps } from '@quadrats/react';

@@ -1,5 +1,6 @@
 /** @jsx jsx */
 
+import { JSX } from 'react';
 import { pipe } from '@quadrats/utils';
 import { createEditor } from '@quadrats/core';
 import { expectEditorEqualOutput, jsx, withTest } from '../../../../__fixtures__/hyperscript';
@@ -7,6 +8,7 @@ import { toggleNodesType, ToggleNodesTypeOptions } from './toggleNodesType';
 
 function testToggle(input: JSX.Element, output: JSX.Element, activeType: string, options?: ToggleNodesTypeOptions) {
   const editor = pipe(createEditor(), withTest(input));
+
   toggleNodesType(editor, activeType, options);
   expectEditorEqualOutput(editor, output);
 }

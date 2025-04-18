@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { QuadratsElement } from '@quadrats/core';
 import { CreateRenderElementOptionsBase, RenderElementPropsBase } from './typings';
 

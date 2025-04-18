@@ -1,4 +1,4 @@
-import React, { CompositionEvent, useCallback, useState } from 'react';
+import React, { JSX, CompositionEvent, useCallback, useState } from 'react';
 import { Editable as SlateEditable, useSlate } from 'slate-react';
 import { EditableProps as SlateEditableProps } from 'slate-react/dist/components/editable';
 import clsx from 'clsx';

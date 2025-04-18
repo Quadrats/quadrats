@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { ListTypeKey } from '@quadrats/common/list';
 import { RenderElementProps } from '@quadrats/react';
 

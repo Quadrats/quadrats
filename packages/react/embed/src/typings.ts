@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { Embed, EmbedElement } from '@quadrats/common/embed';
 import { WithCreateRenderElement, RenderElementProps, Editor } from '@quadrats/react';
 

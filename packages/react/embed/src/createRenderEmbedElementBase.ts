@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { deserializeEmbedElementToData, EmbedElement, EmbedStrategies } from '@quadrats/common/embed';
 import { RenderElementPropsBase } from '@quadrats/react/_internal';
 import { WithEmbedRenderData } from './typings';
@@ -20,6 +21,7 @@ export function createRenderEmbedElementBase<
     if (result) {
       const [provider, data] = result;
       const render = renderers[provider];
+
       return render({ ...props, data });
     }
   };

@@ -1,4 +1,4 @@
-import React, { cloneElement, CSSProperties, ReactElement } from 'react';
+import React, { JSX, cloneElement, CSSProperties, ReactElement } from 'react';
 import { Descendant, QuadratsElement } from '@quadrats/core';
 import { isText, WithElementParent } from '@quadrats/core/serializers';
 import { composeRenderElementsBase, composeRenderLeafsBase } from '@quadrats/react/_internal';

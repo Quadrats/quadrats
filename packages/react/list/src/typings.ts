@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { List, ListElement, ListTypeKey } from '@quadrats/common/list';
 import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps, Editor } from '@quadrats/react';
 
