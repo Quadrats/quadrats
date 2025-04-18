@@ -88,8 +88,35 @@ $qdr-toolbar-input-cross-size: 14px;
       color: var(--qdr-primary);
     }
 
+    &--with-name {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      padding: 0 12px;
+
+      &:hover,
+      &--active {
+        background: var(--qdr-primary-light);
+      }
+    }
+
     &__wrapper {
       position: relative;
+    }
+
+    &__name {
+      flex: 1;
+      margin: 0;
+      font-size: 0.9375rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 2.15;
+      color: var(--qdr-text);
+    }
+
+    &__check {
+      color: var(--qdr-primary);
     }
 
     &__menu {
@@ -101,9 +128,10 @@ $qdr-toolbar-input-cross-size: 14px;
       left: 0;
       padding: 4px 0;
       width: 200px;
-      max-height: 309px;
+      max-height: 240px;
       box-shadow: 0 24px 48px -12px rgb(0 0 0 / 18%), 0 4px 8px 2px rgb(0 0 0 / 4%);
       pointer-events: none;
+      overflow-y: auto;
       transition: opacity 0.2s ease-out;
 
       &--expanded {
@@ -114,7 +142,7 @@ $qdr-toolbar-input-cross-size: 14px;
   }
 
   &__input {
-    font-size: 13px;
+    font-size: 0.8125rem;
     background: var(--qdr-surface);
     color: var(--qdr-placeholder);
     width: calc(100% - #{$qdr-toolbar-input-cross-size});

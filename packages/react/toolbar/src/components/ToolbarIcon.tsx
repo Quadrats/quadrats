@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import clsx from 'clsx';
-import { ArrowDown } from '@quadrats/icons';
+import { ArrowDown, Check } from '@quadrats/icons';
 import { Icon, IconProps } from '@quadrats/react/components';
 
 export interface ToolbarIconProps extends Omit<IconProps, 'ref' | 'onClick' | 'onMouseDown'> {
@@ -8,12 +8,21 @@ export interface ToolbarIconProps extends Omit<IconProps, 'ref' | 'onClick' | 'o
   isMoreButton?: boolean;
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   onMouseDown?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  name?: string;
   withArrow?: boolean;
 }
 
 function ToolbarIcon(props: ToolbarIconProps) {
   const {
-    active, className, children, isMoreButton, onClick: onClickProps, onMouseDown: onMouseDownProps, withArrow, ...rest
+    active,
+    className,
+    children,
+    isMoreButton,
+    onClick: onClickProps,
+    onMouseDown: onMouseDownProps,
+    name,
+    withArrow,
+    ...rest
   } = props;
 
   const [menuExpanded, setMenuExpanded] = useState<boolean>(false);
@@ -32,6 +41,36 @@ function ToolbarIcon(props: ToolbarIconProps) {
       onMouseDownProps?.(event);
     }
   }, [isMoreButton, onMouseDownProps]);
+
+  if (name) {
+    return (
+      <div
+        className={clsx(
+          'qdr-toolbar__icon',
+          'qdr-toolbar__icon--with-name',
+          { 'qdr-toolbar__icon--with-name--active': active },
+          className,
+        )}
+        onClick={onClick}
+        onMouseDown={onMouseDown}
+      >
+        <Icon
+          {...rest}
+          width={20}
+          height={20}
+        />
+        <p className="qdr-toolbar__icon__name">{name}</p>
+        {active && (
+          <Icon
+            className="qdr-toolbar__icon__check"
+            icon={Check}
+            width={20}
+            height={20}
+          />
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="qdr-toolbar__icon__wrapper">
