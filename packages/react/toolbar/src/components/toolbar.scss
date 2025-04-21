@@ -124,8 +124,6 @@ $qdr-toolbar-input-cross-size: 14px;
       position: absolute;
       background: var(--qdr-surface);
       border: 1px solid var(--qdr-border);
-      top: 48px;
-      left: 0;
       padding: 4px 0;
       width: 200px;
       max-height: 240px;
@@ -137,6 +135,14 @@ $qdr-toolbar-input-cross-size: 14px;
       &--expanded {
         pointer-events: auto;
         opacity: 1;
+      }
+
+      &--top {
+        bottom: 48px;
+      }
+
+      &--bottom {
+        top: 48px;
       }
     }
   }

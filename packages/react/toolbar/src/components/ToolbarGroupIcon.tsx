@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useLayoutEffect } from 'react';
 import clsx from 'clsx';
 import { ArrowDown } from '@quadrats/icons';
 import { Icon, IconProps } from '@quadrats/react/components';
@@ -17,7 +17,10 @@ function ToolbarGroupIcon(props: ToolbarGroupIconProps) {
     ...rest
   } = props;
 
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const iconRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const [placement, setPlacement] = useState<'top' | 'bottom'>('bottom');
   const [menuExpanded, setMenuExpanded] = useState<boolean>(false);
 
   useClickAway(
@@ -30,9 +33,51 @@ function ToolbarGroupIcon(props: ToolbarGroupIconProps) {
         setMenuExpanded(false);
       };
     },
-    menuRef,
-    [menuExpanded, menuRef],
+    wrapperRef,
+    [menuExpanded, wrapperRef],
   );
+
+  useLayoutEffect(() => {
+    function handler() {
+      const icon = iconRef.current;
+      const menu = menuRef.current;
+
+      if (icon && menu) {
+        const rect = icon.getBoundingClientRect();
+        const menuWidth = menu.clientWidth;
+        const menuHeight = menu.clientHeight;
+
+        if (rect.left + menuWidth > window.innerWidth) {
+          if (rect.left + (menuWidth + rect.width) / 2 > window.innerWidth) {
+            menu.style.right = '0';
+            menu.style.left = 'unset';
+          } else {
+            menu.style.right = 'unset';
+            menu.style.left = `-${(menuWidth - rect.width) / 2}px`;
+          }
+        } else {
+          menu.style.right = 'unset';
+          menu.style.left = '0';
+        }
+
+        if (rect.top + rect.height + menuHeight + 40 > window.innerHeight) {
+          setPlacement('top');
+        } else {
+          setPlacement('bottom');
+        }
+      }
+    }
+
+    handler();
+
+    window.addEventListener('resize', handler);
+    window.addEventListener('scroll', handler);
+
+    return () => {
+      window.removeEventListener('resize', handler);
+      window.removeEventListener('scroll', handler);
+    };
+  }, []);
 
   const onClick = useCallback(() => {
     setMenuExpanded(expanded => !expanded);
@@ -45,8 +90,9 @@ function ToolbarGroupIcon(props: ToolbarGroupIconProps) {
         menuExpanded,
       }}
     >
-      <div ref={menuRef} className="qdr-toolbar__icon__wrapper">
+      <div ref={wrapperRef} className="qdr-toolbar__icon__wrapper">
         <div
+          ref={iconRef}
           className={clsx('qdr-toolbar__icon', { 'qdr-toolbar__icon--active': menuExpanded }, className)}
           onClick={onClick}
         >
@@ -61,7 +107,15 @@ function ToolbarGroupIcon(props: ToolbarGroupIconProps) {
             />
           )}
         </div>
-        <div className={clsx('qdr-toolbar__icon__menu', { 'qdr-toolbar__icon__menu--expanded': menuExpanded })}>
+        <div
+          ref={menuRef}
+          className={clsx(
+            'qdr-toolbar__icon__menu',
+            { 'qdr-toolbar__icon__menu--expanded': menuExpanded },
+            { 'qdr-toolbar__icon__menu--top': placement === 'top' },
+            { 'qdr-toolbar__icon__menu--bottom': placement === 'bottom' },
+          )}
+        >
           {children}
         </div>
       </div>
