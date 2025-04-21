@@ -41,6 +41,7 @@ function ToolbarGroupIcon(props: ToolbarGroupIconProps) {
   return (
     <ToolbarMenuContext.Provider
       value={{
+        isInGroup: true,
         menuExpanded,
       }}
     >

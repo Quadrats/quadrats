@@ -1,16 +1,14 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import clsx from 'clsx';
-import { ArrowDown, Check } from '@quadrats/icons';
+import { Check } from '@quadrats/icons';
 import { Icon, IconProps } from '@quadrats/react/components';
-import { useClickAway } from '@quadrats/react/utils';
+import { useToolbarMenu, getIconNameInGroup } from '@quadrats/react/toolbar';
+import { useLocale } from '@quadrats/react';
 
 export interface ToolbarIconProps extends Omit<IconProps, 'ref' | 'onClick' | 'onMouseDown'> {
   active?: boolean;
-  isMoreButton?: boolean;
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   onMouseDown?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-  name?: string;
-  withArrow?: boolean;
 }
 
 function ToolbarIcon(props: ToolbarIconProps) {
@@ -18,47 +16,25 @@ function ToolbarIcon(props: ToolbarIconProps) {
     active,
     className,
     children,
-    isMoreButton,
+    icon,
     onClick: onClickProps,
     onMouseDown: onMouseDownProps,
-    name,
-    withArrow,
     ...rest
   } = props;
 
-  const menuRef = useRef<HTMLDivElement | null>(null);
-  const [menuExpanded, setMenuExpanded] = useState<boolean>(false);
-
-  useClickAway(
-    () => {
-      if (!menuExpanded) {
-        return;
-      }
-
-      return () => {
-        setMenuExpanded(false);
-      };
-    },
-    menuRef,
-    [menuExpanded, menuRef],
-  );
+  const locale = useLocale();
+  const { isInGroup } = useToolbarMenu();
 
   const onClick = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (isMoreButton) {
-      setMenuExpanded(expanded => !expanded);
-    } else {
-      onClickProps?.(event);
-    }
-  }, [isMoreButton, onClickProps]);
+    onClickProps?.(event);
+  }, [onClickProps]);
 
   const onMouseDown = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (!isMoreButton) {
-      event.preventDefault();
-      onMouseDownProps?.(event);
-    }
-  }, [isMoreButton, onMouseDownProps]);
+    event.preventDefault();
+    onMouseDownProps?.(event);
+  }, [onMouseDownProps]);
 
-  if (name) {
+  if (isInGroup) {
     return (
       <div
         className={clsx(
@@ -72,10 +48,11 @@ function ToolbarIcon(props: ToolbarIconProps) {
       >
         <Icon
           {...rest}
+          icon={icon}
           width={20}
           height={20}
         />
-        <p className="qdr-toolbar__icon__name">{name}</p>
+        <p className="qdr-toolbar__icon__name">{getIconNameInGroup(icon.name, locale)}</p>
         {active && (
           <Icon
             className="qdr-toolbar__icon__check"
@@ -89,7 +66,7 @@ function ToolbarIcon(props: ToolbarIconProps) {
   }
 
   return (
-    <div ref={menuRef} className="qdr-toolbar__icon__wrapper">
+    <div className="qdr-toolbar__icon__wrapper">
       <div
         className={clsx('qdr-toolbar__icon', { 'qdr-toolbar__icon--active': active }, className)}
         onClick={onClick}
@@ -97,20 +74,9 @@ function ToolbarIcon(props: ToolbarIconProps) {
       >
         <Icon
           {...rest}
+          icon={icon}
         />
-        {withArrow && (
-          <Icon
-            icon={ArrowDown}
-            width={12}
-            height={12}
-          />
-        )}
       </div>
-      {isMoreButton && (
-        <div className={clsx('qdr-toolbar__icon__menu', { 'qdr-toolbar__icon__menu--expanded': menuExpanded })}>
-          {children}
-        </div>
-      )}
     </div>
   );
 }

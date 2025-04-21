@@ -5,3 +5,4 @@ export { ToolbarIconProps, default as ToolbarIcon } from './components/ToolbarIc
 export { ToolbarGroupIconProps, default as ToolbarGroupIcon } from './components/ToolbarGroupIcon';
 export { useStartToolInput } from './hooks/useStartToolInput';
 export * from './components/toolbarMenu';
+export * from './components/toolbarIconName';

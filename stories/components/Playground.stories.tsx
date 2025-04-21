@@ -408,9 +408,9 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     return (
       <>
         <ToolbarGroupIcon icon={ParagraphIcon}>
-          <HeadingToolbarIcon icon={Heading1Icon} controller={heading} level={1} name="Heading 1" />
-          <HeadingToolbarIcon icon={Heading2Icon} controller={heading} level={2} name="Heading 2" />
-          <HeadingToolbarIcon icon={Heading3Icon} controller={heading} level={3} name="Heading 3" />
+          <HeadingToolbarIcon icon={Heading1Icon} controller={heading} level={1} />
+          <HeadingToolbarIcon icon={Heading2Icon} controller={heading} level={2} />
+          <HeadingToolbarIcon icon={Heading3Icon} controller={heading} level={3} />
         </ToolbarGroupIcon>
         {~withTitles.indexOf('h1') ? <HeadingToolbarIcon icon={Heading1Icon} controller={heading} level={1} /> : null}
         {~withTitles.indexOf('h2') ? <HeadingToolbarIcon icon={Heading2Icon} controller={heading} level={2} /> : null}
