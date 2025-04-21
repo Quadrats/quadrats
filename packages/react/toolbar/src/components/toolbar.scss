@@ -68,7 +68,7 @@ $qdr-toolbar-input-cross-size: 14px;
 
   &__icon {
     position: relative;
-    color: var(--qdr-icon);
+    color: var(--qdr-action-inactive);
     font-size: 24px;
     display: inline-flex;
     justify-content: center;
@@ -112,7 +112,7 @@ $qdr-toolbar-input-cross-size: 14px;
       font-style: normal;
       font-weight: 400;
       line-height: 2.15;
-      color: var(--qdr-text);
+      color: var(--qdr-text-primary);
     }
 
     &__check {
@@ -144,7 +144,7 @@ $qdr-toolbar-input-cross-size: 14px;
   &__input {
     font-size: 0.8125rem;
     background: var(--qdr-surface);
-    color: var(--qdr-placeholder);
+    color: var(--qdr-text-secondary);
     width: calc(100% - #{$qdr-toolbar-input-cross-size});
     height: 100%;
     border: none;
@@ -164,7 +164,7 @@ $qdr-toolbar-input-cross-size: 14px;
     }
 
     &__cross {
-      fill: var(--qdr-placeholder);
+      fill: var(--qdr-text-secondary);
       font-size: $qdr-toolbar-input-cross-size;
       width: 1em;
       height: 1em;

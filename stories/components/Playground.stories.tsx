@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import clsx from 'clsx';
 import {
   Bold as BoldIcon,
   Italic as ItalicIcon,
@@ -7,7 +8,7 @@ import {
   Highlight as HighlightIcon,
   Link as LinkIcon,
   Unlink as UnlinkIcon,
-  // Paragraph as ParagraphIcon,
+  Paragraph as ParagraphIcon,
   Heading1 as Heading1Icon,
   Heading2 as Heading2Icon,
   Heading3 as Heading3Icon,
@@ -33,7 +34,7 @@ import {
 } from '@quadrats/icons';
 import { ConfigsProvider } from '@quadrats/react/configs';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Theme, THEME_QDR, THEME_QDR_DARK } from '@quadrats/theme';
+import { Theme } from '@quadrats/theme';
 import { LocaleDefinition, zhTW, enUS } from '@quadrats/locales';
 import { pipe } from '@quadrats/utils';
 import {
@@ -180,7 +181,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withReadMore,
   } = props;
 
-  const editorTheme = useMemo<Theme>(() => (theme === 'Dark' ? THEME_QDR_DARK : THEME_QDR), [theme]);
+  const editorTheme = useMemo<Theme>(() => (theme === 'Dark' ? 'dark' : 'light'), [theme]);
   const editorLocale = useMemo<LocaleDefinition>(() => (locale === 'Chinese' ? zhTW : enUS), [locale]);
 
   const link = useMemo(() => {
@@ -406,7 +407,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
 
     return (
       <>
-        <ToolbarIcon icon={Heading1Icon} withArrow isMoreButton>
+        <ToolbarIcon icon={ParagraphIcon} withArrow isMoreButton>
           <HeadingToolbarIcon icon={Heading1Icon} controller={heading} level={1} name="Heading 1" />
           <HeadingToolbarIcon icon={Heading2Icon} controller={heading} level={2} name="Heading 2" />
           <HeadingToolbarIcon icon={Heading3Icon} controller={heading} level={3} name="Heading 3" />
@@ -632,10 +633,10 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
         <ConfigsProvider theme={editorTheme} locale={editorLocale}>
           {({
             theme: {
-              props: { style },
+              props: { style, className },
             },
           }) => (
-            <div className="stories__custom-elements stories__block" style={style}>
+            <div className={clsx('stories__custom-elements stories__block', className)} style={style}>
               {jsxSerializer.serialize(value)}
             </div>
           )}
