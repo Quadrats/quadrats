@@ -14,6 +14,7 @@ import {
   Transforms,
 } from '@quadrats/core';
 import { ReactEditor, ThemeContext, useQuadrats } from '@quadrats/react';
+import { ToolbarContext  } from '@quadrats/react/toolbar';
 import { Portal } from '@quadrats/react/components';
 import { StartToolInput, ToolInputConfig } from '../typings';
 import { StartToolInputContext } from '../contexts/StartToolInputContext';
@@ -171,19 +172,26 @@ function Toolbar(props: ToolbarProps) {
 
   if (fixed) {
     return (
-      <div
-        className={clsx(
-          'qdr-toolbar__wrapper',
-          'qdr-toolbar__wrapper--fixed',
-          { 'qdr-toolbar__wrapper--inputting': toolInput },
-          themeProps.className,
-        )}
-        style={themeProps.style}
+      <ToolbarContext.Provider
+        value={{
+          fixed: true,
+          toolbarRef: toolbarRef,
+        }}
       >
-        <div className="qdr-toolbar">
-          {toolbarBody}
+        <div
+          className={clsx(
+            'qdr-toolbar__wrapper',
+            'qdr-toolbar__wrapper--fixed',
+            { 'qdr-toolbar__wrapper--inputting': toolInput },
+            themeProps.className,
+          )}
+          style={themeProps.style}
+        >
+          <div className="qdr-toolbar">
+            {toolbarBody}
+          </div>
         </div>
-      </div>
+      </ToolbarContext.Provider>
     );
   }
 
@@ -201,20 +209,27 @@ function Toolbar(props: ToolbarProps) {
 
   return (
     <Portal getContainer={getPortalContainer}>
-      <div
-        ref={toolbarRef}
-        className={clsx(
-          'qdr-toolbar__wrapper',
-          'qdr-toolbar__wrapper--float',
-          { 'qdr-toolbar__wrapper--inputting': toolInput },
-          themeProps.className,
-        )}
-        style={themeProps.style}
+      <ToolbarContext.Provider
+        value={{
+          fixed: false,
+          toolbarRef: toolbarRef,
+        }}
       >
-        <div className="qdr-toolbar qdr-toolbar--radius qdr-toolbar--shadow">
-          {toolbarBody}
+        <div
+          ref={toolbarRef}
+          className={clsx(
+            'qdr-toolbar__wrapper',
+            'qdr-toolbar__wrapper--float',
+            { 'qdr-toolbar__wrapper--inputting': toolInput },
+            themeProps.className,
+          )}
+          style={themeProps.style}
+        >
+          <div className="qdr-toolbar qdr-toolbar--radius qdr-toolbar--shadow">
+            {toolbarBody}
+          </div>
         </div>
-      </div>
+      </ToolbarContext.Provider>
     </Portal>
   );
 }

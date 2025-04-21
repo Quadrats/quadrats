@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { ArrowDown } from '@quadrats/icons';
 import { Icon, IconProps } from '@quadrats/react/components';
 import { useClickAway } from '@quadrats/react/utils';
-import { ToolbarMenuContext } from '@quadrats/react/toolbar';
+import { ToolbarMenuContext, useToolbar } from '@quadrats/react/toolbar';
 
 export interface ToolbarGroupIconProps extends Omit<IconProps, 'ref' | 'onClick' | 'onMouseDown'> {
   withArrow?: boolean;
@@ -20,6 +20,7 @@ function ToolbarGroupIcon(props: ToolbarGroupIconProps) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const iconRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const { toolbarRef } = useToolbar();
   const [placement, setPlacement] = useState<'top' | 'bottom'>('bottom');
   const [menuExpanded, setMenuExpanded] = useState<boolean>(false);
 
@@ -41,9 +42,11 @@ function ToolbarGroupIcon(props: ToolbarGroupIconProps) {
     function handler() {
       const icon = iconRef.current;
       const menu = menuRef.current;
+      const toolbar = toolbarRef?.current;
 
-      if (icon && menu) {
+      if (icon && menu && toolbar) {
         const rect = icon.getBoundingClientRect();
+        const toolbarRect = toolbar.getBoundingClientRect();
         const menuWidth = menu.clientWidth;
         const menuHeight = menu.clientHeight;
 
@@ -60,7 +63,7 @@ function ToolbarGroupIcon(props: ToolbarGroupIconProps) {
           menu.style.left = '0';
         }
 
-        if (rect.top + rect.height + menuHeight + 40 > window.innerHeight) {
+        if (toolbarRect.top + toolbarRect.height + menuHeight > window.innerHeight) {
           setPlacement('top');
         } else {
           setPlacement('bottom');
@@ -77,7 +80,7 @@ function ToolbarGroupIcon(props: ToolbarGroupIconProps) {
       window.removeEventListener('resize', handler);
       window.removeEventListener('scroll', handler);
     };
-  }, []);
+  }, [toolbarRef]);
 
   const onClick = useCallback(() => {
     setMenuExpanded(expanded => !expanded);
