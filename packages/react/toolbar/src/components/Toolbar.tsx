@@ -15,11 +15,12 @@ import {
 } from '@quadrats/core';
 import { More as MoreIcon } from '@quadrats/icons';
 import { ReactEditor, ThemeContext, useQuadrats } from '@quadrats/react';
-import { ToolbarContext, ToolbarGroupIcon } from '@quadrats/react/toolbar';
+import { ToolbarGroupIcon } from '@quadrats/react/toolbar';
 import { Portal } from '@quadrats/react/components';
 import { StartToolInput, ToolInputConfig } from '../typings';
+import { ToolbarContext } from '../contexts/toolbar';
 import { StartToolInputContext } from '../contexts/StartToolInputContext';
-import { useAutoGroupIcons } from './useAutoGroupIcons';
+import { useAutoGroupIcons } from '../hooks/useAutoGroupIcons';
 import ToolbarInput from './ToolbarInput';
 
 function roundNumber(value: number, min: number, max: number) {

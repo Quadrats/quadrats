@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import { ArrowDown } from '@quadrats/icons';
 import { Icon, IconProps } from '@quadrats/react/components';
 import { useClickAway } from '@quadrats/react/utils';
-import { ToolbarMenuContext, useToolbar } from '@quadrats/react/toolbar';
+import { useToolbar } from '../contexts/toolbar';
+import { ToolbarMenuContext } from '../contexts/toolbarMenu';
 
 export interface ToolbarGroupIconProps extends Omit<IconProps, 'ref' | 'onClick' | 'onMouseDown'> {
   withArrow?: boolean;

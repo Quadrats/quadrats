@@ -2,8 +2,9 @@ import React, { useCallback } from 'react';
 import clsx from 'clsx';
 import { Check } from '@quadrats/icons';
 import { Icon, IconProps } from '@quadrats/react/components';
-import { useToolbarMenu, getIconNameInGroup } from '@quadrats/react/toolbar';
 import { useLocale } from '@quadrats/react';
+import { getIconNameInGroup } from './toolbarIconName';
+import { useToolbarMenu } from '../contexts/toolbarMenu';
 
 export interface ToolbarIconProps extends Omit<IconProps, 'ref' | 'onClick' | 'onMouseDown'> {
   active?: boolean;
