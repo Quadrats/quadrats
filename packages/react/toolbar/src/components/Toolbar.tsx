@@ -15,9 +15,9 @@ import {
 } from '@quadrats/core';
 import { More as MoreIcon } from '@quadrats/icons';
 import { ReactEditor, ThemeContext, useQuadrats } from '@quadrats/react';
-import { ToolbarGroupIcon } from '@quadrats/react/toolbar';
 import { Portal } from '@quadrats/react/components';
 import { StartToolInput, ToolInputConfig } from '../typings';
+import ToolbarGroupIcon from './ToolbarGroupIcon';
 import { ToolbarContext } from '../contexts/toolbar';
 import { StartToolInputContext } from '../contexts/StartToolInputContext';
 import { useAutoGroupIcons } from '../hooks/useAutoGroupIcons';
