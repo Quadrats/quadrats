@@ -15,7 +15,6 @@ function ToolbarIcon(props: ToolbarIconProps) {
   const {
     active,
     className,
-    children,
     icon,
     onClick: onClickProps,
     onMouseDown: onMouseDownProps,
