@@ -1,56 +1,78 @@
-import React, { useLayoutEffect, useMemo, useState, ReactElement } from 'react';
+import React, { useLayoutEffect, useRef, useEffect, useMemo, useState, ReactElement, useCallback } from 'react';
 
-export function useAutoGroupIcons(tools: JSX.Element | null | undefined) {
+function usePreviousValue<T>(value: T): T {
+  const ref = useRef(value);
+
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+
+  return ref.current;
+}
+
+export function useAutoGroupIcons(tools: JSX.Element | null | undefined, renderExpandedStatus: boolean) {
+  const preRenderExpandedStatus = usePreviousValue(renderExpandedStatus);
+
+  const fakeToolbarId = useMemo(() => (
+    renderExpandedStatus ? 'fake-expanded-tools-wrapper' : 'fake-tools-wrapper'
+  ), [renderExpandedStatus]);
+
   const fakeTools = useMemo(() => (
     <div
-      id="fake-tools-wrapper"
+      id={fakeToolbarId}
       className="qdr-toolbar"
       style={{ position: 'absolute', top: 0, left: 0, visibility: 'hidden', pointerEvents: 'none' }}
     >
       {tools}
     </div>
-  ), [tools]);
+  ), [fakeToolbarId, tools]);
 
   const [takeCount, setTakeCount] = useState<number>(0);
 
-  const toolsElements = useMemo(() => (tools?.props.children as ReactElement[]).filter(c => !!c).map((c, index) => ({
+  const toolsElements = useMemo(() => (tools?.props.children as ReactElement[])?.filter(c => !!c).map((c, index) => ({
     ...c,
     id: index,
-  })), [tools]);
+  })) ?? [], [tools]);
 
-  useLayoutEffect(() => {
-    function handler() {
-      const fakeToolsWrapper = document.getElementById('fake-tools-wrapper');
+  const calcGroupIcons = useCallback(() => {
+    const fakeToolsWrapper = document.getElementById(fakeToolbarId);
 
-      if (fakeToolsWrapper) {
-        const toolbarRect = fakeToolsWrapper.getBoundingClientRect();
+    if (fakeToolsWrapper) {
+      const toolbarRect = fakeToolsWrapper.getBoundingClientRect();
 
-        if (toolbarRect.right - window.innerWidth > 0) {
-          const iconWrappers = fakeToolsWrapper!.getElementsByClassName('qdr-toolbar__icon__wrapper');
+      if (toolbarRect.right - window.innerWidth > 0) {
+        const iconWrappers = fakeToolsWrapper!.getElementsByClassName('qdr-toolbar__icon__wrapper');
 
-          const targetIndex = Array.from(iconWrappers).findIndex((wrapper) => {
-            const rect = wrapper.getBoundingClientRect();
+        const targetIndex = Array.from(iconWrappers).findIndex((wrapper) => {
+          const rect = wrapper.getBoundingClientRect();
 
-            return rect.right > window.innerWidth;
-          });
+          return rect.right > window.innerWidth;
+        });
 
-          const groupIcons = (Array.from(iconWrappers).slice(targetIndex - 1, iconWrappers.length) as HTMLElement[]);
+        const groupIcons = (Array.from(iconWrappers).slice(targetIndex - 1, iconWrappers.length) as HTMLElement[]);
 
-          setTakeCount(groupIcons.length);
-        } else {
-          setTakeCount(0);
-        }
+        setTakeCount(groupIcons.length);
+      } else {
+        setTakeCount(0);
       }
     }
+  }, [fakeToolbarId]);
 
-    handler();
+  useLayoutEffect(() => {
+    calcGroupIcons();
 
-    window.addEventListener('resize', handler);
+    window.addEventListener('resize', calcGroupIcons);
 
     return () => {
-      window.removeEventListener('resize', handler);
+      window.removeEventListener('resize', calcGroupIcons);
     };
-  }, []);
+  }, [calcGroupIcons]);
+
+  useEffect(() => {
+    if (renderExpandedStatus !== preRenderExpandedStatus) {
+      calcGroupIcons();
+    }
+  }, [renderExpandedStatus, preRenderExpandedStatus, calcGroupIcons]);
 
   const takeIndex = useMemo(() => toolsElements.findIndex(
     el => el.id === toolsElements.filter(e => e.type !== 'span').slice(-takeCount)[0].id,
