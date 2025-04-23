@@ -151,7 +151,9 @@ function Toolbar(props: ToolbarProps) {
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const tools = children(renderExpandedStatus! && !fixed);
-  const { fakeTools, takeCount, shownElements, groupElements } = useAutoGroupIcons(tools);
+  const { fakeTools, takeCount, shownElements, groupElements } = useAutoGroupIcons(
+    tools, renderExpandedStatus! && !fixed,
+  );
 
   const toolbarBody = (
     <>
