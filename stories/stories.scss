@@ -25,9 +25,10 @@
 
 .stories {
   &__block {
-    background-color: var(--qdr-bg);
+    background-color: var(--qdr-surface);
     overflow: hidden;
     overflow-wrap: break-word;
+    border: 1px solid var(--qdr-border);
 
     @include stories-block;
   }
