@@ -29,10 +29,10 @@ export function useAutoGroupIcons(tools: JSX.Element | null | undefined, renderE
 
   const [takeCount, setTakeCount] = useState<number>(0);
 
-  const toolsElements = useMemo(() => (tools?.props.children as ReactElement[]).filter(c => !!c).map((c, index) => ({
+  const toolsElements = useMemo(() => (tools?.props.children as ReactElement[])?.filter(c => !!c).map((c, index) => ({
     ...c,
     id: index,
-  })), [tools]);
+  })) ?? [], [tools]);
 
   const calcGroupIcons = useCallback(() => {
     const fakeToolsWrapper = document.getElementById(fakeToolbarId);

@@ -45,9 +45,9 @@ function ToolbarGroupIcon(props: ToolbarGroupIconProps) {
       const menu = menuRef.current;
       const toolbar = toolbarRef?.current;
 
-      if (icon && menu && toolbar) {
+      if (icon && menu) {
         const rect = icon.getBoundingClientRect();
-        const toolbarRect = toolbar.getBoundingClientRect();
+        const toolbarRect = toolbar?.getBoundingClientRect();
         const menuWidth = menu.clientWidth;
         const menuHeight = menu.clientHeight;
 
@@ -64,7 +64,7 @@ function ToolbarGroupIcon(props: ToolbarGroupIconProps) {
           menu.style.left = '0';
         }
 
-        if (toolbarRect.top + toolbarRect.height + menuHeight > window.innerHeight) {
+        if (toolbarRect && toolbarRect.top + toolbarRect.height + menuHeight > window.innerHeight) {
           setPlacement('top');
         } else {
           setPlacement('bottom');
