@@ -1,3 +1,4 @@
+import { QDR_SPACING } from './spacing';
 import { ThemeObject } from './typings';
 
 export const THEME_QDR_DARK: ThemeObject = {
@@ -54,4 +55,6 @@ export const THEME_QDR_DARK: ThemeObject = {
 
   overlayDark: '#00000080',
   overlayLight: '#242424e6',
+
+  ...QDR_SPACING,
 };

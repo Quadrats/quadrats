@@ -19,7 +19,7 @@
   @return $map;
 }
 
-@mixin qdr-theme($name, $palette) {
+@mixin qdr-theme($name, $palette, $spacing) {
   .qdr-theme-#{$name} {
     $default-palette: assign(
       $palette,
@@ -32,6 +32,10 @@
 
     @each $name, $color in $default-palette {
       --qdr-#{$name}: #{$color};
+    }
+
+    @each $name, $value in $spacing {
+      --qdr-#{$name}: #{$value};
     }
   }
 }

@@ -1,4 +1,5 @@
-@import '../theming/register';
-@import '../theming/palettes';
+@import url('../theming/register');
+@import url('../theming/palettes');
+@import url('../theming/spacing');
 
-@include qdr-theme('qdr', $qdr-palette-qdr);
+@include qdr-theme('qdr', $qdr-palette-qdr, $qdr-spacing);

@@ -1,4 +1,9 @@
-export interface ThemeObject {
+export interface SpacingObject {
+  'spacing-0': string;
+  'spacing-1': string;
+}
+
+export type ThemeObject = {
   primary: string;
   primaryLight: string;
   primaryDark: string;
@@ -52,6 +57,6 @@ export interface ThemeObject {
 
   overlayDark: string;
   overlayLight: string;
-}
+} & SpacingObject;
 
 export type Theme = string | ThemeObject;
