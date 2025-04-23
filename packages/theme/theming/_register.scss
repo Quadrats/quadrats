@@ -19,22 +19,18 @@
   @return $map;
 }
 
-@mixin qdr-theme($name, $palette, $spacing) {
+@mixin qdr-theme($name, $styles) {
   .qdr-theme-#{$name} {
-    $default-palette: assign(
-      $palette,
-      _get-main-color-transformed-palette(primary, $palette),
-      _get-main-color-transformed-palette(secondary, $palette),
-      _get-main-color-transformed-palette(error, $palette),
-      _get-main-color-transformed-palette(warning, $palette),
-      _get-main-color-transformed-palette(success, $palette),
+    $default-styles: assign(
+      $styles,
+      _get-main-color-transformed-palette(primary, $styles),
+      _get-main-color-transformed-palette(secondary, $styles),
+      _get-main-color-transformed-palette(error, $styles),
+      _get-main-color-transformed-palette(warning, $styles),
+      _get-main-color-transformed-palette(success, $styles),
     );
 
-    @each $name, $color in $default-palette {
-      --qdr-#{$name}: #{$color};
-    }
-
-    @each $name, $value in $spacing {
+    @each $name, $value in $default-styles {
       --qdr-#{$name}: #{$value};
     }
   }

@@ -1,6 +1,5 @@
 @use '../packages/theme/theming/register.scss';
-@use '../packages/theme/theming/palettes.scss';
-@use '../packages/theme/theming/spacing.scss';
+@use '../packages/theme/theming/styles.scss';
 @import url('../packages/react/components/src/Progress/progress.scss');
 @import url('../packages/react/components/src/Tooltip/tooltip.scss');
 @import url('../packages/react/src/core/components/editable.scss');
@@ -20,8 +19,8 @@
 }
 
 :root {
-  @include register.qdr-theme('light', palettes.$qdr-palette-qdr, spacing.$qdr-spacing);
-  @include register.qdr-theme('dark', palettes.$qdr-palette-qdr-dark, spacing.$qdr-spacing);
+  @include register.qdr-theme('light', styles.$qdr-palette-qdr);
+  @include register.qdr-theme('dark', styles.$qdr-palette-qdr-dark);
 }
 
 .stories {

@@ -1,6 +1,4 @@
-@use 'sass:map';
-
-$qdr-palette-qdr: (
+$palette-light: (
   primary: #465bc7,
   primary-light: #778de8,
   primary-dark: #2d2d9e,
@@ -46,7 +44,7 @@ $qdr-palette-qdr: (
   overlay-light: #ffffffe6,
 );
 
-$qdr-palette-qdr-dark: (
+$palette-dark: (
   primary: #4767eb,
   primary-light: #6882ef,
   primary-dark: #3249a7,
