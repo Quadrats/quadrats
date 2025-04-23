@@ -97,7 +97,7 @@ function ToolbarGroupIcon(props: ToolbarGroupIconProps) {
       <div ref={wrapperRef} className="qdr-toolbar__icon__wrapper">
         <div
           ref={iconRef}
-          className={clsx('qdr-toolbar__icon', { 'qdr-toolbar__icon--active': menuExpanded }, className)}
+          className={clsx('qdr-toolbar__icon', { 'qdr-toolbar__icon--expanded': menuExpanded }, className)}
           onClick={onClick}
         >
           <Icon
@@ -106,6 +106,7 @@ function ToolbarGroupIcon(props: ToolbarGroupIconProps) {
           {withArrow && (
             <Icon
               icon={ArrowDown}
+              className="qdr-toolbar__icon__arrow"
               width={12}
               height={12}
             />

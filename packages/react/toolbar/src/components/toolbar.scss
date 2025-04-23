@@ -79,11 +79,16 @@ $qdr-toolbar-input-cross-size: 14px;
     padding: 4px;
     outline: none;
     box-shadow: none;
-    border-radius: 0;
-    transition: color 0.2s ease-out;
+    border-radius: 4px;
+    transition: color 0.2s ease-out, background 0.2s ease-out;
     cursor: pointer;
 
     &:hover,
+    &--expanded {
+      color: var(--qdr-action-active);
+      background: var(--qdr-secondary-hover-bg);
+    }
+
     &--active {
       color: var(--qdr-primary);
     }
@@ -92,17 +97,30 @@ $qdr-toolbar-input-cross-size: 14px;
       display: flex;
       align-items: center;
       justify-content: flex-start;
+      border-radius: 0;
       gap: 8px;
       padding: 0 12px;
 
-      &:hover,
+      &:hover {
+        color: var(--qdr-action-inactive);
+        background: var(--qdr-primary-hover-bg);
+      }
+
       &--active {
-        background: var(--qdr-primary-light);
+        color: var(--qdr-action-inactive);
+        background: var(--qdr-primary-active-bg);
       }
     }
 
     &__wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       position: relative;
+    }
+
+    &__arrow {
+      color: var(--qdr-action-disabled)
     }
 
     &__name {
