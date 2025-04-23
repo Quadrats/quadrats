@@ -1,5 +1,5 @@
 .qdr-editable {
-  background-color: var(--qdr-bg);
+  background-color: var(--qdr-surface);
   border: solid 1px var(--qdr-border);
   color: var(--qdr-text-primary);
   caret-color: var(--qdr-primary);
@@ -19,7 +19,6 @@
     padding: inherit;
     width: 0;
     max-width: 100%;
-    opacity: 0.333;
     white-space: nowrap;
     text-decoration: none;
     pointer-events: none;
