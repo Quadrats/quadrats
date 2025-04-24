@@ -8,7 +8,7 @@ export const Italic: IconDefinition = {
     },
     path: {
       fill: 'currentColor',
-      d: 'M17 4v1.4h-2.376l-3.03 13.2H14V20H7v-1.4h2.424l3.03-13.2H10V4h7z',
+      d: 'M14.9457 4H17V5.4H14.6243L11.5945 18.6H14V20H7V18.6H9.42436L12.4542 5.4H10V4H12.7755H14.9457Z',
     },
   },
 };

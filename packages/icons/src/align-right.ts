@@ -1,6 +1,6 @@
 import { IconDefinition } from './typings';
 
-export const AlighRight: IconDefinition = {
+export const AlignRight: IconDefinition = {
   name: 'align-right',
   definition: {
     svg: {
@@ -10,7 +10,7 @@ export const AlighRight: IconDefinition = {
       fillRule: 'evenodd',
       fill: 'currentColor',
       d:
-        'M3,11.435 L17.482,11.435 L17.482,5 L3,5 L3,11.435 Z M4.611,9.826 L15.874,9.826 L15.874,6.609 L4.611,6.609 L4.611,9.826 Z M6,19.436 L17.263,19.436 L17.263,13 L6,13 L6,19.436 Z M7.611,17.827 L15.654,17.827 L15.654,14.61 L7.611,14.61 L7.611,17.827 Z M19,19.48 L20.609,19.48 L20.609,5 L19,5 L19,19.48 Z',
+        'M15 4.5H4.5V6H15V4.5Z M15 9H7.5V10.5H15V9Z M15 13.5H4.5V15H15V13.5Z M15 18H7.5V19.5H15V18Z M19.5 3H18V21H19.5V3Z',
     },
   },
 };

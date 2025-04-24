@@ -6,6 +6,6 @@ export const defaultRenderFootnoteElement = ({ children, element }: JsxSerialize
     <span className="qdr-footnote-text" style={{ textDecoration: 'underline' }}>
       {children}
     </span>
-    <sup className="qdr-footnote-sup" style={{ color: 'var(--qdr-sup)' }}>{`[${element.index ?? 1}]`}</sup>
+    <sup className="qdr-footnote-sup" style={{ color: 'var(--qdr-error-light)' }}>{`[${element.index ?? 1}]`}</sup>
   </>
 );

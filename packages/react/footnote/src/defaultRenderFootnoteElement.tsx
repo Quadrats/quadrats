@@ -26,7 +26,7 @@ export const defaultRenderFootnoteElement = ({
       <sup
         {...attributes}
         className="qdr-footnote-sup"
-        style={{ color: 'var(--qdr-sup)', userSelect: 'none' }}
+        style={{ color: 'var(--qdr-error-light)', userSelect: 'none' }}
         contentEditable={false}
       >
         {`[${index ?? 1}]`}

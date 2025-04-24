@@ -6,11 +6,8 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: var(--qdr-text);
+    inset: 0;
+    background-color: var(--qdr-text-primary);
     transition: background-color 300ms ease-in-out;
     will-change: background-color;
     opacity: 0.65;

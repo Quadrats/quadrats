@@ -1,27 +1,93 @@
 @use 'sass:map';
 
 $qdr-palette-qdr: (
-  primary-light: #c1eef2,
-  primary: #1cc1d0,
-  primary-dark: #16aab8,
-  background: #f5f5f5,
+  primary: #465bc7,
+  primary-light: #778de8,
+  primary-dark: #2d2d9e,
+  on-primary: #fff,
+
+  secondary: #383838,
+  secondary-light: #6a6a6a,
+  secondary-dark: #161616,
+  on-secondary: #fff,
+
+  error: #fb414a,
+  error-light: #ff6461,
+  error-dark: #cf1322,
+  on-error: #fff,
+
+  warning: #f7ac38,
+  warning-light: #fdd948,
+  warning-dark: #f1842b,
+  on-warning: #fff,
+
+  success: #00b42a,
+  success-light: #23c343,
+  success-dark: #009a29,
+  on-success: #fff,
+
+  text-primary: #161616,
+  text-secondary: #8f8f8f,
+  text-disabled: #bcbcbc,
+
+  action-active: #161616,
+  action-inactive: #8f8f8f,
+  action-disabled: #bcbcbc,
+  action-disabled-bg: #e5e5e5,
+
   surface: #fff,
-  text: #000,
-  border: #e0e0e0,
-  divider: #c1c1c1,
-  placeholder: #4a4a4a,
-  icon: #7d7d7d
+  block: #fafafa,
+  bg: #f5f5f5,
+
+  divider: #e7e7e7,
+  border: #d9d9d9,
+
+  overlay-dark: #16161680,
+  overlay-light: #ffffffe6,
 );
 
-$qdr-palette-qdr-dark: map.merge(
-  $qdr-palette-qdr,
-  (
-    background: #212121,
-    surface: #000,
-    text: #fff,
-    border: #4a4a4a,
-    divider: #636363,
-    placeholder: #e0e0e0,
-    icon: #9e9e9e
-  )
+$qdr-palette-qdr-dark: (
+  primary: #4767eb,
+  primary-light: #6882ef,
+  primary-dark: #3249a7,
+  on-primary: #fff,
+
+  secondary: #585858,
+  secondary-light: #b5b5b5,
+  secondary-dark: #3e3e3e,
+  on-secondary: #fff,
+
+  error: #ff4d4f,
+  error-light: #ff6d6f,
+  error-dark: #d94143,
+  on-error: #fff,
+
+  warning: #f7ac38,
+  warning-light: #f8bb5c,
+  warning-dark: #af7a28,
+  on-warning: #fff,
+
+  success: #1ac61a,
+  success-light: #43cf43,
+  success-dark: #128b12,
+  on-success: #fff,
+
+  text-primary: #fff,
+  text-secondary: #8c8c8c,
+  text-disabled: #595959,
+
+  action-active: #fff,
+  action-inactive: #8c8c8c,
+  action-disabled: #595959,
+  action-disabled-bg: #393939,
+
+  surface: #242424,
+  block: #1a1a1a,
+  bg: #0a0a0a,
+
+  divider: #333,
+  border: #434343,
+
+  overlay-dark: #00000080,
+  overlay-light: #242424e6,
 );

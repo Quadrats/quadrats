@@ -1,6 +1,36 @@
+@use 'sass:map';
+@use 'sass:color';
+
+@function _get-main-color-transformed-palette($name, $palette) {
+  $light-color: map.get($palette, '#{$name}-light');
+  $main-color: map.get($palette, $name);
+
+  @return (
+    '#{$name}-hover-bg': color.change($light-color, $alpha: 0.15),
+    '#{$name}-active-bg': color.change($main-color, $alpha: 0.2)
+  );
+}
+
+@function assign($map, $maps...) {
+  @each $m in $maps {
+    $map: map.merge($map, $m);
+  }
+
+  @return $map;
+}
+
 @mixin qdr-theme($name, $palette) {
   .qdr-theme-#{$name} {
-    @each $name, $color in $palette {
+    $default-palette: assign(
+      $palette,
+      _get-main-color-transformed-palette(primary, $palette),
+      _get-main-color-transformed-palette(secondary, $palette),
+      _get-main-color-transformed-palette(error, $palette),
+      _get-main-color-transformed-palette(warning, $palette),
+      _get-main-color-transformed-palette(success, $palette),
+    );
+
+    @each $name, $color in $default-palette {
       --qdr-#{$name}: #{$color};
     }
   }
