@@ -104,6 +104,12 @@ export function getIconNameInGroup(iconOriginName: string, locale: LocaleDefinit
     case 'video':
       return locale.editor.toolbar.video;
 
+    case 'vimeo':
+      return locale.editor.toolbar.vimeo;
+
+    case 'youtube':
+      return locale.editor.toolbar.youtube;
+
     default:
       return '';
   }
