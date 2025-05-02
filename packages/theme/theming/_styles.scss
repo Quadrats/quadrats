@@ -1,0 +1,13 @@
+@use 'sass:map';
+@use './palettes';
+@use './spacing';
+
+$qdr-palette-qdr: map.merge(
+  palettes.$palette-light,
+  spacing.$qdr-spacing,
+);
+
+$qdr-palette-qdr-dark: map.merge(
+  palettes.$palette-dark,
+  spacing.$qdr-spacing,
+)

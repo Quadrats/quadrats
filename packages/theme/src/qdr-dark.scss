@@ -1,4 +1,4 @@
-@import '../theming/register';
-@import '../theming/palettes';
+@use '../theming/register';
+@use '../theming/styles';
 
-@include qdr-theme('qdr-dark', $qdr-palette-qdr-dark);
+@include register.qdr-theme('qdr-dark', styles.$qdr-palette-qdr-dark);
