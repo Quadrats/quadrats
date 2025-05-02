@@ -51,7 +51,7 @@ export interface SpacingObject {
   typographyBasicInput1FontWeight: string;
 }
 
-export type ThemeObject = {
+export interface PalettesObject {
   primary: string;
   primaryLight: string;
   primaryDark: string;
@@ -105,6 +105,8 @@ export type ThemeObject = {
 
   overlayDark: string;
   overlayLight: string;
-} & SpacingObject;
+}
+
+export type ThemeObject = PalettesObject & SpacingObject;
 
 export type Theme = string | ThemeObject;
