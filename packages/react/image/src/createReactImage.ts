@@ -7,10 +7,17 @@ import {
   CreateImageOptions,
   getImageElementCommonProps,
   getImageFigureElementCommonProps,
+  Image,
   ImageElement,
   ImageFigureElement,
 } from '@quadrats/common/image';
-import { createRenderElements, RenderElementProps } from '@quadrats/react';
+import {
+  FILE_UPLOADER_TYPE,
+  FileUploaderUploadOptions,
+  createFileUploaderElementByType,
+  insertFileUploaderElement,
+} from '@quadrats/common/file-uploader';
+import { createRenderElements, QuadratsReactEditor, RenderElementProps } from '@quadrats/react';
 import { ReactImage } from './typings';
 import { defaultRenderImageElements } from './defaultRenderImageElements';
 
@@ -18,8 +25,13 @@ export type CreateReactImageOptions<Hosting extends string> = CreateImageOptions
 
 export function createReactImage<Hosting extends string>(
   options: CreateReactImageOptions<Hosting> = {},
+  getUploadOptions?: (image: Image<Hosting, QuadratsReactEditor>) => FileUploaderUploadOptions & {
+    type?: string;
+  },
 ): ReactImage<Hosting> {
   const core = createImage(options);
+  const uploadOptions = getUploadOptions?.(core);
+
   const { types } = core;
 
   return {
@@ -99,6 +111,23 @@ export function createReactImage<Hosting extends string>(
       editor.insertData = (data) => {
         const text = data.getData('text');
         const { files } = data;
+
+        /**
+         * Insert each image when upload options are set.
+         */
+        if (uploadOptions) {
+          const createFileUploaderElement = createFileUploaderElementByType(uploadOptions.type ?? FILE_UPLOADER_TYPE);
+
+          Array.from(files).reduce(async (prev, file) => {
+            await prev;
+
+            return createFileUploaderElement(editor, file, uploadOptions).then((fileUploaderElement) => {
+              insertFileUploaderElement(editor, fileUploaderElement);
+            });
+          }, Promise.resolve());
+
+          return;
+        }
 
         /**
          * Insert image if inserted text is image url.
