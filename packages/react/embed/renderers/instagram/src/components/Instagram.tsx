@@ -14,27 +14,25 @@ function Instagram({ attributes, children, data: permalink }: InstagramProps) {
   useLoadInstagramEmbedApi(permalink);
 
   useEffect(() => {
-    if (!document.getElementById('add-instagram-title-script')) {
-      const addTitleScript = document.createElement('script');
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if ((node as HTMLElement).tagName === 'IFRAME') {
+            const iframeNode = node as HTMLIFrameElement;
 
-      addTitleScript.id = 'add-instagram-title-script';
-
-      addTitleScript.textContent = `
-        const observer = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-              if (node.tagName === 'IFRAME' && node.src.includes('instagram.com')) {
-                node.setAttribute('title', 'Instagram 貼文');
-              }
-            });
-          });
+            if (iframeNode.src.includes('instagram.com')) {
+              iframeNode.setAttribute('title', 'Instagram 貼文');
+            }
+          }
         });
+      });
+    });
 
-        observer.observe(document.body, { childList: true, subtree: true });
-      `;
+    observer.observe(document.body, { childList: true, subtree: true });
 
-      document.body.appendChild(addTitleScript);
-    }
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   return (
