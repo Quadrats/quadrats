@@ -136,7 +136,7 @@ const readMore = createReactReadMore();
 const fileUploader = createReactFileUploader();
 const image = createReactImage({
   sizeSteps: [25, 50, 75],
-});
+}, img => getLocalFileUploaderOptions(img));
 
 export interface PlaygroundEditorProps {
   theme: 'Default' | 'Dark';

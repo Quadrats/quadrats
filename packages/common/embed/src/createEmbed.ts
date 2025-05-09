@@ -4,6 +4,7 @@ import {
   PARAGRAPH_TYPE,
   QuadratsElement,
   Transforms,
+  isAboveBlockEmpty,
 } from '@quadrats/core';
 import {
   Embed,
@@ -28,6 +29,12 @@ export function createEmbed<P extends string>(options: CreateEmbedOptions<P>): E
       const embedElement: EmbedElement = {
         ...data, type, provider, children: [{ text: '' }],
       };
+
+      if (isAboveBlockEmpty(editor)) {
+        Transforms.removeNodes(editor, {
+          at: editor.selection?.anchor,
+        });
+      }
 
       Transforms.insertNodes(editor, [
         embedElement,

@@ -8,9 +8,8 @@ export interface CreateFileUploaderOptions {
   type?: string;
 }
 
-export function createFileUploader(options: CreateFileUploaderOptions = {}): FileUploader<Editor> {
-  const { type = FILE_UPLOADER_TYPE } = options;
-  const createFileUploaderElement: FileUploader<Editor>['createFileUploaderElement'] = async (
+export const createFileUploaderElementByType: (type: string) => FileUploader<Editor>['createFileUploaderElement'] =
+  type => async (
     editor,
     file,
     options,
@@ -79,6 +78,30 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
     return fileUploaderElement;
   };
 
+export function insertFileUploaderElement(
+  editor: Editor, fileUploaderElement: FileUploaderElement | undefined,
+) {
+  if (fileUploaderElement) {
+    // Clear empty node
+    if (isAboveBlockEmpty(editor)) {
+      Transforms.removeNodes(editor, {
+        at: editor.selection?.anchor,
+      });
+    }
+
+    Transforms.insertNodes(editor, [fileUploaderElement, createParagraphElement()], {
+      at: editor.selection?.anchor.path.length ? [editor.selection?.anchor.path[0] + 1] : undefined,
+    });
+
+    Transforms.move(editor);
+  }
+}
+
+export function createFileUploader(options: CreateFileUploaderOptions = {}): FileUploader<Editor> {
+  const { type = FILE_UPLOADER_TYPE } = options;
+  const createFileUploaderElement: FileUploader<Editor>['createFileUploaderElement'] =
+    createFileUploaderElementByType(type);
+
   const upload: FileUploader<Editor>['upload'] = async (editor, options) => {
     const { accept, multiple } = options;
     const files = await getFilesFromInput({ accept, multiple });
@@ -91,20 +114,7 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
       await prev;
 
       return createFileUploaderElement(editor, file, options).then((fileUploaderElement) => {
-        if (fileUploaderElement) {
-          // Clear empty node
-          if (isAboveBlockEmpty(editor)) {
-            Transforms.removeNodes(editor, {
-              at: editor.selection?.anchor,
-            });
-          }
-
-          Transforms.insertNodes(editor, [fileUploaderElement, createParagraphElement()], {
-            at: editor.selection?.anchor.path.length ? [editor.selection?.anchor.path[0] + 1] : undefined,
-          });
-
-          Transforms.move(editor);
-        }
+        insertFileUploaderElement(editor, fileUploaderElement);
       });
     }, Promise.resolve());
   };

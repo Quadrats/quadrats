@@ -1,4 +1,6 @@
 import { FileUploaderUploadOptions } from '@quadrats/common/file-uploader';
+import { Image } from '@quadrats/common/image';
+import { QuadratsReactEditor } from '@quadrats/react';
 import { ReactImage } from '@quadrats/react/image';
 
 interface ProgressUpdates {
@@ -63,7 +65,7 @@ class LocalFileUploader {
   }
 }
 
-export default function getLocalFileUploaderOptions<Hosting extends string>(image: ReactImage<Hosting>): FileUploaderUploadOptions {
+export default function getLocalFileUploaderOptions<Hosting extends string>(image: ReactImage<Hosting> | Image<Hosting, QuadratsReactEditor>): FileUploaderUploadOptions {
   return {
     accept: ['image/*'],
     createElement: {
