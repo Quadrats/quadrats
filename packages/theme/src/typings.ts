@@ -6,6 +6,9 @@ export interface SpacingObject {
   'spacing-6': string;
   'spacing-7': string;
   'spacing-8': string;
+  'spacing-9': string;
+  'spacing-10': string;
+  'spacing-11': string;
   'spacing-14': string;
   'spacing-25': string;
   'spacing-27': string;
@@ -44,6 +47,11 @@ export interface SpacingObject {
   typographyArticleH6LineHeight: string;
   typographyArticleH6LetterSpacing: string;
   typographyArticleH6FontWeight: string;
+
+  typographyArticleBody1FontSize: string;
+  typographyArticleBody1LineHeight: string;
+  typographyArticleBody1LetterSpacing: string;
+  typographyArticleBody1FontWeight: string;
 
   typographyBasicInput1FontSize: string;
   typographyBasicInput1LineHeight: string;
