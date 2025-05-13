@@ -69,7 +69,7 @@ export function getIconNameInGroup(iconOriginName: string, locale: LocaleDefinit
       return locale.editor.toolbar.link;
 
     case 'ordered list':
-      return locale.editor.toolbar.numberList;
+      return locale.editor.toolbar.orderedList;
 
     case 'paragraph':
       return locale.editor.toolbar.paragraph;
@@ -99,7 +99,7 @@ export function getIconNameInGroup(iconOriginName: string, locale: LocaleDefinit
       return locale.editor.toolbar.unlink;
 
     case 'unordered list':
-      return locale.editor.toolbar.bulletList;
+      return locale.editor.toolbar.unorderedList;
 
     case 'video':
       return locale.editor.toolbar.video;

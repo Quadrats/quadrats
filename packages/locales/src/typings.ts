@@ -37,7 +37,6 @@ export interface LocaleDefinition {
       alignLeft: string;
       alignRight: string;
       bold: string;
-      bulletList: string;
       dance: string;
       divider: string;
       drama: string;
@@ -56,7 +55,7 @@ export interface LocaleDefinition {
       instagram: string;
       italic: string;
       link: string;
-      numberList: string;
+      orderedList: string;
       paragraph: string;
       podcastApple: string;
       quote: string;
@@ -66,6 +65,7 @@ export interface LocaleDefinition {
       strikethrough: string;
       twitter: string;
       underline: string;
+      unorderedList: string;
       unlink: string;
       video: string;
       vimeo: string;
