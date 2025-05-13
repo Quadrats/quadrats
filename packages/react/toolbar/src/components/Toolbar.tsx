@@ -13,10 +13,14 @@ import {
   Range as QuadratsRange,
   Transforms,
 } from '@quadrats/core';
+import { More as MoreIcon } from '@quadrats/icons';
 import { ReactEditor, ThemeContext, useQuadrats } from '@quadrats/react';
 import { Portal } from '@quadrats/react/components';
 import { StartToolInput, ToolInputConfig } from '../typings';
+import ToolbarGroupIcon from './ToolbarGroupIcon';
+import { ToolbarContext } from '../contexts/toolbar';
 import { StartToolInputContext } from '../contexts/StartToolInputContext';
+import { useAutoGroupIcons } from '../hooks/useAutoGroupIcons';
 import ToolbarInput from './ToolbarInput';
 
 function roundNumber(value: number, min: number, max: number) {
@@ -131,7 +135,7 @@ function Toolbar(props: ToolbarProps) {
       const el = toolbarRef.current;
       const range = lastNativeRangeRef.current;
 
-      if (shouldRender && el && range) {
+      if (shouldRender && el && range && !fixed) {
         setPosition(el, range);
       }
     });
@@ -147,10 +151,22 @@ function Toolbar(props: ToolbarProps) {
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const tools = children(renderExpandedStatus! && !fixed);
+  const { fakeTools, takeCount, shownElements, groupElements } = useAutoGroupIcons(
+    tools, renderExpandedStatus! && !fixed,
+  );
 
   const toolbarBody = (
     <>
-      <StartToolInputContext.Provider value={startToolInput}>{tools}</StartToolInputContext.Provider>
+      <StartToolInputContext.Provider value={startToolInput}>
+        {takeCount > 0 ? (
+          <>
+            {shownElements}
+            <ToolbarGroupIcon icon={MoreIcon} withArrow={false}>
+              {groupElements}
+            </ToolbarGroupIcon>
+          </>
+        ) : tools}
+      </StartToolInputContext.Provider>
       {toolInput && (
         <ToolbarInput
           exit={() => {
@@ -171,19 +187,28 @@ function Toolbar(props: ToolbarProps) {
 
   if (fixed) {
     return (
-      <div
-        className={clsx(
-          'qdr-toolbar__wrapper',
-          'qdr-toolbar__wrapper--fixed',
-          { 'qdr-toolbar__wrapper--inputting': toolInput },
-          themeProps.className,
-        )}
-        style={themeProps.style}
+      <ToolbarContext.Provider
+        value={{
+          fixed: true,
+          toolbarRef: toolbarRef,
+        }}
       >
-        <div className="qdr-toolbar">
-          {toolbarBody}
+        <div
+          ref={toolbarRef}
+          className={clsx(
+            'qdr-toolbar__wrapper',
+            'qdr-toolbar__wrapper--fixed',
+            { 'qdr-toolbar__wrapper--inputting': toolInput },
+            themeProps.className,
+          )}
+          style={themeProps.style}
+        >
+          <div className="qdr-toolbar">
+            {toolbarBody}
+          </div>
+          {fakeTools}
         </div>
-      </div>
+      </ToolbarContext.Provider>
     );
   }
 
@@ -201,20 +226,28 @@ function Toolbar(props: ToolbarProps) {
 
   return (
     <Portal getContainer={getPortalContainer}>
-      <div
-        ref={toolbarRef}
-        className={clsx(
-          'qdr-toolbar__wrapper',
-          'qdr-toolbar__wrapper--float',
-          { 'qdr-toolbar__wrapper--inputting': toolInput },
-          themeProps.className,
-        )}
-        style={themeProps.style}
+      <ToolbarContext.Provider
+        value={{
+          fixed: false,
+          toolbarRef: toolbarRef,
+        }}
       >
-        <div className="qdr-toolbar qdr-toolbar--radius qdr-toolbar--shadow">
-          {toolbarBody}
+        <div
+          ref={toolbarRef}
+          className={clsx(
+            'qdr-toolbar__wrapper',
+            'qdr-toolbar__wrapper--float',
+            { 'qdr-toolbar__wrapper--inputting': toolInput },
+            themeProps.className,
+          )}
+          style={themeProps.style}
+        >
+          <div className="qdr-toolbar qdr-toolbar--radius qdr-toolbar--shadow">
+            {toolbarBody}
+          </div>
+          {fakeTools}
         </div>
-      </div>
+      </ToolbarContext.Provider>
     </Portal>
   );
 }

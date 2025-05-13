@@ -1,3 +1,5 @@
+@use '../packages/theme/theming/register.scss';
+@use '../packages/theme/theming/styles.scss';
 @import url('../packages/react/components/src/Progress/progress.scss');
 @import url('../packages/react/components/src/Tooltip/tooltip.scss');
 @import url('../packages/react/src/core/components/editable.scss');
@@ -6,32 +8,33 @@
 @import url('../packages/react/image/src/components/image.scss');
 @import url('../packages/react/read-more/src/components/read-more.scss');
 @import url('../packages/react/paragraph/src/paragraph.scss');
+@import url('../packages/react/heading/src/heading.scss');
 @import url('../packages/react/line-break/src/line-break.scss');
 
 @mixin stories-block {
-  color: var(--qdr-text);
+  color: var(--qdr-text-primary);
   padding: 36px 40px;
   width: 100%;
   min-height: 400px;
   box-sizing: border-box;
 }
 
+:root {
+  @include register.qdr-theme('light', styles.$qdr-palette-qdr);
+  @include register.qdr-theme('dark', styles.$qdr-palette-qdr-dark);
+}
+
 .stories {
   &__block {
-    background-color: var(--qdr-background);
+    background-color: var(--qdr-surface);
     overflow: hidden;
     overflow-wrap: break-word;
+    border: 1px solid var(--qdr-border);
 
     @include stories-block;
   }
 
   &__custom-elements {
-    p {
-      font-size: 1em;
-      line-height: 1.5;
-      margin: 1em 0;
-    }
-
     mark {
       color: var(--qdr-primary);
       background-color: inherit;
@@ -39,7 +42,7 @@
     }
 
     a {
-      color: var(--qdr-text);
+      color: var(--qdr-text-primary);
       transition: color 300ms ease-in-out;
     }
 

@@ -1,7 +1,37 @@
-@mixin qdr-theme($name, $palette) {
+@use 'sass:map';
+@use 'sass:color';
+
+@function _get-main-color-transformed-palette($name, $palette) {
+  $light-color: map.get($palette, '#{$name}-light');
+  $main-color: map.get($palette, $name);
+
+  @return (
+    '#{$name}-hover-bg': color.change($light-color, $alpha: 0.15),
+    '#{$name}-active-bg': color.change($main-color, $alpha: 0.2)
+  );
+}
+
+@function assign($map, $maps...) {
+  @each $m in $maps {
+    $map: map.merge($map, $m);
+  }
+
+  @return $map;
+}
+
+@mixin qdr-theme($name, $styles) {
   .qdr-theme-#{$name} {
-    @each $name, $color in $palette {
-      --qdr-#{$name}: #{$color};
+    $default-styles: assign(
+      $styles,
+      _get-main-color-transformed-palette(primary, $styles),
+      _get-main-color-transformed-palette(secondary, $styles),
+      _get-main-color-transformed-palette(error, $styles),
+      _get-main-color-transformed-palette(warning, $styles),
+      _get-main-color-transformed-palette(success, $styles),
+    );
+
+    @each $name, $value in $default-styles {
+      --qdr-#{$name}: #{$value};
     }
   }
 }

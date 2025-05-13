@@ -9,7 +9,7 @@ export const ReadMore: IconDefinition = {
     path: {
       fill: 'currentColor',
       d:
-        'M22,16 L22,19 L2,19 L2,16 L22,16 Z M7,11 L7,13 L2,13 L2,11 L7,11 Z M15,11 L15,13 L9,13 L9,11 L15,11 Z M22,11 L22,13 L17,13 L17,11 L22,11 Z M22,5 L22,8 L2,8 L2,5 L22,5 Z',
+        'M2 5H22V7H2V5ZM2 11.2H7V12.8H2V11.2ZM15 11.2H9V12.8H15V11.2ZM17 11.2H22V12.8H17V11.2ZM22 17H2V19H22V17Z',
     },
   },
 };

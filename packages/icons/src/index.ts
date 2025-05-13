@@ -3,11 +3,13 @@ export { IconDefinition } from './typings';
 /**
  * icons
  */
-export { AlighLeft } from './align-left';
-export { AlighCenter } from './align-center';
-export { AlighRight } from './align-right';
+export { AlignLeft } from './align-left';
+export { AlignCenter } from './align-center';
+export { AlignRight } from './align-right';
+export { ArrowDown } from './arrow-down';
 export { Blockquote } from './blockquote';
 export { Bold } from './bold';
+export { Check } from './check';
 export { Divider } from './divider';
 export { Erase } from './erase';
 export { Facebook } from './facebook';
@@ -23,7 +25,9 @@ export { Image } from './image';
 export { Instagram } from './instagram';
 export { Italic } from './italic';
 export { Link } from './link';
+export { More } from './more';
 export { OrderedList } from './ordered-list';
+export { Paragraph } from './paragraph';
 export { PodcastApple } from './podcastApple';
 export { Spotify } from './spotify';
 export { ReadMore } from './read-more';
@@ -33,6 +37,8 @@ export { Underline } from './underline';
 export { Unlink } from './unlink';
 export { UnorderedList } from './unordered-list';
 export { Video } from './video';
+export { Vimeo } from './vimeo';
+export { Youtube } from './youtube';
 export { SheetMusic } from './sheet-music';
 export { Drama } from './drama';
 export { Dance } from './dance';

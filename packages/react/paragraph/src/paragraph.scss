@@ -1,6 +1,11 @@
-$qdr-image-resizer-size: 6px;
-
 .qdr-paragraph {
+  margin: 0 0 var(--qdr-spacing-6);
+  color: var(--qdr-text-primary);
+  font-size: var(--qdr-typography-article-body1-font-size);
+  line-height: var(--qdr-typography-article-body1-line-height);
+  letter-spacing: var(--qdr-typography-article-body1-letter-spacing);
+  font-weight: var(--qdr-typography-article-body1-font-weight);
+
   &__with-line-break-symbol {
     > *:last-child {
       position: relative;
