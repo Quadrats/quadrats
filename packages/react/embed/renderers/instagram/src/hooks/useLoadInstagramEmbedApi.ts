@@ -17,6 +17,7 @@ export function useLoadInstagramEmbedApi(permalink: string) {
 
       if (instgrm) {
         instgrm.Embeds.process();
+
         return;
       }
 
@@ -26,8 +27,10 @@ export function useLoadInstagramEmbedApi(permalink: string) {
       script.onload = () => {
         instgrm = getInstagramEmbedApi();
         instgrm?.Embeds.process();
+
         script.remove();
       };
+
       script.async = true;
 
       document.body.appendChild(script);

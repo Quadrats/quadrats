@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { InstagramEmbedElement } from '@quadrats/common/embed/strategies/instagram';
 import { RenderElementProps } from '@quadrats/react';
 import { useLoadInstagramEmbedApi } from '../hooks/useLoadInstagramEmbedApi';
@@ -12,6 +12,28 @@ export interface InstagramProps {
 
 function Instagram({ attributes, children, data: permalink }: InstagramProps) {
   useLoadInstagramEmbedApi(permalink);
+
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if ((node as HTMLElement).tagName === 'IFRAME') {
+            const iframeNode = node as HTMLIFrameElement;
+
+            if (iframeNode.src.includes('instagram.com')) {
+              iframeNode.setAttribute('title', 'Instagram 貼文');
+            }
+          }
+        });
+      });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <div
