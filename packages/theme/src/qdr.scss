@@ -1,4 +1,4 @@
-@import '../theming/register';
-@import '../theming/palettes';
+@use '../theming/register';
+@use '../theming/styles';
 
-@include qdr-theme('qdr', $qdr-palette-qdr);
+@include register.qdr-theme('qdr', styles.$qdr-palette-qdr);
