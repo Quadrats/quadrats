@@ -1,0 +1,8 @@
+.qdr-divider {
+  margin: var(--qdr-spacing-14) 0;
+
+  hr {
+    border-color: var(--qdr-divider);
+    margin: 0;
+  }
+}
