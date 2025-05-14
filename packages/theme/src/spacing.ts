@@ -50,6 +50,11 @@ export const QDR_SPACING: SpacingObject = {
   typographyArticleH6LetterSpacing: '0',
   typographyArticleH6FontWeight: '600',
 
+  typographyArticleSubtitle1FontSize: '1rem',
+  typographyArticleSubtitle1LineHeight: '1.5',
+  typographyArticleSubtitle1LetterSpacing: '0',
+  typographyArticleSubtitle1FontWeight: '400',
+
   typographyArticleBody1FontSize: '1rem',
   typographyArticleBody1LineHeight: '1.65',
   typographyArticleBody1LetterSpacing: '0',

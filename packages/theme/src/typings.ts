@@ -48,6 +48,11 @@ export interface SpacingObject {
   typographyArticleH6LetterSpacing: string;
   typographyArticleH6FontWeight: string;
 
+  typographyArticleSubtitle1FontSize: string;
+  typographyArticleSubtitle1LineHeight: string;
+  typographyArticleSubtitle1LetterSpacing: string;
+  typographyArticleSubtitle1FontWeight: string;
+
   typographyArticleBody1FontSize: string;
   typographyArticleBody1LineHeight: string;
   typographyArticleBody1LetterSpacing: string;

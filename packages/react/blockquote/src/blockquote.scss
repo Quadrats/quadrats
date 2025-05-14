@@ -1,8 +1,22 @@
 .qdr-blockquote {
+  position: relative;
   margin: var(--qdr-spacing-14) 0;
   padding: var(--qdr-spacing-6) 0 var(--qdr-spacing-6) var(--qdr-spacing-8);
 
-  > *:first-child {
+  > * {
     margin: 0;
+    font-size: var(--qdr-typography-article-subtitle1-font-size);
+    line-height: var(--qdr-typography-article-subtitle1-line-height);
+    letter-spacing: var(--qdr-typography-article-subtitle1-letter-spacing);
+    font-weight: var(--qdr-typography-article-subtitle1-font-weight);
+  }
+
+  &__line {
+    position: absolute;
+    top: 0;
+    left: -2px;
+    background-color: var(--qdr-primary);
+    width: 2px;
+    height: 100%;
   }
 }
