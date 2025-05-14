@@ -21,7 +21,7 @@ function Twitter({ attributes, children, data: tweetId }: TwitterProps) {
     <div
       {...attributes}
       ref={composedRef}
-      className="qdr-embed-twitter"
+      className="qdr-embed-twitter qdr-embed-x"
       contentEditable={false}
     >
       {attributes ? children : undefined}
