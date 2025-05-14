@@ -1,0 +1,8 @@
+.qdr-blockquote {
+  margin: var(--qdr-spacing-14) 0;
+  padding: var(--qdr-spacing-6) 0 var(--qdr-spacing-6) var(--qdr-spacing-8);
+
+  > *:first-child {
+    margin: 0;
+  }
+}

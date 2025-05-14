@@ -94,7 +94,6 @@ import { createReactFootnote } from '@quadrats/react/footnote';
 import { HeadingLevel } from '@quadrats/common/heading';
 import type { EmbedStrategies } from '@quadrats/common/embed';
 import { PARAGRAPH_TYPE } from '@quadrats/core';
-import { customRenderBlockquote } from '../custom-elements';
 import getLocalFileUploaderOptions from '../helper/local-file-uploader-options';
 
 import { createJsxSerializeBold } from '@quadrats/react/bold/jsx-serializer';
@@ -335,9 +334,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     }
 
     if (withBlockquote) {
-      elements.push(blockquote.createRenderElement({
-        render: customRenderBlockquote,
-      }));
+      elements.push(blockquote.createRenderElement());
     }
 
     return composeRenderElements(elements);
@@ -555,7 +552,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     if (~withCustomHighlights.indexOf('dance')) leafs.push(createJsxSerializeHighlight('dance'));
 
     // Elements
-    if (withBlockquote) elements.push(createJsxSerializeBlockquote({ render: customRenderBlockquote }));
+    if (withBlockquote) elements.push(createJsxSerializeBlockquote());
     if (withTitles.length) elements.push(createJsxSerializeHeading());
     if (withLists.length) elements.push(createJsxSerializeList());
     if (withDivider) elements.push(createJsxSerializeDivider());
