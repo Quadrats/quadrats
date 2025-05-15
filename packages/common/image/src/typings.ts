@@ -16,7 +16,7 @@ export type ImageCaptionTypeKey = 'caption';
 export type ImageTypes = Record<ImageFigureTypeKey | ImageTypeKey | ImageCaptionTypeKey, string>;
 
 export interface ImageFigureElement extends QuadratsElement, WithElementType {
-  align?: 'flex-start' | 'center' | 'flex-end',
+  align?: 'start' | 'center' | 'end',
   width?: number;
 }
 
