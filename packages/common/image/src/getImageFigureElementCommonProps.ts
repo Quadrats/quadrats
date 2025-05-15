@@ -4,12 +4,13 @@ export function getImageFigureElementCommonProps(
   element: ImageFigureElement,
 ): {
     style?: {
+      '--qdr-image-align': 'flex-start' | 'center' | 'flex-end',
       width: string;
     };
   } {
-  const { width } = element;
+  const { width, align } = element;
 
   return {
-    style: typeof width === 'number' ? { width: `${width}%` } : undefined,
+    style:  { width: typeof width === 'number' ? `${width}%` : 'unset', '--qdr-image-align': align ?? 'flex-start' },
   };
 }
