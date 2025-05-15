@@ -23,6 +23,37 @@ $qdr-toolbar-input-cross-size: --qdr-spacing-7;
     box-shadow: 0 4px 8px -2px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 4%);
   }
 
+  &__input {
+    font-size: 0.8125rem;
+    background: var(--qdr-surface);
+    color: var(--qdr-text-secondary);
+    width: calc(100% - var(#{$qdr-toolbar-input-cross-size}));
+    height: 100%;
+    border: none;
+    padding: 0;
+    outline: none;
+
+    &__wrapper {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: var(#{$qdr-toolbar-padding-vertical});
+      left: var(#{$qdr-toolbar-padding-horizontal});
+      width: calc(100% - var(#{$qdr-toolbar-padding-horizontal}) * 2);
+      height: calc(100% - (var(#{$qdr-toolbar-padding-vertical}) * 2 + var(#{$qdr-toolbar-popup-gap})));
+      background: var(--qdr-surface);
+      box-sizing: border-box;
+    }
+
+    &__cross {
+      fill: var(--qdr-text-secondary);
+      font-size: var(#{$qdr-toolbar-input-cross-size});
+      width: var(#{$qdr-toolbar-input-cross-size});
+      height: var(#{$qdr-toolbar-input-cross-size});
+      cursor: pointer;
+    }
+  }
+
   &__wrapper {
     box-sizing: content-box;
     height: var(#{$qdr-toolbar-height});
@@ -31,6 +62,14 @@ $qdr-toolbar-input-cross-size: --qdr-spacing-7;
       position: sticky;
       top: 0;
       z-index: 1;
+
+      .qdr-toolbar {
+        &__input {
+          &__wrapper {
+            height: calc(100% - (var(#{$qdr-toolbar-padding-vertical}) * 2));
+          }
+        }
+      }
     }
 
     &--float {
@@ -41,7 +80,6 @@ $qdr-toolbar-input-cross-size: --qdr-spacing-7;
 
     &--inputting {
       min-width: 250px;
-      max-width: 350px;
     }
   }
 
@@ -161,37 +199,6 @@ $qdr-toolbar-input-cross-size: --qdr-spacing-7;
       &--bottom {
         top: var(--qdr-spacing-14);
       }
-    }
-  }
-
-  &__input {
-    font-size: 0.8125rem;
-    background: var(--qdr-surface);
-    color: var(--qdr-text-secondary);
-    width: calc(100% - var(#{$qdr-toolbar-input-cross-size}));
-    height: 100%;
-    border: none;
-    padding: 0;
-    outline: none;
-
-    &__wrapper {
-      display: flex;
-      align-items: center;
-      position: absolute;
-      top: var(#{$qdr-toolbar-padding-vertical});
-      left: var(#{$qdr-toolbar-padding-horizontal});
-      width: calc(100% - var(#{$qdr-toolbar-padding-horizontal}) * 2);
-      height: calc(100% - (var(#{$qdr-toolbar-padding-vertical}) * 2 + var(#{$qdr-toolbar-popup-gap})));
-      background: var(--qdr-surface);
-      box-sizing: border-box;
-    }
-
-    &__cross {
-      fill: var(--qdr-text-secondary);
-      font-size: var(#{$qdr-toolbar-input-cross-size});
-      width: var(#{$qdr-toolbar-input-cross-size});
-      height: var(#{$qdr-toolbar-input-cross-size});
-      cursor: pointer;
     }
   }
 }
