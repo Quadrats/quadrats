@@ -8,16 +8,35 @@ export interface ProgressProps {
 
 const Progress = forwardRef<HTMLSpanElement, ProgressProps>(function Progress(props, ref) {
   const { className, percentage = 0 } = props;
-  const transform = `scaleX(${percentage / 100})`;
-  const style = {
-    transform,
-    msTransform: transform,
-  };
+
+  const size = 16;
+  const strokeWidth = 3;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference * (1 - percentage / 100);
 
   return (
     <span ref={ref} className={clsx('qdr-progress', className)}>
-      <span className="qdr-progress__backdrop" />
-      <span className="qdr-progress__track" style={style} />
+      <svg width={size} height={size}>
+        <circle
+          className="qdr-progress__backdrop"
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          strokeWidth={strokeWidth}
+          fill="none"
+        />
+        <circle
+          className="qdr-progress__track"
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          strokeWidth={strokeWidth}
+          fill="none"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+        />
+      </svg>
     </span>
   );
 });
