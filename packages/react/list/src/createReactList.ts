@@ -1,4 +1,5 @@
 import { createList, CreateListOptions, ListTypeKey } from '@quadrats/common/list';
+import { Element, Node } from '@quadrats/core';
 import { createRenderElements } from '@quadrats/react';
 import { defaultRenderListElements } from './defaultRenderListElements';
 import { ReactList } from './typings';
@@ -23,6 +24,20 @@ export function createReactList(options: CreateReactListOptions = {}): ReactList
 
           if (entries) {
             event.preventDefault();
+
+            const [, path] = entries.listItem;
+
+            const depth = path.filter((_, i) => {
+              const ancestorPath = path.slice(0, i + 1);
+              const ancestor = Node.get(editor, ancestorPath);
+
+              return Element.isElement(ancestor) && (ancestor.type === 'ol' || ancestor.type === 'ul');
+            }).length;
+
+            if (depth >= 4) {
+              return;
+            }
+
             (event.shiftKey ? core.decreaseListItemDepth : core.increaseListItemDepth)(editor, entries);
 
             return;
