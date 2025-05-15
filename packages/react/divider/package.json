@@ -1,9 +1,15 @@
 {
   "name": "@quadrats/react/divider",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
   "quadratsConfig": {
     "deps": [
       "__ROOT__"
-    ]
+    ],
+    "styles": {
+      "divider": "divider"
+    }
   }
 }
