@@ -6,7 +6,8 @@
   ],
   "quadratsConfig": {
     "deps": [
-      "__ROOT__"
+      "__ROOT__",
+      "line-break"
     ],
     "styles": {
       "heading": "heading"

@@ -1,10 +1,16 @@
 {
   "name": "@quadrats/react/blockquote",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
   "quadratsConfig": {
     "deps": [
       "__ROOT__",
       "line-break"
-    ]
+    ],
+    "styles": {
+      "blockquote": "blockquote"
+    }
   }
 }
