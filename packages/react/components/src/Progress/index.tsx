@@ -10,7 +10,7 @@ const Progress = forwardRef<HTMLSpanElement, ProgressProps>(function Progress(pr
   const { className, percentage = 0 } = props;
 
   const size = 16;
-  const strokeWidth = 3;
+  const strokeWidth = 2;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference * (1 - percentage / 100);

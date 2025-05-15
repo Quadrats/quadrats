@@ -2,6 +2,7 @@ $qdr-spacing: (
   spacing-0: 0,
   spacing-1: 0.165rem,
   spacing-2: 0.25rem,
+  spacing-3: 0.375rem,
   spacing-4: 0.5rem,
   spacing-6: 0.75rem,
   spacing-7: 1rem,
@@ -67,4 +68,9 @@ $qdr-spacing: (
   typography-basic-input1-line-height: 2.65,
   typography-basic-input1-letter-spacing: 0,
   typography-basic-input1-font-weight: 400,
+
+  typography-basic-body2-font-size: 0.8125rem,
+  typography-basic-body2-line-height: 1.5,
+  typography-basic-body2-letter-spacing: 0,
+  typography-basic-body2-font-weight: 400,
 )

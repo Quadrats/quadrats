@@ -2,6 +2,7 @@ export interface SpacingObject {
   'spacing-0': string;
   'spacing-1': string;
   'spacing-2': string;
+  'spacing-3': string;
   'spacing-4': string;
   'spacing-6': string;
   'spacing-7': string;
@@ -67,6 +68,11 @@ export interface SpacingObject {
   typographyBasicInput1LineHeight: string;
   typographyBasicInput1LetterSpacing: string;
   typographyBasicInput1FontWeight: string;
+
+  typographyBasicBody2FontSize: string;
+  typographyBasicBody2LineHeight: string;
+  typographyBasicBody2LetterSpacing: string;
+  typographyBasicBody2FontWeight: string;
 }
 
 export interface PalettesObject {
