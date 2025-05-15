@@ -32,6 +32,7 @@ export { PodcastApple } from './podcastApple';
 export { Spotify } from './spotify';
 export { ReadMore } from './read-more';
 export { Strikethrough } from './strikethrough';
+export { Trash } from './trash';
 export { Twitter } from './twitter';
 export { Underline } from './underline';
 export { Unlink } from './unlink';

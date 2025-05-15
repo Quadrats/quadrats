@@ -10,7 +10,7 @@ export const AlignRight: IconDefinition = {
       fillRule: 'evenodd',
       fill: 'currentColor',
       d:
-        'M15 4.5H4.5V6H15V4.5Z M15 9H7.5V10.5H15V9Z M15 13.5H4.5V15H15V13.5Z M15 18H7.5V19.5H15V18Z M19.5 3H18V21H19.5V3Z',
+        'M4.5 6.5H15V8H4.5V6.5Z M7.5 11H15V12.5H7.5V11Z M4.5 15.5H15V17H4.5V15.5Z M18 4H19.5V20H18V4Z',
     },
   },
 };
