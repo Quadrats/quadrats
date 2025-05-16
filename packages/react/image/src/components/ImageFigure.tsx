@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import { Transforms } from '@quadrats/core';
 import { ImageFigureElement } from '@quadrats/common/image';
 import { AlignLeft, AlignCenter, AlignRight, Trash } from '@quadrats/icons';
-import { InlineToolbar } from '@quadrats/react/toolbar';
 import { ReactEditor, useSlateStatic, useFocused, useSelected } from '@quadrats/react';
+import { InlineToolbar } from '../../../toolbar/src';
 import { RenderImageFigureElementProps } from '../typings';
 
 function ImageFigure(props: RenderImageFigureElementProps) {
