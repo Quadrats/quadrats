@@ -202,3 +202,53 @@ $qdr-toolbar-input-cross-size: --qdr-spacing-7;
     }
   }
 }
+
+.qdr-inline-toolbar {
+  position: absolute;
+  top: var(--qdr-spacing-4);
+  right: var(--qdr-spacing-4);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--qdr-spacing-3);
+  background-color: var(--qdr-bg);
+  padding: var(--qdr-spacing-3);
+  border: 1px solid var(--qdr-border);
+  border-radius: var(--qdr-radius-3);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+  z-index: 1;
+
+  &__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--qdr-spacing-1);
+    padding: var(--qdr-spacing-1);
+    background-color: var(--qdr-divider);
+    border-radius: var(--qdr-radius-1);
+  }
+
+  &__divider {
+    width: 1px;
+    height: 16px;
+    background-color: var(--qdr-divider);
+  }
+
+  &__icon {
+    color: var(--qdr-action-inactive);
+    border-radius: var(--qdr-radius-1);
+    transition: color 300ms ease-in-out, background-color 300ms ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--qdr-primary-light);
+    }
+
+    &--active {
+      color: var(--qdr-primary-light);
+      background-color: var(--qdr-block);
+    }
+  }
+}

@@ -7,7 +7,11 @@ export const defaultRenderImageElements: ImageJsxSerializeElements = {
       {children}
     </figure>
   ),
-  image: ({ caption, src }) => <img src={src} alt={caption} style={{ width: '100%' }} />,
+  image: ({ caption, src }) => (
+    <div className="qdr-image">
+      <img src={src} alt={caption} />
+    </div>
+  ),
   caption: ({ children, isEmpty }) =>
     isEmpty ? (
       <span className="qdr-image__caption-placeholder" />

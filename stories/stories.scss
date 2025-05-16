@@ -38,23 +38,6 @@
     @include stories-block;
   }
 
-  &__custom-elements {
-    mark {
-      color: var(--qdr-primary);
-      background-color: inherit;
-      transition: color 300ms ease-in-out;
-    }
-
-    a {
-      color: var(--qdr-text-primary);
-      transition: color 300ms ease-in-out;
-    }
-
-    figure {
-      margin: 1.5em 0;
-    }
-  }
-
   &__examples {
     &__playground {
       &__json-block {

@@ -8,8 +8,6 @@ module.exports = {
     'stylelint-scss'
   ],
   rules: {
-    'color-hex-case': 'lower',
-    indentation: 2,
     'at-rule-empty-line-before': [
       'always',
       {
@@ -27,16 +25,8 @@ module.exports = {
         ]
       }
     ],
+    'selector-class-pattern': null,
     'at-rule-no-vendor-prefix': true,
-    'block-closing-brace-newline-after': [
-      'always',
-      {
-        ignoreAtRules: [
-          'if',
-          'else'
-        ]
-      }
-    ],
     'media-feature-name-no-vendor-prefix': true,
     'property-no-vendor-prefix': true,
     'selector-no-vendor-prefix': true,
