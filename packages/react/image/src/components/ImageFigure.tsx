@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { Transforms } from '@quadrats/core';
 import { ImageFigureElement } from '@quadrats/common/image';
 import { AlignLeft, AlignCenter, AlignRight, Trash } from '@quadrats/icons';
-import { Icon } from '@quadrats/react/components';
+import { InlineToolbar } from '@quadrats/react/toolbar';
 import { ReactEditor, useSlateStatic, useFocused, useSelected } from '@quadrats/react';
 import { RenderImageFigureElementProps } from '../typings';
 
@@ -25,47 +25,40 @@ function ImageFigure(props: RenderImageFigureElementProps) {
       })}
       style={style}
     >
-      <div className="qdr-image__controller">
-        <div className="qdr-image__controller__wrapper">
-          <Icon
-            className="qdr-image__controller__icon"
-            icon={AlignLeft}
-            width={24}
-            height={24}
-            onClick={() => {
+      <InlineToolbar
+        className="qdr-image__inline-toolbar"
+        leftIcons={[
+          {
+            icon: AlignLeft,
+            onClick: () => {
               Transforms.setNodes(editor, { align: 'start' } as ImageFigureElement, { at: path });
-            }}
-          />
-          <Icon
-            className="qdr-image__controller__icon"
-            icon={AlignCenter}
-            width={24}
-            height={24}
-            onClick={() => {
+            },
+            active: element.align === 'start' || !element.align,
+          },
+          {
+            icon: AlignCenter,
+            onClick: () => {
               Transforms.setNodes(editor, { align: 'center' } as ImageFigureElement, { at: path });
-            }}
-          />
-          <Icon
-            className="qdr-image__controller__icon"
-            icon={AlignRight}
-            width={24}
-            height={24}
-            onClick={() => {
+            },
+            active: element.align === 'center',
+          },
+          {
+            icon: AlignRight,
+            onClick: () => {
               Transforms.setNodes(editor, { align: 'end' } as ImageFigureElement, { at: path });
-            }}
-          />
-        </div>
-        <div className="qdr-image__controller__divider" />
-        <Icon
-          className="qdr-image__controller__icon"
-          icon={Trash}
-          width={24}
-          height={24}
-          onClick={() => {
-            Transforms.removeNodes(editor, { at: path });
-          }}
-        />
-      </div>
+            },
+            active: element.align === 'end',
+          },
+        ]}
+        rightIcons={[
+          {
+            icon: Trash,
+            onClick: () => {
+              Transforms.removeNodes(editor, { at: path });
+            },
+          },
+        ]}
+      />
       {children}
     </figure>
   );
