@@ -1,8 +1,64 @@
 $qdr-image-resizer-size: 6px;
 
 .qdr-image {
+  display: flex;
+  justify-content: var(--qdr-image-align);
   position: relative;
   user-select: none;
+
+  &__controller {
+    position: absolute;
+    top: var(--qdr-spacing-4);
+    right: var(--qdr-spacing-4);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--qdr-spacing-3);
+    background-color: var(--qdr-bg);
+    padding: var(--qdr-spacing-3);
+    border: 1px solid var(--qdr-border);
+    border-radius: var(--qdr-radius-3);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+    z-index: 1;
+
+    &__wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: var(--qdr-spacing-1);
+      background-color: var(--qdr-divider);
+      border-radius: var(--qdr-radius-1);
+    }
+
+    &__divider {
+      width: 1px;
+      height: 16px;
+      background-color: var(--qdr-divider);
+    }
+
+    &__icon {
+      color: var(--qdr-action-inactive);
+      cursor: pointer;
+
+      &:hover {
+        color: var(--qdr-primary-light);
+      }
+    }
+  }
+
+  &__figure {
+    position: relative;
+    margin: var(--qdr-spacing-14) 0;
+
+    &:hover {
+      .qdr-image__controller {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+  }
 
   &__spacer {
     position: absolute;
@@ -16,7 +72,8 @@ $qdr-image-resizer-size: 6px;
 
   img {
     display: block;
-    width: 100%;
+    min-width: 240px;
+    max-width: 100%;
     user-select: none;
   }
 
@@ -42,10 +99,14 @@ $qdr-image-resizer-size: 6px;
   }
 
   &__caption {
-    margin-top: 6px;
+    margin-top: var(--qdr-spacing-6);
+    text-align: var(--qdr-image-caption-align);
+    font-size: var(--qdr-typography-article-body2-font-size);
+    line-height: var(--qdr-typography-article-body2-line-height);
+    letter-spacing: var(--qdr-typography-article-body2-letter-spacing);
+    font-weight: var(--qdr-typography-article-body2-font-weight);
 
     &-placeholder {
-      display: inline-block;
       color: var(--qdr-text-secondary);
       width: 0;
       max-width: 100%;

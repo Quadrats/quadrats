@@ -18,6 +18,8 @@ import {
 
 export interface RenderImageFigureElementProps extends RenderElementProps<ImageFigureElement> {
   style?: {
+    '--qdr-image-align': 'flex-start' | 'center' | 'flex-end',
+    '--qdr-image-caption-align': 'left' | 'center' | 'right',
     width: string;
   };
 }
