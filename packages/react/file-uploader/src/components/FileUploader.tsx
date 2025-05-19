@@ -9,12 +9,7 @@ function FileUploader(props: RenderFileUploaderElementProps) {
 
   return (
     <div {...attributes} className="qdr-file-uploader" contentEditable={false}>
-      <div className="qdr-file-uploader__backdrop">
-        <div className="qdr-file-uploader__backdrop__wrapper">
-          <Progress percentage={percentage} />
-          <p className="qdr-file-uploader__backdrop__percentage">{`${percentage}%`}</p>
-        </div>
-      </div>
+      <Progress percentage={percentage} />
       {children}
     </div>
   );

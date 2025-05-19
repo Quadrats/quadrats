@@ -6,7 +6,7 @@ export interface ProgressProps {
   percentage?: number;
 }
 
-const Progress = forwardRef<HTMLSpanElement, ProgressProps>(function Progress(props, ref) {
+const Progress = forwardRef<HTMLDivElement, ProgressProps>(function Progress(props, ref) {
   const { className, percentage = 0 } = props;
 
   const size = 16;
@@ -16,28 +16,33 @@ const Progress = forwardRef<HTMLSpanElement, ProgressProps>(function Progress(pr
   const offset = circumference * (1 - percentage / 100);
 
   return (
-    <span ref={ref} className={clsx('qdr-progress', className)}>
-      <svg width={size} height={size}>
-        <circle
-          className="qdr-progress__backdrop"
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          strokeWidth={strokeWidth}
-          fill="none"
-        />
-        <circle
-          className="qdr-progress__track"
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          strokeWidth={strokeWidth}
-          fill="none"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-        />
-      </svg>
-    </span>
+    <div ref={ref} className={clsx('qdr-progress', className)}>
+      <div className="qdr-progress__wrapper">
+        <div className="qdr-progress__spinner-wrapper">
+          <svg width={size} height={size}>
+            <circle
+              className="qdr-progress__backdrop"
+              cx={size / 2}
+              cy={size / 2}
+              r={radius}
+              strokeWidth={strokeWidth}
+              fill="none"
+            />
+            <circle
+              className="qdr-progress__track"
+              cx={size / 2}
+              cy={size / 2}
+              r={radius}
+              strokeWidth={strokeWidth}
+              fill="none"
+              strokeDasharray={circumference}
+              strokeDashoffset={offset}
+            />
+          </svg>
+        </div>
+        <p className="qdr-progress__percentage">{`${percentage}%`}</p>
+      </div>
+    </div>
   );
 });
 

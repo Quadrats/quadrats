@@ -1,9 +1,31 @@
 .qdr-progress {
-  display: inline-flex;
-  align-items: center;
+  display: flex;
   justify-content: center;
-  position: relative;
-  transform: rotate(-90deg);
+  align-items: center;
+  position: absolute;
+  inset: 0;
+  background-color: var(--qdr-overlay-light);
+  transition: background-color 300ms ease-in-out;
+  will-change: background-color;
+  z-index: 1;
+
+  &__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--qdr-spacing-2);
+    padding: var(--qdr-spacing-2) var(--qdr-spacing-3);
+    background-color: var(--qdr-overlay-dark);
+    border-radius: var(--qdr-radius-3);
+  }
+
+  &__spinner-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transform: rotate(-90deg);
+  }
 
   &__backdrop {
     stroke: var(--qdr-action-disabled);
@@ -11,5 +33,10 @@
 
   &__track {
     stroke: var(--qdr-on-primary);
+  }
+
+  &__percentage {
+    margin: 0;
+    color: var(--qdr-on-primary);
   }
 }
