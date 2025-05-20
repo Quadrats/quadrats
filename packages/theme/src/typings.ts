@@ -70,6 +70,11 @@ export interface SpacingObject {
   typographyBasicInput1LetterSpacing: string;
   typographyBasicInput1FontWeight: string;
 
+  typographyBasicInput2FontSize: string;
+  typographyBasicInput2LineHeight: string;
+  typographyBasicInput2LetterSpacing: string;
+  typographyBasicInput2FontWeight: string;
+
   typographyBasicBody2FontSize: string;
   typographyBasicBody2LineHeight: string;
   typographyBasicBody2LetterSpacing: string;
