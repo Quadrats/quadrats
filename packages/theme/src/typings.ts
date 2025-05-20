@@ -17,6 +17,7 @@ export interface SpacingObject {
   'spacing-30': string;
 
   'radius-1': string;
+  'radius-2': string;
   'radius-3': string;
 
   typographyArticleH1FontSize: string;
