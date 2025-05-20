@@ -11,11 +11,26 @@ export function useInputBlock({ confirm, element, remove }: RenderInputBlockElem
    * Since keying `Enter` or `Escape` will also cause input blurred
    * Add a `removeable` flag to avoid.
    */
+
   const removeable = useRef(true);
+
+  const onRemove = () => {
+    removeable.current = false;
+    remove(editor, element);
+  };
+
+  const onConfirm = () => {
+    const value = inputRef.current?.value;
+
+    if (value) {
+      removeable.current = false;
+      confirm(editor, element, value);
+    }
+  };
+
   const removeIfRemovable = () => {
     if (removeable.current) {
-      removeable.current = false;
-      remove(editor, element);
+      onRemove();
     }
   };
 
@@ -28,17 +43,14 @@ export function useInputBlock({ confirm, element, remove }: RenderInputBlockElem
 
   return {
     inputRef,
+    onRemove,
+    onConfirm,
     onBlur: removeIfRemovable,
     onKeyDown: (event: KeyboardEvent) => {
-      const value = inputRef.current?.value;
-
       if (event.key === 'Enter') {
         event.preventDefault();
 
-        if (value) {
-          removeable.current = false;
-          confirm(editor, element, value);
-        }
+        onConfirm();
       } else if (event.key === 'Escape') {
         event.preventDefault();
         removeIfRemovable();

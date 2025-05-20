@@ -1,20 +1,19 @@
 import React from 'react';
+import { Icon } from '@quadrats/react/components';
+import { Edit, Trash } from '@quadrats/icons';
 import { RenderInputBlockElementProps } from '../typings';
 import { useInputBlock } from '../hooks/useInputBlock';
 
 function InputBlock(props: RenderInputBlockElementProps) {
-  const { attributes, children } = props;
+  const { attributes } = props;
   const {
-    inputRef, onBlur, onKeyDown, placeholder,
+    inputRef, onBlur, onConfirm, onRemove, onKeyDown, placeholder,
   } = useInputBlock(props);
 
   return (
     <div
       {...attributes}
       contentEditable={false}
-      style={{
-        display: 'flex',
-      }}
       className="qdr-input-block"
     >
       <input
@@ -22,10 +21,10 @@ function InputBlock(props: RenderInputBlockElementProps) {
         onBlur={onBlur}
         onKeyDown={onKeyDown}
         placeholder={placeholder}
+        className="qdr-input-block__input"
         style={{
           display: 'block',
           color: 'currentColor',
-          font: 'inherit',
           width: '100%',
           margin: 0,
           border: 0,
@@ -35,7 +34,22 @@ function InputBlock(props: RenderInputBlockElementProps) {
           boxSizing: 'border-box',
         }}
       />
-      {children}
+      <div className="qdr-input-block__icons">
+        <div className="qdr-input-block__icon" onClick={onConfirm}>
+          <Icon
+            icon={Edit}
+            width={24}
+            height={24}
+          />
+        </div>
+        <div className="qdr-input-block__icon" onClick={onRemove}>
+          <Icon
+            icon={Trash}
+            width={24}
+            height={24}
+          />
+        </div>
+      </div>
     </div>
   );
 }
