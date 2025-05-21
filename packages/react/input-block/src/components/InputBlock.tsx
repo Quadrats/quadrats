@@ -1,24 +1,37 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Icon } from '@quadrats/react/components';
 import { Edit, Trash } from '@quadrats/icons';
+import { useClickAway } from '@quadrats/react/utils';
 import { RenderInputBlockElementProps } from '../typings';
 import { useInputBlock } from '../hooks/useInputBlock';
 
 function InputBlock(props: RenderInputBlockElementProps) {
   const { attributes } = props;
+  const blockRef = useRef(null);
+
   const {
-    inputRef, onBlur, onConfirm, onRemove, onKeyDown, placeholder,
+    inputRef, onConfirm, onRemove, onKeyDown, placeholder,
   } = useInputBlock(props);
+
+  useClickAway(
+    () => {
+      return () => {
+        onRemove();
+      };
+    },
+    blockRef,
+    [blockRef],
+  );
 
   return (
     <div
       {...attributes}
+      ref={blockRef}
       contentEditable={false}
       className="qdr-input-block"
     >
       <input
         ref={inputRef}
-        onBlur={onBlur}
         onKeyDown={onKeyDown}
         placeholder={placeholder}
         className="qdr-input-block__input"
