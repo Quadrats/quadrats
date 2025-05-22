@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import {
+  Accordion as AccordionIcon,
   Bold as BoldIcon,
   Italic as ItalicIcon,
   Underline as UnderlineIcon,
@@ -53,6 +54,7 @@ import { createReactItalic } from '@quadrats/react/italic';
 import { createReactUnderline } from '@quadrats/react/underline';
 import { createReactStrikethrough } from '@quadrats/react/strikethrough';
 import { createReactHighlight } from '@quadrats/react/highlight';
+import { createReactAccordion } from '@quadrats/react/accordion';
 import { createReactBlockquote } from '@quadrats/react/blockquote';
 import { createReactDivider } from '@quadrats/react/divider';
 import { createReactEmbed } from '@quadrats/react/embed';
@@ -78,6 +80,7 @@ import { createReactInputBlock } from '@quadrats/react/input-block';
 
 import { Toolbar, ToolbarGroupIcon, TOOLBAR_DIVIDER } from '@quadrats/react/toolbar';
 import { ToggleMarkToolbarIcon } from '@quadrats/react/toggle-mark/toolbar';
+import { AccordionToolbarIcon } from '@quadrats/react/accordion/toolbar';
 import { BlockquoteToolbarIcon } from '@quadrats/react/blockquote/toolbar';
 import { DividerToolbarIcon } from '@quadrats/react/divider/toolbar';
 import { EmbedToolbarIcon } from '@quadrats/react/embed/toolbar';
@@ -103,6 +106,7 @@ import { createJsxSerializeStrikethrough } from '@quadrats/react/strikethrough/j
 import { createJsxSerializeHighlight } from '@quadrats/react/highlight/jsx-serializer';
 import { createJsxSerializeLineBreak } from '@quadrats/react/line-break/jsx-serializer';
 import { createJsxSerializeParagraph } from '@quadrats/react/paragraph/jsx-serializer';
+import { createJsxSerializeAccordion } from '@quadrats/react/accordion/jsx-serializer';
 import { createJsxSerializeBlockquote } from '@quadrats/react/blockquote/jsx-serializer';
 import { createJsxSerializeHeading } from '@quadrats/react/heading/jsx-serializer';
 import { createJsxSerializeList } from '@quadrats/react/list/jsx-serializer';
@@ -121,6 +125,7 @@ const lineBreak = createReactLineBreak();
 
 // Options
 const list = createReactList();
+const accordion = createReactAccordion();
 const blockquote = createReactBlockquote();
 const divider = createReactDivider();
 const bold = createReactBold();
@@ -143,6 +148,7 @@ export interface PlaygroundEditorProps {
   theme: 'Default' | 'Dark';
   locale: 'Chinese' | 'English';
   withTitles: ('h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6')[];
+  withAccordion: boolean;
   withBlockquote: boolean;
   withLists: ('ol' | 'ul')[];
   withDivider: boolean;
@@ -164,6 +170,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     theme,
     locale,
     withTitles,
+    withAccordion,
     withBlockquote,
     withLists,
     withDivider,
@@ -252,6 +259,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     ];
 
     if (withTitles.length) editorWithOptions.push(heading.with);
+    if (withAccordion) editorWithOptions.push(accordion.with);
     if (withBlockquote) editorWithOptions.push(blockquote.with);
     if (withLists.length) editorWithOptions.push(list.with);
     if (withDivider) editorWithOptions.push(divider.with);
@@ -263,7 +271,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     if (withReadMore) editorWithOptions.push(fileUploader.with);
 
     return pipe(createReactEditor(), ...editorWithOptions);
-  })(), [heading, withTitles, withBlockquote, withLists, withDivider, withEmbeds, withFootnote, withLink, withImage, withReadMore]);
+  })(), [heading, withTitles, withAccordion, withBlockquote, withLists, withDivider, withEmbeds, withFootnote, withLink, withImage, withReadMore]);
 
   const handlers = useMemo(() => {
     const handlers = [
@@ -333,6 +341,10 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       elements.push(embed.createRenderElement(embedElements));
     }
 
+    if (withAccordion) {
+      elements.push(accordion.createRenderElement());
+    }
+
     if (withBlockquote) {
       elements.push(blockquote.createRenderElement());
     }
@@ -365,6 +377,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
   const toolbarRenderer = useCallback((expanded: boolean) => {
     const linkTool = <LinkToolbarIcon icon={LinkIcon} controller={link} />;
     const unlinkTool = <UnlinkToolbarIcon icon={UnlinkIcon} controller={link} />;
+    const accordionTool = <AccordionToolbarIcon icon={AccordionIcon} controller={accordion} />;
     const blockquoteTool = <BlockquoteToolbarIcon icon={BlockquoteIcon} controller={blockquote} />;
     const footnoteTool = <FootnoteToolbarIcon icon={FnIcon} controller={footnote} />;
 
@@ -410,10 +423,11 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
         {~withTitles.indexOf('h4') ? <HeadingToolbarIcon icon={Heading4Icon} controller={heading} level={4} /> : null}
         {~withTitles.indexOf('h5') ? <HeadingToolbarIcon icon={Heading5Icon} controller={heading} level={5} /> : null}
         {~withTitles.indexOf('h6') ? <HeadingToolbarIcon icon={Heading6Icon} controller={heading} level={6} /> : null}
+        {withAccordion ? accordionTool : null}
         {withBlockquote ? blockquoteTool : null}
         {~withLists.indexOf('ul') ? <ListToolbarIcon icon={UnorderedListIcon} controller={list} listTypeKey="ul" /> : null}
         {~withLists.indexOf('ol') ? <ListToolbarIcon icon={OrderedListIcon} controller={list} listTypeKey="ol" /> : null}
-        {withTitles.length || withBlockquote || withLists.length ? TOOLBAR_DIVIDER : null}
+        {withTitles.length || withAccordion || withBlockquote || withLists.length ? TOOLBAR_DIVIDER : null}
         {withDivider ? <DividerToolbarIcon icon={DividerIcon} controller={divider} /> : null}
         {withImage ? (
           <FileUploaderToolbarIcon
@@ -552,6 +566,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     if (~withCustomHighlights.indexOf('dance')) leafs.push(createJsxSerializeHighlight('dance'));
 
     // Elements
+    if (withAccordion) elements.push(createJsxSerializeAccordion());
     if (withBlockquote) elements.push(createJsxSerializeBlockquote());
     if (withTitles.length) elements.push(createJsxSerializeHeading());
     if (withLists.length) elements.push(createJsxSerializeList());
@@ -656,6 +671,7 @@ type Story = StoryObj<typeof PlaygroundEditor>;
 export const Editor: Story = {
   args: {
     withTitles: ['h1', 'h2', 'h3'],
+    withAccordion: true,
     withBlockquote: false,
     withLists: ['ol', 'ul'],
     withDivider: true,
@@ -678,6 +694,10 @@ export const Editor: Story = {
       name: 'Titles',
       options: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
       control: { type: 'inline-check' },
+    },
+    withAccordion: {
+      name: 'Accordion',
+      control: { type: 'boolean' },
     },
     withBlockquote: {
       name: 'Blockquote',
