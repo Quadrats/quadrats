@@ -1,5 +1,6 @@
 import { Accordion, AccordionElement } from '@quadrats/common/accordion';
-import { WithCreateRenderElement, RenderElementProps, Editor } from '@quadrats/react';
+import { Editor } from '@quadrats/core';
+import { WithCreateRenderElement, RenderElementProps } from '@quadrats/react';
 
 export type RenderAccordionElementProps = RenderElementProps<AccordionElement>;
 

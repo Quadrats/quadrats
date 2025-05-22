@@ -5,7 +5,7 @@ import { ReactAccordion } from './typings';
 
 export type CreateReactAccordionOptions = CreateAccordionOptions;
 
-export function createReactAccordion(options: CreateReactAccordionOptions): ReactAccordion {
+export function createReactAccordion(options: CreateReactAccordionOptions = {}): ReactAccordion {
   const core = createAccordion(options);
   const { type } = core;
 
