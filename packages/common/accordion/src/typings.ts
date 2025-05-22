@@ -7,7 +7,11 @@ import {
 } from '@quadrats/core';
 
 export interface AccordionElement extends QuadratsElement, WithElementType {
-  children: [Text];
+  expanded: boolean;
+  children: {
+    type: string;
+    children: [Text];
+  }[];
 }
 
 export interface Accordion<T extends Editor = Editor> extends WithElementType, Withable {
