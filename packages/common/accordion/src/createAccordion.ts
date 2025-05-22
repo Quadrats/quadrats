@@ -16,12 +16,12 @@ export interface CreateAccordionOptions {
 export function createAccordion(options: CreateAccordionOptions = {}): Accordion<Editor> {
   const { type = ACCORDION_TYPE } = options;
 
-  const embedElement: AccordionElement = {
+  const accordionElement: AccordionElement = {
     type, children: [{ text: '' }],
   };
 
   const insertAccordion: Accordion<Editor>['insertAccordion'] = (editor) => {
-    Transforms.insertNodes(editor, [embedElement], {
+    Transforms.insertNodes(editor, [accordionElement], {
       at: editor.selection?.anchor,
     });
   };
