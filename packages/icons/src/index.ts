@@ -3,6 +3,7 @@ export { IconDefinition } from './typings';
 /**
  * icons
  */
+export { Accordion } from './accordion';
 export { AlignLeft } from './align-left';
 export { AlignCenter } from './align-center';
 export { AlignRight } from './align-right';
