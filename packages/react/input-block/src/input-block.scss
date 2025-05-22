@@ -1,0 +1,38 @@
+.qdr-input-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--qdr-spacing-4);
+  background-color: var(--qdr-bg);
+  padding: var(--qdr-spacing-2) var(--qdr-spacing-4);
+  border-radius: var(--qdr-radius-2);
+
+  &__input {
+    font-size: var(--qdr-typography-basic-input2-font-size);
+    line-height: var(--qdr-typography-basic-input2-line-height);
+    letter-spacing: var(--qdr-typography-basic-input2-letter-spacing);
+    font-weight: var(--qdr-typography-basic-input2-font-weight);
+  }
+
+  &__icons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--qdr-spacing-1);
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--qdr-spacing-1);
+    border-radius: var(--qdr-radius-2);
+    color: var(--qdr-action-inactive);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--qdr-action-active);
+      background: var(--qdr-secondary-hover-bg);
+    }
+  }
+}

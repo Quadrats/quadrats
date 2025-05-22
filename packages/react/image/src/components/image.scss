@@ -57,6 +57,7 @@ $qdr-image-resizer-size: 6px;
   }
 
   &__caption {
+    position: relative;
     margin-top: var(--qdr-spacing-6);
     text-align: var(--qdr-image-caption-align);
     font-size: var(--qdr-typography-article-body2-font-size);
@@ -65,9 +66,11 @@ $qdr-image-resizer-size: 6px;
     font-weight: var(--qdr-typography-article-body2-font-weight);
 
     &-placeholder {
+      position: absolute;
+      left: 0;
+      text-align: var(--qdr-image-caption-align);
       color: var(--qdr-text-secondary);
-      width: 0;
-      max-width: 100%;
+      width: 100%;
       white-space: nowrap;
       vertical-align: text-top;
       pointer-events: none;

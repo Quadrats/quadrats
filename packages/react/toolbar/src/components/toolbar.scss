@@ -76,6 +76,10 @@ $qdr-toolbar-input-cross-size: --qdr-spacing-7;
       position: absolute;
       z-index: 1;
       padding-bottom: var(#{$qdr-toolbar-popup-gap});
+
+      .qdr-toolbar {
+        background-color: var(--qdr-block);
+      }
     }
 
     &--inputting {

@@ -19,6 +19,7 @@ export const QDR_SPACING: SpacingObject = {
   'spacing-30': '22.5rem',
 
   'radius-1': '0.25rem',
+  'radius-2': '0.375rem',
   'radius-3': '0.5rem',
 
   typographyArticleH1FontSize: '2rem',
@@ -70,6 +71,11 @@ export const QDR_SPACING: SpacingObject = {
   typographyBasicInput1LineHeight: '2.65',
   typographyBasicInput1LetterSpacing: '0',
   typographyBasicInput1FontWeight: '400',
+
+  typographyBasicInput2FontSize: '0.9375rem',
+  typographyBasicInput2LineHeight: '2.15',
+  typographyBasicInput2LetterSpacing: '0',
+  typographyBasicInput2FontWeight: '400',
 
   typographyBasicBody2FontSize: '0.8125rem',
   typographyBasicBody2LineHeight: '1.5',
