@@ -4,6 +4,10 @@ export const enUS: LocaleDefinition = {
   locale: 'en-US',
   editor: {
     placeholder: 'Please fill in the content',
+    accordion: {
+      titlePlaceholder: 'Accordion Title',
+      contentPlaceholder: 'Empty accordion content. Type your content here...',
+    },
     facebook: {
       inputPlaceholder: 'Please paste a link to embed content from Facebook post , and press Enter',
     },

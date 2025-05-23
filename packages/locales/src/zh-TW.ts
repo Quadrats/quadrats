@@ -4,6 +4,10 @@ export const zhTW: LocaleDefinition = {
   locale: 'zh-TW',
   editor: {
     placeholder: '請在此輸入內容',
+    accordion: {
+      titlePlaceholder: '折疊項目標題',
+      contentPlaceholder: '空白折疊列表，請在此輸入內容...',
+    },
     facebook: {
       inputPlaceholder: '請在此輸入或貼上Facebook的貼文連結，並按下Enter',
     },

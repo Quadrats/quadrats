@@ -2,6 +2,10 @@ export interface LocaleDefinition {
   locale: string;
   editor: {
     placeholder: string;
+    accordion: {
+      titlePlaceholder: string;
+      contentPlaceholder: string;
+    },
     facebook: {
       inputPlaceholder: string;
     };
