@@ -22,8 +22,8 @@ export function createAccordion(options: CreateAccordionOptions = {}): Accordion
     type: types.accordion,
     expanded: true,
     children: [
-      { type: types['accordion-title'], children: [{ text: '折疊項目標題' }] },
-      { type: types['accordion-content'], children: [{ text: '空白折疊列表，請在此輸入內容...' }] },
+      { type: types.accordion_title, children: [{ text: '折疊項目標題' }] },
+      { type: types.accordion_content, children: [{ text: '空白折疊列表，請在此輸入內容...' }] },
     ],
   };
 

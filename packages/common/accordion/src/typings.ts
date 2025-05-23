@@ -7,8 +7,8 @@ import {
 } from '@quadrats/core';
 
 export type AccordionTypeKey = 'accordion';
-export type AccordionTitleTypeKey = 'accordion-title';
-export type AccordionContentTypeKey = 'accordion-content';
+export type AccordionTitleTypeKey = 'accordion_title';
+export type AccordionContentTypeKey = 'accordion_content';
 
 export type AccordionTypes = Record<AccordionTypeKey | AccordionTitleTypeKey | AccordionContentTypeKey, string>;
 
