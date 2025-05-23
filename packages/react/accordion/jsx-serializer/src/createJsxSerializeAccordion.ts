@@ -1,14 +1,79 @@
-import { ACCORDION_TYPE } from '@quadrats/common/accordion';
-import { createJsxSerializeElement, CreateJsxSerializeElementOptions } from '@quadrats/react/jsx-serializer';
-import { JsxSerializeAccordionElementProps } from './typings';
-import { defaultRenderAccordionElement } from './defaultRenderAccordionElement';
+/* eslint-disable @typescript-eslint/naming-convention */
+import {
+  WithElementParent,
+} from '@quadrats/core/serializers';
+import {
+  AccordionElement,
+  AccordionTypeKey,
+  AccordionTitleTypeKey,
+  AccordionContentTypeKey,
+  ACCORDION_TYPES,
+} from '@quadrats/common/accordion';
+import {
+  CreateJsxSerializeElementOptions,
+  createJsxSerializeElements,
+  JsxSerializeElementProps,
+} from '@quadrats/react/jsx-serializer';
+import { defaultRenderAccordionElements } from './defaultRenderAccordionElements';
+import {
+  JsxSerializeAccordionElementProps,
+} from './typings';
 
 export type CreateJsxSerializeAccordionOptions = Partial<
-CreateJsxSerializeElementOptions<JsxSerializeAccordionElementProps>
+Record<AccordionTypeKey, Partial<CreateJsxSerializeElementOptions<JsxSerializeAccordionElementProps>>> &
+Record<AccordionTitleTypeKey, Partial<CreateJsxSerializeElementOptions<JsxSerializeElementProps>>> &
+Record<AccordionContentTypeKey, Partial<CreateJsxSerializeElementOptions<JsxSerializeElementProps>>>
 >;
 
 export function createJsxSerializeAccordion(options: CreateJsxSerializeAccordionOptions = {}) {
-  const { type = ACCORDION_TYPE, render = defaultRenderAccordionElement } = options;
+  const {
+    accordion = {},
+    accordion_title = {},
+    accordion_content = {},
+  } = options;
 
-  return createJsxSerializeElement<JsxSerializeAccordionElementProps>({ type, render });
+  const accordionType = accordion.type || ACCORDION_TYPES.accordion;
+  const titleType = accordion_title.type || ACCORDION_TYPES.accordion_title;
+  const contentType = accordion_content.type || ACCORDION_TYPES.accordion_content;
+
+  const renderAccordion = accordion.render || defaultRenderAccordionElements.accordion;
+  const renderAccordionTitle = accordion_title.render || defaultRenderAccordionElements.accordion_title;
+  const renderAccordionContent = accordion_content.render || defaultRenderAccordionElements.accordion_content;
+
+  return createJsxSerializeElements([
+    {
+      type: accordionType,
+      render: (props) => {
+        const { children } = props;
+        const element = props.element as AccordionElement & WithElementParent;
+
+        return renderAccordion({
+          children,
+          element,
+        });
+      },
+    },
+    {
+      type: titleType,
+      render: (props) => {
+        const { children, element } = props;
+
+        return renderAccordionTitle({
+          children,
+          element,
+        });
+      },
+    },
+    {
+      type: contentType,
+      render: (props) => {
+        const { children, element } = props;
+
+        return renderAccordionContent({
+          children,
+          element,
+        });
+      },
+    },
+  ]);
 }

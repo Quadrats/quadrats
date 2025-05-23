@@ -1,3 +1,3 @@
 export * from './typings';
-export { defaultRenderAccordionElement } from './defaultRenderAccordionElement';
+export { defaultRenderAccordionElements } from './defaultRenderAccordionElements';
 export { CreateReactAccordionOptions, createReactAccordion } from './createReactAccordion';

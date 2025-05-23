@@ -1,3 +1,3 @@
 export * from './typings';
-export { defaultRenderAccordionElement } from './defaultRenderAccordionElement';
+export { defaultRenderAccordionElements } from './defaultRenderAccordionElements';
 export { CreateJsxSerializeAccordionOptions, createJsxSerializeAccordion } from './createJsxSerializeAccordion';

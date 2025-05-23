@@ -1,7 +1,10 @@
 import React from 'react';
-import { RenderAccordionElementProps } from '../typings';
+import { RenderElementProps } from '@quadrats/react';
 
-function AccordionContent(props: RenderAccordionElementProps) {
+function AccordionContent(props: {
+  attributes?: RenderElementProps['attributes'];
+  children: RenderElementProps['children'];
+}) {
   const { attributes, children } = props;
 
   return (
