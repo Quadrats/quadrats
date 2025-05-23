@@ -1,27 +1,29 @@
 import {
   Editor,
-  QuadratsElement,
   Transforms,
 } from '@quadrats/core';
 import {
   Accordion,
   AccordionElement,
+  AccordionTypes,
 } from './typings';
 import { ACCORDION_TYPES } from './constants';
 
 export interface CreateAccordionOptions {
-  type?: string;
+  types?: Partial<AccordionTypes>;
 }
 
 export function createAccordion(options: CreateAccordionOptions = {}): Accordion<Editor> {
-  const { type = ACCORDION_TYPES.accordion } = options;
+  const { types: typesOptions } = options;
+
+  const types: AccordionTypes = { ...ACCORDION_TYPES, ...typesOptions };
 
   const accordionElement: AccordionElement = {
-    type,
+    type: types.accordion,
     expanded: true,
     children: [
-      { type: ACCORDION_TYPES['accordion-title'], children: [{ text: '折疊項目標題' }] },
-      { type: ACCORDION_TYPES['accordion-content'], children: [{ text: '空白折疊列表，請在此輸入內容...' }] },
+      { type: types['accordion-title'], children: [{ text: '折疊項目標題' }] },
+      { type: types['accordion-content'], children: [{ text: '空白折疊列表，請在此輸入內容...' }] },
     ],
   };
 
@@ -30,13 +32,9 @@ export function createAccordion(options: CreateAccordionOptions = {}): Accordion
   };
 
   return {
-    type,
+    types,
     insertAccordion,
     with(editor) {
-      const { isVoid } = editor;
-
-      editor.isVoid = element => (element as QuadratsElement).type === type || isVoid(element);
-
       return editor;
     },
   };

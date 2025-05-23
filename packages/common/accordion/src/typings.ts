@@ -20,6 +20,7 @@ export interface AccordionElement extends QuadratsElement, WithElementType {
   }[];
 }
 
-export interface Accordion<T extends Editor = Editor> extends WithElementType, Withable {
+export interface Accordion<T extends Editor = Editor> extends Withable {
+  types: AccordionTypes;
   insertAccordion(editor: T): void;
 }
