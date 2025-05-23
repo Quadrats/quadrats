@@ -6,6 +6,12 @@ import {
   WithElementType,
 } from '@quadrats/core';
 
+export type AccordionTypeKey = 'accordion';
+export type AccordionTitleTypeKey = 'accordion-title';
+export type AccordionContentTypeKey = 'accordion-content';
+
+export type AccordionTypes = Record<AccordionTypeKey | AccordionTitleTypeKey | AccordionContentTypeKey, string>;
+
 export interface AccordionElement extends QuadratsElement, WithElementType {
   expanded: boolean;
   children: {
