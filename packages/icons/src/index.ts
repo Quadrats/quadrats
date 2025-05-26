@@ -4,6 +4,7 @@ export { IconDefinition } from './typings';
  * icons
  */
 export { Accordion } from './accordion';
+export { AccordionDown } from './accordion-down';
 export { AlignLeft } from './align-left';
 export { AlignCenter } from './align-center';
 export { AlignRight } from './align-right';
