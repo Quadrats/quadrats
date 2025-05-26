@@ -28,6 +28,7 @@ function Accordion({
       >
         <div
           className="qdr-accordion__icon-wrapper"
+          contentEditable={false}
           onClick={() => {
             setExpanded(status => !status);
           }}
