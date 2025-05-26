@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { Icon } from '@quadrats/react/components';
 import { AccordionDown } from '@quadrats/icons';
 import { RenderElementProps } from '@quadrats/react';
+import { AccordionContext } from '../contexts/AccordionContext';
 import { RenderAccordionElementProps } from '../typings';
 
 function Accordion({
@@ -16,29 +17,35 @@ function Accordion({
   const [expanded, setExpanded] = useState<boolean>(true);
 
   return (
-    <div
-      {...attributes}
-      className="qdr-accordion"
+    <AccordionContext.Provider
+      value={{
+        expanded,
+      }}
     >
       <div
-        className="qdr-accordion__icon-wrapper"
-        onClick={() => {
-          setExpanded(status => !status);
-        }}
+        {...attributes}
+        className="qdr-accordion"
       >
-        <Icon
-          className={clsx('qdr-accordion__icon', {
-            'qdr-accordion__icon--expanded': expanded,
-          })}
-          icon={AccordionDown}
-          width={24}
-          height={24}
-        />
+        <div
+          className="qdr-accordion__icon-wrapper"
+          onClick={() => {
+            setExpanded(status => !status);
+          }}
+        >
+          <Icon
+            className={clsx('qdr-accordion__icon', {
+              'qdr-accordion__icon--expanded': expanded,
+            })}
+            icon={AccordionDown}
+            width={24}
+            height={24}
+          />
+        </div>
+        <div className="qdr-accordion__wrapper">
+          {children}
+        </div>
       </div>
-      <div className="qdr-accordion__wrapper">
-        {children}
-      </div>
-    </div>
+    </AccordionContext.Provider>
   );
 }
 

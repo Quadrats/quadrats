@@ -7,6 +7,10 @@ import {
 } from '@quadrats/common/accordion';
 import { WithCreateRenderElement, RenderElementProps } from '@quadrats/react';
 
+export type AccordionContextType = {
+  expanded: boolean;
+};
+
 export type RenderAccordionElementProps = RenderElementProps<AccordionElement>;
 
 export type AccordionRenderElements = Record<

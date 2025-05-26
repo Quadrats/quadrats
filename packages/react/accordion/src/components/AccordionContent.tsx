@@ -2,6 +2,7 @@ import React from 'react';
 import { Editor } from '@quadrats/core';
 import { ReactEditor, useQuadrats, useLocale } from '@quadrats/react';
 import { RenderElementProps } from '@quadrats/react';
+import { useAccordion } from '../hooks/useAccordion';
 
 function AccordionContent(props: {
   attributes?: RenderElementProps['attributes'];
@@ -15,6 +16,10 @@ function AccordionContent(props: {
   const isEmpty = !text;
   const locale = useLocale();
   const placeholder = locale.editor.accordion.contentPlaceholder;
+
+  const { expanded } = useAccordion();
+
+  if (!expanded) return null;
 
   return (
     <p
