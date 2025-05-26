@@ -350,7 +350,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     }
 
     return composeRenderElements(elements);
-  }, [heading, withTitles, withLists, withDivider, withEmbeds, withFootnote, withLink, withImage, withBlockquote]);
+  }, [heading, withTitles, withLists, withDivider, withEmbeds, withFootnote, withLink, withImage, withAccordion, withBlockquote]);
 
   const renderLeaf = useMemo(() => {
     const leafs = [];
@@ -505,6 +505,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     editor,
     heading,
     withTitles,
+    withAccordion,
     withBlockquote,
     withLists,
     withDivider,
@@ -532,6 +533,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     }]);
   }, [
     withTitles,
+    withAccordion,
     withBlockquote,
     withLists,
     withDivider,
@@ -600,6 +602,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
   }, [
     embedStrategies,
     withTitles,
+    withAccordion,
     withBlockquote,
     withLists,
     withDivider,

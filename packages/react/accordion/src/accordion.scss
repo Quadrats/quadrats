@@ -32,21 +32,38 @@
     gap: var(--qdr-spacing-4);
   }
 
-  &__title {
+  &__title, &__content {
+    position: relative;
     align-self: stretch;
     color: var(--qdr-text-primary);
+    margin: 0;
+  }
+
+  &__title {
     font-size: var(--qdr-typography-article-h4-font-size);
     line-height: var(--qdr-typography-article-h4-line-height);
     letter-spacing: var(--qdr-typography-article-h4-letter-spacing);
     font-weight: var(--qdr-typography-article-h4-font-weight);
+
+    &__placeholder {
+      position: absolute;
+      left: 0;
+      color: var(--qdr-text-secondary);
+      pointer-events: none;
+    }
   }
 
   &__content {
-    align-self: stretch;
-    color: var(--qdr-text-primary);
     font-size: var(--qdr-typography-article-body1-font-size);
     line-height: var(--qdr-typography-article-body1-line-height);
     letter-spacing: var(--qdr-typography-article-body1-letter-spacing);
     font-weight: var(--qdr-typography-article-body1-font-weight);
+
+    &__placeholder {
+      position: absolute;
+      left: 0;
+      color: var(--qdr-text-secondary);
+      pointer-events: none;
+    }
   }
 }
