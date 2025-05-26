@@ -20,7 +20,6 @@ export function createAccordion(options: CreateAccordionOptions = {}): Accordion
 
   const accordionElement: AccordionElement = {
     type: types.accordion,
-    expanded: true,
     children: [
       { type: types.accordion_title, children: [{ text: '' }] },
       { type: types.accordion_content, children: [{ text: '' }] },

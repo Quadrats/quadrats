@@ -13,7 +13,6 @@ export type AccordionContentTypeKey = 'accordion_content';
 export type AccordionTypes = Record<AccordionTypeKey | AccordionTitleTypeKey | AccordionContentTypeKey, string>;
 
 export interface AccordionElement extends QuadratsElement, WithElementType {
-  expanded: boolean;
   children: {
     type: string;
     children: [Text];
