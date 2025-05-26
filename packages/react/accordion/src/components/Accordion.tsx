@@ -1,4 +1,6 @@
 import React from 'react';
+import { Icon } from '@quadrats/react/components';
+import { AccordionDown } from '@quadrats/icons';
 import { RenderElementProps } from '@quadrats/react';
 import { RenderAccordionElementProps } from '../typings';
 
@@ -16,7 +18,12 @@ function Accordion({
       {...attributes}
       className="qdr-accordion"
     >
-      {children}
+      <div className="qdr-accordion__icon">
+        <Icon icon={AccordionDown} width={24} height={24} />
+      </div>
+      <div className="qdr-accordion__wrapper">
+        {children}
+      </div>
     </div>
   );
 }
