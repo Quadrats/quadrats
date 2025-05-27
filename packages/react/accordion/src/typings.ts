@@ -5,7 +5,7 @@ import {
   AccordionTitleTypeKey,
   AccordionContentTypeKey,
 } from '@quadrats/common/accordion';
-import { WithCreateRenderElement, RenderElementProps } from '@quadrats/react';
+import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps } from '@quadrats/react';
 
 export type AccordionContextType = {
   expanded: boolean;
@@ -37,4 +37,4 @@ export type ReactAccordionCreateRenderElementOptions = {
 };
 
 export interface ReactAccordion
-  extends Accordion<Editor>, WithCreateRenderElement<[ReactAccordionCreateRenderElementOptions?]> {}
+  extends Accordion<Editor>, WithCreateHandlers, WithCreateRenderElement<[ReactAccordionCreateRenderElementOptions?]> {}
