@@ -21,5 +21,7 @@ export interface AccordionElement extends QuadratsElement, WithElementType {
 
 export interface Accordion<T extends Editor = Editor> extends Withable {
   types: AccordionTypes;
+  isSelectionInAccordionTitle(editor: T): boolean;
+  isSelectionInAccordionContent(editor: T): boolean;
   insertAccordion(editor: T): void;
 }
