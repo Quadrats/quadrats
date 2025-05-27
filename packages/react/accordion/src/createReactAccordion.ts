@@ -1,6 +1,6 @@
 import { AccordionElement, createAccordion, CreateAccordionOptions } from '@quadrats/common/accordion';
 import { createRenderElements, RenderElementProps } from '@quadrats/react';
-// import { getNodesByTypes, QuadratsElement, QuadratsText, Transforms, Editor } from '@quadrats/core';
+import { Editor, getParent, Path, QuadratsElement } from '@quadrats/core';
 import { defaultRenderAccordionElements } from './defaultRenderAccordionElements';
 import { ReactAccordion } from './typings';
 
@@ -16,7 +16,27 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
       onKeyDown(event, editor, next) {
         if (core.isSelectionInAccordionTitle(editor)) {
           if (event.key === 'Backspace' || event.key === 'Delete') {
-            event.preventDefault();
+            const blockEntry = editor.above(
+              { match: node => (node as QuadratsElement).type === types.accordion_title },
+            );
+
+            if (!blockEntry) return;
+
+            const [, childPath] = blockEntry;
+
+            const parentEntry = getParent(editor, childPath);
+
+            if (!parentEntry) return;
+
+            const [, parentPath] = parentEntry;
+
+            const isFirst = Path.equals(childPath, parentPath.concat(0));
+
+            if (isFirst) {
+              event.preventDefault();
+
+              return;
+            }
 
             return;
           }
@@ -24,7 +44,21 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
 
         if (core.isSelectionInAccordionContent(editor)) {
           if (event.key === 'Backspace' || event.key === 'Delete') {
-            event.preventDefault();
+            const blockEntry = editor.above(
+              { match: node => (node as QuadratsElement).type === types.accordion_content },
+            );
+
+            if (!blockEntry) return;
+
+            const [, blockPath] = blockEntry;
+
+            const text = Editor.string(editor, blockPath);
+
+            if (!text) {
+              event.preventDefault();
+
+              return;
+            }
 
             return;
           }
