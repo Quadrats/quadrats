@@ -1,6 +1,6 @@
 import { AccordionElement, createAccordion, CreateAccordionOptions } from '@quadrats/common/accordion';
 import { createRenderElements, RenderElementProps } from '@quadrats/react';
-import { Editor, getParent, Path, QuadratsElement } from '@quadrats/core';
+import { Editor, getParent, PARAGRAPH_TYPE, Path, QuadratsElement, Transforms } from '@quadrats/core';
 import { defaultRenderAccordionElements } from './defaultRenderAccordionElements';
 import { ReactAccordion } from './typings';
 
@@ -43,22 +43,50 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
         }
 
         if (core.isSelectionInAccordionContent(editor)) {
+          const blockEntry = editor.above(
+            { match: node => (node as QuadratsElement).type === types.accordion_content },
+          );
+
+          if (!blockEntry) return;
+
+          const [, blockPath] = blockEntry;
+
+          const text = Editor.string(editor, blockPath);
+
           if (event.key === 'Backspace' || event.key === 'Delete') {
-            const blockEntry = editor.above(
-              { match: node => (node as QuadratsElement).type === types.accordion_content },
-            );
-
-            if (!blockEntry) return;
-
-            const [, blockPath] = blockEntry;
-
-            const text = Editor.string(editor, blockPath);
-
             if (!text) {
               event.preventDefault();
 
               return;
             }
+
+            return;
+          }
+
+          if (!text && editor.selection && event.key === 'Enter') {
+            const parentEntry = getParent(editor, blockPath);
+
+            if (!parentEntry) return;
+
+            const [, parentPath] = parentEntry;
+
+            event.preventDefault();
+            const moveto = parentPath.slice();
+
+            Transforms.insertNodes(
+              editor,
+              { type: PARAGRAPH_TYPE, children: [{ text: '' }] },
+              {
+                at: editor.selection,
+                select: true,
+              },
+            );
+
+            moveto[(parentPath.length - 1)] += 1;
+            Transforms.moveNodes(editor, {
+              at: editor.selection,
+              to: moveto,
+            });
 
             return;
           }
