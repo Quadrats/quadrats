@@ -1,6 +1,6 @@
 import { AccordionElement, createAccordion, CreateAccordionOptions } from '@quadrats/common/accordion';
 import { createRenderElements, RenderElementProps } from '@quadrats/react';
-import { Editor, getParent, PARAGRAPH_TYPE, Path, QuadratsElement, Transforms } from '@quadrats/core';
+import { Editor, getParent, PARAGRAPH_TYPE, Path, QuadratsElement, Transforms, Element } from '@quadrats/core';
 import { defaultRenderAccordionElements } from './defaultRenderAccordionElements';
 import { ReactAccordion } from './typings';
 
@@ -15,31 +15,43 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
     createHandlers: () => ({
       onKeyDown(event, editor, next) {
         if (core.isSelectionInAccordionTitle(editor)) {
-          if (event.key === 'Backspace' || event.key === 'Delete') {
-            const blockEntry = editor.above(
-              { match: node => (node as QuadratsElement).type === types.accordion_title },
-            );
+          const blockEntry = editor.above(
+            { match: node => (node as QuadratsElement).type === types.accordion_title },
+          );
 
-            if (!blockEntry) return;
+          if (!blockEntry) return;
 
-            const [, childPath] = blockEntry;
+          const [, currentPath] = blockEntry;
 
-            const parentEntry = getParent(editor, childPath);
+          const parentEntry = getParent(editor, currentPath);
 
-            if (!parentEntry) return;
+          if (!parentEntry) return;
 
-            const [, parentPath] = parentEntry;
+          const [, parentPath] = parentEntry;
 
-            const isFirst = Path.equals(childPath, parentPath.concat(0));
+          const isFirst = Path.equals(currentPath, parentPath.concat(0));
 
-            if (isFirst) {
+          if (isFirst) {
+            if (event.key === 'Backspace' || event.key === 'Delete') {
+              const text = Editor.string(editor, currentPath);
+
+              if (!text) {
+                event.preventDefault();
+
+                return;
+              }
+            }
+
+            if (editor.selection && event.key === 'Enter') {
               event.preventDefault();
+
+              Transforms.select(editor, Editor.end(editor, Path.next(currentPath)));
 
               return;
             }
-
-            return;
           }
+
+          return;
         }
 
         if (core.isSelectionInAccordionContent(editor)) {
@@ -54,8 +66,19 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
           const text = Editor.string(editor, blockPath);
 
           if (event.key === 'Backspace' || event.key === 'Delete') {
-            if (!text) {
-              event.preventDefault();
+            const prePath = Path.previous(blockPath);
+            const [preNode] = Editor.node(editor, prePath);
+
+            if (Element.isElement(preNode)) {
+              const preType = preNode.type as string;
+
+              if (preType === types.accordion_title && !text) {
+                event.preventDefault();
+
+                Transforms.select(editor, Editor.end(editor, prePath));
+
+                return;
+              }
 
               return;
             }
