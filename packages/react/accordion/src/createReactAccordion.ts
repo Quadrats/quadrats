@@ -1,6 +1,6 @@
 import { AccordionElement, createAccordion, CreateAccordionOptions } from '@quadrats/common/accordion';
 import { createRenderElements, RenderElementProps } from '@quadrats/react';
-import { Editor, getParent, PARAGRAPH_TYPE, Path, QuadratsElement, Transforms, Element } from '@quadrats/core';
+import { Editor, getParent, PARAGRAPH_TYPE, Path, QuadratsElement, Transforms, Element, Node } from '@quadrats/core';
 import { defaultRenderAccordionElements } from './defaultRenderAccordionElements';
 import { ReactAccordion } from './typings';
 
@@ -37,6 +37,7 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
 
               if (!text) {
                 event.preventDefault();
+                Transforms.removeNodes(editor, { at: parentPath });
 
                 return;
               }
@@ -69,16 +70,24 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
           const text = Editor.string(editor, blockPath);
 
           if (event.key === 'Backspace' || event.key === 'Delete') {
-
             if (Element.isElement(preNode)) {
               const preType = preNode.type as string;
 
-              if (preType === types.accordion_title && !text) {
-                event.preventDefault();
+              if (preType === types.accordion_title) {
+                const firstTextEntry = Node.first(editor, blockPath);
+                const [, firstTextPath] = firstTextEntry;
 
-                Transforms.select(editor, Editor.end(editor, prePath));
+                if (
+                  editor.selection &&
+                  Path.equals(editor.selection.anchor.path, firstTextPath) &&
+                  editor.selection.anchor.offset === 0
+                ) {
+                  event.preventDefault();
 
-                return;
+                  Transforms.select(editor, Editor.end(editor, prePath));
+
+                  return;
+                }
               }
 
               return;
