@@ -6,6 +6,7 @@ export const QDR_SPACING: SpacingObject = {
   'spacing-2': '0.25rem',
   'spacing-3': '0.375rem',
   'spacing-4': '0.5rem',
+  'spacing-5': '0.625rem',
   'spacing-6': '0.75rem',
   'spacing-7': '1rem',
   'spacing-8': '1.25rem',
