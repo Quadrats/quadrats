@@ -3,7 +3,7 @@
   border: solid 1px var(--qdr-border);
   color: var(--qdr-text-primary);
   caret-color: var(--qdr-primary);
-  transition: background-color 300ms ease-in-out, border-color 300ms ease-in-out, color 300ms ease-in-out;
+  transition: background-color var(--qdr-duration-short) var(--qdr-easing-standard), border-color var(--qdr-duration-short) var(--qdr-easing-standard), color var(--qdr-duration-short) var(--qdr-easing-standard);
   will-change: background-color, border-color, color;
 
   ::selection {

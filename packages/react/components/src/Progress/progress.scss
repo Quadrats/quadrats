@@ -5,7 +5,7 @@
   position: absolute;
   inset: 0;
   background-color: var(--qdr-overlay-light);
-  transition: background-color 300ms ease-in-out;
+  transition: background-color var(--qdr-duration-short) var(--qdr-easing-standard);
   will-change: background-color;
   z-index: 1;
 
