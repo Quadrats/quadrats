@@ -2,6 +2,9 @@ import {
   Editor,
   isNodesTypeIn,
   Transforms,
+  Element,
+  Text,
+  Node,
 } from '@quadrats/core';
 import {
   Accordion,
@@ -43,6 +46,40 @@ export function createAccordion(options: CreateAccordionOptions = {}): Accordion
     isSelectionInAccordionContent,
     insertAccordion,
     with(editor) {
+      editor.normalizeNode = (entry) => {
+        const [node, path] = entry;
+
+        if (Element.isElement(node)) {
+          const type = node.type as string;
+
+          if (type === types.accordion) {
+            if (!isNodesTypeIn(editor, [types.accordion_content], { at: path })) {
+              Transforms.removeNodes(editor, { at: path });
+
+              return;
+            }
+          } else if (type === types.accordion_title || type === types.accordion_content) {
+            if (node.children.length !== 1 || !Text.isText(node.children[0])) {
+              const mergedText = node.children.map(child => Node.string(child)).join('');
+
+              Transforms.removeNodes(editor, { at: path });
+              Transforms.insertNodes(
+                editor,
+                {
+                  type,
+                  children: [{ text: mergedText }],
+                },
+                { at: path },
+              );
+
+              Transforms.select(editor, Editor.end(editor, path));
+
+              return;
+            }
+          }
+        }
+      };
+
       return editor;
     },
   };
