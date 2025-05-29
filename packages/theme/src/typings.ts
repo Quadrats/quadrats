@@ -1,3 +1,25 @@
+export interface EffectObject {
+  durationShortest: string;
+  durationShorter: string;
+  durationShort: string;
+  durationStandard: string;
+  durationLong: string;
+  durationLonger: string;
+  durationLongest: string;
+
+  easingStandard: string;
+  easingEmphasized: string;
+  easingDecelerated: string;
+  easingAccelerated: string;
+
+  'shadow-xs': string;
+  'shadow-s': string;
+  'shadow-m': string;
+  'shadow-l': string;
+  'shadow-xl': string;
+  'shadow-2xl': string;
+}
+
 export interface SpacingObject {
   'spacing-0': string;
   'spacing-1': string;
@@ -137,6 +159,6 @@ export interface PalettesObject {
   overlayLight: string;
 }
 
-export type ThemeObject = PalettesObject & SpacingObject;
+export type ThemeObject = EffectObject & PalettesObject & SpacingObject;
 
 export type Theme = string | ThemeObject;
