@@ -63,11 +63,12 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
 
           const [, blockPath] = blockEntry;
 
+          const prePath = Path.previous(blockPath);
+          const [preNode] = Editor.node(editor, prePath);
+
           const text = Editor.string(editor, blockPath);
 
           if (event.key === 'Backspace' || event.key === 'Delete') {
-            const prePath = Path.previous(blockPath);
-            const [preNode] = Editor.node(editor, prePath);
 
             if (Element.isElement(preNode)) {
               const preType = preNode.type as string;
@@ -95,6 +96,14 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
 
             event.preventDefault();
             const moveto = parentPath.slice();
+
+            if (Element.isElement(preNode)) {
+              const preType = preNode.type as string;
+
+              if (preType === types.accordion_content) {
+                Transforms.removeNodes(editor, { at: editor.selection });
+              }
+            }
 
             Transforms.insertNodes(
               editor,
