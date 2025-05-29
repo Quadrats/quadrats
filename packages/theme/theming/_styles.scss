@@ -1,13 +1,24 @@
 @use 'sass:map';
+@use './effect';
 @use './palettes';
 @use './spacing';
 
-$qdr-palette-qdr: map.merge(
+@function assign($map, $maps...) {
+  @each $m in $maps {
+    $map: map.merge($map, $m);
+  }
+
+  @return $map;
+}
+
+$qdr-palette-qdr: assign(
+  effect.$qdr-effect,
   palettes.$palette-light,
   spacing.$qdr-spacing,
 );
 
-$qdr-palette-qdr-dark: map.merge(
+$qdr-palette-qdr-dark: assign(
+  effect.$qdr-effect,
   palettes.$palette-dark,
   spacing.$qdr-spacing,
 )
