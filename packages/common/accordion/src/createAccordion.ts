@@ -9,7 +9,6 @@ import {
 } from '@quadrats/core';
 import {
   Accordion,
-  AccordionElement,
   AccordionTypes,
 } from './typings';
 import { ACCORDION_TYPES } from './constants';
@@ -23,13 +22,13 @@ export function createAccordion(options: CreateAccordionOptions = {}): Accordion
 
   const types: AccordionTypes = { ...ACCORDION_TYPES, ...typesOptions };
 
-  const accordionElement: AccordionElement = {
+  const createAccordionElement: Accordion<Editor>['createAccordionElement'] = () => ({
     type: types.accordion,
     children: [
       { type: types.accordion_title, children: [{ text: '' }] },
       { type: types.accordion_content, children: [{ text: '' }] },
     ],
-  };
+  });
 
   const isSelectionInAccordionTitle: Accordion<Editor>['isSelectionInAccordionTitle']
     = editor => isNodesTypeIn(editor, [types.accordion_title]);
@@ -38,11 +37,12 @@ export function createAccordion(options: CreateAccordionOptions = {}): Accordion
     = editor => isNodesTypeIn(editor, [types.accordion_content]);
 
   const insertAccordion: Accordion<Editor>['insertAccordion'] = (editor) => {
-    Transforms.insertNodes(editor, accordionElement);
+    Transforms.insertNodes(editor, createAccordionElement());
   };
 
   return {
     types,
+    createAccordionElement,
     isSelectionInAccordionTitle,
     isSelectionInAccordionContent,
     insertAccordion,
