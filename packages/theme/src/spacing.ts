@@ -68,6 +68,51 @@ export const QDR_SPACING: SpacingObject = {
   typographyArticleBody2LetterSpacing: '0',
   typographyArticleBody2FontWeight: '400',
 
+  typographyBasicH1FontSize: '2rem',
+  typographyBasicH1LineHeight: '1.5',
+  typographyBasicH1LetterSpacing: '0',
+  typographyBasicH1FontWeight: '600',
+
+  typographyBasicH2FontSize: '1.5rem',
+  typographyBasicH2LineHeight: '1.5',
+  typographyBasicH2LetterSpacing: '0',
+  typographyBasicH2FontWeight: '600',
+
+  typographyBasicH3FontSize: '1.3125rem',
+  typographyBasicH3LineHeight: '1.45',
+  typographyBasicH3LetterSpacing: '0',
+  typographyBasicH3FontWeight: '500',
+
+  typographyBasicH4FontSize: '1.125rem',
+  typographyBasicH4LineHeight: '1.55',
+  typographyBasicH4LetterSpacing: '0',
+  typographyBasicH4FontWeight: '500',
+
+  typographyBasicH5FontSize: '0.9375rem',
+  typographyBasicH5LineHeight: '1.6',
+  typographyBasicH5LetterSpacing: '0',
+  typographyBasicH5FontWeight: '500',
+
+  typographyBasicH6FontSize: '0.8125rem',
+  typographyBasicH6LineHeight: '1.5',
+  typographyBasicH6LetterSpacing: '0',
+  typographyBasicH6FontWeight: '500',
+
+  typographyBasicButton1FontSize: '0.9375rem',
+  typographyBasicButton1LineHeight: '2.65',
+  typographyBasicButton1LetterSpacing: '0',
+  typographyBasicButton1FontWeight: '500',
+
+  typographyBasicButton2FontSize: '0.9375rem',
+  typographyBasicButton2LineHeight: '2.15',
+  typographyBasicButton2LetterSpacing: '0',
+  typographyBasicButton2FontWeight: '500',
+
+  typographyBasicButton3FontSize: '0.8125rem',
+  typographyBasicButton3LineHeight: '1.85',
+  typographyBasicButton3LetterSpacing: '0',
+  typographyBasicButton3FontWeight: '500',
+
   typographyBasicInput1FontSize: '0.9375rem',
   typographyBasicInput1LineHeight: '2.65',
   typographyBasicInput1LetterSpacing: '0',
@@ -78,8 +123,23 @@ export const QDR_SPACING: SpacingObject = {
   typographyBasicInput2LetterSpacing: '0',
   typographyBasicInput2FontWeight: '400',
 
+  typographyBasicInput3FontSize: '0.8125rem',
+  typographyBasicInput3LineHeight: '1.85',
+  typographyBasicInput3LetterSpacing: '0',
+  typographyBasicInput3FontWeight: '400',
+
+  typographyBasicBody1FontSize: '0.9375rem',
+  typographyBasicBody1LineHeight: '1.6',
+  typographyBasicBody1LetterSpacing: '0',
+  typographyBasicBody1FontWeight: '400',
+
   typographyBasicBody2FontSize: '0.8125rem',
   typographyBasicBody2LineHeight: '1.5',
   typographyBasicBody2LetterSpacing: '0',
   typographyBasicBody2FontWeight: '400',
+
+  typographyBasicCaptionFontSize: '0.75rem',
+  typographyBasicCaptionLineHeight: '1.35',
+  typographyBasicCaptionLetterSpacing: '0',
+  typographyBasicCaptionFontWeight: '400',
 };

@@ -88,6 +88,51 @@ export interface SpacingObject {
   typographyArticleBody2LetterSpacing: string;
   typographyArticleBody2FontWeight: string;
 
+  typographyBasicH1FontSize: string;
+  typographyBasicH1LineHeight: string;
+  typographyBasicH1LetterSpacing: string;
+  typographyBasicH1FontWeight: string;
+
+  typographyBasicH2FontSize: string;
+  typographyBasicH2LineHeight: string;
+  typographyBasicH2LetterSpacing: string;
+  typographyBasicH2FontWeight: string;
+
+  typographyBasicH3FontSize: string;
+  typographyBasicH3LineHeight: string;
+  typographyBasicH3LetterSpacing: string;
+  typographyBasicH3FontWeight: string;
+
+  typographyBasicH4FontSize: string;
+  typographyBasicH4LineHeight: string;
+  typographyBasicH4LetterSpacing: string;
+  typographyBasicH4FontWeight: string;
+
+  typographyBasicH5FontSize: string;
+  typographyBasicH5LineHeight: string;
+  typographyBasicH5LetterSpacing: string;
+  typographyBasicH5FontWeight: string;
+
+  typographyBasicH6FontSize: string;
+  typographyBasicH6LineHeight: string;
+  typographyBasicH6LetterSpacing: string;
+  typographyBasicH6FontWeight: string;
+
+  typographyBasicButton1FontSize: string;
+  typographyBasicButton1LineHeight: string;
+  typographyBasicButton1LetterSpacing: string;
+  typographyBasicButton1FontWeight: string;
+
+  typographyBasicButton2FontSize: string;
+  typographyBasicButton2LineHeight: string;
+  typographyBasicButton2LetterSpacing: string;
+  typographyBasicButton2FontWeight: string;
+
+  typographyBasicButton3FontSize: string;
+  typographyBasicButton3LineHeight: string;
+  typographyBasicButton3LetterSpacing: string;
+  typographyBasicButton3FontWeight: string;
+
   typographyBasicInput1FontSize: string;
   typographyBasicInput1LineHeight: string;
   typographyBasicInput1LetterSpacing: string;
@@ -98,10 +143,25 @@ export interface SpacingObject {
   typographyBasicInput2LetterSpacing: string;
   typographyBasicInput2FontWeight: string;
 
+  typographyBasicInput3FontSize: string;
+  typographyBasicInput3LineHeight: string;
+  typographyBasicInput3LetterSpacing: string;
+  typographyBasicInput3FontWeight: string;
+
+  typographyBasicBody1FontSize: string;
+  typographyBasicBody1LineHeight: string;
+  typographyBasicBody1LetterSpacing: string;
+  typographyBasicBody1FontWeight: string;
+
   typographyBasicBody2FontSize: string;
   typographyBasicBody2LineHeight: string;
   typographyBasicBody2LetterSpacing: string;
   typographyBasicBody2FontWeight: string;
+
+  typographyBasicCaptionFontSize: string;
+  typographyBasicCaptionLineHeight: string;
+  typographyBasicCaptionLetterSpacing: string;
+  typographyBasicCaptionFontWeight: string;
 }
 
 export interface PalettesObject {
