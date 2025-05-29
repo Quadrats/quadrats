@@ -1,0 +1,14 @@
+.qdr-modal {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+
+  &__container {
+    background-color: #fff;
+    box-shadow: 0 24px 48px -12px rgb(0 0 0 / 18%), 0 4px 8px 2px rgb(0 0 0 / 4%);
+  }
+}
