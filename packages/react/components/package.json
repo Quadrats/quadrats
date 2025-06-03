@@ -12,6 +12,7 @@
     "styles": {
       "Progress/progress": "progress",
       "Tooltip/tooltip": "tooltip",
+      "Button/button": "modal",
       "Modal/modal": "modal"
     }
   }

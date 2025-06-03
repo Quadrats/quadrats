@@ -1,3 +1,4 @@
+export { ButtonProps, default as Button } from './Button';
 export { IconProps, default as Icon } from './Icon';
 export { ModalProps, default as Modal } from './Modal';
 export { PortalProps, default as Portal } from './Portal';
