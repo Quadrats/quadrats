@@ -25,6 +25,11 @@
     letter-spacing: var(--qdr-typography-basic-h5-letter-spacing);
     font-weight: var(--qdr-typography-basic-h5-font-weight);
     border-bottom: 1px solid var(--qdr-divider);
+
+    &__cancel {
+      color: var(--qdr-action-inactive);
+      cursor: pointer;
+    }
   }
 
   &__body {

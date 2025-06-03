@@ -1,7 +1,8 @@
 import React, { ReactNode, useContext } from 'react';
 import clsx from 'clsx';
 import { ThemeContext } from '@quadrats/react';
-import { Portal } from '@quadrats/react/components';
+import { Portal, Icon } from '@quadrats/react/components';
+import { Cancel } from '@quadrats/icons';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -28,6 +29,13 @@ const Modal = ({
         <div className="qdr-modal__container">
           <div className="qdr-modal__header">
             Modal Title
+            <Icon
+              className="qdr-modal__header__cancel"
+              icon={Cancel}
+              width={24}
+              height={24}
+              onClick={onClose}
+            />
           </div>
           <div className="qdr-modal__body">
             {children}
