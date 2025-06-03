@@ -11,4 +11,8 @@
     background-color: #fff;
     box-shadow: var(--qdr-shadow-xl);
   }
+
+  &__header {
+    padding: var(--qdr-spacing-5) var(--qdr-spacing-9);
+  }
 }

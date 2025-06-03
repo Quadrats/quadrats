@@ -1,5 +1,7 @@
-import React, { ReactNode } from 'react';
-import ReactDOM from 'react-dom';
+import React, { ReactNode, useContext } from 'react';
+import clsx from 'clsx';
+import { ThemeContext } from '@quadrats/react';
+import { Portal } from '@quadrats/react/components';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -11,13 +13,26 @@ const Modal = ({
   onClose,
   children,
 }: ModalProps) => {
-  return ReactDOM.createPortal(
-    <div className="qdr-modal" onClick={onClose}>
-      <div className="qdr-modal__container">
-        {children}
+  const { props: themeProps } = useContext(ThemeContext);
+
+  return (
+    <Portal>
+      <div
+        className={clsx(
+          'qdr-modal',
+          themeProps.className,
+        )}
+        style={themeProps.style}
+        onClick={onClose}
+      >
+        <div className="qdr-modal__container">
+          <div className="qdr-modal__header">
+            header
+          </div>
+          {children}
+        </div>
       </div>
-    </div>,
-    document.body,
+    </Portal>
   );
 };
 
