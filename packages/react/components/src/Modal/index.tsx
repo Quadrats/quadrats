@@ -1,8 +1,9 @@
 import React, { ReactNode, useContext } from 'react';
 import clsx from 'clsx';
 import { ThemeContext } from '@quadrats/react';
-import { Portal, Icon } from '@quadrats/react/components';
 import { Cancel } from '@quadrats/icons';
+import Portal from '../Portal';
+import Icon from '../Icon';
 
 export interface ModalProps {
   isOpen: boolean;
