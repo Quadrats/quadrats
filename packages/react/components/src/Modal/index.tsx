@@ -27,9 +27,14 @@ const Modal = ({
       >
         <div className="qdr-modal__container">
           <div className="qdr-modal__header">
-            header
+            Modal Title
           </div>
-          {children}
+          <div className="qdr-modal__body">
+            {children}
+          </div>
+          <div className="qdr-modal__footer">
+            Modal Footer
+          </div>
         </div>
       </div>
     </Portal>
