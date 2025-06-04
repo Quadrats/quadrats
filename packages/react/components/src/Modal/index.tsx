@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext } from 'react';
 import clsx from 'clsx';
-import { ThemeContext } from '@quadrats/react';
+import { ThemeContext } from '@quadrats/react/configs';
 import { Cancel } from '@quadrats/icons';
 import Portal from '../Portal';
 import Button from '../Button';
