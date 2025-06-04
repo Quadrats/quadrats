@@ -15,12 +15,15 @@ export interface ModalProps {
 }
 
 const Modal = ({
+  isOpen,
   onClose,
   onConfirm,
   title,
   children,
 }: ModalProps) => {
   const { props: themeProps } = useContext(ThemeContext);
+
+  if (!isOpen) return null;
 
   return (
     <Portal>
@@ -32,7 +35,7 @@ const Modal = ({
         style={themeProps.style}
         onClick={onClose}
       >
-        <div className="qdr-modal__container">
+        <div className="qdr-modal__container" onClick={e => e.stopPropagation()}>
           <div className="qdr-modal__header">
             {title}
             <Icon

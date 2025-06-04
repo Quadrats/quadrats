@@ -12,7 +12,10 @@
     "styles": {
       "Progress/progress": "progress",
       "Tooltip/tooltip": "tooltip",
-      "Button/button": "modal",
+      "Button/button": "button",
+      "Input/input": "input",
+      "Textarea/textarea": "textarea",
+      "Hint/hint": "hint",
       "Modal/modal": "modal"
     }
   }
