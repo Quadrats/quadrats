@@ -28,7 +28,12 @@
 
     &__cancel {
       color: var(--qdr-action-inactive);
+      transition: color var(--qdr-duration-short) var(--qdr-easing-standard);
       cursor: pointer;
+
+      &:hover {
+        color: var(--qdr-action-active);
+      }
     }
   }
 
