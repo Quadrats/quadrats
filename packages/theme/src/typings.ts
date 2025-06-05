@@ -34,6 +34,7 @@ export interface SpacingObject {
   'spacing-10': string;
   'spacing-11': string;
   'spacing-12': string;
+  'spacing-13': string;
   'spacing-14': string;
   'spacing-25': string;
   'spacing-27': string;
