@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import clsx from 'clsx';
 
 export interface InputProps {
+  label?: string;
   value?: string;
   onChange?: (value: string) => void;
   placeholder?: string;
@@ -12,6 +13,7 @@ export interface InputProps {
 }
 
 const Input = ({
+  label,
   value = '',
   onChange,
   placeholder,
@@ -30,6 +32,11 @@ const Input = ({
         'qdr-input',
       )}
     >
+      {label && (
+        <span className="qdr-input__label">
+          {label}
+        </span>
+      )}
       <input
         className={clsx(
           'qdr-input__input',

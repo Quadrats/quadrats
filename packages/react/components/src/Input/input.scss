@@ -5,6 +5,14 @@
   justify-content: flex-start;
   gap: var(--qdr-spacing-2);
 
+  &__label {
+    color: var(--qdr-text-secondary);
+    font-size: var(--qdr-typography-basic-h6-font-size);
+    line-height: var(--qdr-typography-basic-h6-line-height);
+    letter-spacing: var(--qdr-typography-basic-h6-letter-spacing);
+    font-weight: var(--qdr-typography-basic-h6-font-weight);
+  }
+
   &__input {
     border: 1px solid var(--qdr-border);
     outline: none;

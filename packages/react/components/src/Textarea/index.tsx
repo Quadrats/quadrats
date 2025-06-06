@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import clsx from 'clsx';
 
 export interface TextareaProps {
+  label?: string;
   value?: string;
   onChange?: (value: string) => void;
   placeholder?: string;
@@ -13,6 +14,7 @@ export interface TextareaProps {
 }
 
 const Textarea = ({
+  label,
   value = '',
   onChange,
   placeholder,
@@ -32,6 +34,11 @@ const Textarea = ({
         'qdr-textarea',
       )}
     >
+      {label && (
+        <span className="qdr-textarea__label">
+          {label}
+        </span>
+      )}
       <textarea
         style={{ height }}
         className={clsx(

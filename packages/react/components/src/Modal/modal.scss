@@ -24,7 +24,7 @@
     &-enter-active {
       transform: translateY(0);
       opacity: 1;
-       transition: transform var(--qdr-duration-short) var(--qdr-easing-standard), opacity var(--qdr-duration-short) var(--qdr-easing-standard);
+      transition: transform var(--qdr-duration-short) var(--qdr-easing-standard), opacity var(--qdr-duration-short) var(--qdr-easing-standard);
     }
 
     &-exit {
@@ -35,7 +35,7 @@
     &-exit-active {
       transform: translateY(-200px);
       opacity: 0;
-       transition: transform var(--qdr-duration-short) var(--qdr-easing-standard), opacity var(--qdr-duration-short) var(--qdr-easing-standard);
+      transition: transform var(--qdr-duration-short) var(--qdr-easing-standard), opacity var(--qdr-duration-short) var(--qdr-easing-standard);
     }
   }
 
