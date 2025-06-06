@@ -18,7 +18,7 @@ export interface InlineToolbarProps {
 
 function InlineToolbar({ className, leftIcons, rightIcons }: InlineToolbarProps) {
   return (
-    <div className={clsx('qdr-inline-toolbar', className)}>
+    <div contentEditable={false} className={clsx('qdr-inline-toolbar', className)}>
       <div className="qdr-inline-toolbar__wrapper">
         {leftIcons.map(icon => (
           <Icon
