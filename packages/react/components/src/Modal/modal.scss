@@ -5,10 +5,80 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--qdr-duration-short) var(--qdr-easing-standard);
   z-index: 9999;
 
+  &--opened {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  &__transition {
+    &-enter {
+      transform: translateY(-200px);
+      opacity: 0;
+    }
+
+    &-enter-active {
+      transform: translateY(0);
+      opacity: 1;
+      transition: transform var(--qdr-duration-short) var(--qdr-easing-standard), opacity var(--qdr-duration-short) var(--qdr-easing-standard);
+    }
+
+    &-exit {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    &-exit-active {
+      transform: translateY(-200px);
+      opacity: 0;
+      transition: transform var(--qdr-duration-short) var(--qdr-easing-standard), opacity var(--qdr-duration-short) var(--qdr-easing-standard);
+    }
+  }
+
   &__container {
+    width: 520px;
     background-color: #fff;
     box-shadow: var(--qdr-shadow-xl);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--qdr-spacing-4);
+    padding: var(--qdr-spacing-5) var(--qdr-spacing-9);
+    color: var(--qdr-text-primary);
+    font-size: var(--qdr-typography-basic-h5-font-size);
+    line-height: var(--qdr-typography-basic-h5-line-height);
+    letter-spacing: var(--qdr-typography-basic-h5-letter-spacing);
+    font-weight: var(--qdr-typography-basic-h5-font-weight);
+    border-bottom: 1px solid var(--qdr-divider);
+
+    &__cancel {
+      color: var(--qdr-action-inactive);
+      transition: color var(--qdr-duration-short) var(--qdr-easing-standard);
+      cursor: pointer;
+
+      &:hover {
+        color: var(--qdr-action-active);
+      }
+    }
+  }
+
+  &__body {
+    padding: var(--qdr-spacing-9);
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--qdr-spacing-4);
+    padding: var(--qdr-spacing-6) var(--qdr-spacing-9);
+    border-top: 1px solid var(--qdr-divider);
   }
 }

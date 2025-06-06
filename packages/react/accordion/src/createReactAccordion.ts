@@ -41,6 +41,12 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
 
                 return;
               }
+
+              if (editor.selection && editor.selection.anchor.offset === 0) {
+                event.preventDefault();
+
+                return;
+              }
             }
 
             if (editor.selection && event.key === 'Enter') {
