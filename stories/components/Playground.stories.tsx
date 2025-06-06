@@ -64,7 +64,7 @@ import { InstagramEmbedStrategy } from '@quadrats/common/embed/strategies/instag
 import { FacebookEmbedStrategy } from '@quadrats/common/embed/strategies/facebook';
 import { TwitterEmbedStrategy } from '@quadrats/common/embed/strategies/twitter';
 import { PodcastAppleEmbedStrategy } from '@quadrats/common/embed/strategies/podcast-apple';
-import { defaultRenderYoutubeEmbedElement } from '@quadrats/react/embed/renderers/youtube';
+import { defaultRenderYoutubeEmbedElement, defaultRenderYoutubeEmbedJsxSerializer } from '@quadrats/react/embed/renderers/youtube';
 import { defaultRenderVimeoEmbedElement } from '@quadrats/react/embed/renderers/vimeo';
 import { defaultRenderInstagramEmbedElement } from '@quadrats/react/embed/renderers/instagram';
 import { defaultRenderFacebookEmbedElement } from '@quadrats/react/embed/renderers/facebook';
@@ -583,7 +583,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     if (withEmbeds.length) {
       const embedElements: Record<string, (props: any) => React.JSX.Element> = {};
 
-      if (~withEmbeds.indexOf('youtube')) embedElements.youtube = defaultRenderYoutubeEmbedElement;
+      if (~withEmbeds.indexOf('youtube')) embedElements.youtube = defaultRenderYoutubeEmbedJsxSerializer;
       if (~withEmbeds.indexOf('vimeo')) embedElements.vimeo = defaultRenderVimeoEmbedElement;
       if (~withEmbeds.indexOf('instagram')) embedElements.instagram = defaultRenderInstagramEmbedElement;
       if (~withEmbeds.indexOf('facebook')) embedElements.facebook = defaultRenderFacebookEmbedElement;

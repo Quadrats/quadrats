@@ -1,1 +1,1 @@
-export * from '@quadrats/react/embed/renderers/youtube';
+export { defaultRenderYoutubeEmbedJsxSerializer } from '@quadrats/react/embed/renderers/youtube';
