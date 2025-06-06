@@ -32,11 +32,7 @@ const Hint = ({
   }, [variant]);
 
   return (
-    <div
-      className={clsx(
-        'qdr-hint',
-      )}
-    >
+    <div className="qdr-hint">
       <div
         className={clsx(
           'qdr-hint__icon',
@@ -53,6 +49,25 @@ const Hint = ({
       >
         {children}
       </div>
+    </div>
+  );
+};
+
+export interface HintsProps {
+  hints: {
+    text: string;
+    variant?: 'info' | 'success' | 'warning' | 'error';
+  }[];
+}
+
+export const Hints = ({
+  hints,
+}: HintsProps) => {
+  return (
+    <div className="qdr-hints">
+      {hints.map((hint, index) => (
+        <Hint key={index} variant={hint.variant}>{hint.text}</Hint>
+      ))}
     </div>
   );
 };

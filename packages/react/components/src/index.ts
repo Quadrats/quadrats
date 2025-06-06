@@ -1,5 +1,5 @@
 export { ButtonProps, default as Button } from './Button';
-export { HintProps, default as Hint } from './Hint';
+export { HintProps, default as Hint, HintsProps, Hints } from './Hint';
 export { InputProps, default as Input } from './Input';
 export { TextareaProps, default as Textarea } from './Textarea';
 export { IconProps, default as Icon } from './Icon';
