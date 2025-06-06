@@ -1,9 +1,10 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { Transforms } from '@quadrats/core';
 import { EmbedElement } from '@quadrats/common/embed';
 import { RenderElementPropsBase } from '@quadrats/react/_internal';
 import { AlignLeft, AlignCenter, AlignRight, Edit, Trash } from '@quadrats/icons';
 import { ReactEditor, useSlateStatic } from '@quadrats/react';
+import { useModal, Input } from '../../../components/src';
 import { InlineToolbar } from '../../../toolbar/src';
 import { WithEmbedRenderData } from '../typings';
 
@@ -23,6 +24,8 @@ const EmbedBase = ({
   children,
 }: EmbedBaseProps) => {
   const { element } = embedProps;
+  const { openModal } = useModal();
+  const [embedValue, setEmbedValue] = useState<string>('');
   const editor = useSlateStatic();
   const path = ReactEditor.findPath(editor, element);
 
@@ -57,7 +60,23 @@ const EmbedBase = ({
           {
             icon: Edit,
             onClick: () => {
-
+              openModal({
+                title: '嵌入連結',
+                children: (
+                  <>
+                    <Input
+                      value={embedValue}
+                      onChange={(v) => {
+                        setEmbedValue(v);
+                      }}
+                      placeholder="貼上語法"
+                    />
+                  </>
+                ),
+                onConfirm: () => {
+                  console.log('confirm', embedValue);
+                },
+              });
             },
           },
           {
