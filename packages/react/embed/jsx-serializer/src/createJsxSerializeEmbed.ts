@@ -15,6 +15,6 @@ export function createJsxSerializeEmbed<Provider extends string>(options: Create
 
   return createJsxSerializeElement<JsxSerializeEmbedElementProps<any, any>>({
     type,
-    render: createRenderEmbedElementBase({ strategies, renderers }),
+    render: createRenderEmbedElementBase({ strategies, renderers, withoutToolbar: true }),
   });
 }

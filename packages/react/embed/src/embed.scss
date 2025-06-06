@@ -1,3 +1,11 @@
-.qdr-embed-video, .qdr-embed-instagram, .qdr-embed-facebook, .qdr-embed-twitter, .qdr-embed-x, .qdr-embed-podcast-apple, .qdr-embed-spotify {
+.qdr-embed {
+  position: relative;
   margin: var(--qdr-spacing-14) 0;
+
+  &:hover {
+    .qdr-embed__inline-toolbar {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
 }
