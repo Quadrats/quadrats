@@ -15,6 +15,14 @@ export const ModalProvider = ({
     setIsOpen(false);
   }, []);
 
+  const onClose = useCallback(() => {
+    closeModal();
+
+    if (modalConfig?.onClose) {
+      modalConfig.onClose();
+    }
+  }, [closeModal, modalConfig?.onClose]);
+
   return (
     <ModalContext.Provider
       value={{
@@ -29,7 +37,7 @@ export const ModalProvider = ({
       {children}
       <Modal
         isOpen={isOpen}
-        onClose={closeModal}
+        onClose={onClose}
         title={modalConfig?.title ?? ''}
         cancelText={modalConfig?.cancelText}
         confirmText={modalConfig?.confirmText}

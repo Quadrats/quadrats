@@ -1,5 +1,6 @@
 import React, { ReactNode, useContext, useRef } from 'react';
 import clsx from 'clsx';
+import { useLocale } from '@quadrats/react';
 import { CSSTransition } from 'react-transition-group';
 import { ThemeContext } from '@quadrats/react/configs';
 import { Cancel } from '@quadrats/icons';
@@ -19,13 +20,14 @@ export interface ModalProps {
 
 const Modal = ({
   isOpen,
-  cancelText = '取消',
-  confirmText = '確認',
+  cancelText,
+  confirmText,
   onClose,
   onConfirm,
   title,
   children,
 }: ModalProps) => {
+  const locale = useLocale();
   const nodeRef = useRef(null);
   const { props: themeProps } = useContext(ThemeContext);
 
@@ -64,8 +66,12 @@ const Modal = ({
               {children}
             </div>
             <div className="qdr-modal__footer">
-              <Button variant="secondary" onClick={onClose}>{cancelText}</Button>
-              <Button variant="primary" onClick={onConfirm}>{confirmText}</Button>
+              <Button variant="secondary" onClick={onClose}>
+                {cancelText || locale.editor.cancel}
+              </Button>
+              <Button variant="primary" onClick={onConfirm}>
+                {confirmText || locale.editor.confirm}
+              </Button>
             </div>
           </div>
         </CSSTransition>

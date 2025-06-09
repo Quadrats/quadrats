@@ -1,7 +1,9 @@
 import { createContext, useContext } from 'react';
 import { ModalProps } from '../index';
 
-export interface ModalConfig extends Omit<ModalProps, 'isOpen' | 'onClose'> {}
+export interface ModalConfig extends Omit<ModalProps, 'isOpen' | 'onClose'> {
+  onClose?: VoidFunction;
+}
 
 export interface ModalContextValue {
   isOpen: boolean;
