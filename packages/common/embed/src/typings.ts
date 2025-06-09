@@ -14,6 +14,10 @@ export interface EmbedElement extends QuadratsElement, WithElementType {
    * e.g. If you embed a youtube video, then you can use `youtube` as provider.
    */
   provider: string;
+  /**
+   * The embed alignment. default is `left`.
+   */
+  align?: 'left' | 'center' | 'right';
   children: [Text];
 }
 
