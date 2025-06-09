@@ -1,13 +1,17 @@
-import React, { ReactNode, useState } from 'react';
-import { Transforms } from '@quadrats/core';
+import React, { ReactNode, useState, useEffect, useRef } from 'react';
+import { Path, Transforms } from '@quadrats/core';
 import { EmbedElement } from '@quadrats/common/embed';
 import { AlignLeft, AlignCenter, AlignRight, Edit, Trash } from '@quadrats/icons';
-import { ReactEditor, useSlateStatic } from '@quadrats/react';
-import { useModal, Input } from '@quadrats/react/components';
+import { QuadratsReactEditor, ReactEditor, useSlateStatic } from '@quadrats/react';
+import { useModal, Input, Textarea } from '@quadrats/react/components';
 import { InlineToolbar } from '@quadrats/react/toolbar';
 
 export interface BaseEmbedElementProps {
   element: EmbedElement;
+  type?: 'input' | 'textarea';
+  placeholder?: string;
+  hint?: string;
+  onConfirm?: (editor: QuadratsReactEditor, path: Path, value: string) => void;
   children: ReactNode;
 }
 
@@ -19,10 +23,14 @@ export const BaseEmbedElementWithoutToolbar = ({
 
 const BaseEmbedElement = ({
   element,
+  type = 'input',
+  placeholder,
+  hint,
+  onConfirm,
   children,
 }: BaseEmbedElementProps) => {
   const { openModal } = useModal();
-  const [embedValue, setEmbedValue] = useState<string>('');
+  const modalConfigRef = useRef('');
   const editor = useSlateStatic();
   const path = ReactEditor.findPath(editor, element);
 
@@ -59,19 +67,39 @@ const BaseEmbedElement = ({
             onClick: () => {
               openModal({
                 title: '嵌入連結',
-                children: (
-                  <>
-                    <Input
-                      value={embedValue}
-                      onChange={(v) => {
-                        setEmbedValue(v);
-                      }}
-                      placeholder="貼上語法"
-                    />
-                  </>
-                ),
+                children: (() => {
+                  const EmbedComponent = () => {
+                    const [value, setValue] = useState('');
+
+                    useEffect(() => {
+                      modalConfigRef.current = value;
+                    }, [value]);
+
+                    if (type === 'textarea') {
+                      return (
+                        <Textarea
+                          value={value}
+                          onChange={setValue}
+                          placeholder={placeholder}
+                          hint={hint}
+                        />
+                      );
+                    }
+
+                    return (
+                      <Input
+                        value={value}
+                        onChange={setValue}
+                        placeholder={placeholder}
+                        hint={hint}
+                      />
+                    );
+                  };
+
+                  return <EmbedComponent />;
+                })(),
                 onConfirm: () => {
-                  console.log('confirm', embedValue);
+                  onConfirm?.(editor, path, modalConfigRef.current);
                 },
               });
             },
