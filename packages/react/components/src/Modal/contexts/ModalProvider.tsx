@@ -31,6 +31,8 @@ export const ModalProvider = ({
         isOpen={isOpen}
         onClose={closeModal}
         title={modalConfig?.title ?? ''}
+        cancelText={modalConfig?.cancelText}
+        confirmText={modalConfig?.confirmText}
         onConfirm={modalConfig?.onConfirm}
       >
         {modalConfig?.children}

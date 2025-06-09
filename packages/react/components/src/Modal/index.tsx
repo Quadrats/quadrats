@@ -9,6 +9,8 @@ import Icon from '../Icon';
 
 export interface ModalProps {
   isOpen: boolean;
+  cancelText?: string;
+  confirmText?: string;
   onClose: () => void;
   onConfirm?: () => void;
   title: string;
@@ -17,6 +19,8 @@ export interface ModalProps {
 
 const Modal = ({
   isOpen,
+  cancelText = '取消',
+  confirmText = '確認',
   onClose,
   onConfirm,
   title,
@@ -60,8 +64,8 @@ const Modal = ({
               {children}
             </div>
             <div className="qdr-modal__footer">
-              <Button variant="secondary" onClick={onClose}>Cancel</Button>
-              <Button variant="primary" onClick={onConfirm}>Submit</Button>
+              <Button variant="secondary" onClick={onClose}>{cancelText}</Button>
+              <Button variant="primary" onClick={onConfirm}>{confirmText}</Button>
             </div>
           </div>
         </CSSTransition>

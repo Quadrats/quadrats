@@ -11,6 +11,7 @@ export interface BaseEmbedElementProps {
   type?: 'input' | 'textarea';
   placeholder?: string;
   hint?: string;
+  confirmText?: string;
   onConfirm?: (editor: QuadratsReactEditor, path: Path, value: string) => void;
   children: ReactNode;
 }
@@ -26,6 +27,7 @@ const BaseEmbedElement = ({
   type = 'input',
   placeholder,
   hint,
+  confirmText,
   onConfirm,
   children,
 }: BaseEmbedElementProps) => {
@@ -98,6 +100,7 @@ const BaseEmbedElement = ({
 
                   return <EmbedComponent />;
                 })(),
+                confirmText,
                 onConfirm: () => {
                   onConfirm?.(editor, path, modalConfigRef.current);
                 },
