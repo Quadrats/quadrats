@@ -8,6 +8,7 @@ import { InlineToolbar } from '@quadrats/react/toolbar';
 
 export interface BaseEmbedElementProps {
   element: EmbedElement;
+  haveAlignConfig?: boolean;
   type?: 'input' | 'textarea';
   placeholder?: string;
   hint?: string;
@@ -28,6 +29,7 @@ export const BaseEmbedElementWithoutToolbar = ({
 
 const BaseEmbedElement = ({
   element,
+  haveAlignConfig = false,
   type = 'input',
   placeholder,
   hint,
@@ -44,7 +46,7 @@ const BaseEmbedElement = ({
     <div className="qdr-embed">
       <InlineToolbar
         className="qdr-embed__inline-toolbar"
-        leftIcons={[
+        leftIcons={haveAlignConfig ? [
           {
             icon: AlignLeft,
             onClick: () => {
@@ -66,7 +68,7 @@ const BaseEmbedElement = ({
             },
             active: element.align === 'right',
           },
-        ]}
+        ] : []}
         rightIcons={[
           {
             icon: Edit,
