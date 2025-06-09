@@ -5,9 +5,11 @@ import { VideoIframe, VideoIframeProps } from '@quadrats/react/embed';
 import { BaseEmbedElement, BaseEmbedElementWithoutToolbar } from '@quadrats/react/embed/renderers/base';
 
 export const defaultRenderYoutubeEmbedElement = (props: VideoIframeProps<YoutubeEmbedElement>) => {
+  const { element } = props;
+
   return (
     <BaseEmbedElement
-      element={props.element}
+      element={element}
       placeholder="貼上連結，如 https://youtube.com/..."
       hint="適用於 Youtube 的影片連結"
       confirmText="嵌入影片"
@@ -24,8 +26,12 @@ export const defaultRenderYoutubeEmbedElement = (props: VideoIframeProps<Youtube
   );
 };
 
-export const defaultRenderYoutubeEmbedJsxSerializer = (props: VideoIframeProps<YoutubeEmbedElement>) => (
-  <BaseEmbedElementWithoutToolbar element={props.element}>
-    <VideoIframe {...props} />
-  </BaseEmbedElementWithoutToolbar>
-);
+export const defaultRenderYoutubeEmbedJsxSerializer = (props: VideoIframeProps<YoutubeEmbedElement>) => {
+  const { element } = props;
+
+  return (
+    <BaseEmbedElementWithoutToolbar element={element}>
+      <VideoIframe {...props} />
+    </BaseEmbedElementWithoutToolbar>
+  );
+};

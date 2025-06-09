@@ -19,7 +19,11 @@ export interface BaseEmbedElementProps {
 export const BaseEmbedElementWithoutToolbar = ({
   children,
 }: BaseEmbedElementProps) => {
-  return <div className="qdr-embed">{children}</div>;
+  return (
+    <div className="qdr-embed">
+      {children}
+    </div>
+  );
 };
 
 const BaseEmbedElement = ({
@@ -44,23 +48,23 @@ const BaseEmbedElement = ({
           {
             icon: AlignLeft,
             onClick: () => {
-
+              Transforms.setNodes(editor, { align: 'left' } as EmbedElement, { at: path });
             },
-            active: false,
+            active: element.align === 'left' || !element.align,
           },
           {
             icon: AlignCenter,
             onClick: () => {
-
+              Transforms.setNodes(editor, { align: 'center' } as EmbedElement, { at: path });
             },
-            active: false,
+            active: element.align === 'center',
           },
           {
             icon: AlignRight,
             onClick: () => {
-
+              Transforms.setNodes(editor, { align: 'right' } as EmbedElement, { at: path });
             },
-            active: false,
+            active: element.align === 'right',
           },
         ]}
         rightIcons={[
