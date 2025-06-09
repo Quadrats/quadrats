@@ -21,8 +21,8 @@ export interface CreateEmbedOptions<P extends string> {
 
 export function createEmbed<P extends string>(options: CreateEmbedOptions<P>): Embed<P> {
   const { type = EMBED_TYPE, strategies } = options;
-  const insertEmbed: Embed<P>['insertEmbed'] = (editor, providers, embedCode, defaultNode = PARAGRAPH_TYPE) => {
-    const result = serializeEmbedCode(embedCode, strategies, providers);
+  const insertEmbed: Embed<P>['insertEmbed'] = (editor, provider, embedCode, defaultNode = PARAGRAPH_TYPE) => {
+    const result = serializeEmbedCode(embedCode, strategies, provider);
 
     if (result) {
       const [provider, data] = result;
