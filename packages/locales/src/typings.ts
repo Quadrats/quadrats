@@ -2,6 +2,9 @@ export interface LocaleDefinition {
   locale: string;
   editor: {
     placeholder: string;
+    cancel: string;
+    confirm: string;
+    embedTitle: string;
     accordion: {
       titlePlaceholder: string;
       contentPlaceholder: string;

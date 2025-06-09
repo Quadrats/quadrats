@@ -4,6 +4,9 @@ export const zhTW: LocaleDefinition = {
   locale: 'zh-TW',
   editor: {
     placeholder: '請在此輸入內容',
+    cancel: '取消',
+    confirm: '確認',
+    embedTitle: '嵌入連結',
     accordion: {
       titlePlaceholder: '折疊項目標題',
       contentPlaceholder: '空白折疊列表，請在此輸入內容...',

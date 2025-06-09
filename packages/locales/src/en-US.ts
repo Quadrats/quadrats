@@ -4,6 +4,9 @@ export const enUS: LocaleDefinition = {
   locale: 'en-US',
   editor: {
     placeholder: 'Please fill in the content',
+    cancel: 'Cancel',
+    confirm: 'Confirm',
+    embedTitle: 'Embed Link',
     accordion: {
       titlePlaceholder: 'Accordion Title',
       contentPlaceholder: 'Empty accordion content. Type your content here...',
