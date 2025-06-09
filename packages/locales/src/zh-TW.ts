@@ -35,8 +35,18 @@ export const zhTW: LocaleDefinition = {
     spotify: {
       inputPlaceholder: '請在此輸入或貼上Podcast(Spotify)的貼文連結，並按下Enter',
     },
+    youtube: {
+      inputPlaceholder: '貼上連結，如 https://youtube.com/...',
+      hint: '適用於 Youtube 的影片連結',
+      confirmText: '嵌入影片',
+    },
+    vimeo: {
+      inputPlaceholder: '請在此輸入或貼上 Vimeo 影片連結，並按下 Enter',
+      hint: '適用於 Vimeo 的影片連結',
+      confirmText: '嵌入影片',
+    },
     video: {
-      inputPlaceholder: '請在此輸入或貼上Youtube、Vimeo 或其他影片連結，並按下 Enter',
+      inputPlaceholder: '請在此輸入或貼上 Youtube、Vimeo 或其他影片連結，並按下 Enter',
     },
     toolbar: {
       alignCenter: 'Align Center',

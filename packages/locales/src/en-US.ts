@@ -35,6 +35,16 @@ export const enUS: LocaleDefinition = {
     spotify: {
       inputPlaceholder: 'Please paste a link to embed content from Spotify, and press Enter',
     },
+    youtube: {
+      inputPlaceholder: '貼上連結，如 https://youtube.com/...',
+      hint: '適用於 Youtube 的影片連結',
+      confirmText: '嵌入影片',
+    },
+    vimeo: {
+      inputPlaceholder: '請在此輸入或貼上 Vimeo 影片連結，並按下 Enter',
+      hint: '適用於 Vimeo 的影片連結',
+      confirmText: '嵌入影片',
+    },
     video: {
       inputPlaceholder: 'Please paste a Youtube, Vimeo, or other video link, and press Enter',
     },

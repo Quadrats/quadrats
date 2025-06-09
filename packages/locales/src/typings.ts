@@ -33,6 +33,16 @@ export interface LocaleDefinition {
     spotify: {
       inputPlaceholder: string;
     };
+    youtube: {
+      inputPlaceholder: string;
+      hint: string;
+      confirmText: string;
+    };
+    vimeo: {
+      inputPlaceholder: string;
+      hint: string;
+      confirmText: string;
+    };
     video: {
       inputPlaceholder: string;
     };
