@@ -2,7 +2,7 @@ import React, { ReactNode, useState, useEffect, useRef } from 'react';
 import { Path, Transforms } from '@quadrats/core';
 import { EmbedElement } from '@quadrats/common/embed';
 import { AlignLeft, AlignCenter, AlignRight, Edit, Trash } from '@quadrats/icons';
-import { QuadratsReactEditor, ReactEditor, useSlateStatic } from '@quadrats/react';
+import { QuadratsReactEditor, ReactEditor, useSlateStatic, useLocale } from '@quadrats/react';
 import { useModal, Input, Textarea } from '@quadrats/react/components';
 import { InlineToolbar } from '@quadrats/react/toolbar';
 
@@ -38,6 +38,7 @@ const BaseEmbedElement = ({
   children,
 }: BaseEmbedElementProps) => {
   const { openModal } = useModal();
+  const locale = useLocale();
   const modalConfigRef = useRef('');
   const editor = useSlateStatic();
   const path = ReactEditor.findPath(editor, element);
@@ -74,7 +75,7 @@ const BaseEmbedElement = ({
             icon: Edit,
             onClick: () => {
               openModal({
-                title: '嵌入連結',
+                title: locale.editor.embedTitle,
                 children: (() => {
                   const EmbedComponent = () => {
                     const [value, setValue] = useState('');

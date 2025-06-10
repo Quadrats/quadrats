@@ -21,7 +21,8 @@ import {
   OrderedList as OrderedListIcon,
   Divider as DividerIcon,
   Image as ImageIcon,
-  Video as VideoIcon,
+  Youtube as YoutubeIcon,
+  Vimeo as VimeoIcon,
   Facebook as FacebookIcon,
   Instagram as InstagramIcon,
   Twitter as TwitterIcon,
@@ -438,61 +439,60 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
             options={getLocalFileUploaderOptions(image)}
           />
         ) : null}
-        {~withEmbeds.indexOf('youtube') || ~withEmbeds.indexOf('vimeo') ? (
+        {~withEmbeds.indexOf('youtube') ? (
           <EmbedToolbarIcon
-            icon={VideoIcon}
+            icon={YoutubeIcon}
             controller={embed}
-            providers={[
-              ...(~withEmbeds.indexOf('youtube') ? ['youtube'] : []),
-              ...(~withEmbeds.indexOf('vimeo') ? ['vimeo'] : []),
-            ]}
-            getPlaceholder={locale => locale.editor.video.inputPlaceholder}
-            startToolInput={inputBlock.start}
+            provider="youtube"
+            getPlaceholder={locale => locale.editor.youtube.inputPlaceholder}
+          />
+        ) : null}
+        {~withEmbeds.indexOf('vimeo') ? (
+          <EmbedToolbarIcon
+            icon={VimeoIcon}
+            controller={embed}
+            provider="vimeo"
+            getPlaceholder={locale => locale.editor.vimeo.inputPlaceholder}
           />
         ) : null}
         {~withEmbeds.indexOf('instagram') ? (
           <EmbedToolbarIcon
             icon={InstagramIcon}
             controller={embed}
-            providers={['instagram']}
+            provider="instagram"
             getPlaceholder={locale => locale.editor.instagram.inputPlaceholder}
-            startToolInput={inputBlock.start}
           />
         ) : null}
         {~withEmbeds.indexOf('facebook') ? (
           <EmbedToolbarIcon
             icon={FacebookIcon}
             controller={embed}
-            providers={['facebook']}
+            provider="facebook"
             getPlaceholder={locale => locale.editor.facebook.inputPlaceholder}
-            startToolInput={inputBlock.start}
           />
         ) : null}
         {~withEmbeds.indexOf('twitter') ? (
           <EmbedToolbarIcon
             icon={TwitterIcon}
             controller={embed}
-            providers={['twitter']}
+            provider="twitter"
             getPlaceholder={locale => locale.editor.twitter.tweet.inputPlaceholder}
-            startToolInput={inputBlock.start}
           />
         ) : null}
         {~withEmbeds.indexOf('podcastApple') ? (
           <EmbedToolbarIcon
             icon={PodcastAppleIcon}
             controller={embed}
-            providers={['podcastApple']}
+            provider="podcastApple"
             getPlaceholder={locale => locale.editor.podcastApple.inputPlaceholder}
-            startToolInput={inputBlock.start}
           />
         ) : null}
         {~withEmbeds.indexOf('spotify') ? (
           <EmbedToolbarIcon
             icon={SpotifyIcon}
             controller={embed}
-            providers={['spotify']}
+            provider="spotify"
             getPlaceholder={locale => locale.editor.spotify.inputPlaceholder}
-            startToolInput={inputBlock.start}
           />
         ) : null}
         {withReadMore ? <ReadMoreToolbarIcon icon={ReadMoreIcon} controller={readMore} /> : null}
