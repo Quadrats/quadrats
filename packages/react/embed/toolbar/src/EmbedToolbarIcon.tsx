@@ -1,12 +1,10 @@
 import React from 'react';
-import { InputWidgetConfig } from '@quadrats/common/input-widget';
 import { ReactEmbed } from '@quadrats/react/embed';
 import { ToolbarIcon, ToolbarIconProps } from '@quadrats/react/toolbar';
 import { useEmbedTool } from './useEmbedTool';
 
 export interface EmbedToolbarIconProps<Provider extends string>
-  extends Omit<ToolbarIconProps, 'active' | 'onClick'>,
-  Pick<InputWidgetConfig, 'getPlaceholder'> {
+  extends Omit<ToolbarIconProps, 'active' | 'onClick'> {
   controller: ReactEmbed<Provider>;
   /**
    * The provider supported by this icon.
@@ -16,10 +14,10 @@ export interface EmbedToolbarIconProps<Provider extends string>
 
 function EmbedToolbarIcon<Provider extends string>(props: EmbedToolbarIconProps<Provider>) {
   const {
-    controller, provider, getPlaceholder, ...rest
+    controller, provider, ...rest
   } = props;
 
-  const { onClick } = useEmbedTool(controller, provider, getPlaceholder);
+  const { onClick } = useEmbedTool(controller, provider);
 
   return <ToolbarIcon {...rest} onClick={onClick} />;
 }

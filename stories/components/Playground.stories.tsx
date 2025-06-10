@@ -444,7 +444,6 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
             icon={YoutubeIcon}
             controller={embed}
             provider="youtube"
-            getPlaceholder={locale => locale.editor.youtube.inputPlaceholder}
           />
         ) : null}
         {~withEmbeds.indexOf('vimeo') ? (
@@ -452,7 +451,6 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
             icon={VimeoIcon}
             controller={embed}
             provider="vimeo"
-            getPlaceholder={locale => locale.editor.vimeo.inputPlaceholder}
           />
         ) : null}
         {~withEmbeds.indexOf('instagram') ? (
@@ -460,7 +458,6 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
             icon={InstagramIcon}
             controller={embed}
             provider="instagram"
-            getPlaceholder={locale => locale.editor.instagram.inputPlaceholder}
           />
         ) : null}
         {~withEmbeds.indexOf('facebook') ? (
@@ -468,7 +465,6 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
             icon={FacebookIcon}
             controller={embed}
             provider="facebook"
-            getPlaceholder={locale => locale.editor.facebook.inputPlaceholder}
           />
         ) : null}
         {~withEmbeds.indexOf('twitter') ? (
@@ -476,7 +472,6 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
             icon={TwitterIcon}
             controller={embed}
             provider="twitter"
-            getPlaceholder={locale => locale.editor.twitter.tweet.inputPlaceholder}
           />
         ) : null}
         {~withEmbeds.indexOf('podcastApple') ? (
@@ -484,7 +479,6 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
             icon={PodcastAppleIcon}
             controller={embed}
             provider="podcastApple"
-            getPlaceholder={locale => locale.editor.podcastApple.inputPlaceholder}
           />
         ) : null}
         {~withEmbeds.indexOf('spotify') ? (
@@ -492,7 +486,6 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
             icon={SpotifyIcon}
             controller={embed}
             provider="spotify"
-            getPlaceholder={locale => locale.editor.spotify.inputPlaceholder}
           />
         ) : null}
         {withReadMore ? <ReadMoreToolbarIcon icon={ReadMoreIcon} controller={readMore} /> : null}

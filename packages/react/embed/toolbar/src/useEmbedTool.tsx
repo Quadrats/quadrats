@@ -1,5 +1,4 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
-import { InputWidgetConfig } from '@quadrats/common/input-widget';
 import { useSlateStatic, useLocale } from '@quadrats/react';
 import { ReactEmbed } from '@quadrats/react/embed';
 import { useModal, Textarea, Input } from '@quadrats/react/components';
@@ -7,7 +6,6 @@ import { useModal, Textarea, Input } from '@quadrats/react/components';
 export function useEmbedTool<P extends string>(
   controller: ReactEmbed<P>,
   provider: P,
-  getPlaceholder: InputWidgetConfig['getPlaceholder'],
 ) {
   const locale = useLocale();
   const modalConfigRef = useRef('');
@@ -16,6 +14,7 @@ export function useEmbedTool<P extends string>(
 
   const config = useMemo((): {
     type: 'input' | 'textarea',
+    placeholder: string;
     confirmText: string;
     hint: string;
   } => {
@@ -23,6 +22,7 @@ export function useEmbedTool<P extends string>(
       case 'youtube':
         return {
           type: 'input',
+          placeholder: locale.editor.youtube.inputPlaceholder,
           confirmText: locale.editor.youtube.confirmText,
           hint: locale.editor.youtube.hint,
         };
@@ -30,6 +30,7 @@ export function useEmbedTool<P extends string>(
       case 'vimeo':
         return {
           type: 'input',
+          placeholder: locale.editor.vimeo.inputPlaceholder,
           confirmText: locale.editor.vimeo.confirmText,
           hint: locale.editor.vimeo.hint,
         };
@@ -37,13 +38,12 @@ export function useEmbedTool<P extends string>(
       default:
         return {
           type: 'input',
+          placeholder: '',
           confirmText: '',
           hint: '',
         };
     }
   }, [provider]);
-
-  const placeholder = useMemo(() => getPlaceholder(locale), [getPlaceholder, locale]);
 
   return {
     onClick: () => {
@@ -62,7 +62,7 @@ export function useEmbedTool<P extends string>(
                 <Textarea
                   value={value}
                   onChange={setValue}
-                  placeholder={placeholder}
+                  placeholder={config.placeholder}
                   hint={config.hint}
                 />
               );
@@ -72,7 +72,7 @@ export function useEmbedTool<P extends string>(
               <Input
                 value={value}
                 onChange={setValue}
-                placeholder={placeholder}
+                placeholder={config.placeholder}
                 hint={config.hint}
               />
             );
