@@ -1,8 +1,7 @@
 import React, { ReactNode, useContext, useRef } from 'react';
 import clsx from 'clsx';
-import { useLocale } from '@quadrats/react';
 import { CSSTransition } from 'react-transition-group';
-import { ThemeContext } from '@quadrats/react/configs';
+import { useLocale, ThemeContext } from '@quadrats/react/configs';
 import { Cancel } from '@quadrats/icons';
 import Portal from '../Portal';
 import Button from '../Button';
