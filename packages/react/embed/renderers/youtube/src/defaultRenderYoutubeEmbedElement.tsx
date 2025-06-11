@@ -1,6 +1,8 @@
 import React from 'react';
 import { Transforms } from '@quadrats/core';
 import { useLocale } from '@quadrats/react';
+import { Icon } from '@quadrats/react/components';
+import { Youtube } from '@quadrats/icons';
 import { YoutubeEmbedElement, YoutubeEmbedStrategy } from '@quadrats/common/embed/strategies/youtube';
 import { VideoIframe, VideoIframeProps } from '@quadrats/react/embed';
 import { BaseEmbedElement, BaseEmbedElementWithoutToolbar } from '@quadrats/react/embed/renderers/base';
@@ -29,8 +31,13 @@ export const defaultRenderYoutubeEmbedElement = (props: VideoIframeProps<Youtube
 };
 
 export const defaultRenderYoutubeEmbedPlaceholderElement = () => {
+  const locale = useLocale();
+
   return (
-    <div>youtube placeholder</div>
+    <div className="qdr-embed-youtube__placeholder">
+      <Icon className="qdr-embed-youtube__placeholder__icon" icon={Youtube} width={48} height={48} />
+      <p className="qdr-embed-youtube__placeholder__text">{locale.editor.youtube.blockPlaceholder}</p>
+    </div>
   );
 };
 
