@@ -40,11 +40,13 @@ export const enUS: LocaleDefinition = {
     },
     youtube: {
       inputPlaceholder: '貼上連結，如 https://youtube.com/...',
+      blockPlaceholder: '嵌入 Youtube 影片',
       hint: '適用於 Youtube 的影片連結',
       confirmText: '嵌入影片',
     },
     vimeo: {
       inputPlaceholder: '請在此輸入或貼上 Vimeo 影片連結，並按下 Enter',
+      blockPlaceholder: '嵌入 Vimeo 影片',
       hint: '適用於 Vimeo 的影片連結',
       confirmText: '嵌入影片',
     },

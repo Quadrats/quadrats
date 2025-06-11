@@ -38,11 +38,13 @@ export interface LocaleDefinition {
     };
     youtube: {
       inputPlaceholder: string;
+      blockPlaceholder: string;
       hint: string;
       confirmText: string;
     };
     vimeo: {
       inputPlaceholder: string;
+      blockPlaceholder: string;
       hint: string;
       confirmText: string;
     };
