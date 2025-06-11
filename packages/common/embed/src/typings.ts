@@ -21,6 +21,16 @@ export interface EmbedElement extends QuadratsElement, WithElementType {
   children: [Text];
 }
 
+export interface EmbedPlaceholderElement extends QuadratsElement, WithElementType {
+  /**
+   * The embed provider.
+   *
+   * e.g. If you embed a youtube video, then you can use `youtube` as provider.
+   */
+  provider: string;
+  children: [Text];
+}
+
 export interface EmbedStrategy<EmbedData extends Record<string, unknown>, RenderData> {
   /**
    * To serialize embed code to element data.
@@ -38,4 +48,6 @@ export type EmbedStrategies<Provider extends string> = Record<Provider, EmbedStr
 export interface Embed<P extends string, T extends Editor = Editor> extends WithElementType, Withable {
   strategies: EmbedStrategies<P>;
   insertEmbed(editor: T, provider: P, embedCode: string, defaultNode?: Node | string): void;
+  insertEmbedPlaceholder(editor: T, provider: P): void;
+  removeEmbedPlaceholder(editor: T): void;
 }

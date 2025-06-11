@@ -1,4 +1,5 @@
 import {
+  Editor,
   Element,
   normalizeVoidElementChildren,
   PARAGRAPH_TYPE,
@@ -9,9 +10,10 @@ import {
 import {
   Embed,
   EmbedElement,
+  EmbedPlaceholderElement,
   EmbedStrategies,
 } from './typings';
-import { EMBED_TYPE } from './constants';
+import { EMBED_TYPE, EMBED_PLACEHOLDER_TYPE } from './constants';
 import { serializeEmbedCode } from './serializeEmbedCode';
 
 export interface CreateEmbedOptions<P extends string> {
@@ -46,10 +48,31 @@ export function createEmbed<P extends string>(options: CreateEmbedOptions<P>): E
     }
   };
 
+  const insertEmbedPlaceholder: Embed<P>['insertEmbedPlaceholder'] =
+    (editor, provider) => {
+      const embedPlaceholderElement: EmbedPlaceholderElement = {
+        type: EMBED_PLACEHOLDER_TYPE,
+        provider,
+        children: [{ text: '' }],
+      };
+
+      Editor.withoutNormalizing(editor, () => {
+        Transforms.insertNodes(editor, embedPlaceholderElement);
+      });
+    };
+
+  const removeEmbedPlaceholder: Embed<P>['removeEmbedPlaceholder'] = (editor) => {
+    Transforms.removeNodes(editor, {
+      match: node => Element.isElement(node) && (node as QuadratsElement).type === EMBED_PLACEHOLDER_TYPE,
+    });
+  };
+
   return {
     type,
     strategies,
     insertEmbed,
+    insertEmbedPlaceholder,
+    removeEmbedPlaceholder,
     with(editor) {
       const { isVoid, normalizeNode } = editor;
 
