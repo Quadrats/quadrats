@@ -28,6 +28,12 @@ export const defaultRenderYoutubeEmbedElement = (props: VideoIframeProps<Youtube
   );
 };
 
+export const defaultRenderYoutubeEmbedPlaceholderElement = () => {
+  return (
+    <div>youtube placeholder</div>
+  );
+};
+
 export const defaultRenderYoutubeEmbedJsxSerializer = (props: VideoIframeProps<YoutubeEmbedElement>) => {
   const { element } = props;
 
