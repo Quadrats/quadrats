@@ -1,1 +1,1 @@
-export { defaultRenderVimeoEmbedElement } from './defaultRenderVimeoEmbedElement';
+export * from './defaultRenderVimeoEmbedElement';

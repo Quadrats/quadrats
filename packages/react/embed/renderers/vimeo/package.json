@@ -3,6 +3,7 @@
   "sideEffects": false,
   "quadratsConfig": {
     "deps": [
+      "embed/renderers/base",
       "embed"
     ]
   }

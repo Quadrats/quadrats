@@ -1,5 +1,1 @@
-export {
-  defaultRenderYoutubeEmbedElement,
-  defaultRenderYoutubeEmbedPlaceholderElement,
-  defaultRenderYoutubeEmbedJsxSerializer,
-} from './defaultRenderYoutubeEmbedElement';
+export * from './defaultRenderYoutubeEmbedElement';
