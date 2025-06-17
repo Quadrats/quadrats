@@ -69,7 +69,7 @@ import { defaultRenderYoutubeEmbedElement, defaultRenderYoutubeEmbedPlaceholderE
 import { defaultRenderVimeoEmbedElement, defaultRenderVimeoEmbedPlaceholderElement, defaultRenderVimeoEmbedJsxSerializer } from '@quadrats/react/embed/renderers/vimeo';
 import { defaultRenderInstagramEmbedElement, defaultRenderInstagramEmbedPlaceholderElement, defaultRenderInstagramEmbedJsxSerializer } from '@quadrats/react/embed/renderers/instagram';
 import { defaultRenderFacebookEmbedElement, defaultRenderFacebookEmbedPlaceholderElement, defaultRenderFacebookEmbedJsxSerializer } from '@quadrats/react/embed/renderers/facebook';
-import { defaultRenderTwitterEmbedElement } from '@quadrats/react/embed/renderers/twitter';
+import { defaultRenderTwitterEmbedElement, defaultRenderTwitterEmbedPlaceholderElement, defaultRenderTwitterEmbedJsxSerializer } from '@quadrats/react/embed/renderers/twitter';
 import { defaultRenderSpotifyEmbedElement, defaultRenderSpotifyEmbedPlaceholderElement, defaultRenderSpotifyEmbedJsxSerializer } from '@quadrats/react/embed/renderers/spotify';
 import { defaultRenderPodcastAppleEmbedElement, defaultRenderPodcastAppleEmbedPlaceholderElement, defaultRenderPodcastAppleEmbedJsxSerializer } from '@quadrats/react/embed/renderers/podcast-apple';
 import { createReactFileUploader } from '@quadrats/react/file-uploader';
@@ -337,19 +337,37 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       if (~withEmbeds.indexOf('youtube')) {
         embedElements.youtube = defaultRenderYoutubeEmbedElement;
         embedPlaceholderElements.youtube = defaultRenderYoutubeEmbedPlaceholderElement;
+      }
+
+      if (~withEmbeds.indexOf('vimeo')) {
+        embedElements.vimeo = defaultRenderVimeoEmbedElement;
         embedPlaceholderElements.vimeo = defaultRenderVimeoEmbedPlaceholderElement;
+      }
+
+      if (~withEmbeds.indexOf('instagram')) {
+        embedElements.instagram = defaultRenderInstagramEmbedElement;
         embedPlaceholderElements.instagram = defaultRenderInstagramEmbedPlaceholderElement;
+      }
+
+      if (~withEmbeds.indexOf('facebook')) {
+        embedElements.facebook = defaultRenderFacebookEmbedElement;
         embedPlaceholderElements.facebook = defaultRenderFacebookEmbedPlaceholderElement;
-        embedPlaceholderElements.spotify = defaultRenderSpotifyEmbedPlaceholderElement;
+      }
+
+      if (~withEmbeds.indexOf('twitter')) {
+        embedElements.twitter = defaultRenderTwitterEmbedElement;
+        embedPlaceholderElements.twitter = defaultRenderTwitterEmbedPlaceholderElement;
+      }
+
+      if (~withEmbeds.indexOf('podcastApple')) {
+        embedElements.podcastApple = defaultRenderPodcastAppleEmbedElement;
         embedPlaceholderElements.podcastApple = defaultRenderPodcastAppleEmbedPlaceholderElement;
       }
 
-      if (~withEmbeds.indexOf('vimeo')) embedElements.vimeo = defaultRenderVimeoEmbedElement;
-      if (~withEmbeds.indexOf('instagram')) embedElements.instagram = defaultRenderInstagramEmbedElement;
-      if (~withEmbeds.indexOf('facebook')) embedElements.facebook = defaultRenderFacebookEmbedElement;
-      if (~withEmbeds.indexOf('twitter')) embedElements.twitter = defaultRenderTwitterEmbedElement;
-      if (~withEmbeds.indexOf('podcastApple')) embedElements.podcastApple = defaultRenderPodcastAppleEmbedElement;
-      if (~withEmbeds.indexOf('spotify')) embedElements.spotify = defaultRenderSpotifyEmbedElement;
+      if (~withEmbeds.indexOf('spotify')) {
+        embedElements.spotify = defaultRenderSpotifyEmbedElement;
+        embedPlaceholderElements.spotify = defaultRenderSpotifyEmbedPlaceholderElement;
+      }
 
       elements.push(embed.createRenderElement(embedElements));
       elements.push(embed.createRenderPlaceholderElement(embedPlaceholderElements));
@@ -591,7 +609,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       if (~withEmbeds.indexOf('vimeo')) embedElements.vimeo = defaultRenderVimeoEmbedJsxSerializer;
       if (~withEmbeds.indexOf('instagram')) embedElements.instagram = defaultRenderInstagramEmbedJsxSerializer;
       if (~withEmbeds.indexOf('facebook')) embedElements.facebook = defaultRenderFacebookEmbedJsxSerializer;
-      if (~withEmbeds.indexOf('twitter')) embedElements.twitter = defaultRenderTwitterEmbedElement;
+      if (~withEmbeds.indexOf('twitter')) embedElements.twitter = defaultRenderTwitterEmbedJsxSerializer;
       if (~withEmbeds.indexOf('podcastApple')) embedElements.podcastApple = defaultRenderPodcastAppleEmbedJsxSerializer;
       if (~withEmbeds.indexOf('spotify')) embedElements.spotify = defaultRenderSpotifyEmbedJsxSerializer;
 
