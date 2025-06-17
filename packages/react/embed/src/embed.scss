@@ -36,6 +36,14 @@
       }
     }
 
+    &__block {
+      width: 120px;
+      height: 32px;
+      border-radius: var(--qdr-radius-3);
+      opacity: 0.2;
+      background: linear-gradient(90deg, var(--qdr-action-inactive) 0%, var(--qdr-divider) 100%);
+    }
+
     &__body {
       width: 100%;
       aspect-ratio: 16 / 9;
@@ -69,6 +77,53 @@
       border-radius: var(--qdr-radius-3);
       border: 1px solid var(--qdr-divider);
       background-color: var(--qdr-block);
+    }
+  }
+
+  &-podcast-apple {
+    &__placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      border-radius: var(--qdr-radius-5);
+      border: 1px solid var(--qdr-divider);
+      background-color: var(--qdr-block);
+      padding: var(--qdr-spacing-4) var(--qdr-spacing-7) var(--qdr-spacing-7);
+      gap: var(--qdr-spacing-4);
+
+      &__wrapper {
+        align-self: stretch;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: var(--qdr-spacing-7);
+      }
+
+      &__content-wrapper {
+        flex: 1;
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+
+      &__title-wrapper {
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: var(--qdr-spacing-4);
+      }
+
+      &__blocks-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: var(--qdr-spacing-4);
+      }
     }
   }
 

@@ -35,9 +35,25 @@ export const defaultRenderPodcastAppleEmbedElement = (props: PodcastAppleProps) 
 };
 
 export const defaultRenderPodcastAppleEmbedPlaceholderElement = () => {
+  const locale = useLocale();
+
   return (
     <div className="qdr-embed-podcast-apple__placeholder">
-      <Icon className="qdr-embed-podcast-apple__placeholder__icon" icon={PodcastAppleIcon} width={48} height={48} />
+      <Icon className="qdr-embed__placeholder__icon" icon={PodcastAppleIcon} width={24} height={24} />
+      <div className="qdr-embed-podcast-apple__placeholder__wrapper">
+        <div style={{ width: 120 }} className="qdr-embed__placeholder__body qdr-embed__placeholder__body--square" />
+        <div className="qdr-embed-podcast-apple__placeholder__content-wrapper">
+          <div className="qdr-embed-podcast-apple__placeholder__title-wrapper">
+            <p className="qdr-embed__placeholder__title">{locale.editor.podcastApple.blockPlaceholder}</p>
+            <div className="qdr-embed__placeholder__line" style={{ marginRight: 'var(--qdr-spacing-18)' }} />
+            <div className="qdr-embed__placeholder__line" style={{ marginRight: 'var(--qdr-spacing-24)' }} />
+          </div>
+          <div className="qdr-embed-podcast-apple__placeholder__blocks-wrapper">
+            <div className="qdr-embed__placeholder__block" />
+            <div className="qdr-embed__placeholder__block" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
