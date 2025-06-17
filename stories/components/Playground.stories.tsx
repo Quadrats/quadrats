@@ -71,7 +71,7 @@ import { defaultRenderInstagramEmbedElement, defaultRenderInstagramEmbedPlacehol
 import { defaultRenderFacebookEmbedElement, defaultRenderFacebookEmbedPlaceholderElement, defaultRenderFacebookEmbedJsxSerializer } from '@quadrats/react/embed/renderers/facebook';
 import { defaultRenderTwitterEmbedElement } from '@quadrats/react/embed/renderers/twitter';
 import { defaultRenderSpotifyEmbedElement, defaultRenderSpotifyEmbedPlaceholderElement, defaultRenderSpotifyEmbedJsxSerializer } from '@quadrats/react/embed/renderers/spotify';
-import { defaultRenderPodcastAppleEmbedElement } from '@quadrats/react/embed/renderers/podcast-apple';
+import { defaultRenderPodcastAppleEmbedElement, defaultRenderPodcastAppleEmbedPlaceholderElement, defaultRenderPodcastAppleEmbedJsxSerializer } from '@quadrats/react/embed/renderers/podcast-apple';
 import { createReactFileUploader } from '@quadrats/react/file-uploader';
 import { createReactHeading } from '@quadrats/react/heading';
 import { createReactImage } from '@quadrats/react/image';
@@ -341,6 +341,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
         embedPlaceholderElements.instagram = defaultRenderInstagramEmbedPlaceholderElement;
         embedPlaceholderElements.facebook = defaultRenderFacebookEmbedPlaceholderElement;
         embedPlaceholderElements.spotify = defaultRenderSpotifyEmbedPlaceholderElement;
+        embedPlaceholderElements.podcastApple = defaultRenderPodcastAppleEmbedPlaceholderElement;
       }
 
       if (~withEmbeds.indexOf('vimeo')) embedElements.vimeo = defaultRenderVimeoEmbedElement;
@@ -591,7 +592,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       if (~withEmbeds.indexOf('instagram')) embedElements.instagram = defaultRenderInstagramEmbedJsxSerializer;
       if (~withEmbeds.indexOf('facebook')) embedElements.facebook = defaultRenderFacebookEmbedJsxSerializer;
       if (~withEmbeds.indexOf('twitter')) embedElements.twitter = defaultRenderTwitterEmbedElement;
-      if (~withEmbeds.indexOf('podcastApple')) embedElements.podcastApple = defaultRenderPodcastAppleEmbedElement;
+      if (~withEmbeds.indexOf('podcastApple')) embedElements.podcastApple = defaultRenderPodcastAppleEmbedJsxSerializer;
       if (~withEmbeds.indexOf('spotify')) embedElements.spotify = defaultRenderSpotifyEmbedJsxSerializer;
 
       elements.push(createJsxSerializeEmbed({
