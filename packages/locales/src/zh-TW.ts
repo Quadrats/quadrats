@@ -22,7 +22,7 @@ export const zhTW: LocaleDefinition = {
     },
     instagram: {
       inputPlaceholder: '貼上連結，如 https://instagram.com/...',
-      blockPlaceholder: '嵌入Instagram 貼文',
+      blockPlaceholder: '嵌入 Instagram 貼文',
       hint: '適用於 Instagram 的貼文連結',
       confirmText: '嵌入貼文',
     },

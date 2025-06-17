@@ -13,7 +13,7 @@ export const enUS: LocaleDefinition = {
     },
     facebook: {
       inputPlaceholder: 'Paste a Facebook iframe code',
-      blockPlaceholder: '嵌入 Facebook 貼文',
+      blockPlaceholder: 'Embed Facebook post',
       hint: 'Work with links from Facebook post',
       confirmText: 'Embed Post',
     },
@@ -22,7 +22,7 @@ export const enUS: LocaleDefinition = {
     },
     instagram: {
       inputPlaceholder: 'Paste in https://instagram.com/...',
-      blockPlaceholder: '嵌入Instagram 貼文',
+      blockPlaceholder: 'Embed Instagram post',
       hint: 'Work with links from Instagram post',
       confirmText: 'Embed Post',
     },
@@ -36,32 +36,32 @@ export const enUS: LocaleDefinition = {
     twitter: {
       tweet: {
         inputPlaceholder: 'Paste in http://X.com/...',
-        blockPlaceholder: '嵌入 Twitter 貼文',
+        blockPlaceholder: 'Embed Twitter post',
         hint: 'Work with links from Tweet',
         confirmText: 'Embed Tweet',
       },
     },
     podcastApple: {
       inputPlaceholder: 'Paste in https://podcasts.apple.com/...',
-      blockPlaceholder: '嵌入 Podcast',
+      blockPlaceholder: 'Embed Podcast',
       hint: 'Work with links from Podcast content',
       confirmText: 'Embed audio',
     },
     spotify: {
       inputPlaceholder: 'Paste in https://open.spotify.com/...',
-      blockPlaceholder: '嵌入 Spotify',
+      blockPlaceholder: 'Embed Spotify',
       hint: 'Work with links from Spotify content',
       confirmText: 'Embed audio',
     },
     youtube: {
       inputPlaceholder: 'Paste in https://youtube.com/...',
-      blockPlaceholder: '嵌入 Youtube 影片',
+      blockPlaceholder: 'Embed Youtube video',
       hint: 'Work with links from Youtube',
       confirmText: 'Embed Video',
     },
     vimeo: {
       inputPlaceholder: 'Paste in https://vimeo.com/...',
-      blockPlaceholder: '嵌入 Vimeo 影片',
+      blockPlaceholder: 'Embed Vimeo video',
       hint: 'Work with links from Vimeo',
       confirmText: 'Embed Video',
     },
