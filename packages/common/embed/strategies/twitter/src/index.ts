@@ -12,7 +12,7 @@ export type TwitterEmbedElement = EmbedElement & TwitterEmbedElementData;
 export type TwitterEmbedStrategy = EmbedStrategy<TwitterEmbedElementData, string>;
 
 export function getTwitterTweetDataFromUrl(url: string): TwitterEmbedElementData | undefined {
-  const result = /^https:\/\/twitter.com\/[\w]*\/status\/([\w-]*)/i.exec(url);
+  const result = /^https:\/\/x.com\/[\w]*\/status\/([\w-]*)/i.exec(url);
 
   if (result) {
     const [, tweetId] = result;
@@ -26,6 +26,7 @@ export function getTwitterTweetDataFromUrl(url: string): TwitterEmbedElementData
 
 export function getTwitterTweetDataFromBlockquote(embedCode: string): TwitterEmbedElementData | undefined {
   const template = document.createElement('template');
+
   template.innerHTML = embedCode;
   const { firstChild } = template.content;
 
@@ -36,6 +37,7 @@ export function getTwitterTweetDataFromBlockquote(embedCode: string): TwitterEmb
   const blockquote = firstChild as HTMLElement;
   const link = blockquote.lastChild as HTMLLinkElement | null | undefined;
   const url = link?.getAttribute('href');
+
   return url ? getTwitterTweetDataFromUrl(url) : undefined;
 }
 
