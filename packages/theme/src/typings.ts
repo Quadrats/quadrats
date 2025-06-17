@@ -47,6 +47,8 @@ export interface SpacingObject {
   'radius-1': string;
   'radius-2': string;
   'radius-3': string;
+  'radius-4': string;
+  'radius-5': string;
   'radius-6': string;
 
   typographyArticleH1FontSize: string;
