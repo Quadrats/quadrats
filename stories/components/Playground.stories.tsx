@@ -70,6 +70,7 @@ import { defaultRenderVimeoEmbedElement, defaultRenderVimeoEmbedPlaceholderEleme
 import { defaultRenderInstagramEmbedElement, defaultRenderInstagramEmbedPlaceholderElement, defaultRenderInstagramEmbedJsxSerializer } from '@quadrats/react/embed/renderers/instagram';
 import { defaultRenderFacebookEmbedElement, defaultRenderFacebookEmbedPlaceholderElement, defaultRenderFacebookEmbedJsxSerializer } from '@quadrats/react/embed/renderers/facebook';
 import { defaultRenderTwitterEmbedElement } from '@quadrats/react/embed/renderers/twitter';
+import { defaultRenderSpotifyEmbedElement, defaultRenderSpotifyEmbedPlaceholderElement, defaultRenderSpotifyEmbedJsxSerializer } from '@quadrats/react/embed/renderers/spotify';
 import { defaultRenderPodcastAppleEmbedElement } from '@quadrats/react/embed/renderers/podcast-apple';
 import { createReactFileUploader } from '@quadrats/react/file-uploader';
 import { createReactHeading } from '@quadrats/react/heading';
@@ -91,7 +92,6 @@ import { LinkToolbarIcon, UnlinkToolbarIcon } from '@quadrats/react/link/toolbar
 import { ListToolbarIcon } from '@quadrats/react/list/toolbar';
 import { FootnoteToolbarIcon } from '@quadrats/react/footnote/toolbar';
 import { ReadMoreToolbarIcon } from '@quadrats/react/read-more/toolbar';
-import { defaultRenderSpotifyEmbedElement } from '@quadrats/react/embed/renderers/spotify';
 import { SpotifyEmbedStrategy } from '@quadrats/common/embed/strategies/spotify';
 
 import { createReactFootnote } from '@quadrats/react/footnote';
@@ -340,6 +340,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
         embedPlaceholderElements.vimeo = defaultRenderVimeoEmbedPlaceholderElement;
         embedPlaceholderElements.instagram = defaultRenderInstagramEmbedPlaceholderElement;
         embedPlaceholderElements.facebook = defaultRenderFacebookEmbedPlaceholderElement;
+        embedPlaceholderElements.spotify = defaultRenderSpotifyEmbedPlaceholderElement;
       }
 
       if (~withEmbeds.indexOf('vimeo')) embedElements.vimeo = defaultRenderVimeoEmbedElement;
@@ -591,7 +592,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       if (~withEmbeds.indexOf('facebook')) embedElements.facebook = defaultRenderFacebookEmbedJsxSerializer;
       if (~withEmbeds.indexOf('twitter')) embedElements.twitter = defaultRenderTwitterEmbedElement;
       if (~withEmbeds.indexOf('podcastApple')) embedElements.podcastApple = defaultRenderPodcastAppleEmbedElement;
-      if (~withEmbeds.indexOf('spotify')) embedElements.spotify = defaultRenderSpotifyEmbedElement;
+      if (~withEmbeds.indexOf('spotify')) embedElements.spotify = defaultRenderSpotifyEmbedJsxSerializer;
 
       elements.push(createJsxSerializeEmbed({
         strategies: embedStrategies,
