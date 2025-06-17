@@ -23,10 +23,31 @@
       font-weight: var(--qdr-typography-basic-h5-font-weight);
     }
 
+    &__line {
+      align-self: stretch;
+      height: 16px;
+      border-radius: var(--qdr-radius-6);
+      opacity: 0.2;
+      background: linear-gradient(90deg, var(--qdr-action-inactive) 0%, var(--qdr-divider) 100%);
+
+      &--shortest {
+        align-self: auto;
+        width: 32px;
+      }
+    }
+
     &__body {
       width: 100%;
       aspect-ratio: 16 / 9;
       border-radius: var(--qdr-radius-6);
+      opacity: 0.2;
+      background: linear-gradient(90deg, var(--qdr-action-inactive) 0%, var(--qdr-divider) 100%);
+    }
+
+    &__dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
       opacity: 0.2;
       background: linear-gradient(90deg, var(--qdr-action-inactive) 0%, var(--qdr-divider) 100%);
     }
@@ -47,41 +68,7 @@
     }
   }
 
-  &-instagram {
-    display: flex;
-    align-items: flex-start;
-
-    &--left {
-      justify-content: flex-start;
-    }
-
-    &--center {
-      justify-content: center;
-    }
-
-    &--right {
-      justify-content: flex-end;
-    }
-  }
-
-  &-facebook {
-    display: flex;
-    align-items: flex-start;
-
-    &--left {
-      justify-content: flex-start;
-    }
-
-    &--center {
-      justify-content: center;
-    }
-
-    &--right {
-      justify-content: flex-end;
-    }
-  }
-
-   &-twitter {
+  &-instagram, &-facebook, &-twitter {
     display: flex;
     align-items: flex-start;
 
@@ -109,10 +96,34 @@
       padding: var(--qdr-spacing-9);
 
       &__title-wrapper {
+        width: 100%;
         display: flex;
         align-items: center;
         justify-content: flex-start;
         gap: var(--qdr-spacing-6);
+      }
+
+      &__line-wrapper {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: var(--qdr-spacing-4);
+      }
+
+      &__set-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: var(--qdr-spacing-11);
+      }
+
+      &__tools-set {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: var(--qdr-spacing-3);
       }
     }
   }

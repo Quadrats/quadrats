@@ -43,7 +43,26 @@ export const defaultRenderTwitterEmbedPlaceholderElement = () => {
         <Icon className="qdr-embed__placeholder__icon" icon={TwitterIcon} width={48} height={48} />
         <p className="qdr-embed__placeholder__title">{locale.editor.twitter.tweet.blockPlaceholder}</p>
       </div>
+      <div className="qdr-embed-twitter__placeholder__line-wrapper">
+        <div className="qdr-embed__placeholder__line" style={{ marginRight: 'var(--qdr-spacing-28)' }} />
+        <div className="qdr-embed__placeholder__line" />
+        <div className="qdr-embed__placeholder__line" style={{ marginRight: 'var(--qdr-spacing-21)' }} />
+      </div>
       <div className="qdr-embed__placeholder__body" />
+      <div className="qdr-embed-twitter__placeholder__set-wrapper">
+        <div className="qdr-embed-twitter__placeholder__tools-set">
+          <div className="qdr-embed__placeholder__dot" />
+          <div className="qdr-embed__placeholder__line qdr-embed__placeholder__line--shortest" />
+        </div>
+        <div className="qdr-embed-twitter__placeholder__tools-set">
+          <div className="qdr-embed__placeholder__dot" />
+          <div className="qdr-embed__placeholder__line qdr-embed__placeholder__line--shortest" />
+        </div>
+        <div className="qdr-embed-twitter__placeholder__tools-set">
+          <div className="qdr-embed__placeholder__dot" />
+          <div className="qdr-embed__placeholder__line qdr-embed__placeholder__line--shortest" />
+        </div>
+      </div>
     </div>
   );
 };
