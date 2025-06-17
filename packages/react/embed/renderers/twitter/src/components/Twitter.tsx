@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import clsx from 'clsx';
 import { TwitterEmbedElement } from '@quadrats/common/embed/strategies/twitter';
 import { RenderElementProps } from '@quadrats/react';
 import { composeRefs } from '@quadrats/react/utils';
@@ -11,7 +12,7 @@ export interface TwitterProps {
   element: TwitterEmbedElement;
 }
 
-function Twitter({ attributes, children, data: tweetId }: TwitterProps) {
+function Twitter({ attributes, children, data: tweetId, element: { align } }: TwitterProps) {
   const tweetContainerRef = useRef<HTMLElement | null>(null);
   const composedRef = composeRefs([attributes?.ref, tweetContainerRef]);
 
@@ -21,7 +22,11 @@ function Twitter({ attributes, children, data: tweetId }: TwitterProps) {
     <div
       {...attributes}
       ref={composedRef}
-      className="qdr-embed-twitter qdr-embed-x"
+      className={clsx('qdr-embed-twitter', {
+        'qdr-embed-twitter--left': align === 'left' || !align,
+        'qdr-embed-twitter--center': align === 'center',
+        'qdr-embed-twitter--right': align === 'right',
+      })}
       contentEditable={false}
     >
       {attributes ? children : undefined}

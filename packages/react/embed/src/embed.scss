@@ -70,4 +70,21 @@
       justify-content: flex-end;
     }
   }
+
+   &-twitter {
+    display: flex;
+    align-items: flex-start;
+
+    &--left {
+      justify-content: flex-start;
+    }
+
+    &--center {
+      justify-content: center;
+    }
+
+    &--right {
+      justify-content: flex-end;
+    }
+  }
 }
