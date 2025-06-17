@@ -34,9 +34,20 @@ export const defaultRenderSpotifyEmbedElement = (props: SpotifyProps) => {
 };
 
 export const defaultRenderSpotifyEmbedPlaceholderElement = () => {
+  const locale = useLocale();
+
   return (
     <div className="qdr-embed-spotify__placeholder">
-      <Icon className="qdr-embed-spotify__placeholder__icon" icon={SpotifyIcon} width={48} height={48} />
+      <div style={{ width: 120 }} className="qdr-embed__placeholder__body qdr-embed__placeholder__body--square" />
+      <div className="qdr-embed-spotify__placeholder__title-wrapper">
+        <p className="qdr-embed__placeholder__title">{locale.editor.spotify.blockPlaceholder}</p>
+        <div className="qdr-embed__placeholder__line" />
+        <div className="qdr-embed__placeholder__line" style={{ marginRight: 'var(--qdr-spacing-21)' }} />
+      </div>
+      <div className="qdr-embed-spotify__placeholder__icon-wrapper">
+        <Icon className="qdr-embed__placeholder__icon" icon={SpotifyIcon} width={36} height={36} />
+        <div className="qdr-embed__placeholder__dot" style={{ width: 30, height: 30 }} />
+      </div>
     </div>
   );
 };

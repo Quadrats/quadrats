@@ -72,6 +72,38 @@
     }
   }
 
+  &-spotify {
+    &__placeholder {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      border-radius: var(--qdr-radius-5);
+      border: 1px solid var(--qdr-divider);
+      background-color: var(--qdr-block);
+      padding: var(--qdr-spacing-7);
+
+      &__title-wrapper {
+        flex: 1;
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: var(--qdr-spacing-4);
+        margin-left: var(--qdr-spacing-7);
+      }
+
+      &__icon-wrapper {
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        margin-left: var(--qdr-spacing-12);
+      }
+    }
+  }
+
   &-instagram, &-facebook, &-twitter {
     display: flex;
     align-items: flex-start;
