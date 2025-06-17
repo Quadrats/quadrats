@@ -35,8 +35,8 @@ export const defaultRenderVimeoEmbedPlaceholderElement = () => {
 
   return (
     <div className="qdr-embed-vimeo__placeholder">
-      <Icon className="qdr-embed-vimeo__placeholder__icon" icon={Vimeo} width={48} height={48} />
-      <p className="qdr-embed-vimeo__placeholder__text">{locale.editor.vimeo.blockPlaceholder}</p>
+      <Icon className="qdr-embed__placeholder__icon" icon={Vimeo} width={48} height={48} />
+      <p className="qdr-embed__placeholder__title">{locale.editor.vimeo.blockPlaceholder}</p>
     </div>
   );
 };

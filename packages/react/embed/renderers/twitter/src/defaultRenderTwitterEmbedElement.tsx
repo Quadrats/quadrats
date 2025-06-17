@@ -35,9 +35,15 @@ export const defaultRenderTwitterEmbedElement = (props: TwitterProps) => {
 };
 
 export const defaultRenderTwitterEmbedPlaceholderElement = () => {
+  const locale = useLocale();
+
   return (
     <div className="qdr-embed-twitter__placeholder">
-      <Icon className="qdr-embed-twitter__placeholder__icon" icon={TwitterIcon} width={48} height={48} />
+      <div className="qdr-embed-twitter__placeholder__title-wrapper">
+        <Icon className="qdr-embed__placeholder__icon" icon={TwitterIcon} width={48} height={48} />
+        <p className="qdr-embed__placeholder__title">{locale.editor.twitter.tweet.blockPlaceholder}</p>
+      </div>
+      <div className="qdr-embed__placeholder__body" />
     </div>
   );
 };

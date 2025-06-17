@@ -9,6 +9,29 @@
     }
   }
 
+  &__placeholder {
+    &__icon {
+      color: var(--qdr-action-inactive);
+    }
+
+    &__title {
+      margin: 0;
+      color: var(--qdr-text-secondary);
+      font-size: var(--qdr-typography-basic-h5-font-size);
+      line-height: var(--qdr-typography-basic-h5-line-height);
+      letter-spacing: var(--qdr-typography-basic-h5-letter-spacing);
+      font-weight: var(--qdr-typography-basic-h5-font-weight);
+    }
+
+    &__body {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--qdr-radius-6);
+      opacity: 0.2;
+      background: linear-gradient(90deg, var(--qdr-action-inactive) 0%, var(--qdr-divider) 100%);
+    }
+  }
+
   &-youtube, &-vimeo {
     &__placeholder {
       display: flex;
@@ -18,22 +41,9 @@
       gap: var(--qdr-spacing-4);
       width: 100%;
       aspect-ratio: 16 / 9;
-      border-radius: var(--qdr-radius-2);
+      border-radius: var(--qdr-radius-3);
       border: 1px solid var(--qdr-divider);
-      background-color: var(--qdr-bg);
-
-      &__icon {
-        color: var(--qdr-action-inactive);
-      }
-
-      &__text {
-        margin: 0;
-        color: var(--qdr-text-secondary);
-        font-size: var(--qdr-typography-basic-input2-font-size);
-        line-height: var(--qdr-typography-basic-input2-line-height);
-        letter-spacing: var(--qdr-typography-basic-input2-letter-spacing);
-        font-weight: var(--qdr-typography-basic-input2-font-weight);
-      }
+      background-color: var(--qdr-block);
     }
   }
 
@@ -85,6 +95,25 @@
 
     &--right {
       justify-content: flex-end;
+    }
+
+    &__placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: var(--qdr-spacing-7);
+      border-radius: var(--qdr-radius-3);
+      border: 1px solid var(--qdr-divider);
+      background-color: var(--qdr-block);
+      padding: var(--qdr-spacing-9);
+
+      &__title-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: var(--qdr-spacing-6);
+      }
     }
   }
 }

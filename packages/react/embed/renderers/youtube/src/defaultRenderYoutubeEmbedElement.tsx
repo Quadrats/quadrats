@@ -35,8 +35,8 @@ export const defaultRenderYoutubeEmbedPlaceholderElement = () => {
 
   return (
     <div className="qdr-embed-youtube__placeholder">
-      <Icon className="qdr-embed-youtube__placeholder__icon" icon={Youtube} width={48} height={48} />
-      <p className="qdr-embed-youtube__placeholder__text">{locale.editor.youtube.blockPlaceholder}</p>
+      <Icon className="qdr-embed__placeholder__icon" icon={Youtube} width={48} height={48} />
+      <p className="qdr-embed__placeholder__title">{locale.editor.youtube.blockPlaceholder}</p>
     </div>
   );
 };
