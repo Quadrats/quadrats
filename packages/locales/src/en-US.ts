@@ -12,13 +12,19 @@ export const enUS: LocaleDefinition = {
       contentPlaceholder: 'Empty accordion content. Type your content here...',
     },
     facebook: {
-      inputPlaceholder: 'Please paste a link to embed content from Facebook post , and press Enter',
+      inputPlaceholder: 'Paste a Facebook iframe code',
+      blockPlaceholder: '嵌入 Facebook 貼文',
+      hint: 'Work with links from Facebook post',
+      confirmText: 'Embed Post',
     },
     image: {
       captionInputPlaceholder: ' Type caption for image (optional)',
     },
     instagram: {
-      inputPlaceholder: 'Please paste a link to embed content from Instagram post , and press Enter',
+      inputPlaceholder: 'Paste in https://instagram.com/...',
+      blockPlaceholder: '嵌入Instagram 貼文',
+      hint: 'Work with links from Instagram post',
+      confirmText: 'Embed Post',
     },
     link: {
       inputPlaceholder: 'Paste or type a link...',
@@ -29,26 +35,35 @@ export const enUS: LocaleDefinition = {
     readMore: 'READ MORE',
     twitter: {
       tweet: {
-        inputPlaceholder: 'Please paste a link to embed content from Twitter tweet, and press Enter',
+        inputPlaceholder: 'Paste in http://X.com/...',
+        blockPlaceholder: '嵌入 Twitter 貼文',
+        hint: 'Work with links from Tweet',
+        confirmText: 'Embed Tweet',
       },
     },
     podcastApple: {
-      inputPlaceholder: 'Please paste a link to embed content from Podcast(Apple), and press Enter',
+      inputPlaceholder: 'Paste in https://podcasts.apple.com/...',
+      blockPlaceholder: '嵌入 Podcast',
+      hint: 'Work with links from Podcast content',
+      confirmText: 'Embed audio',
     },
     spotify: {
-      inputPlaceholder: 'Please paste a link to embed content from Spotify, and press Enter',
+      inputPlaceholder: 'Paste in https://open.spotify.com/...',
+      blockPlaceholder: '嵌入 Spotify',
+      hint: 'Work with links from Spotify content',
+      confirmText: 'Embed audio',
     },
     youtube: {
-      inputPlaceholder: '貼上連結，如 https://youtube.com/...',
+      inputPlaceholder: 'Paste in https://youtube.com/...',
       blockPlaceholder: '嵌入 Youtube 影片',
-      hint: '適用於 Youtube 的影片連結',
-      confirmText: '嵌入影片',
+      hint: 'Work with links from Youtube',
+      confirmText: 'Embed Video',
     },
     vimeo: {
-      inputPlaceholder: '請在此輸入或貼上 Vimeo 影片連結，並按下 Enter',
+      inputPlaceholder: 'Paste in https://vimeo.com/...',
       blockPlaceholder: '嵌入 Vimeo 影片',
-      hint: '適用於 Vimeo 的影片連結',
-      confirmText: '嵌入影片',
+      hint: 'Work with links from Vimeo',
+      confirmText: 'Embed Video',
     },
     video: {
       inputPlaceholder: 'Please paste a Youtube, Vimeo, or other video link, and press Enter',

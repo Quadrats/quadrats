@@ -29,7 +29,7 @@ export const BaseEmbedElementWithoutToolbar = ({
 
 const BaseEmbedElement = ({
   element,
-  haveAlignConfig = false,
+  haveAlignConfig = true,
   type = 'input',
   placeholder,
   hint,

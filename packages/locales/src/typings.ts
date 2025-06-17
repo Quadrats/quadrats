@@ -11,12 +11,18 @@ export interface LocaleDefinition {
     },
     facebook: {
       inputPlaceholder: string;
+      blockPlaceholder: string;
+      hint: string;
+      confirmText: string;
     };
     image: {
       captionInputPlaceholder: string;
     };
     instagram: {
       inputPlaceholder: string;
+      blockPlaceholder: string;
+      hint: string;
+      confirmText: string;
     };
     link: {
       inputPlaceholder: string;
@@ -28,13 +34,22 @@ export interface LocaleDefinition {
     twitter: {
       tweet: {
         inputPlaceholder: string;
+        blockPlaceholder: string;
+        hint: string;
+        confirmText: string;
       };
     };
     podcastApple: {
       inputPlaceholder: string;
+      blockPlaceholder: string;
+      hint: string;
+      confirmText: string;
     };
     spotify: {
       inputPlaceholder: string;
+      blockPlaceholder: string;
+      hint: string;
+      confirmText: string;
     };
     youtube: {
       inputPlaceholder: string;
