@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import clsx from 'clsx';
 import { InstagramEmbedElement } from '@quadrats/common/embed/strategies/instagram';
 import { RenderElementProps } from '@quadrats/react';
 import { useLoadInstagramEmbedApi } from '../hooks/useLoadInstagramEmbedApi';
@@ -10,7 +11,7 @@ export interface InstagramProps {
   element: InstagramEmbedElement;
 }
 
-function Instagram({ attributes, children, data: permalink }: InstagramProps) {
+function Instagram({ attributes, children, data: permalink, element: { align } }: InstagramProps) {
   useLoadInstagramEmbedApi(permalink);
 
   useEffect(() => {
@@ -38,7 +39,11 @@ function Instagram({ attributes, children, data: permalink }: InstagramProps) {
   return (
     <div
       {...attributes}
-      className="qdr-embed-instagram"
+      className={clsx('qdr-embed-instagram', {
+        'qdr-embed-instagram--left': align === 'left' || !align,
+        'qdr-embed-instagram--center': align === 'center',
+        'qdr-embed-instagram--right': align === 'right',
+      })}
       contentEditable={false}
       style={{
         display: 'flex',
