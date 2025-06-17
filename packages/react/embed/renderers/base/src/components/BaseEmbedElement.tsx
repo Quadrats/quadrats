@@ -91,6 +91,7 @@ const BaseEmbedElement = ({
                           onChange={setValue}
                           placeholder={placeholder}
                           hint={hint}
+                          height={86}
                         />
                       );
                     }

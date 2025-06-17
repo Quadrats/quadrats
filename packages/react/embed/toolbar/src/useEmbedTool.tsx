@@ -37,6 +37,46 @@ export function useEmbedTool<P extends string>(
           hint: locale.editor.vimeo.hint,
         };
 
+      case 'instagram':
+        return {
+          type: 'input',
+          placeholder: locale.editor.instagram.inputPlaceholder,
+          confirmText: locale.editor.instagram.confirmText,
+          hint: locale.editor.instagram.hint,
+        };
+
+      case 'facebook':
+        return {
+          type: 'textarea',
+          placeholder: locale.editor.facebook.inputPlaceholder,
+          confirmText: locale.editor.facebook.confirmText,
+          hint: locale.editor.facebook.hint,
+        };
+
+      case 'twitter':
+        return {
+          type: 'input',
+          placeholder: locale.editor.twitter.tweet.inputPlaceholder,
+          confirmText: locale.editor.twitter.tweet.confirmText,
+          hint: locale.editor.twitter.tweet.hint,
+        };
+
+      case 'podcastApple':
+        return {
+          type: 'input',
+          placeholder: locale.editor.podcastApple.inputPlaceholder,
+          confirmText: locale.editor.podcastApple.confirmText,
+          hint: locale.editor.podcastApple.hint,
+        };
+
+      case 'spotify':
+        return {
+          type: 'input',
+          placeholder: locale.editor.spotify.inputPlaceholder,
+          confirmText: locale.editor.spotify.confirmText,
+          hint: locale.editor.spotify.hint,
+        };
+
       default:
         return {
           type: 'input',
@@ -72,6 +112,7 @@ export function useEmbedTool<P extends string>(
                   onChange={setValue}
                   placeholder={config.placeholder}
                   hint={config.hint}
+                  height={86}
                 />
               );
             }
