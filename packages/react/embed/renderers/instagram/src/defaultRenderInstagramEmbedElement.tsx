@@ -31,9 +31,34 @@ export const defaultRenderInstagramEmbedElement = (props: InstagramProps) => {
 };
 
 export const defaultRenderInstagramEmbedPlaceholderElement = () => {
+  const locale = useLocale();
+
   return (
     <div className="qdr-embed-instagram__placeholder">
-      <Icon className="qdr-embed-instagram__placeholder__icon" icon={InstagramIcon} width={48} height={48} />
+      <div className="qdr-embed-instagram__placeholder__title-wrapper">
+        <Icon className="qdr-embed__placeholder__icon" icon={InstagramIcon} width={48} height={48} />
+        <p className="qdr-embed__placeholder__title">{locale.editor.instagram.blockPlaceholder}</p>
+      </div>
+      <div className="qdr-embed__placeholder__body qdr-embed__placeholder__body--square" />
+      <div className="qdr-embed-instagram__placeholder__set-wrapper">
+        <div className="qdr-embed-instagram__placeholder__tools-set">
+          <div className="qdr-embed__placeholder__dot" />
+          <div className="qdr-embed__placeholder__line qdr-embed__placeholder__line--shortest" />
+        </div>
+        <div className="qdr-embed-instagram__placeholder__tools-set">
+          <div className="qdr-embed__placeholder__dot" />
+          <div className="qdr-embed__placeholder__line qdr-embed__placeholder__line--shortest" />
+        </div>
+        <div className="qdr-embed-instagram__placeholder__tools-set">
+          <div className="qdr-embed__placeholder__dot" />
+          <div className="qdr-embed__placeholder__line qdr-embed__placeholder__line--shortest" />
+        </div>
+      </div>
+      <div className="qdr-embed-instagram__placeholder__line-wrapper">
+        <div className="qdr-embed__placeholder__line" style={{ marginRight: 'var(--qdr-spacing-28)' }} />
+        <div className="qdr-embed__placeholder__line" />
+        <div className="qdr-embed__placeholder__line" style={{ marginRight: 'var(--qdr-spacing-21)' }} />
+      </div>
     </div>
   );
 };

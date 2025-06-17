@@ -42,6 +42,10 @@
       border-radius: var(--qdr-radius-6);
       opacity: 0.2;
       background: linear-gradient(90deg, var(--qdr-action-inactive) 0%, var(--qdr-divider) 100%);
+
+      &--square {
+        aspect-ratio: 1 / 1;
+      }
     }
 
     &__dot {
