@@ -16,6 +16,7 @@ export const QDR_SPACING: SpacingObject = {
   'spacing-12': '2.25rem',
   'spacing-13': '2.5rem',
   'spacing-14': '3rem',
+  'spacing-21': '7.5rem',
   'spacing-25': '12.5rem',
   'spacing-27': '16rem',
   'spacing-28': '17.5rem',
@@ -24,6 +25,7 @@ export const QDR_SPACING: SpacingObject = {
   'radius-1': '0.25rem',
   'radius-2': '0.375rem',
   'radius-3': '0.5rem',
+  'radius-6': '1rem',
 
   typographyArticleH1FontSize: '2rem',
   typographyArticleH1LineHeight: '1.4',

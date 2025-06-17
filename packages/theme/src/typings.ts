@@ -36,6 +36,7 @@ export interface SpacingObject {
   'spacing-12': string;
   'spacing-13': string;
   'spacing-14': string;
+  'spacing-21': string;
   'spacing-25': string;
   'spacing-27': string;
   'spacing-28': string;
@@ -44,6 +45,7 @@ export interface SpacingObject {
   'radius-1': string;
   'radius-2': string;
   'radius-3': string;
+  'radius-6': string;
 
   typographyArticleH1FontSize: string;
   typographyArticleH1LineHeight: string;
