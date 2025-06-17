@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { FacebookDeserializedEmbedData, FacebookEmbedElement } from '@quadrats/common/embed/strategies/facebook';
 import { RenderElementProps } from '@quadrats/react';
 
@@ -9,9 +10,17 @@ export interface FacebookProps {
   element: FacebookEmbedElement;
 }
 
-function Facebook({ attributes, children, data: { url, width, height } }: FacebookProps) {
+function Facebook({ attributes, children, data: { url, width, height }, element: { align } }: FacebookProps) {
   return (
-    <div {...attributes} className="qdr-embed-facebook" contentEditable={false}>
+    <div
+      {...attributes}
+      className={clsx('qdr-embed-facebook', {
+        'qdr-embed-facebook--left': align === 'left' || !align,
+        'qdr-embed-facebook--center': align === 'center',
+        'qdr-embed-facebook--right': align === 'right',
+      })}
+      contentEditable={false}
+    >
       <iframe
         title={url}
         src={url}

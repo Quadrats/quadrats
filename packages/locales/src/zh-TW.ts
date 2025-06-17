@@ -4,18 +4,27 @@ export const zhTW: LocaleDefinition = {
   locale: 'zh-TW',
   editor: {
     placeholder: '請在此輸入內容',
+    cancel: '取消',
+    confirm: '確認',
+    embedTitle: '嵌入連結',
     accordion: {
       titlePlaceholder: '折疊項目標題',
       contentPlaceholder: '空白折疊列表，請在此輸入內容...',
     },
     facebook: {
-      inputPlaceholder: '請在此輸入或貼上Facebook的貼文連結，並按下Enter',
+      inputPlaceholder: '貼上 iframe 語法',
+      blockPlaceholder: '嵌入 Facebook 貼文',
+      hint: '適用於 Facebook 的貼文連結',
+      confirmText: '嵌入貼文',
     },
     image: {
       captionInputPlaceholder: '請輸入圖片說明（選填）',
     },
     instagram: {
-      inputPlaceholder: '請在此輸入或貼上Instagram的貼文連結，並按下Enter',
+      inputPlaceholder: '貼上連結，如 https://instagram.com/...',
+      blockPlaceholder: '嵌入 Instagram 貼文',
+      hint: '適用於 Instagram 的貼文連結',
+      confirmText: '嵌入貼文',
     },
     link: {
       inputPlaceholder: '請在此貼上或輸入連結...',
@@ -26,17 +35,38 @@ export const zhTW: LocaleDefinition = {
     readMore: '繼續閱讀',
     twitter: {
       tweet: {
-        inputPlaceholder: '請在此輸入或貼上Twitter的貼文連結，並按下Enter',
+        inputPlaceholder: '貼上連結，如 http://X.com/...',
+        blockPlaceholder: '嵌入 Twitter 貼文',
+        hint: '適用於 X (Twitter) 的推文連結',
+        confirmText: '嵌入推文',
       },
     },
     podcastApple: {
-      inputPlaceholder: '請在此輸入或貼上Podcast(Apple)的貼文連結，並按下Enter',
+      inputPlaceholder: '貼上連結，如 https://podcasts.apple.com/...',
+      blockPlaceholder: '嵌入 Podcast',
+      hint: '適用於 Podcast 的單集或節目內容',
+      confirmText: '嵌入音訊',
     },
     spotify: {
-      inputPlaceholder: '請在此輸入或貼上Podcast(Spotify)的貼文連結，並按下Enter',
+      inputPlaceholder: '貼上連結，如 https://open.spotify.com/...',
+      blockPlaceholder: '嵌入 Spotify',
+      hint: '適用於 Spotify 的內容',
+      confirmText: '嵌入音訊',
+    },
+    youtube: {
+      inputPlaceholder: '貼上連結，如 https://youtube.com/...',
+      blockPlaceholder: '嵌入 Youtube 影片',
+      hint: '適用於 Youtube 的影片連結',
+      confirmText: '嵌入影片',
+    },
+    vimeo: {
+      inputPlaceholder: '貼上連結，如 https://vimeo.com/...',
+      blockPlaceholder: '嵌入 Vimeo 影片',
+      hint: '適用於 Vimeo 的影片連結',
+      confirmText: '嵌入影片',
     },
     video: {
-      inputPlaceholder: '請在此輸入或貼上Youtube、Vimeo 或其他影片連結，並按下 Enter',
+      inputPlaceholder: '請在此輸入或貼上 Youtube、Vimeo 或其他影片連結，並按下 Enter',
     },
     toolbar: {
       alignCenter: 'Align Center',

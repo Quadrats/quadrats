@@ -12,6 +12,7 @@
   "quadratsConfig": {
     "deps": [
       "_internal",
+      "components",
       "configs"
     ],
     "styles": {

@@ -2,18 +2,27 @@ export interface LocaleDefinition {
   locale: string;
   editor: {
     placeholder: string;
+    cancel: string;
+    confirm: string;
+    embedTitle: string;
     accordion: {
       titlePlaceholder: string;
       contentPlaceholder: string;
     },
     facebook: {
       inputPlaceholder: string;
+      blockPlaceholder: string;
+      hint: string;
+      confirmText: string;
     };
     image: {
       captionInputPlaceholder: string;
     };
     instagram: {
       inputPlaceholder: string;
+      blockPlaceholder: string;
+      hint: string;
+      confirmText: string;
     };
     link: {
       inputPlaceholder: string;
@@ -25,13 +34,34 @@ export interface LocaleDefinition {
     twitter: {
       tweet: {
         inputPlaceholder: string;
+        blockPlaceholder: string;
+        hint: string;
+        confirmText: string;
       };
     };
     podcastApple: {
       inputPlaceholder: string;
+      blockPlaceholder: string;
+      hint: string;
+      confirmText: string;
     };
     spotify: {
       inputPlaceholder: string;
+      blockPlaceholder: string;
+      hint: string;
+      confirmText: string;
+    };
+    youtube: {
+      inputPlaceholder: string;
+      blockPlaceholder: string;
+      hint: string;
+      confirmText: string;
+    };
+    vimeo: {
+      inputPlaceholder: string;
+      blockPlaceholder: string;
+      hint: string;
+      confirmText: string;
     };
     video: {
       inputPlaceholder: string;

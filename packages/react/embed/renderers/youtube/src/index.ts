@@ -1,1 +1,1 @@
-export { defaultRenderYoutubeEmbedElement } from './defaultRenderYoutubeEmbedElement';
+export * from './defaultRenderYoutubeEmbedElement';

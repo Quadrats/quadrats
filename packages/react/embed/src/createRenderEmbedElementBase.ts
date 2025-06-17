@@ -22,7 +22,9 @@ export function createRenderEmbedElementBase<
       const [provider, data] = result;
       const render = renderers[provider];
 
-      return render({ ...props, data });
+      if (render) {
+        return render({ ...props, data });
+      }
     }
   };
 }

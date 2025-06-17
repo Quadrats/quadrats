@@ -1,6 +1,7 @@
 import React from 'react';
 import { Slate } from 'slate-react';
 import { ConfigsProvider, ConfigsProviderProps } from '@quadrats/react/configs';
+import { ModalProvider } from '@quadrats/react/components';
 import { Descendant } from '..';
 
 export type QuadratsProps = Pick<Parameters<typeof Slate>[0], 'children' | 'editor'> &
@@ -20,7 +21,9 @@ function Quadrats(props: QuadratsProps) {
   return (
     <ConfigsProvider theme={theme} locale={locale}>
       <Slate editor={editor} onChange={onChange} initialValue={value}>
-        {children}
+        <ModalProvider>
+          {children}
+        </ModalProvider>
       </Slate>
     </ConfigsProvider>
   );

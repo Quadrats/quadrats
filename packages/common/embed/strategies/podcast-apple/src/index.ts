@@ -15,9 +15,9 @@ export type PodcastAppleEmbedStrategy = EmbedStrategy<PodcastAppleEmbedElementDa
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PodcastAppleEmbedStrategy: PodcastAppleEmbedStrategy = {
   serialize: (embedCode) => {
-    const result = /^https:\/\/embed.podcasts.apple.com\/([\w-]*)\/podcast\/[\S]*\/id([\d]*)/i.exec(embedCode)
-      ?? /^https:\/\/embed.podcasts.apple.com\/([\w-]*)\/podcast\/id([\d]*)/i.exec(embedCode)
-      ?? /^https:\/\/podcasts.apple.com\/([\w-]*)\/podcast\/[\S]*\/id([\d]*)/i.exec(embedCode);
+    const result = /^https:\/\/embed.podcasts.apple.com\/([\w-]*)\/podcast\/[\S]*\/id([\S]*)/i.exec(embedCode)
+      ?? /^https:\/\/embed.podcasts.apple.com\/([\w-]*)\/podcast\/id([\S]*)/i.exec(embedCode)
+      ?? /^https:\/\/podcasts.apple.com\/([\w-]*)\/podcast\/[\S]*\/id([\S]*)/i.exec(embedCode);
 
     if (result) {
       const [, language, contextId] = result;
