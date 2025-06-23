@@ -49,7 +49,7 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
               }
             }
 
-            if (editor.selection && event.key === 'Enter') {
+            if (editor.selection && event.key === 'Enter' && !event.nativeEvent.isComposing) {
               event.preventDefault();
 
               Transforms.select(editor, Editor.end(editor, Path.next(currentPath)));
@@ -102,7 +102,7 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
             return;
           }
 
-          if (!text && editor.selection && event.key === 'Enter') {
+          if (!text && editor.selection && event.key === 'Enter' && !event.nativeEvent.isComposing) {
             const parentEntry = getParent(editor, blockPath);
 
             if (!parentEntry) return;
