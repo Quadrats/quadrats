@@ -31,7 +31,6 @@ module.exports = {
     'property-no-vendor-prefix': true,
     'selector-no-vendor-prefix': true,
     'value-no-vendor-prefix': true,
-    'declaration-no-important': true,
     'selector-pseudo-class-no-unknown': true,
     'order/order': [
       'custom-properties',
