@@ -14,6 +14,10 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
     ...core,
     createHandlers: () => ({
       onKeyDown(event, editor, next) {
+        if (event.nativeEvent.isComposing) {
+          return;
+        }
+
         if (core.isSelectionInAccordionTitle(editor)) {
           const blockEntry = editor.above(
             { match: node => (node as QuadratsElement).type === types.accordion_title },
@@ -49,7 +53,7 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
               }
             }
 
-            if (editor.selection && event.key === 'Enter' && !event.nativeEvent.isComposing) {
+            if (editor.selection && event.key === 'Enter') {
               event.preventDefault();
 
               Transforms.select(editor, Editor.end(editor, Path.next(currentPath)));
@@ -102,7 +106,7 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
             return;
           }
 
-          if (!text && editor.selection && event.key === 'Enter' && !event.nativeEvent.isComposing) {
+          if (!text && editor.selection && event.key === 'Enter') {
             const parentEntry = getParent(editor, blockPath);
 
             if (!parentEntry) return;
