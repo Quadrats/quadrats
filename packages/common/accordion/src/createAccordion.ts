@@ -54,6 +54,15 @@ export function createAccordion(options: CreateAccordionOptions = {}): Accordion
           const type = (node as QuadratsElement).type;
 
           if (type === types.accordion) {
+            for (const [child, childPath] of Node.children(editor, path)) {
+              if (Element.isElement(child) && child.type === types.accordion) {
+
+                Transforms.removeNodes(editor, { at: childPath });
+
+                return;
+              }
+            }
+
             if (!isNodesTypeIn(editor, [types.accordion_content], { at: path })) {
               Transforms.removeNodes(editor, { at: path });
 
