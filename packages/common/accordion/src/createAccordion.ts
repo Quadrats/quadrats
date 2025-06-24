@@ -55,7 +55,7 @@ export function createAccordion(options: CreateAccordionOptions = {}): Accordion
 
           if (type === types.accordion) {
             for (const [child, childPath] of Node.children(editor, path)) {
-              if (Element.isElement(child) && child.type === types.accordion) {
+              if (Element.isElement(child) && (child as QuadratsElement).type === types.accordion) {
 
                 Transforms.removeNodes(editor, { at: childPath });
 
