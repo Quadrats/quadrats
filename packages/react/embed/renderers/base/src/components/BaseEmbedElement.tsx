@@ -6,6 +6,11 @@ import { QuadratsReactEditor, ReactEditor, useSlateStatic, useLocale } from '@qu
 import { useModal, Input, Textarea } from '@quadrats/react/components';
 import { InlineToolbar } from '@quadrats/react/toolbar';
 
+export interface BaseEmbedElementWithoutToolbarProps {
+  element: EmbedElement;
+  children: ReactNode;
+}
+
 export interface BaseEmbedElementProps {
   element: EmbedElement;
   haveAlignConfig?: boolean;
@@ -14,12 +19,12 @@ export interface BaseEmbedElementProps {
   hint?: string;
   confirmText?: string;
   onConfirm?: (editor: QuadratsReactEditor, path: Path, value: string) => void;
-  children: ReactNode;
+  children: (toolbarElement: ReactNode) =>  ReactNode;
 }
 
 export const BaseEmbedElementWithoutToolbar = ({
   children,
-}: BaseEmbedElementProps) => {
+}: BaseEmbedElementWithoutToolbarProps) => {
   return (
     <div className="qdr-embed">
       {children}
@@ -45,85 +50,86 @@ const BaseEmbedElement = ({
 
   return (
     <div className="qdr-embed">
-      <InlineToolbar
-        className="qdr-embed__inline-toolbar"
-        leftIcons={haveAlignConfig ? [
-          {
-            icon: AlignLeft,
-            onClick: () => {
-              Transforms.setNodes(editor, { align: 'left' } as EmbedElement, { at: path });
+      {children(
+        <InlineToolbar
+          className="qdr-embed__inline-toolbar"
+          leftIcons={haveAlignConfig ? [
+            {
+              icon: AlignLeft,
+              onClick: () => {
+                Transforms.setNodes(editor, { align: 'left' } as EmbedElement, { at: path });
+              },
+              active: element.align === 'left' || !element.align,
             },
-            active: element.align === 'left' || !element.align,
-          },
-          {
-            icon: AlignCenter,
-            onClick: () => {
-              Transforms.setNodes(editor, { align: 'center' } as EmbedElement, { at: path });
+            {
+              icon: AlignCenter,
+              onClick: () => {
+                Transforms.setNodes(editor, { align: 'center' } as EmbedElement, { at: path });
+              },
+              active: element.align === 'center',
             },
-            active: element.align === 'center',
-          },
-          {
-            icon: AlignRight,
-            onClick: () => {
-              Transforms.setNodes(editor, { align: 'right' } as EmbedElement, { at: path });
+            {
+              icon: AlignRight,
+              onClick: () => {
+                Transforms.setNodes(editor, { align: 'right' } as EmbedElement, { at: path });
+              },
+              active: element.align === 'right',
             },
-            active: element.align === 'right',
-          },
-        ] : []}
-        rightIcons={[
-          {
-            icon: Edit,
-            onClick: () => {
-              openModal({
-                title: locale.editor.embedTitle,
-                children: (() => {
-                  const EmbedComponent = () => {
-                    const [value, setValue] = useState('');
+          ] : []}
+          rightIcons={[
+            {
+              icon: Edit,
+              onClick: () => {
+                openModal({
+                  title: locale.editor.embedTitle,
+                  children: (() => {
+                    const EmbedComponent = () => {
+                      const [value, setValue] = useState('');
 
-                    useEffect(() => {
-                      modalConfigRef.current = value;
-                    }, [value]);
+                      useEffect(() => {
+                        modalConfigRef.current = value;
+                      }, [value]);
 
-                    if (type === 'textarea') {
+                      if (type === 'textarea') {
+                        return (
+                          <Textarea
+                            value={value}
+                            onChange={setValue}
+                            placeholder={placeholder}
+                            hint={hint}
+                            height={86}
+                          />
+                        );
+                      }
+
                       return (
-                        <Textarea
+                        <Input
                           value={value}
                           onChange={setValue}
                           placeholder={placeholder}
                           hint={hint}
-                          height={86}
                         />
                       );
-                    }
+                    };
 
-                    return (
-                      <Input
-                        value={value}
-                        onChange={setValue}
-                        placeholder={placeholder}
-                        hint={hint}
-                      />
-                    );
-                  };
-
-                  return <EmbedComponent />;
-                })(),
-                confirmText,
-                onConfirm: () => {
-                  onConfirm?.(editor, path, modalConfigRef.current);
-                },
-              });
+                    return <EmbedComponent />;
+                  })(),
+                  confirmText,
+                  onConfirm: () => {
+                    onConfirm?.(editor, path, modalConfigRef.current);
+                  },
+                });
+              },
             },
-          },
-          {
-            icon: Trash,
-            onClick: () => {
-              Transforms.removeNodes(editor, { at: path });
+            {
+              icon: Trash,
+              onClick: () => {
+                Transforms.removeNodes(editor, { at: path });
+              },
             },
-          },
-        ]}
-      />
-      {children}
+          ]}
+        />,
+      )}
     </div>
   );
 };

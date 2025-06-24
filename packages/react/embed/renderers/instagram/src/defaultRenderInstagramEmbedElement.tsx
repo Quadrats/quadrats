@@ -25,7 +25,7 @@ export const defaultRenderInstagramEmbedElement = (props: InstagramProps) => {
         );
       }}
     >
-      <Instagram {...props} />
+      {toolbarElement => <Instagram {...props} toolbarElement={toolbarElement} />}
     </BaseEmbedElement>
   );
 };

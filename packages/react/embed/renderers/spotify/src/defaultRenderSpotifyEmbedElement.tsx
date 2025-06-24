@@ -28,7 +28,7 @@ export const defaultRenderSpotifyEmbedElement = (props: SpotifyProps) => {
         );
       }}
     >
-      <PodcastSpotify {...props} />
+      {toolbarElement => <PodcastSpotify {...props} toolbarElement={toolbarElement} />}
     </BaseEmbedElement>
   );
 };

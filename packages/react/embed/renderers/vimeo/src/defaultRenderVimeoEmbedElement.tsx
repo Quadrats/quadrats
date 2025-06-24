@@ -25,7 +25,7 @@ export const defaultRenderVimeoEmbedElement = (props: VideoIframeProps<VimeoEmbe
         );
       }}
     >
-      <VideoIframe {...props} />
+      {toolbarElement => <VideoIframe {...props} toolbarElement={toolbarElement} />}
     </BaseEmbedElement>
   );
 };
