@@ -1,5 +1,6 @@
 .qdr-divider {
-  margin: var(--qdr-spacing-14) 0;
+  width: 100%;
+  margin: var(--qdr-spacing-14) 0 !important;
 
   hr {
     border-color: var(--qdr-divider);

@@ -25,7 +25,7 @@ $qdr-toolbar-input-cross-size: --qdr-spacing-7;
 
   &__input {
     font-size: 0.8125rem;
-    background: var(--qdr-surface);
+    background: var(--qdr-block);
     color: var(--qdr-text-secondary);
     width: calc(100% - var(#{$qdr-toolbar-input-cross-size}));
     height: 100%;
@@ -41,7 +41,7 @@ $qdr-toolbar-input-cross-size: --qdr-spacing-7;
       left: var(#{$qdr-toolbar-padding-horizontal});
       width: calc(100% - var(#{$qdr-toolbar-padding-horizontal}) * 2);
       height: calc(100% - (var(#{$qdr-toolbar-padding-vertical}) * 2 + var(#{$qdr-toolbar-popup-gap})));
-      background: var(--qdr-surface);
+      background: var(--qdr-block);
       box-sizing: border-box;
     }
 

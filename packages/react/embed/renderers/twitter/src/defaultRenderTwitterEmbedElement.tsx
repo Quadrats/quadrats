@@ -29,7 +29,7 @@ export const defaultRenderTwitterEmbedElement = (props: TwitterProps) => {
         );
       }}
     >
-      <Twitter {...props} />
+      {toolbarElement => <Twitter {...props} toolbarElement={toolbarElement} />}
     </BaseEmbedElement>
   );
 };

@@ -9,6 +9,10 @@
     }
   }
 
+  &__inline-toolbar-wrapper {
+    position: relative;
+  }
+
   &__placeholder {
     &__icon {
       color: var(--qdr-action-inactive);
@@ -156,6 +160,12 @@
         align-items: center;
         margin-left: var(--qdr-spacing-12);
       }
+    }
+  }
+
+  &-twitter__container {
+    > * {
+      margin: 0 !important;
     }
   }
 

@@ -29,7 +29,7 @@ export const defaultRenderPodcastAppleEmbedElement = (props: PodcastAppleProps) 
         );
       }}
     >
-      <PodcastApple {...props} />
+      {toolbarElement => <PodcastApple {...props} toolbarElement={toolbarElement} />}
     </BaseEmbedElement>
   );
 };

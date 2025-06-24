@@ -1,4 +1,8 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
+import {
+  Editor,
+  Element,
+} from '@quadrats/core';
 import { useSlateStatic, useLocale } from '@quadrats/react';
 import { EMBED_PLACEHOLDER_TYPE, EmbedPlaceholderElement } from '@quadrats/common/embed';
 import { ReactEmbed } from '@quadrats/react/embed';
@@ -88,13 +92,20 @@ export function useEmbedTool<P extends string>(
   }, [provider]);
 
   useEffect(() => {
-    if (editor.children.find(
-      (c) => {
-        const placeholderElement = c as EmbedPlaceholderElement;
+    const [match] = Editor.nodes(editor, {
+      at: [],
+      match: (node) => {
+        const placeholderElement = node as EmbedPlaceholderElement;
 
-        return placeholderElement?.type === EMBED_PLACEHOLDER_TYPE && placeholderElement?.provider === provider;
+        return (
+          Element.isElement(placeholderElement) &&
+          placeholderElement.type === EMBED_PLACEHOLDER_TYPE &&
+          placeholderElement.provider === provider
+        );
       },
-    )) {
+    });
+
+    if (match) {
       openModal({
         title: locale.editor.embedTitle,
         children: (() => {

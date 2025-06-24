@@ -25,7 +25,7 @@ export const defaultRenderYoutubeEmbedElement = (props: VideoIframeProps<Youtube
         );
       }}
     >
-      <VideoIframe {...props} />
+      {toolbarElement => <VideoIframe {...props} toolbarElement={toolbarElement} />}
     </BaseEmbedElement>
   );
 };

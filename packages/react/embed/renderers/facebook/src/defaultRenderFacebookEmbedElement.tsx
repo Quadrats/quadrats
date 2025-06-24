@@ -32,7 +32,7 @@ export const defaultRenderFacebookEmbedElement = (props: FacebookProps) => {
         );
       }}
     >
-      <Facebook {...props} />
+      {toolbarElement => <Facebook {...props} toolbarElement={toolbarElement} />}
     </BaseEmbedElement>
   );
 };

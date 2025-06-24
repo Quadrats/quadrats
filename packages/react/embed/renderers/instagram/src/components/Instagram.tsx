@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, ReactNode } from 'react';
 import clsx from 'clsx';
 import { InstagramEmbedElement } from '@quadrats/common/embed/strategies/instagram';
 import { RenderElementProps } from '@quadrats/react';
@@ -9,9 +9,10 @@ export interface InstagramProps {
   children?: any;
   data: string;
   element: InstagramEmbedElement;
+  toolbarElement: ReactNode;
 }
 
-function Instagram({ attributes, children, data: permalink, element: { align } }: InstagramProps) {
+function Instagram({ attributes, children, data: permalink, element: { align }, toolbarElement }: InstagramProps) {
   useLoadInstagramEmbedApi(permalink);
 
   useEffect(() => {
@@ -50,24 +51,34 @@ function Instagram({ attributes, children, data: permalink, element: { align } }
         marginBottom: -12,
       }}
     >
-      <blockquote
-        className="instagram-media"
-        data-instgrm-captioned
-        data-instgrm-permalink={permalink}
-        data-instgrm-version="13"
+      <div
+        className="qdr-embed__inline-toolbar-wrapper"
         style={{
-          background: '#FFF',
-          border: 0,
-          borderRadius: 3,
-          boxShadow: '0 0 1px 0 rgba(0,0,0,0.5), 0 1px 10px 0 rgba(0,0,0,0.15)',
-          margin: 1,
           maxWidth: 540,
           minWidth: 326,
-          padding: 0,
           width: 'calc(100% - 2px)',
         }}
-      />
-      {attributes ? children : undefined}
+      >
+        {toolbarElement}
+        <blockquote
+          className="instagram-media"
+          data-instgrm-captioned
+          data-instgrm-permalink={permalink}
+          data-instgrm-version="13"
+          style={{
+            background: '#FFF',
+            border: 0,
+            borderRadius: 3,
+            boxShadow: '0 0 1px 0 rgba(0,0,0,0.5), 0 1px 10px 0 rgba(0,0,0,0.15)',
+            margin: 1,
+            maxWidth: 540,
+            minWidth: 326,
+            padding: 0,
+            width: 'calc(100% - 2px)',
+          }}
+        />
+        {attributes ? children : undefined}
+      </div>
     </div>
   );
 }
