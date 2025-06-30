@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.7](https://github.com/Quadrats/quadrats/compare/v0.7.6...v0.7.7) (2025-06-30)
+
+### Bug Fixes
+
+- import JSX from react ([ddc7262](https://github.com/Quadrats/quadrats/commit/ddc7262d2b379fb6408a23c357bb2d0f086d3793))
+
+### Features
+
+- upgrade slate ([22ea4a5](https://github.com/Quadrats/quadrats/commit/22ea4a5c5f97aca15f98d94df4548ef00a53772c))
+
 ## [0.7.2](https://github.com/Quadrats/quadrats/compare/v0.7.1...v0.7.2) (2023-11-18)
 
 **Note:** Version bump only for package @quadrats/core

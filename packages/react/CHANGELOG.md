@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.7](https://github.com/Quadrats/quadrats/compare/v0.7.6...v0.7.7) (2025-06-30)
+
+### Bug Fixes
+
+- import JSX from react ([ddc7262](https://github.com/Quadrats/quadrats/commit/ddc7262d2b379fb6408a23c357bb2d0f086d3793))
+- **react/embed:** append script to add title of ig iframe ([e4d42dd](https://github.com/Quadrats/quadrats/commit/e4d42dddf8ac4679bdc2327852c984bf26864a10))
+- **react/footnote:** add Tooltip in defaultRenderFootnoteElement ([1df44cc](https://github.com/Quadrats/quadrats/commit/1df44ccb4acc933dcc949a57e81127b32e415915))
+- **react/link:** validate url ([f79e84b](https://github.com/Quadrats/quadrats/commit/f79e84bba196220601d2d0ca1a77ef1fa93d1540))
+- **react/tooltip:** fix CSSTransition issue in React 19 ([ce94e15](https://github.com/Quadrats/quadrats/commit/ce94e15023e4f8e5f20ad552e9b114c214d2e424))
+
+### Features
+
+- **react/image:** drop image and then upload ([d9a0c10](https://github.com/Quadrats/quadrats/commit/d9a0c10038030355aadab771be42dcb8e79f76d2))
+- **react/toolbar:** toolbar fixed and float style ([b56bbe2](https://github.com/Quadrats/quadrats/commit/b56bbe29845e112cf29be42befaea1a4059ca155))
+- upgrade react ([617526f](https://github.com/Quadrats/quadrats/commit/617526f1ebf425acfec4bf8ee9466241de9ac505))
+- upgrade slate ([22ea4a5](https://github.com/Quadrats/quadrats/commit/22ea4a5c5f97aca15f98d94df4548ef00a53772c))
+
 ## [0.7.6](https://github.com/Quadrats/quadrats/compare/v0.7.5...v0.7.6) (2025-04-09)
 
 ### Bug Fixes

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.7](https://github.com/Quadrats/quadrats/compare/v0.7.6...v0.7.7) (2025-06-30)
+
+### Bug Fixes
+
+- **common/embed:** fix twitter/X embed ([b90dff1](https://github.com/Quadrats/quadrats/commit/b90dff132e50470c263270d31c5865e378ef3e6f))
+- **common/embed:** remove above empty section when embed ([da95330](https://github.com/Quadrats/quadrats/commit/da95330e0b5f921334f6c0811e8649417760e99f))
+- import JSX from react ([ddc7262](https://github.com/Quadrats/quadrats/commit/ddc7262d2b379fb6408a23c357bb2d0f086d3793))
+
 ## [0.7.3](https://github.com/Quadrats/quadrats/compare/v0.7.2...v0.7.3) (2024-08-29)
 
 ### Bug Fixes
