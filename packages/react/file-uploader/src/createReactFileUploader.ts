@@ -3,7 +3,6 @@ import { createRenderElement } from '@quadrats/react';
 import { ReactFileUploader } from './typings';
 import {
   defaultRenderFileUploaderElement,
-  defaultRenderFileUploaderPlaceholderElement,
 } from './defaultRenderFileUploaderElement';
 
 export interface CreateReactFileUploaderOptions {
@@ -20,7 +19,7 @@ export function createReactFileUploader(options: CreateReactFileUploaderOptions 
       type,
       render,
     }),
-    createRenderPlaceholderElement: ({ render = defaultRenderFileUploaderPlaceholderElement } = {}) =>
+    createRenderPlaceholderElement: ({ render }) =>
       createRenderElement({
         type: FILE_UPLOADER_PLACEHOLDER_TYPE,
         render,

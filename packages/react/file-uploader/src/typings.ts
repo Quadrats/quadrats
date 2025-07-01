@@ -14,6 +14,6 @@ export interface FileUploaderCreateRenderElementOptions {
 
 export type ReactFileUploader = FileUploader<Editor>
 & WithCreateRenderElement<[FileUploaderCreateRenderElementOptions?]> & {
-  createRenderPlaceholderElement: (params_0?: FileUploaderCreateRenderElementOptions | undefined) =>
+  createRenderPlaceholderElement: (params_0: { render: RenderFileUploaderPlaceholderElement }) =>
   (props: RenderElementProps) => JSX.Element | null | undefined;
 };

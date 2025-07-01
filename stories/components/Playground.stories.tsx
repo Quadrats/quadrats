@@ -74,7 +74,7 @@ import { defaultRenderSpotifyEmbedElement, defaultRenderSpotifyEmbedPlaceholderE
 import { defaultRenderPodcastAppleEmbedElement, defaultRenderPodcastAppleEmbedPlaceholderElement, defaultRenderPodcastAppleEmbedJsxSerializer } from '@quadrats/react/embed/renderers/podcast-apple';
 import { createReactFileUploader } from '@quadrats/react/file-uploader';
 import { createReactHeading } from '@quadrats/react/heading';
-import { createReactImage } from '@quadrats/react/image';
+import { createReactImage, ImagePlaceholder } from '@quadrats/react/image';
 import { createReactLink } from '@quadrats/react/link';
 import { createReactList } from '@quadrats/react/list';
 import { createReactReadMore } from '@quadrats/react/read-more';
@@ -329,7 +329,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     if (withImage) elements.push(image.createRenderElement());
     if (withImage) {
       elements.push(fileUploader.createRenderElement());
-      elements.push(fileUploader.createRenderPlaceholderElement());
+      elements.push(fileUploader.createRenderPlaceholderElement({ render: props => <ImagePlaceholder {...props} /> }));
     }
 
     if (withReadMore) elements.push(readMore.createRenderElement());
