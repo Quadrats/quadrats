@@ -327,7 +327,11 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     if (withFootnote) elements.push(footnote.createRenderElement());
     if (withLink) elements.push(link.createRenderElement());
     if (withImage) elements.push(image.createRenderElement());
-    if (withImage) elements.push(fileUploader.createRenderElement());
+    if (withImage) {
+      elements.push(fileUploader.createRenderElement());
+      elements.push(fileUploader.createRenderPlaceholderElement());
+    }
+
     if (withReadMore) elements.push(readMore.createRenderElement());
 
     if (withEmbeds.length) {
