@@ -1,7 +1,15 @@
 import { readFileAsDataURL } from '@quadrats/utils';
-import { createParagraphElement, Editor, HistoryEditor, isAboveBlockEmpty, Transforms } from '@quadrats/core';
-import { FileUploader, FileUploaderElement } from './typings';
-import { FILE_UPLOADER_TYPE } from './constants';
+import {
+  createParagraphElement,
+  Element,
+  QuadratsElement,
+  Editor,
+  HistoryEditor,
+  isAboveBlockEmpty,
+  Transforms,
+} from '@quadrats/core';
+import { FileUploader, FileUploaderElement, UploaderPlaceholderElement } from './typings';
+import { FILE_UPLOADER_TYPE, FILE_UPLOADER_PLACEHOLDER_TYPE } from './constants';
 import { getFilesFromInput } from './getFilesFromInput';
 
 export interface CreateFileUploaderOptions {
@@ -102,13 +110,23 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
   const createFileUploaderElement: FileUploader<Editor>['createFileUploaderElement'] =
     createFileUploaderElementByType(type);
 
+  const removeUploaderPlaceholder: FileUploader<Editor>['removeUploaderPlaceholder'] = (editor) => {
+    Transforms.removeNodes(editor, {
+      match: node => Element.isElement(node) && (node as QuadratsElement).type === FILE_UPLOADER_PLACEHOLDER_TYPE,
+    });
+  };
+
   const upload: FileUploader<Editor>['upload'] = async (editor, options) => {
     const { accept, multiple } = options;
     const files = await getFilesFromInput({ accept, multiple });
 
     if (!files) {
+      removeUploaderPlaceholder(editor);
+
       return;
     }
+
+    removeUploaderPlaceholder(editor);
 
     files.reduce(async (prev, file) => {
       await prev;
@@ -119,10 +137,24 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
     }, Promise.resolve());
   };
 
+  const insertUploaderPlaceholder: FileUploader<Editor>['insertUploaderPlaceholder'] =
+    (editor) => {
+      const uploaderPlaceholderElement: UploaderPlaceholderElement = {
+        type: FILE_UPLOADER_PLACEHOLDER_TYPE,
+        children: [{ text: '' }],
+      };
+
+      Editor.withoutNormalizing(editor, () => {
+        Transforms.insertNodes(editor, uploaderPlaceholderElement);
+      });
+    };
+
   return {
     type,
     createFileUploaderElement,
     upload,
+    insertUploaderPlaceholder,
+    removeUploaderPlaceholder,
     with(editor) {
       return editor;
     },
