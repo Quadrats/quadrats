@@ -4,6 +4,8 @@ import {
   Path,
   TransformsInsertNodesOptions,
   Withable,
+  WithElementType,
+  Text,
 } from '@quadrats/core';
 import { GetFilesFromInputOptions } from './getFilesFromInput';
 
@@ -48,6 +50,10 @@ interface FileUploaderImplement {
   readonly upload: FileUploaderUploadImplement;
 }
 
+export interface UploaderPlaceholderElement extends QuadratsElement, WithElementType {
+  children: [Text];
+}
+
 export interface FileUploaderCreateFileUploaderElementOptions {
   createElement: {
     [mime in string]?: {
@@ -73,4 +79,6 @@ export interface FileUploader<T extends Editor = Editor> extends Withable {
     options: FileUploaderCreateFileUploaderElementOptions
   ): Promise<FileUploaderElement | undefined>;
   upload(editor: T, options: FileUploaderUploadOptions): Promise<void>;
+  insertUploaderPlaceholder(editor: T): void;
+  removeUploaderPlaceholder(editor: T): void;
 }

@@ -6,6 +6,22 @@ $qdr-image-resizer-size: 6px;
   position: relative;
   user-select: none;
 
+  &__placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    border-radius: var(--qdr-radius-1);
+    border: 1px solid var(--qdr-divider);
+    background-color: var(--qdr-block);
+
+    &__icon {
+      color: var(--qdr-action-inactive);
+    }
+  }
+
   &__figure {
     position: relative;
     margin: var(--qdr-spacing-14) 0;
