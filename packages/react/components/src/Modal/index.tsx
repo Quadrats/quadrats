@@ -16,6 +16,7 @@ export interface ModalProps {
   maskClosable?: boolean;
   escToExit?: boolean;
   haveFooter?: boolean;
+  size?: 'small' | 'medium' | 'large' | 'extraLarge';
   isOpen: boolean;
   haveCloseButton?: boolean;
   haveConfirmButton?: boolean;
@@ -34,6 +35,7 @@ const Modal = ({
   maskClosable = true,
   escToExit = true,
   haveFooter = true,
+  size = 'medium',
   isOpen,
   haveCloseButton = true,
   haveConfirmButton = true,
@@ -79,7 +81,11 @@ const Modal = ({
           classNames="qdr-modal__transition"
           unmountOnExit
         >
-          <div ref={nodeRef} className="qdr-modal__container" onClick={e => e.stopPropagation()}>
+          <div
+            ref={nodeRef}
+            className={clsx('qdr-modal__container', `qdr-modal__container--${size}`)}
+            onClick={e => e.stopPropagation()}
+          >
             <div className="qdr-modal__header">
               {title}
               {closable && (

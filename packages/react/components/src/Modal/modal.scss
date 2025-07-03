@@ -43,9 +43,25 @@
   }
 
   &__container {
-    width: 520px;
     background-color: #fff;
     box-shadow: var(--qdr-shadow-xl);
+    margin: var(--qdr-spacing-8);
+
+    &--small {
+      width: 420px;
+    }
+
+    &--medium {
+      width: 520px;
+    }
+
+    &--large {
+      width: 720px;
+    }
+
+    &--extraLarge {
+      width: 100%;
+    }
   }
 
   &__header {
