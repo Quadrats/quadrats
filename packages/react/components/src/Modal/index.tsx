@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useRef } from 'react';
+import React, { ReactNode, useContext, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 import { CSSTransition } from 'react-transition-group';
 import { useLocale, ThemeContext } from '@quadrats/react/configs';
@@ -8,27 +8,55 @@ import Button from '../Button';
 import Icon from '../Icon';
 
 export interface ModalProps {
+  title: string | ReactNode;
+  closable?: boolean;
+  children: ReactNode;
+  mainAreaClassName?: string;
+  mask?: boolean;
+  maskClosable?: boolean;
+  escToExit?: boolean;
+  haveFooter?: boolean;
   isOpen: boolean;
-  cancelText?: string;
+  haveCloseButton?: boolean;
+  haveConfirmButton?: boolean;
+  closeText?: string;
   confirmText?: string;
   onClose: () => void;
   onConfirm?: () => void;
-  title: string;
-  children: ReactNode;
 }
 
 const Modal = ({
+  title,
+  closable = false,
+  children,
+  mainAreaClassName,
+  mask = true,
+  maskClosable = true,
+  escToExit = true,
+  haveFooter = true,
   isOpen,
-  cancelText,
+  haveCloseButton = true,
+  haveConfirmButton = true,
+  closeText,
   confirmText,
   onClose,
   onConfirm,
-  title,
-  children,
 }: ModalProps) => {
   const locale = useLocale();
   const nodeRef = useRef(null);
   const { props: themeProps } = useContext(ThemeContext);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && escToExit) {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose, escToExit]);
 
   return (
     <Portal>
@@ -37,11 +65,12 @@ const Modal = ({
           'qdr-modal',
           {
             'qdr-modal--opened': isOpen,
+            'qdr-modal--mask': mask,
           },
           themeProps.className,
         )}
         style={themeProps.style}
-        onClick={onClose}
+        onClick={maskClosable ? onClose : undefined}
       >
         <CSSTransition
           in={isOpen}
@@ -53,25 +82,33 @@ const Modal = ({
           <div ref={nodeRef} className="qdr-modal__container" onClick={e => e.stopPropagation()}>
             <div className="qdr-modal__header">
               {title}
-              <Icon
-                className="qdr-modal__header__cancel"
-                icon={Cancel}
-                width={24}
-                height={24}
-                onClick={onClose}
-              />
+              {closable && (
+                <Icon
+                  className="qdr-modal__header__cancel"
+                  icon={Cancel}
+                  width={24}
+                  height={24}
+                  onClick={onClose}
+                />
+              )}
             </div>
-            <div className="qdr-modal__body">
+            <div className={clsx('qdr-modal__body', mainAreaClassName)}>
               {children}
             </div>
-            <div className="qdr-modal__footer">
-              <Button variant="secondary" onClick={onClose}>
-                {cancelText || locale.editor.cancel}
-              </Button>
-              <Button variant="primary" onClick={onConfirm}>
-                {confirmText || locale.editor.confirm}
-              </Button>
-            </div>
+            {haveFooter && (
+              <div className="qdr-modal__footer">
+                {haveCloseButton && (
+                  <Button variant="secondary" onClick={onClose}>
+                    {closeText || locale.editor.cancel}
+                  </Button>
+                )}
+                {haveConfirmButton && (
+                  <Button variant="primary" onClick={onConfirm}>
+                    {confirmText || locale.editor.confirm}
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
         </CSSTransition>
       </div>

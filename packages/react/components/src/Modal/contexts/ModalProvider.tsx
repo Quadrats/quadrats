@@ -36,12 +36,10 @@ export const ModalProvider = ({
     >
       {children}
       <Modal
+        {...modalConfig}
         isOpen={isOpen}
         onClose={onClose}
         title={modalConfig?.title ?? ''}
-        cancelText={modalConfig?.cancelText}
-        confirmText={modalConfig?.confirmText}
-        onConfirm={modalConfig?.onConfirm}
       >
         {modalConfig?.children}
       </Modal>
