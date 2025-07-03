@@ -48,7 +48,7 @@ const Modal = ({
   confirmText,
   onClose,
   onConfirm,
-  customizedFooterElement,
+  customizedFooterElement = <div />,
 }: ModalProps) => {
   const locale = useLocale();
   const nodeRef = useRef(null);
@@ -66,33 +66,36 @@ const Modal = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose, escToExit]);
 
-  const renderFooter = useMemo(() => (
-    <div className="qdr-modal__footer">
-      {customizedFooterElement}
-      <div className="qdr-modal__footer__actions">
-        {haveCloseButton && (
-          <Button variant="secondary" onClick={onClose}>
-            {closeText || locale.editor.cancel}
-          </Button>
-        )}
-        {haveConfirmButton && (
-          <Button variant="primary" onClick={onConfirm}>
-            {confirmText || locale.editor.confirm}
-          </Button>
-        )}
+  const renderFooter = useMemo(
+    () => (
+      <div className="qdr-modal__footer">
+        {customizedFooterElement}
+        <div className="qdr-modal__footer__actions">
+          {haveCloseButton && (
+            <Button variant="secondary" onClick={onClose}>
+              {closeText || locale.editor.cancel}
+            </Button>
+          )}
+          {haveConfirmButton && (
+            <Button variant="primary" onClick={onConfirm}>
+              {confirmText || locale.editor.confirm}
+            </Button>
+          )}
+        </div>
       </div>
-    </div>
-  ), [
-    closeText,
-    confirmText,
-    haveCloseButton,
-    haveConfirmButton,
-    locale.editor.cancel,
-    locale.editor.confirm,
-    onClose,
-    onConfirm,
-    customizedFooterElement,
-  ]);
+    ),
+    [
+      closeText,
+      confirmText,
+      haveCloseButton,
+      haveConfirmButton,
+      locale.editor.cancel,
+      locale.editor.confirm,
+      onClose,
+      onConfirm,
+      customizedFooterElement,
+    ],
+  );
 
   return (
     <Portal>
@@ -108,42 +111,26 @@ const Modal = ({
         style={themeProps.style}
         onClick={maskClosable ? onClose : undefined}
       >
-        <CSSTransition
-          in={isOpen}
-          nodeRef={nodeRef}
-          timeout={250}
-          classNames="qdr-modal__transition"
-          unmountOnExit
-        >
+        <CSSTransition in={isOpen} nodeRef={nodeRef} timeout={250} classNames="qdr-modal__transition" unmountOnExit>
           <div
             ref={nodeRef}
             className={clsx('qdr-modal__container', `qdr-modal__container--${size}`)}
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="qdr-modal__header">
               {title}
               {closable && (
-                <Icon
-                  className="qdr-modal__header__cancel"
-                  icon={Cancel}
-                  width={24}
-                  height={24}
-                  onClick={onClose}
-                />
+                <Icon className="qdr-modal__header__cancel" icon={Cancel} width={24} height={24} onClick={onClose} />
               )}
             </div>
             <div className="qdr-modal__body">
               {sideChildren && (
                 <div className="qdr-modal__side-body">
-                  <div className={clsx('qdr-modal__side', sideAreaClassName)}>
-                    {sideChildren}
-                  </div>
+                  <div className={clsx('qdr-modal__side', sideAreaClassName)}>{sideChildren}</div>
                   {haveFooter && renderFooter}
                 </div>
               )}
-              <div className={clsx('qdr-modal__main', mainAreaClassName)}>
-                {children}
-              </div>
+              <div className={clsx('qdr-modal__main', mainAreaClassName)}>{children}</div>
             </div>
             {haveFooter && !sideChildren && renderFooter}
           </div>
