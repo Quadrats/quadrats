@@ -89,7 +89,7 @@ export function useEmbedTool<P extends string>(
           hint: '',
         };
     }
-  }, [provider]);
+  }, [locale, provider]);
 
   useEffect(() => {
     const [match] = Editor.nodes(editor, {
@@ -150,7 +150,8 @@ export function useEmbedTool<P extends string>(
         },
       });
     }
-  }, [editor, provider, controller, config, modalConfigRef]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editor, provider, controller, config, modalConfigRef, locale]);
 
   useEffect(() => {
     if (isModalClosed) {
@@ -159,7 +160,7 @@ export function useEmbedTool<P extends string>(
         setIsModalClosed(false);
       }, 250);
     }
-  }, [controller, isModalClosed]);
+  }, [controller, isModalClosed, editor]);
 
   return {
     onClick: () => {

@@ -4,8 +4,8 @@ module.exports = {
     node: true,
     jest: true,
   },
-  extends: ['eslint:recommended', 'plugin:storybook/recommended'],
-  plugins: ['import'],
+  extends: ['eslint:recommended', 'plugin:storybook/recommended', 'plugin:react-hooks/recommended'],
+  plugins: ['import', 'react-hooks'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2020,

@@ -89,7 +89,25 @@
   }
 
   &__body {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  &__side-body {
+    min-width: 280px;
+    border-right: 1px solid var(--qdr-divider);
+    align-self: stretch;
+  }
+
+  &__main, &__side {
     padding: var(--qdr-spacing-9);
+    box-sizing: border-box;
+    align-self: stretch;
+  }
+
+  &__main {
+    flex: 1;
   }
 
   &__footer {

@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useRef, useEffect } from 'react';
+import React, { ReactNode, useContext, useRef, useEffect, useMemo } from 'react';
 import clsx from 'clsx';
 import { CSSTransition } from 'react-transition-group';
 import { useLocale, ThemeContext } from '@quadrats/react/configs';
@@ -12,10 +12,12 @@ export interface ModalProps {
   closable?: boolean;
   children: ReactNode;
   mainAreaClassName?: string;
+  sideAreaClassName?: string;
   mask?: boolean;
   maskClosable?: boolean;
   escToExit?: boolean;
   haveFooter?: boolean;
+  sideChildren?: ReactNode;
   size?: 'small' | 'medium' | 'large' | 'extraLarge';
   isOpen: boolean;
   haveCloseButton?: boolean;
@@ -31,10 +33,12 @@ const Modal = ({
   closable = false,
   children,
   mainAreaClassName,
+  sideAreaClassName,
   mask = true,
   maskClosable = true,
   escToExit = true,
   haveFooter = true,
+  sideChildren,
   size = 'medium',
   isOpen,
   haveCloseButton = true,
@@ -59,6 +63,30 @@ const Modal = ({
 
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose, escToExit]);
+
+  const renderFooter = useMemo(() => (
+    <div className="qdr-modal__footer">
+      {haveCloseButton && (
+        <Button variant="secondary" onClick={onClose}>
+          {closeText || locale.editor.cancel}
+        </Button>
+      )}
+      {haveConfirmButton && (
+        <Button variant="primary" onClick={onConfirm}>
+          {confirmText || locale.editor.confirm}
+        </Button>
+      )}
+    </div>
+  ), [
+    closeText,
+    confirmText,
+    haveCloseButton,
+    haveConfirmButton,
+    locale.editor.cancel,
+    locale.editor.confirm,
+    onClose,
+    onConfirm,
+  ]);
 
   return (
     <Portal>
@@ -98,23 +126,20 @@ const Modal = ({
                 />
               )}
             </div>
-            <div className={clsx('qdr-modal__body', mainAreaClassName)}>
-              {children}
-            </div>
-            {haveFooter && (
-              <div className="qdr-modal__footer">
-                {haveCloseButton && (
-                  <Button variant="secondary" onClick={onClose}>
-                    {closeText || locale.editor.cancel}
-                  </Button>
-                )}
-                {haveConfirmButton && (
-                  <Button variant="primary" onClick={onConfirm}>
-                    {confirmText || locale.editor.confirm}
-                  </Button>
-                )}
+            <div className="qdr-modal__body">
+              {sideChildren && (
+                <div className="qdr-modal__side-body">
+                  <div className={clsx('qdr-modal__side', sideAreaClassName)}>
+                    {sideChildren}
+                  </div>
+                  {haveFooter && renderFooter}
+                </div>
+              )}
+              <div className={clsx('qdr-modal__main', mainAreaClassName)}>
+                {children}
               </div>
-            )}
+            </div>
+            {haveFooter && !sideChildren && renderFooter}
           </div>
         </CSSTransition>
       </div>
