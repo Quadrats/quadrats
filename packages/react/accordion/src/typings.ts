@@ -1,6 +1,7 @@
-import { Accordion, AccordionElement } from '@quadrats/common/accordion';
 import { Editor } from '@quadrats/core';
 import {
+  Accordion,
+  AccordionElement,
   AccordionTypeKey,
   AccordionTitleTypeKey,
   AccordionContentTypeKey,
