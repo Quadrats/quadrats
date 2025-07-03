@@ -69,10 +69,12 @@ export const enUS: LocaleDefinition = {
       inputPlaceholder: 'Please paste a Youtube, Vimeo, or other video link, and press Enter',
     },
     toolbar: {
+      accordion: 'Accordion',
       alignCenter: 'Align Center',
       alignLeft: 'Align Left',
       alignRight: 'Align Right',
       bold: 'Bold',
+      carousel: 'Carousel',
       dance: 'Dance',
       divider: 'Divider',
       drama: 'Drama',

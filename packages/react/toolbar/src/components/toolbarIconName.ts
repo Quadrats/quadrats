@@ -2,6 +2,9 @@ import { LocaleDefinition } from '@quadrats/locales';
 
 export function getIconNameInGroup(iconOriginName: string, locale: LocaleDefinition): string {
   switch (iconOriginName) {
+    case 'accordion':
+      return locale.editor.toolbar.accordion;
+
     case 'align-center':
       return locale.editor.toolbar.alignCenter;
 
@@ -16,6 +19,9 @@ export function getIconNameInGroup(iconOriginName: string, locale: LocaleDefinit
 
     case 'bold':
       return locale.editor.toolbar.bold;
+
+    case 'carousel':
+      return locale.editor.toolbar.carousel;
 
     case 'dance':
       return locale.editor.toolbar.dance;
