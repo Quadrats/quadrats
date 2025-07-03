@@ -26,6 +26,7 @@ export interface ModalProps {
   confirmText?: string;
   onClose: () => void;
   onConfirm?: () => void;
+  customizedFooterElement?: ReactNode;
 }
 
 const Modal = ({
@@ -47,6 +48,7 @@ const Modal = ({
   confirmText,
   onClose,
   onConfirm,
+  customizedFooterElement,
 }: ModalProps) => {
   const locale = useLocale();
   const nodeRef = useRef(null);
@@ -66,16 +68,19 @@ const Modal = ({
 
   const renderFooter = useMemo(() => (
     <div className="qdr-modal__footer">
-      {haveCloseButton && (
-        <Button variant="secondary" onClick={onClose}>
-          {closeText || locale.editor.cancel}
-        </Button>
-      )}
-      {haveConfirmButton && (
-        <Button variant="primary" onClick={onConfirm}>
-          {confirmText || locale.editor.confirm}
-        </Button>
-      )}
+      {customizedFooterElement}
+      <div className="qdr-modal__footer__actions">
+        {haveCloseButton && (
+          <Button variant="secondary" onClick={onClose}>
+            {closeText || locale.editor.cancel}
+          </Button>
+        )}
+        {haveConfirmButton && (
+          <Button variant="primary" onClick={onConfirm}>
+            {confirmText || locale.editor.confirm}
+          </Button>
+        )}
+      </div>
     </div>
   ), [
     closeText,
@@ -86,6 +91,7 @@ const Modal = ({
     locale.editor.confirm,
     onClose,
     onConfirm,
+    customizedFooterElement,
   ]);
 
   return (

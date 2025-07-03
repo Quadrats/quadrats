@@ -113,9 +113,15 @@
   &__footer {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: var(--qdr-spacing-4);
+    justify-content: space-between;
     padding: var(--qdr-spacing-6) var(--qdr-spacing-9);
     border-top: 1px solid var(--qdr-divider);
+
+    &__actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--qdr-spacing-4);
+    }
   }
 }
