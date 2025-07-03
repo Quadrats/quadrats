@@ -272,7 +272,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     if (withReadMore) editorWithOptions.push(fileUploader.with);
 
     return pipe(createReactEditor(), ...editorWithOptions);
-  })(), [heading, withTitles, withAccordion, withBlockquote, withLists, withDivider, withEmbeds, withFootnote, withLink, withImage, withReadMore]);
+  })(), [withTitles.length, heading.with, withAccordion, withBlockquote, withLists.length, withDivider, withEmbeds.length, embed.with, withFootnote, withLink, link.with, withImage, withReadMore]);
 
   const handlers = useMemo(() => {
     const handlers = [
@@ -386,7 +386,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     }
 
     return composeRenderElements(elements);
-  }, [heading, withTitles, withLists, withDivider, withEmbeds, withFootnote, withLink, withImage, withAccordion, withBlockquote]);
+  }, [withTitles.length, heading, withLists.length, withDivider, withFootnote, withLink, link, withImage, withReadMore, withEmbeds, withAccordion, withBlockquote, embed]);
 
   const renderLeaf = useMemo(() => {
     const leafs = [];
@@ -529,25 +529,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
         </ToolbarGroupIcon>
       </>
     );
-  }, [
-    editor,
-    heading,
-    withTitles,
-    withAccordion,
-    withBlockquote,
-    withLists,
-    withDivider,
-    withEmbeds,
-    withBold,
-    withItalic,
-    withUnderline,
-    withStrikethrough,
-    withHighlight,
-    withCustomHighlights,
-    withFootnote,
-    withLink,
-    withImage,
-  ]);
+  }, [link, withImage, editor, withBlockquote, withTitles, heading, withAccordion, withLists, withDivider, withEmbeds, embed, withReadMore, withBold, withItalic, withUnderline, withStrikethrough, withHighlight, withCustomHighlights, withLink, withFootnote]);
 
   const [value, setValue] = useState<Descendant[]>([{
     type: PARAGRAPH_TYPE,

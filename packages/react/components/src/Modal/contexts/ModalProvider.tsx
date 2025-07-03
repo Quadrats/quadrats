@@ -21,7 +21,7 @@ export const ModalProvider = ({
     if (modalConfig?.onClose) {
       modalConfig.onClose();
     }
-  }, [closeModal, modalConfig?.onClose]);
+  }, [closeModal, modalConfig]);
 
   return (
     <ModalContext.Provider
