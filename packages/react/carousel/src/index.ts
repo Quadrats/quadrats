@@ -1,4 +1,5 @@
 export * from './typings';
+export * from './hooks/useCarouselModal';
 export * from './components/Carousel';
 export * from './components/CarouselImages';
 export * from './components/CarouselCaption';

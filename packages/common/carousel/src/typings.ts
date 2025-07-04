@@ -24,4 +24,6 @@ export interface Carousel<T extends Editor = Editor> extends Withable {
   types: CarouselTypes;
   insertCarouselPlaceholder(editor: T): void;
   removeCarouselPlaceholder(editor: T): void;
+  maxLength: number;
+  limitSize: number;
 }

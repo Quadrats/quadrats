@@ -4,12 +4,16 @@ import { CAROUSEL_TYPES, CAROUSEL_PLACEHOLDER_TYPE } from './constants';
 
 export interface CreateCarouselOptions {
   types?: Partial<CarouselTypes>;
+  maxLength?: number;
+  limitSize?: number;
 }
 
 export function createCarousel(options: CreateCarouselOptions = {}): Carousel<Editor> {
-  const { types: typesOptions } = options;
+  const { types: typesOptions, maxLength: maxLengthOptions, limitSize: limitSizeOptions } = options;
 
   const types: CarouselTypes = { ...CAROUSEL_TYPES, ...typesOptions };
+  const maxLength: number = maxLengthOptions || 10;
+  const limitSize: number = limitSizeOptions || 5;
 
   const insertCarouselPlaceholder: Carousel<Editor>['insertCarouselPlaceholder'] = (editor) => {
     const carouselPlaceholderElement: CarouselPlaceholderElement = {
@@ -30,6 +34,8 @@ export function createCarousel(options: CreateCarouselOptions = {}): Carousel<Ed
 
   return {
     types,
+    maxLength,
+    limitSize,
     insertCarouselPlaceholder,
     removeCarouselPlaceholder,
     with(editor) {

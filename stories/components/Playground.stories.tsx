@@ -159,7 +159,11 @@ const lineBreak = createReactLineBreak();
 // Options
 const list = createReactList();
 const accordion = createReactAccordion();
-const carousel = createReactCarousel();
+const carousel = createReactCarousel({
+  maxLength: 12,
+  limitSize: 6,
+});
+
 const blockquote = createReactBlockquote();
 const divider = createReactDivider();
 const bold = createReactBold();
