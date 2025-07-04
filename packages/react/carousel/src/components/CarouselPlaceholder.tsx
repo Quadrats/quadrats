@@ -1,7 +1,7 @@
 import React from 'react';
 import { RenderElementProps } from '@quadrats/react';
 
-function CarouselPlaceholder({
+export function CarouselPlaceholder({
   attributes,
   children,
 }: {

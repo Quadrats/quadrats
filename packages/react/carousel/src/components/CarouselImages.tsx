@@ -2,7 +2,7 @@ import React from 'react';
 import { RenderElementProps } from '@quadrats/react';
 import { RenderCarouselImagesElementProps } from '../typings';
 
-function CarouselImages({
+export function CarouselImages({
   attributes,
   children,
 }: {
