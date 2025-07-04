@@ -1,3 +1,37 @@
 .qdr-carousel {
-  display: block;
+  &__placeholder {
+    &__icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      aspect-ratio: 3 / 2;
+      border-radius: var(--qdr-radius-1);
+      border: 1px solid var(--qdr-divider);
+      background-color: var(--qdr-block);
+    }
+
+    &__icon {
+      color: var(--qdr-action-inactive);
+    }
+  }
+
+  &__dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: var(--qdr-spacing-4);
+  }
+
+  &__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: var(--qdr-action-disabled-bg);
+    margin: 2.5px;
+
+    &--active {
+      background-color: var(--qdr-primary);
+    }
+  }
 }
