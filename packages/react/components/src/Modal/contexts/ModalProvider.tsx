@@ -6,9 +6,9 @@ export interface ModalProviderProps {
   children: ReactNode;
 }
 
-export const ModalProvider = ({
-  children,
-}: ModalProviderProps) => {
+export const ModalProvider = ({ children }: ModalProviderProps) => {
+  const [modalComponent, setModalComponent] = useState<ReactNode>(null);
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [modalConfig, setModalConfig] = useState<ModalConfig | null>(null);
   const closeModal = useCallback(() => {
@@ -32,18 +32,16 @@ export const ModalProvider = ({
           setModalConfig(config);
         },
         closeModal,
+        appendModal: (modal) => {
+          setModalComponent(modal);
+        },
       }}
     >
       {children}
-      <Modal
-        {...modalConfig}
-        isOpen={isOpen}
-        onClose={onClose}
-        title={modalConfig?.title ?? ''}
-      >
+      {modalComponent}
+      <Modal {...modalConfig} isOpen={isOpen} onClose={onClose} title={modalConfig?.title ?? ''}>
         {modalConfig?.children}
       </Modal>
     </ModalContext.Provider>
   );
 };
-

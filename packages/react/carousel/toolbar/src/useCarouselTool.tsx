@@ -1,27 +1,31 @@
-// import React from 'react';
-// import { useSlateStatic } from '@quadrats/react';
+import { useEffect } from 'react';
+import { Editor, Element } from '@quadrats/core';
+import { CAROUSEL_PLACEHOLDER_TYPE, CarouselPlaceholderElement } from '@quadrats/common/carousel';
+import { useSlateStatic } from '@quadrats/react';
 import { ReactCarousel, useCarouselModal } from '@quadrats/react/carousel';
-import { useModal } from '@quadrats/react/components';
 
 export function useCarouselTool(controller: ReactCarousel) {
-  // const editor = useSlateStatic();
-  const { openModal } = useModal();
-  const { sideChildren, children, customizedFooterElement } = useCarouselModal(controller);
+  const editor = useSlateStatic();
+  const { setIsOpen } = useCarouselModal(controller);
+
+  useEffect(() => {
+    const [match] = Editor.nodes(editor, {
+      at: [],
+      match: (node) => {
+        const placeholderElement = node as CarouselPlaceholderElement;
+
+        return Element.isElement(placeholderElement) && placeholderElement.type === CAROUSEL_PLACEHOLDER_TYPE;
+      },
+    });
+
+    if (match) {
+      setIsOpen(true);
+    }
+  }, [editor, setIsOpen]);
 
   return {
     onClick: () => {
-      openModal({
-        title: '建立輪播',
-        size: 'extraLarge',
-        closable: true,
-        haveCloseButton: false,
-        confirmText: '建立輪播',
-        sideChildren,
-        children,
-        customizedFooterElement,
-      });
-
-      // controller.insertCarouselPlaceholder(editor);
+      controller.insertCarouselPlaceholder(editor);
     },
   };
 }
