@@ -6,9 +6,7 @@ import { useModal } from '@quadrats/react/components';
 export function useCarouselTool(controller: ReactCarousel) {
   // const editor = useSlateStatic();
   const { openModal } = useModal();
-  const { sideChildren, children } = useCarouselModal(controller);
-
-  console.log('controller', controller);
+  const { sideChildren, children, customizedFooterElement } = useCarouselModal(controller);
 
   return {
     onClick: () => {
@@ -20,6 +18,7 @@ export function useCarouselTool(controller: ReactCarousel) {
         confirmText: '建立輪播',
         sideChildren,
         children,
+        customizedFooterElement,
       });
 
       // controller.insertCarouselPlaceholder(editor);

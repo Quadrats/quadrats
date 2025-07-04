@@ -3,25 +3,17 @@ import clsx from 'clsx';
 
 export interface ButtonProps {
   onClick?: MouseEventHandler<HTMLButtonElement>;
+  className?: string;
   type?: 'submit' | 'reset' | 'button';
   variant?: 'primary' | 'secondary' | 'outlined' | 'dashed' | 'tertiary';
   disabled?: boolean;
   children: ReactNode;
 }
 
-const Button = ({
-  onClick,
-  type = 'button',
-  variant = 'primary',
-  disabled,
-  children,
-}: ButtonProps) => {
+const Button = ({ onClick, className, type = 'button', variant = 'primary', disabled, children }: ButtonProps) => {
   return (
     <button
-      className={clsx(
-        'qdr-button',
-        `qdr-button--${variant}`,
-      )}
+      className={clsx('qdr-button', `qdr-button--${variant}`, className)}
       type={type}
       disabled={disabled}
       onClick={onClick}
