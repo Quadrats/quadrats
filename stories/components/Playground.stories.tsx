@@ -129,7 +129,7 @@ import { createReactFootnote } from '@quadrats/react/footnote';
 import { HeadingLevel } from '@quadrats/common/heading';
 import type { EmbedStrategies } from '@quadrats/common/embed';
 import { PARAGRAPH_TYPE } from '@quadrats/core';
-import getLocalFileUploaderOptions from '../helper/local-file-uploader-options';
+import getLocalFileUploaderOptions, { LocalFileUploader } from '../helper/local-file-uploader-options';
 
 import { createJsxSerializeBold } from '@quadrats/react/bold/jsx-serializer';
 import { createJsxSerializeItalic } from '@quadrats/react/italic/jsx-serializer';
@@ -162,6 +162,14 @@ const accordion = createReactAccordion();
 const carousel = createReactCarousel({
   maxLength: 12,
   limitSize: 6,
+  getBody: (file) => file,
+  getHeaders: (file) => ({
+    Authorization: 'Bearer <Your OAuth2 Token>',
+    'Content-Type': file.type,
+  }),
+  getUrl: (file) =>
+    `https://storage.googleapis.com/upload/storage/v1/b/<Your Bucket Name>/o?uploadType=media&name=${file.name}`,
+  uploader: new LocalFileUploader(),
 });
 
 const blockquote = createReactBlockquote();

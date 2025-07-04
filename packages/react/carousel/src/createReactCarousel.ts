@@ -13,7 +13,7 @@ import {
 
 export type CreateReactCarouselOptions = CreateCarouselOptions;
 
-export function createReactCarousel(options: CreateReactCarouselOptions = {}): ReactCarousel {
+export function createReactCarousel(options: CreateReactCarouselOptions): ReactCarousel {
   const core = createCarousel(options);
 
   const { types } = core;

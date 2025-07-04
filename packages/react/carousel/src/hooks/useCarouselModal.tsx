@@ -1,9 +1,10 @@
 import React from 'react';
+import { useSlateStatic } from '@quadrats/react';
 import { Hints, Button } from '@quadrats/react/components';
 import { ReactCarousel } from '../typings';
 
 export function useCarouselModal(controller: ReactCarousel) {
-  console.log('controller', controller);
+  const editor = useSlateStatic();
 
   return {
     sideChildren: (
@@ -19,7 +20,14 @@ export function useCarouselModal(controller: ReactCarousel) {
             },
           ]}
         />
-        <Button variant="outlined">加入圖片</Button>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            controller.upload(editor);
+          }}
+        >
+          加入圖片
+        </Button>
       </div>
     ),
     children: <div>建立輪播</div>,

@@ -20,6 +20,33 @@ export interface CarouselPlaceholderElement extends QuadratsElement, WithElement
   children: [Text];
 }
 
+export interface XHRUploadHeaders {
+  [name: string]: string;
+}
+
+interface FileUploaderUploadImplementOnProgressArgs {
+  loaded: number;
+  total: number;
+}
+
+interface FileUploaderUploadImplement {
+  onprogress: ((options: FileUploaderUploadImplementOnProgressArgs) => void) | null;
+}
+
+export interface FileUploaderImplement {
+  onload: (() => void) | null;
+  open: (method: string, url: string | URL) => void;
+  setRequestHeader: (key: string, value: string) => void;
+  send(body?: Document | BodyInit | null): void;
+  readonly status: number;
+  readonly response: any;
+  readonly upload: FileUploaderUploadImplement;
+}
+
+export type FileUploaderGetBody = (file: File) => BodyInit;
+export type FileUploaderGetHeaders = (file: File) => XHRUploadHeaders | Promise<XHRUploadHeaders>;
+export type FileUploaderGetUrl = (file: File) => string;
+
 export interface Carousel<T extends Editor = Editor> extends Withable {
   types: CarouselTypes;
   insertCarouselPlaceholder(editor: T): void;
@@ -27,4 +54,9 @@ export interface Carousel<T extends Editor = Editor> extends Withable {
   accept: string[];
   maxLength: number;
   limitSize: number;
+  upload(editor: T): Promise<void>;
+  getBody: FileUploaderGetBody;
+  getHeaders?: FileUploaderGetHeaders;
+  getUrl: FileUploaderGetUrl;
+  uploader?: FileUploaderImplement;
 }
