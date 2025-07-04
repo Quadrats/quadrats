@@ -39,14 +39,10 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
   const limitSize: number = limitSizeOptions || 5;
   const accept: string[] = acceptOptions || ['image/*'];
 
-  const upload: Carousel<Editor>['upload'] = async () => {
+  const selectFiles: Carousel<Editor>['selectFiles'] = async () => {
     const files = await getFilesFromInput({ accept });
 
-    console.log('files', files);
-
-    if (!files) {
-      return;
-    }
+    return files;
   };
 
   const insertCarouselPlaceholder: Carousel<Editor>['insertCarouselPlaceholder'] = (editor) => {
@@ -71,7 +67,7 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
     accept,
     maxLength,
     limitSize,
-    upload,
+    selectFiles,
     insertCarouselPlaceholder,
     removeCarouselPlaceholder,
     getBody,

@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSlateStatic } from '@quadrats/react';
 import { Hints, Button } from '@quadrats/react/components';
 import { ReactCarousel } from '../typings';
 
 export function useCarouselModal(controller: ReactCarousel) {
   const editor = useSlateStatic();
+  const [targetFiles, setTargetFiles] = useState<File[]>([]);
+
+  console.log('targetFiles', targetFiles);
 
   return {
     sideChildren: (
@@ -22,8 +25,12 @@ export function useCarouselModal(controller: ReactCarousel) {
         />
         <Button
           variant="outlined"
-          onClick={() => {
-            controller.upload(editor);
+          onClick={async () => {
+            const files = await controller.selectFiles(editor);
+
+            if (files) {
+              setTargetFiles(files);
+            }
           }}
         >
           加入圖片
@@ -31,6 +38,6 @@ export function useCarouselModal(controller: ReactCarousel) {
       </div>
     ),
     children: <div>建立輪播</div>,
-    customizedFooterElement: <div>已上傳 8/10</div>,
+    customizedFooterElement: <div>{`已上傳 ${targetFiles.length}/10`}</div>,
   };
 }
