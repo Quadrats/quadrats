@@ -1,10 +1,4 @@
-import {
-  Editor,
-  Withable,
-  QuadratsElement,
-  WithElementType,
-  Text,
-} from '@quadrats/core';
+import { Editor, Withable, QuadratsElement, WithElementType, Text } from '@quadrats/core';
 
 export type CarouselTypeKey = 'carousel';
 export type CarouselImagesTypeKey = 'carousel_images';
@@ -21,6 +15,10 @@ export interface CarouselImagesElement extends QuadratsElement, WithElementType 
 }
 
 export interface CarouselCaptionElement extends QuadratsElement, WithElementType {}
+
+export interface CarouselPlaceholderElement extends QuadratsElement, WithElementType {
+  children: [Text];
+}
 
 export interface Carousel<T extends Editor = Editor> extends Withable {
   types: CarouselTypes;
