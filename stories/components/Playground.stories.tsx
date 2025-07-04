@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import {
   Accordion as AccordionIcon,
+  Carousel as CarouselIcon,
   Bold as BoldIcon,
   Italic as ItalicIcon,
   Underline as UnderlineIcon,
@@ -56,6 +57,7 @@ import { createReactUnderline } from '@quadrats/react/underline';
 import { createReactStrikethrough } from '@quadrats/react/strikethrough';
 import { createReactHighlight } from '@quadrats/react/highlight';
 import { createReactAccordion } from '@quadrats/react/accordion';
+import { createReactCarousel } from '@quadrats/react/carousel';
 import { createReactBlockquote } from '@quadrats/react/blockquote';
 import { createReactDivider } from '@quadrats/react/divider';
 import { createReactEmbed } from '@quadrats/react/embed';
@@ -111,6 +113,7 @@ import { createReactInputBlock } from '@quadrats/react/input-block';
 import { Toolbar, ToolbarGroupIcon, TOOLBAR_DIVIDER } from '@quadrats/react/toolbar';
 import { ToggleMarkToolbarIcon } from '@quadrats/react/toggle-mark/toolbar';
 import { AccordionToolbarIcon } from '@quadrats/react/accordion/toolbar';
+import { CarouselToolbarIcon } from '@quadrats/react/carousel/toolbar';
 import { BlockquoteToolbarIcon } from '@quadrats/react/blockquote/toolbar';
 import { DividerToolbarIcon } from '@quadrats/react/divider/toolbar';
 import { EmbedToolbarIcon } from '@quadrats/react/embed/toolbar';
@@ -136,6 +139,7 @@ import { createJsxSerializeHighlight } from '@quadrats/react/highlight/jsx-seria
 import { createJsxSerializeLineBreak } from '@quadrats/react/line-break/jsx-serializer';
 import { createJsxSerializeParagraph } from '@quadrats/react/paragraph/jsx-serializer';
 import { createJsxSerializeAccordion } from '@quadrats/react/accordion/jsx-serializer';
+import { createJsxSerializeCarousel } from '@quadrats/react/carousel/jsx-serializer';
 import { createJsxSerializeBlockquote } from '@quadrats/react/blockquote/jsx-serializer';
 import { createJsxSerializeHeading } from '@quadrats/react/heading/jsx-serializer';
 import { createJsxSerializeList } from '@quadrats/react/list/jsx-serializer';
@@ -155,6 +159,7 @@ const lineBreak = createReactLineBreak();
 // Options
 const list = createReactList();
 const accordion = createReactAccordion();
+const carousel = createReactCarousel();
 const blockquote = createReactBlockquote();
 const divider = createReactDivider();
 const bold = createReactBold();
@@ -181,6 +186,7 @@ export interface PlaygroundEditorProps {
   locale: 'Chinese' | 'English';
   withTitles: ('h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6')[];
   withAccordion: boolean;
+  withCarousel: boolean;
   withBlockquote: boolean;
   withLists: ('ol' | 'ul')[];
   withDivider: boolean;
@@ -203,6 +209,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     locale,
     withTitles,
     withAccordion,
+    withCarousel,
     withBlockquote,
     withLists,
     withDivider,
@@ -293,6 +300,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
 
         if (withTitles.length) editorWithOptions.push(heading.with);
         if (withAccordion) editorWithOptions.push(accordion.with);
+        if (withCarousel) editorWithOptions.push(carousel.with);
         if (withBlockquote) editorWithOptions.push(blockquote.with);
         if (withLists.length) editorWithOptions.push(list.with);
         if (withDivider) editorWithOptions.push(divider.with);
@@ -309,6 +317,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       withTitles.length,
       heading.with,
       withAccordion,
+      withCarousel,
       withBlockquote,
       withLists.length,
       withDivider,
@@ -429,6 +438,11 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       elements.push(accordion.createRenderElement());
     }
 
+    if (withCarousel) {
+      elements.push(carousel.createRenderElement());
+      elements.push(carousel.createRenderPlaceholderElement());
+    }
+
     if (withBlockquote) {
       elements.push(blockquote.createRenderElement());
     }
@@ -446,6 +460,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withReadMore,
     withEmbeds,
     withAccordion,
+    withCarousel,
     withBlockquote,
     embed,
   ]);
@@ -470,6 +485,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       const linkTool = <LinkToolbarIcon icon={LinkIcon} controller={link} />;
       const unlinkTool = <UnlinkToolbarIcon icon={UnlinkIcon} controller={link} />;
       const accordionTool = <AccordionToolbarIcon icon={AccordionIcon} controller={accordion} />;
+      const carouselTool = <CarouselToolbarIcon icon={CarouselIcon} controller={carousel} />;
       const blockquoteTool = <BlockquoteToolbarIcon icon={BlockquoteIcon} controller={blockquote} />;
       const footnoteTool = <FootnoteToolbarIcon icon={FnIcon} controller={footnote} />;
 
@@ -522,6 +538,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
           {~withTitles.indexOf('h5') ? <HeadingToolbarIcon icon={Heading5Icon} controller={heading} level={5} /> : null}
           {~withTitles.indexOf('h6') ? <HeadingToolbarIcon icon={Heading6Icon} controller={heading} level={6} /> : null}
           {withAccordion ? accordionTool : null}
+          {withCarousel ? carouselTool : null}
           {withBlockquote ? blockquoteTool : null}
           {~withLists.indexOf('ul') ? (
             <ListToolbarIcon icon={UnorderedListIcon} controller={list} listTypeKey="ul" />
@@ -529,7 +546,9 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
           {~withLists.indexOf('ol') ? (
             <ListToolbarIcon icon={OrderedListIcon} controller={list} listTypeKey="ol" />
           ) : null}
-          {withTitles.length || withAccordion || withBlockquote || withLists.length ? TOOLBAR_DIVIDER : null}
+          {withTitles.length || withAccordion || withCarousel || withBlockquote || withLists.length
+            ? TOOLBAR_DIVIDER
+            : null}
           {withDivider ? <DividerToolbarIcon icon={DividerIcon} controller={divider} /> : null}
           {withImage ? (
             <FileUploaderToolbarIcon
@@ -576,6 +595,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       withTitles,
       heading,
       withAccordion,
+      withCarousel,
       withLists,
       withDivider,
       withEmbeds,
@@ -609,6 +629,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
   }, [
     withTitles,
     withAccordion,
+    withCarousel,
     withBlockquote,
     withLists,
     withDivider,
@@ -641,6 +662,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
 
     // Elements
     if (withAccordion) elements.push(createJsxSerializeAccordion());
+    if (withCarousel) elements.push(createJsxSerializeCarousel());
     if (withBlockquote) elements.push(createJsxSerializeBlockquote());
     if (withTitles.length) elements.push(createJsxSerializeHeading());
     if (withLists.length) elements.push(createJsxSerializeList());
@@ -677,6 +699,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     embedStrategies,
     withTitles,
     withAccordion,
+    withCarousel,
     withBlockquote,
     withLists,
     withDivider,
@@ -745,6 +768,7 @@ export const Editor: Story = {
   args: {
     withTitles: ['h1', 'h2', 'h3'],
     withAccordion: true,
+    withCarousel: true,
     withBlockquote: false,
     withLists: ['ol', 'ul'],
     withDivider: true,
@@ -770,6 +794,10 @@ export const Editor: Story = {
     },
     withAccordion: {
       name: 'Accordion',
+      control: { type: 'boolean' },
+    },
+    withCarousel: {
+      name: 'Carousel',
       control: { type: 'boolean' },
     },
     withBlockquote: {

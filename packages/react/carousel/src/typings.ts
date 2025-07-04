@@ -33,7 +33,7 @@ export type ReactCarouselCreateRenderElementOptions = {
 
 export interface ReactCarousel
   extends Carousel<Editor>,
-    WithCreateRenderElement<[ReactCarouselCreateRenderElementOptions]> {
+    WithCreateRenderElement<[ReactCarouselCreateRenderElementOptions?]> {
   createRenderPlaceholderElement: (params_0?: {
     render?: RenderCarouselPlaceholderElement;
   }) => (props: RenderElementProps) => JSX.Element | null | undefined;

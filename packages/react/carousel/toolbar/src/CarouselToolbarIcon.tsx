@@ -1,9 +1,9 @@
 import React from 'react';
 import { ToolbarIcon, ToolbarIconProps } from '@quadrats/react/toolbar';
-import { ReactAccordion } from '@quadrats/react/accordion';
+import { ReactCarousel } from '@quadrats/react/carousel';
 
 export interface CarouselToolbarIconProps extends Omit<ToolbarIconProps, 'active' | 'onClick'> {
-  controller: ReactAccordion;
+  controller: ReactCarousel;
 }
 
 function CarouselToolbarIcon(props: CarouselToolbarIconProps) {
