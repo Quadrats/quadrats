@@ -9,6 +9,8 @@ export function CarouselImages({
   attributes?: RenderElementProps['attributes'];
   children: RenderElementProps['children'];
   element: RenderCarouselImagesElementProps['element'];
+  images: RenderCarouselImagesElementProps['images'];
+  hosting?: RenderCarouselImagesElementProps['hosting'];
 }) {
   console.log('first', attributes, children);
 

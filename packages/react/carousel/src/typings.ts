@@ -13,6 +13,7 @@ export interface RenderCarouselElementProps extends RenderElementProps<CarouselE
 
 export interface RenderCarouselImagesElementProps extends RenderElementProps<CarouselImagesElement> {
   images: string;
+  hosting?: string;
 }
 
 export type RenderCarouselCaptionElementProps = RenderElementProps<CarouselCaptionElement>;
