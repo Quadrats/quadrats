@@ -1,6 +1,7 @@
 import React, { ReactNode, useCallback, useState } from 'react';
 import { EmbedModal } from '../../../../embed/src';
-import { ModalContext, ModalName, EmbedModalConfig } from './modal';
+import { CarouselModal } from '../../../../carousel/src';
+import { ModalContext, ModalName, EmbedModalConfig, CarouselModalConfig } from './modal';
 
 export interface ModalProviderProps {
   children: ReactNode;
@@ -10,6 +11,7 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
   const [modalName, setModalName] = useState<ModalName>('');
   const [isModalClosed, setIsModalClosed] = useState<boolean>(false);
   const [embedModalConfig, setEmbedModalConfig] = useState<EmbedModalConfig | null>(null);
+  const [carouselModalConfig, setCarouselModalConfig] = useState<CarouselModalConfig | null>(null);
 
   const close = useCallback(() => {
     setModalName('');
@@ -25,6 +27,10 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
           setModalName('embed-modal');
           setEmbedModalConfig(config);
         },
+        setCarouselModalConfig: (config) => {
+          setModalName('carousel-modal');
+          setCarouselModalConfig(config);
+        },
       }}
     >
       {children}
@@ -38,6 +44,11 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
         onConfirm={(value) => {
           embedModalConfig?.onConfirm?.(value);
         }}
+      />
+      <CarouselModal
+        isOpen={modalName === 'carousel-modal'}
+        close={close}
+        controller={carouselModalConfig?.controller}
       />
     </ModalContext.Provider>
   );

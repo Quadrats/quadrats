@@ -2,11 +2,12 @@ import { useEffect } from 'react';
 import { Editor, Element } from '@quadrats/core';
 import { CAROUSEL_PLACEHOLDER_TYPE, CarouselPlaceholderElement } from '@quadrats/common/carousel';
 import { useSlateStatic } from '@quadrats/react';
-import { ReactCarousel, useCarouselModal } from '@quadrats/react/carousel';
+import { useModal } from '@quadrats/react/components';
+import { ReactCarousel } from '@quadrats/react/carousel';
 
 export function useCarouselTool(controller: ReactCarousel) {
   const editor = useSlateStatic();
-  const { setIsOpen } = useCarouselModal(controller);
+  const { setCarouselModalConfig, isModalClosed, setIsModalClosed } = useModal();
 
   useEffect(() => {
     const [match] = Editor.nodes(editor, {
@@ -19,9 +20,21 @@ export function useCarouselTool(controller: ReactCarousel) {
     });
 
     if (match) {
-      setIsOpen(true);
+      setCarouselModalConfig({
+        controller,
+      });
     }
-  }, [editor, setIsOpen]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [controller, editor]);
+
+  useEffect(() => {
+    if (isModalClosed) {
+      setTimeout(() => {
+        controller.removeCarouselPlaceholder(editor);
+        setIsModalClosed(false);
+      }, 250);
+    }
+  }, [controller, editor, isModalClosed, setIsModalClosed]);
 
   return {
     onClick: () => {
