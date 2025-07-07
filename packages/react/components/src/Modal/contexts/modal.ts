@@ -1,22 +1,22 @@
-import { createContext, useContext, ReactNode } from 'react';
-import { ModalProps } from '../index';
+import { createContext, useContext, Dispatch, SetStateAction } from 'react';
+import { EmbedModalProps } from '../../../../embed/src';
 
-export interface ModalConfig extends Omit<ModalProps, 'isOpen' | 'onClose'> {
-  onClose?: VoidFunction;
-}
+export type ModalName = 'embed-modal' | '';
+
+export interface EmbedModalConfig extends Omit<EmbedModalProps, 'isOpen' | 'close'> {}
 
 export interface ModalContextValue {
-  isOpen: boolean;
-  openModal: (modalConfig: ModalConfig) => void;
-  closeModal: VoidFunction;
-  appendModal: (modal: ReactNode) => void;
+  isModalClosed: boolean;
+  setIsModalClosed: Dispatch<SetStateAction<boolean>>;
+
+  setEmbedModalConfig: (config: EmbedModalConfig) => void;
 }
 
 export const ModalContext = createContext<ModalContextValue>({
-  isOpen: false,
-  openModal: () => {},
-  closeModal: () => {},
-  appendModal: () => {},
+  isModalClosed: false,
+  setIsModalClosed: () => {},
+
+  setEmbedModalConfig: () => {},
 });
 
 export function useModal() {

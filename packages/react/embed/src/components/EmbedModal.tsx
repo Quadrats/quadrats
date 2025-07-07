@@ -2,25 +2,17 @@ import React, { useState } from 'react';
 import { useLocale } from '@quadrats/react';
 import { Textarea, Input, Modal } from '@quadrats/react/components';
 
-export const EmbedModal = ({
-  isOpen,
-  setIsOpen,
-  setIsModalClosed,
-  placeholder,
-  confirmText,
-  hint,
-  type,
-  onConfirm,
-}: {
+export interface EmbedModalProps {
   isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsModalClosed: React.Dispatch<React.SetStateAction<boolean>>;
+  close: VoidFunction;
   placeholder: string;
   confirmText: string;
   hint: string;
   type: 'input' | 'textarea';
   onConfirm: (value: string) => void;
-}) => {
+}
+
+export const EmbedModal = ({ isOpen, close, placeholder, confirmText, hint, type, onConfirm }: EmbedModalProps) => {
   const [value, setValue] = useState('');
   const locale = useLocale();
 
@@ -30,8 +22,7 @@ export const EmbedModal = ({
       title={locale.editor.embedTitle}
       confirmText={confirmText}
       onClose={() => {
-        setIsOpen(false);
-        setIsModalClosed(true);
+        close();
         setValue('');
       }}
       onConfirm={() => {

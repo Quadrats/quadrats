@@ -1,47 +1,44 @@
-import React, { ReactNode, useState, useCallback } from 'react';
-import { ModalConfig, ModalContext } from './modal';
-import Modal from '../index';
+import React, { ReactNode, useCallback, useState } from 'react';
+import { EmbedModal } from '../../../../embed/src';
+import { ModalContext, ModalName, EmbedModalConfig } from './modal';
 
 export interface ModalProviderProps {
   children: ReactNode;
 }
 
 export const ModalProvider = ({ children }: ModalProviderProps) => {
-  const [modalComponent, setModalComponent] = useState<ReactNode>(null);
+  const [modalName, setModalName] = useState<ModalName>('');
+  const [isModalClosed, setIsModalClosed] = useState<boolean>(false);
+  const [embedModalConfig, setEmbedModalConfig] = useState<EmbedModalConfig | null>(null);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [modalConfig, setModalConfig] = useState<ModalConfig | null>(null);
-  const closeModal = useCallback(() => {
-    setIsOpen(false);
+  const close = useCallback(() => {
+    setModalName('');
+    setIsModalClosed(true);
   }, []);
-
-  const onClose = useCallback(() => {
-    closeModal();
-
-    if (modalConfig?.onClose) {
-      modalConfig.onClose();
-    }
-  }, [closeModal, modalConfig]);
 
   return (
     <ModalContext.Provider
       value={{
-        isOpen,
-        openModal: (config) => {
-          setIsOpen(true);
-          setModalConfig(config);
-        },
-        closeModal,
-        appendModal: (modal) => {
-          setModalComponent(modal);
+        isModalClosed,
+        setIsModalClosed,
+        setEmbedModalConfig: (config) => {
+          setModalName('embed-modal');
+          setEmbedModalConfig(config);
         },
       }}
     >
       {children}
-      {modalComponent}
-      <Modal {...modalConfig} isOpen={isOpen} onClose={onClose} title={modalConfig?.title ?? ''}>
-        {modalConfig?.children}
-      </Modal>
+      <EmbedModal
+        isOpen={modalName === 'embed-modal'}
+        close={close}
+        placeholder={embedModalConfig?.placeholder || ''}
+        confirmText={embedModalConfig?.confirmText || ''}
+        hint={embedModalConfig?.hint || ''}
+        type={embedModalConfig?.type || 'input'}
+        onConfirm={(value) => {
+          embedModalConfig?.onConfirm?.(value);
+        }}
+      />
     </ModalContext.Provider>
   );
 };
