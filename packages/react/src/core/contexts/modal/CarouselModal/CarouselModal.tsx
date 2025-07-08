@@ -48,7 +48,8 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
       isOpen={isOpen}
       title="建立輪播"
       size="extraLarge"
-      closable
+      closable={!uploading}
+      maskClosable={!uploading}
       haveCloseButton={false}
       confirmText="建立輪播"
       mainAreaClassName="qdr-carousel-modal__main"
@@ -82,18 +83,14 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
               const files = await controller?.selectFiles(editor);
 
               if (files) {
-                setUploading(true);
+                for (const file of files) {
+                  setUploading(true);
+                  const base64 = await readFileAsBase64(file);
+                  const url = await mockUpload(base64);
 
-                await Promise.all(
-                  files.map(async (f) => {
-                    const base64 = await readFileAsBase64(f);
-                    const url = await mockUpload(base64);
-
-                    setUrls((prev) => [...prev, url]);
-                  }),
-                );
-
-                setUploading(false);
+                  setUrls((prev) => [...prev, url]);
+                  setUploading(false);
+                }
               }
             }}
           >
