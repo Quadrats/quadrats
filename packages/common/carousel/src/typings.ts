@@ -52,6 +52,7 @@ export interface Carousel<T extends Editor = Editor> extends Withable {
   insertCarouselPlaceholder(editor: T): void;
   removeCarouselPlaceholder(editor: T): void;
   accept: string[];
+  ratio?: [number, number];
   maxLength: number;
   limitSize: number;
   selectFiles(editor: T): Promise<File[] | undefined>;

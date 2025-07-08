@@ -160,6 +160,7 @@ const lineBreak = createReactLineBreak();
 const list = createReactList();
 const accordion = createReactAccordion();
 const carousel = createReactCarousel({
+  ratio: [3, 2],
   maxLength: 12,
   limitSize: 6,
   getBody: (file) => file,

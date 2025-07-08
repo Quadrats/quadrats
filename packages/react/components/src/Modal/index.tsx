@@ -9,6 +9,7 @@ import Icon from '../Icon';
 
 export interface ModalProps {
   title: string | ReactNode;
+  className?: string;
   closable?: boolean;
   children: ReactNode;
   mainAreaClassName?: string;
@@ -33,6 +34,7 @@ export interface ModalProps {
 
 const Modal = ({
   title,
+  className,
   closable = false,
   children,
   mainAreaClassName,
@@ -113,6 +115,7 @@ const Modal = ({
             'qdr-modal--mask': mask,
           },
           themeProps.className,
+          className,
         )}
         style={themeProps.style}
         onClick={maskClosable ? onClose : undefined}

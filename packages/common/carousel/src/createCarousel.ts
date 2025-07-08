@@ -14,6 +14,7 @@ import { getFilesFromInput } from './getFilesFromInput';
 export interface CreateCarouselOptions {
   types?: Partial<CarouselTypes>;
   accept?: string[];
+  ratio?: [number, number];
   maxLength?: number;
   limitSize?: number;
   getBody: FileUploaderGetBody;
@@ -26,6 +27,7 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
   const {
     types: typesOptions,
     accept: acceptOptions,
+    ratio,
     maxLength: maxLengthOptions,
     limitSize: limitSizeOptions,
     getBody,
@@ -65,6 +67,7 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
   return {
     types,
     accept,
+    ratio,
     maxLength,
     limitSize,
     selectFiles,

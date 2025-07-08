@@ -63,10 +63,13 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
                 {
                   text: '檔案格式：限 JPG 或 PNG。',
                 },
+                controller?.ratio && {
+                  text: `檔案尺寸：最佳比例為 ${controller.ratio[0]}:${controller.ratio[1]}。建議圖片寬度達 2000px 以上，高度不限。`,
+                },
                 {
                   text: `檔案大小：不可大於 ${controller?.limitSize} MB。`,
                 },
-              ]}
+              ].filter((h) => !!h)}
             />
           </div>
           <Button
