@@ -4,6 +4,30 @@ import { useSlateStatic } from 'slate-react';
 import { Carousel } from '@quadrats/common/carousel';
 import { Hints, Button, Modal } from '@quadrats/react/components';
 
+function readFileAsBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        resolve(reader.result);
+      }
+    };
+
+    reader.onerror = () => reject(reader.error);
+
+    reader.readAsDataURL(file);
+  });
+}
+
+function mockUpload(base64: string): Promise<string> {
+  return new Promise((resolve) => {
+    setTimeout(async () => {
+      resolve(base64);
+    }, 1500);
+  });
+}
+
 export interface CarouselModalProps {
   isOpen: boolean;
   close: VoidFunction;
@@ -12,7 +36,10 @@ export interface CarouselModalProps {
 
 export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps) => {
   const editor = useSlateStatic();
-  const [targetFiles, setTargetFiles] = useState<File[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [urls, setUrls] = useState<string[]>([]);
+
+  console.log('uploading', uploading, urls);
 
   return (
     <Modal
@@ -41,7 +68,18 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
               const files = await controller?.selectFiles(editor);
 
               if (files) {
-                setTargetFiles(files);
+                setUploading(true);
+
+                await Promise.all(
+                  files.map(async (f) => {
+                    const base64 = await readFileAsBase64(f);
+                    const url = await mockUpload(base64);
+
+                    setUrls((prev) => [...prev, url]);
+                  }),
+                );
+
+                setUploading(false);
               }
             }}
           >
@@ -49,12 +87,12 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
           </Button>
         </div>
       }
-      customizedFooterElement={<div>{`已上傳 ${targetFiles.length}/10`}</div>}
+      customizedFooterElement={<div>{`已上傳 ${urls.length}/10`}</div>}
       onClose={() => {
         close();
       }}
       onConfirm={() => {
-        console.log('targetFiles', targetFiles);
+        console.log('urls', urls);
       }}
     >
       <div>建立輪播</div>
