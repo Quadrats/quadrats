@@ -50,11 +50,11 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
       closable
       haveCloseButton={false}
       confirmText="建立輪播"
-      mainAreaClassName="qdr-embed-modal__main"
+      mainAreaClassName="qdr-carousel-modal__main"
       sideChildren={
-        <div className="qdr-embed-modal__side">
-          <div className="qdr-embed-modal__side__hints-wrapper">
-            <div className="qdr-embed-modal__side__hints-title">上傳建議</div>
+        <div className="qdr-carousel-modal__side">
+          <div className="qdr-carousel-modal__side__hints-wrapper">
+            <div className="qdr-carousel-modal__side__hints-title">上傳建議</div>
             <Hints
               hints={[
                 {
@@ -73,7 +73,7 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
             />
           </div>
           <Button
-            className="qdr-embed-modal__side__upload"
+            className="qdr-carousel-modal__side__upload"
             variant="outlined"
             size="large"
             prefix={<Icon icon={Plus} width={24} height={24} />}
@@ -100,7 +100,7 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
           </Button>
         </div>
       }
-      customizedFooterElement={<div>{`已上傳 ${urls.length}/10`}</div>}
+      customizedFooterElement={<div>{`已上傳 ${urls.length}/${controller?.maxLength}`}</div>}
       disabledConfirmButton={uploading}
       onClose={() => {
         close();
@@ -109,7 +109,7 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
         console.log('urls', urls);
       }}
     >
-      <div>建立輪播</div>
+      <div className="qdr-carousel-modal__grid">建立輪播</div>
     </Modal>
   );
 };

@@ -1,4 +1,41 @@
 .qdr-carousel {
+  &-modal {
+    &__side {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      gap: var(--qdr-spacing-9);
+
+      &__hints-wrapper {
+        width: 100%;
+      }
+
+      &__hints-title {
+        color: var(--qdr-text-primary);
+        font-size: var(--qdr-typography-basic-h6-font-size);
+        line-height: var(--qdr-typography-basic-h6-line-height);
+        letter-spacing: var(--qdr-typography-basic-h6-letter-spacing);
+        font-weight: var(--qdr-typography-basic-h6-font-weight);
+        margin-bottom: var(--qdr-spacing-4);
+      }
+
+      &__upload {
+        width: 100%;
+      }
+    }
+
+    &__main {
+      background-color: var(--qdr-bg);
+    }
+
+    &__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--qdr-spacing-6);
+    }
+  }
+
   &__placeholder {
     &__icon-wrapper {
       display: flex;
