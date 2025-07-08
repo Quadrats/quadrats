@@ -4,6 +4,7 @@ import { Plus } from '@quadrats/icons';
 import { useSlateStatic } from 'slate-react';
 import { Carousel } from '@quadrats/common/carousel';
 import { Hints, Button, Modal, Icon } from '@quadrats/react/components';
+import CarouselItem from './CarouselItem';
 
 function readFileAsBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -109,7 +110,11 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
         console.log('urls', urls);
       }}
     >
-      <div className="qdr-carousel-modal__grid">建立輪播</div>
+      <div className="qdr-carousel-modal__grid">
+        {urls.map((url) => (
+          <CarouselItem key={url} url={url} ratio={controller?.ratio} />
+        ))}
+      </div>
     </Modal>
   );
 };

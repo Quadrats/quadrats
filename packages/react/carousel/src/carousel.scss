@@ -34,6 +34,22 @@
       grid-template-columns: repeat(3, 1fr);
       gap: var(--qdr-spacing-6);
     }
+
+    &__item {
+      border: 1px solid var(--qdr-divider);
+      border-radius: var(--qdr-radius-2);
+      overflow: hidden;
+    }
+
+    &__image {
+      width: 100%;
+    }
+
+    &__input-wrapper {
+      border-top: 1px solid var(--qdr-divider);
+      background-color: var(--qdr-surface);
+      padding: var(--qdr-spacing-6);
+    }
   }
 
   &__placeholder {
