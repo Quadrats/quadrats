@@ -1,13 +1,36 @@
 .qdr-button {
-  padding: 0 var(--qdr-spacing-7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--qdr-spacing-2);
   border: none;
   background-color: transparent;
   cursor: pointer;
   transition: all var(--qdr-duration-short) var(--qdr-easing-standard);
-  font-size: var(--qdr-typography-basic-button2-font-size);
-  line-height: var(--qdr-typography-basic-button2-line-height);
-  letter-spacing: var(--qdr-typography-basic-button2-letter-spacing);
-  font-weight: var(--qdr-typography-basic-button2-font-weight);
+
+  &--small {
+    padding: 0 var(--qdr-spacing-7);
+    font-size: var(--qdr-typography-basic-button2-font-size);
+    line-height: var(--qdr-typography-basic-button2-line-height);
+    letter-spacing: var(--qdr-typography-basic-button2-letter-spacing);
+    font-weight: var(--qdr-typography-basic-button2-font-weight);
+  }
+
+  &--medium {
+    padding: var(--qdr-spacing-1) var(--qdr-spacing-7);
+    font-size: var(--qdr-typography-basic-button2-font-size);
+    line-height: var(--qdr-typography-basic-button2-line-height);
+    letter-spacing: var(--qdr-typography-basic-button2-letter-spacing);
+    font-weight: var(--qdr-typography-basic-button2-font-weight);
+  }
+
+  &--large {
+    padding: 0 var(--qdr-spacing-7);
+    font-size: var(--qdr-typography-basic-button1-font-size);
+    line-height: var(--qdr-typography-basic-button1-line-height);
+    letter-spacing: var(--qdr-typography-basic-button1-letter-spacing);
+    font-weight: var(--qdr-typography-basic-button1-font-weight);
+  }
 
   &--primary {
     background-color: var(--qdr-primary);
@@ -70,7 +93,7 @@
       border-color: var(--qdr-primary);
     }
 
-    &:disabled  {
+    &:disabled {
       color: var(--qdr-action-disabled);
       border-color: var(--qdr-action-disabled);
       background-color: var(--qdr-surface);
@@ -93,7 +116,7 @@
       border-color: var(--qdr-primary-dark);
     }
 
-    &:disabled  {
+    &:disabled {
       color: var(--qdr-action-disabled);
       border-color: var(--qdr-action-disabled);
       background-color: var(--qdr-surface);
@@ -112,7 +135,7 @@
       background-color: var(--qdr-primary-active-bg);
     }
 
-    &:disabled  {
+    &:disabled {
       color: var(--qdr-action-disabled);
       background-color: transparent;
       cursor: not-allowed;

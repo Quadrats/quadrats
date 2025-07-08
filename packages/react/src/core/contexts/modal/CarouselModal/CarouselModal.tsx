@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Editor } from '@quadrats/core';
+import { Dance } from '@quadrats/icons';
 import { useSlateStatic } from 'slate-react';
 import { Carousel } from '@quadrats/common/carousel';
-import { Hints, Button, Modal } from '@quadrats/react/components';
+import { Hints, Button, Modal, Icon } from '@quadrats/react/components';
 
 function readFileAsBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -64,6 +65,8 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
           />
           <Button
             variant="outlined"
+            size="large"
+            prefix={<Icon icon={Dance} width={24} height={24} />}
             onClick={async () => {
               const files = await controller?.selectFiles(editor);
 
