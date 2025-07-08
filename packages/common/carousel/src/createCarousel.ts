@@ -50,6 +50,7 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
   const insertCarouselPlaceholder: Carousel<Editor>['insertCarouselPlaceholder'] = (editor) => {
     const carouselPlaceholderElement: CarouselPlaceholderElement = {
       type: CAROUSEL_PLACEHOLDER_TYPE,
+      ratio,
       children: [{ text: '' }],
     };
 

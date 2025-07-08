@@ -17,6 +17,7 @@ export interface CarouselImagesElement extends QuadratsElement, WithElementType 
 export interface CarouselCaptionElement extends QuadratsElement, WithElementType {}
 
 export interface CarouselPlaceholderElement extends QuadratsElement, WithElementType {
+  ratio?: [number, number];
   children: [Text];
 }
 
