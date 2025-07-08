@@ -22,6 +22,8 @@ export interface ModalProps {
   isOpen: boolean;
   haveCloseButton?: boolean;
   haveConfirmButton?: boolean;
+  disabledCloseButton?: boolean;
+  disabledConfirmButton?: boolean;
   closeText?: string;
   confirmText?: string;
   onClose: () => void;
@@ -44,6 +46,8 @@ const Modal = ({
   isOpen,
   haveCloseButton = true,
   haveConfirmButton = true,
+  disabledCloseButton = false,
+  disabledConfirmButton = false,
   closeText,
   confirmText,
   onClose,
@@ -72,12 +76,12 @@ const Modal = ({
         {customizedFooterElement}
         <div className="qdr-modal__footer__actions">
           {haveCloseButton && (
-            <Button variant="secondary" onClick={onClose}>
+            <Button variant="secondary" disabled={disabledCloseButton} onClick={onClose}>
               {closeText || locale.editor.cancel}
             </Button>
           )}
           {haveConfirmButton && (
-            <Button variant="primary" onClick={onConfirm}>
+            <Button variant="primary" disabled={disabledConfirmButton} onClick={onConfirm}>
               {confirmText || locale.editor.confirm}
             </Button>
           )}
@@ -85,15 +89,17 @@ const Modal = ({
       </div>
     ),
     [
-      closeText,
-      confirmText,
+      customizedFooterElement,
       haveCloseButton,
-      haveConfirmButton,
+      disabledCloseButton,
+      onClose,
+      closeText,
       locale.editor.cancel,
       locale.editor.confirm,
-      onClose,
+      haveConfirmButton,
+      disabledConfirmButton,
       onConfirm,
-      customizedFooterElement,
+      confirmText,
     ],
   );
 

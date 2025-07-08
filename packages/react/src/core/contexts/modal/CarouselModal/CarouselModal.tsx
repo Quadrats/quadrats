@@ -88,6 +88,7 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
         </div>
       }
       customizedFooterElement={<div>{`已上傳 ${urls.length}/10`}</div>}
+      disabledConfirmButton={uploading}
       onClose={() => {
         close();
       }}
