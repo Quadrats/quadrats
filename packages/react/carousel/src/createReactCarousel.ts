@@ -41,14 +41,12 @@ export function createReactCarousel(options: CreateReactCarouselOptions): ReactC
         {
           type: types.carousel_images,
           render: (props) => {
-            const { attributes, children, element, images, hosting } = props as RenderCarouselImagesElementProps;
+            const { attributes, children, element } = props as RenderCarouselImagesElementProps;
 
             return renderCarouselImages({
               attributes,
               element,
               children,
-              images,
-              hosting,
             });
           },
         },

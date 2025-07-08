@@ -3,6 +3,7 @@ import {
   CarouselElement,
   CarouselImagesElement,
   CarouselCaptionElement,
+  CarouselPlaceholderElement,
   CarouselTypeKey,
   CarouselImagesTypeKey,
   CarouselCaptionTypeKey,
@@ -11,14 +12,15 @@ import { RenderElementProps, Editor, WithCreateRenderElement } from '@quadrats/r
 
 export interface RenderCarouselElementProps extends RenderElementProps<CarouselElement> {}
 
-export interface RenderCarouselImagesElementProps extends RenderElementProps<CarouselImagesElement> {
-  images: string;
-  hosting?: string;
-}
+export interface RenderCarouselImagesElementProps extends RenderElementProps<CarouselImagesElement> {}
 
 export type RenderCarouselCaptionElementProps = RenderElementProps<CarouselCaptionElement>;
 
-export type RenderCarouselPlaceholderElement = (props: RenderElementProps) => JSX.Element | null | undefined;
+export interface RenderCarouselPlaceholderElementProps extends RenderElementProps<CarouselPlaceholderElement> {}
+
+export type RenderCarouselPlaceholderElement = (
+  props: RenderCarouselPlaceholderElementProps,
+) => JSX.Element | null | undefined;
 
 export type CarouselRenderElements = Record<
   CarouselTypeKey,

@@ -5,14 +5,13 @@ import { RenderCarouselImagesElementProps } from '../typings';
 export function CarouselImages({
   attributes,
   children,
+  element,
 }: {
   attributes?: RenderElementProps['attributes'];
   children: RenderElementProps['children'];
   element: RenderCarouselImagesElementProps['element'];
-  images: RenderCarouselImagesElementProps['images'];
-  hosting?: RenderCarouselImagesElementProps['hosting'];
 }) {
-  console.log('first', attributes, children);
+  console.log('first', attributes, children, element);
 
   return <div>CarouselImages</div>;
 }

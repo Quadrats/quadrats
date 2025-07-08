@@ -5,12 +5,13 @@ import { RenderCarouselElementProps } from '../typings';
 export function Carousel({
   attributes,
   children,
+  element,
 }: {
   attributes?: RenderElementProps['attributes'];
   children: RenderElementProps['children'];
   element: RenderCarouselElementProps['element'];
 }) {
-  console.log('first', attributes, children);
+  console.log('first', attributes, children, element);
 
   return <div>Carousel</div>;
 }

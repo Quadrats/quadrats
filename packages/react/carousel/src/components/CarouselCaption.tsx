@@ -5,12 +5,13 @@ import { RenderCarouselCaptionElementProps } from '../typings';
 export function CarouselCaption({
   attributes,
   children,
+  element,
 }: {
   attributes?: RenderElementProps['attributes'];
   children: RenderElementProps['children'];
   element: RenderCarouselCaptionElementProps['element'];
 }) {
-  console.log('first', attributes, children);
+  console.log('first', attributes, children, element);
 
   return <div>CarouselCaption</div>;
 }
