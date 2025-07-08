@@ -99,6 +99,8 @@
   }
 
   &__side-body {
+    display: flex;
+    flex-direction: column;
     width: 280px;
     border-right: 1px solid var(--qdr-divider);
     align-self: stretch;
@@ -106,13 +108,10 @@
 
   &__main,
   &__side {
+    flex: 1;
     padding: var(--qdr-spacing-9);
     box-sizing: border-box;
     align-self: stretch;
-  }
-
-  &__main {
-    flex: 1;
   }
 
   &__footer {
