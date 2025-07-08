@@ -31,6 +31,11 @@ export const QDR_SPACING: SpacingObject = {
   'radius-5': '0.75rem',
   'radius-6': '1rem',
 
+  'modal-size-s': '420px',
+  'modal-size-m': '540px',
+  'modal-size-l': '720px',
+  'modal-size-xl': '100%',
+
   typographyArticleH1FontSize: '2rem',
   typographyArticleH1LineHeight: '1.4',
   typographyArticleH1LetterSpacing: '0',

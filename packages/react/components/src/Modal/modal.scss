@@ -52,19 +52,19 @@
     margin: var(--qdr-spacing-8);
 
     &--small {
-      width: 420px;
+      width: var(--qdr-modal-size-s);
     }
 
     &--medium {
-      width: 540px;
+      width: var(--qdr-modal-size-m);
     }
 
     &--large {
-      width: 720px;
+      width: var(--qdr-modal-size-l);
     }
 
     &--extraLarge {
-      width: 100%;
+      width: var(--qdr-modal-size-xl);
     }
   }
 
