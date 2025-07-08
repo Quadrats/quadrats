@@ -1,6 +1,6 @@
 import React, { ReactNode, useCallback, useState } from 'react';
-import { EmbedModal } from '../../../../embed/src';
-import { CarouselModal } from '../../../../carousel/src';
+import { EmbedModal } from './EmbedModal/EmbedModal';
+import { CarouselModal } from './CarouselModal/CarouselModal';
 import { ModalContext, ModalName, EmbedModalConfig, CarouselModalConfig } from './modal';
 
 export interface ModalProviderProps {

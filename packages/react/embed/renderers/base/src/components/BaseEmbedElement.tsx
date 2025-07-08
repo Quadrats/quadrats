@@ -2,8 +2,7 @@ import React, { ReactNode } from 'react';
 import { Path, Transforms } from '@quadrats/core';
 import { EmbedElement } from '@quadrats/common/embed';
 import { AlignLeft, AlignCenter, AlignRight, Edit, Trash } from '@quadrats/icons';
-import { QuadratsReactEditor, ReactEditor, useSlateStatic } from '@quadrats/react';
-import { useModal } from '@quadrats/react/components';
+import { QuadratsReactEditor, ReactEditor, useSlateStatic, useModal } from '@quadrats/react';
 import { InlineToolbar } from '@quadrats/react/toolbar';
 
 export interface BaseEmbedElementWithoutToolbarProps {

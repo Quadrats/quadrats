@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { useSlateStatic } from '@quadrats/react';
+import { Editor } from '@quadrats/core';
+import { useSlateStatic } from 'slate-react';
+import { Carousel } from '@quadrats/common/carousel';
 import { Hints, Button, Modal } from '@quadrats/react/components';
-import { ReactCarousel } from '../typings';
 
 export interface CarouselModalProps {
   isOpen: boolean;
   close: VoidFunction;
-  controller?: ReactCarousel;
+  controller?: Carousel<Editor>;
 }
 
 export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps) => {

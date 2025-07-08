@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { Editor, Element } from '@quadrats/core';
 import { CAROUSEL_PLACEHOLDER_TYPE, CarouselPlaceholderElement } from '@quadrats/common/carousel';
-import { useSlateStatic } from '@quadrats/react';
-import { useModal } from '@quadrats/react/components';
+import { useSlateStatic, useModal } from '@quadrats/react';
 import { ReactCarousel } from '@quadrats/react/carousel';
 
 export function useCarouselTool(controller: ReactCarousel) {

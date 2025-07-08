@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useLocale } from '@quadrats/react';
 import { Textarea, Input, Modal } from '@quadrats/react/components';
+import { useLocale } from '@quadrats/react/configs';
 
 export interface EmbedModalProps {
   isOpen: boolean;

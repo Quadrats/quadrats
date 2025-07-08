@@ -1,6 +1,6 @@
 import { createContext, useContext, Dispatch, SetStateAction } from 'react';
-import { EmbedModalProps } from '../../../../embed/src';
-import { CarouselModalProps } from '../../../../carousel/src';
+import { EmbedModalProps } from './EmbedModal/EmbedModal';
+import { CarouselModalProps } from './CarouselModal/CarouselModal';
 
 export type ModalName = 'embed-modal' | 'carousel-modal' | '';
 

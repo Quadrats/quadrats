@@ -1,9 +1,8 @@
 import { useMemo, useEffect } from 'react';
 import { Editor, Element } from '@quadrats/core';
-import { useSlateStatic, useLocale } from '@quadrats/react';
+import { useSlateStatic, useLocale, useModal } from '@quadrats/react';
 import { EMBED_PLACEHOLDER_TYPE, EmbedPlaceholderElement } from '@quadrats/common/embed';
 import { ReactEmbed } from '@quadrats/react/embed';
-import { useModal } from '@quadrats/react/components';
 
 type ConfigType = {
   type: 'input' | 'textarea';
