@@ -37,6 +37,7 @@ export { Link } from './link';
 export { More } from './more';
 export { OrderedList } from './ordered-list';
 export { Paragraph } from './paragraph';
+export { Plus } from './plus';
 export { PodcastApple } from './podcastApple';
 export { Spotify } from './spotify';
 export { ReadMore } from './read-more';
