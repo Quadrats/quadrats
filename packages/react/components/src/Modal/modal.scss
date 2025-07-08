@@ -93,9 +93,22 @@
   }
 
   &__body {
+    max-height: calc(
+      100svh - 2 * var(--qdr-spacing-8) - 2 * var(--qdr-spacing-5) - var(--qdr-typography-basic-h5-font-size) *
+        var(--qdr-typography-basic-h5-line-height)
+    );
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
+
+    &--have-footer-height {
+      max-height: calc(
+        100svh - 2 * var(--qdr-spacing-8) - 2 * var(--qdr-spacing-5) - var(--qdr-typography-basic-h5-font-size) *
+          var(--qdr-typography-basic-h5-line-height) - 2 *
+          var(--qdr-spacing-6) - var(--qdr-typography-basic-button2-font-size) *
+          var(--qdr-typography-basic-button2-line-height)
+      );
+    }
   }
 
   &__side-body {
@@ -112,6 +125,10 @@
     padding: var(--qdr-spacing-9);
     box-sizing: border-box;
     align-self: stretch;
+  }
+
+  &__main {
+    overflow-y: auto;
   }
 
   &__footer {

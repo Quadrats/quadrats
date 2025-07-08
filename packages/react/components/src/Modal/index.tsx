@@ -132,7 +132,11 @@ const Modal = ({
                 <Icon className="qdr-modal__header__cancel" icon={Cancel} width={24} height={24} onClick={onClose} />
               )}
             </div>
-            <div className="qdr-modal__body">
+            <div
+              className={clsx('qdr-modal__body', {
+                'qdr-modal__body--have-footer-height': haveFooter && !sideChildren,
+              })}
+            >
               {sideChildren && (
                 <div className="qdr-modal__side-body">
                   <div className={clsx('qdr-modal__side', sideAreaClassName)}>{sideChildren}</div>

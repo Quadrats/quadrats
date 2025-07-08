@@ -1,29 +1,13 @@
 module.exports = {
-  extends: [
-    'stylelint-config-standard',
-    'stylelint-config-recommended-scss'
-  ],
-  plugins: [
-    'stylelint-order',
-    'stylelint-scss'
-  ],
+  extends: ['stylelint-config-standard', 'stylelint-config-recommended-scss'],
+  plugins: ['stylelint-order', 'stylelint-scss'],
   rules: {
     'at-rule-empty-line-before': [
       'always',
       {
-        ignore: [
-          'after-comment',
-          'first-nested'
-        ],
-        ignoreAtRules: [
-          'use',
-          'forward',
-          'import',
-          'include',
-          'if',
-          'else'
-        ]
-      }
+        ignore: ['after-comment', 'first-nested'],
+        ignoreAtRules: ['use', 'forward', 'import', 'include', 'if', 'else'],
+      },
     ],
     'selector-class-pattern': null,
     'at-rule-no-vendor-prefix': true,
@@ -32,10 +16,8 @@ module.exports = {
     'selector-no-vendor-prefix': true,
     'value-no-vendor-prefix': true,
     'selector-pseudo-class-no-unknown': true,
-    'order/order': [
-      'custom-properties',
-      'declarations'
-    ],
-    'scss/selector-no-redundant-nesting-selector': true
-  }
+    'order/order': ['custom-properties', 'declarations'],
+    'scss/selector-no-redundant-nesting-selector': true,
+    'scss/operator-no-newline-after': null,
+  },
 };
