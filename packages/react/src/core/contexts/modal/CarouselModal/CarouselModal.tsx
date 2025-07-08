@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Editor } from '@quadrats/core';
-import { Dance } from '@quadrats/icons';
+import { Plus } from '@quadrats/icons';
 import { useSlateStatic } from 'slate-react';
 import { Carousel } from '@quadrats/common/carousel';
 import { Hints, Button, Modal, Icon } from '@quadrats/react/components';
@@ -50,23 +50,30 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
       closable
       haveCloseButton={false}
       confirmText="建立輪播"
+      mainAreaClassName="qdr-embed-modal__main"
       sideChildren={
-        <div>
-          上傳建議
-          <Hints
-            hints={[
-              {
-                text: `數量限制：至少 1 張，至多 ${controller?.maxLength} 張。`,
-              },
-              {
-                text: `檔案大小：不可大於 ${controller?.limitSize} MB。`,
-              },
-            ]}
-          />
+        <div className="qdr-embed-modal__side">
+          <div className="qdr-embed-modal__side__hints-wrapper">
+            <div className="qdr-embed-modal__side__hints-title">上傳建議</div>
+            <Hints
+              hints={[
+                {
+                  text: `數量限制：至少 1 張，至多 ${controller?.maxLength} 張。`,
+                },
+                {
+                  text: '檔案格式：限 JPG 或 PNG。',
+                },
+                {
+                  text: `檔案大小：不可大於 ${controller?.limitSize} MB。`,
+                },
+              ]}
+            />
+          </div>
           <Button
+            className="qdr-embed-modal__side__upload"
             variant="outlined"
             size="large"
-            prefix={<Icon icon={Dance} width={24} height={24} />}
+            prefix={<Icon icon={Plus} width={24} height={24} />}
             onClick={async () => {
               const files = await controller?.selectFiles(editor);
 
