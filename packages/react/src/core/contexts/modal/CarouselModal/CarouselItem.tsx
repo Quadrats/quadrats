@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Input } from '@quadrats/react/components';
 
 interface CarouselItemProps {
   url: string;
+  caption: string;
+  onChange: (value: string) => void;
   ratio?: [number, number];
 }
 
-const CarouselItem = ({ url, ratio }: CarouselItemProps) => {
-  const [value, setValue] = useState('');
-
+const CarouselItem = ({ url, caption, onChange, ratio }: CarouselItemProps) => {
   return (
     <div className="qdr-carousel-modal__item">
       <img
@@ -20,7 +20,7 @@ const CarouselItem = ({ url, ratio }: CarouselItemProps) => {
         }}
       />
       <div className="qdr-carousel-modal__input-wrapper">
-        <Input value={value} onChange={setValue} placeholder="圖片說明或替代文字..." />
+        <Input value={caption} onChange={onChange} placeholder="圖片說明或替代文字..." />
       </div>
     </div>
   );

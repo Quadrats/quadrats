@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Editor } from '@quadrats/core';
 import { Plus } from '@quadrats/icons';
 import { useSlateStatic } from 'slate-react';
@@ -26,7 +26,7 @@ function mockUpload(base64: string): Promise<string> {
   return new Promise((resolve) => {
     setTimeout(async () => {
       resolve(base64);
-    }, 1500);
+    }, 2000);
   });
 }
 
@@ -36,12 +36,54 @@ export interface CarouselModalProps {
   controller?: Carousel<Editor>;
 }
 
+export interface CarouselFieldArrayItem {
+  url: string;
+  caption: string;
+}
+
 export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps) => {
   const editor = useSlateStatic();
   const [uploading, setUploading] = useState(false);
-  const [urls, setUrls] = useState<string[]>([]);
+  const [images, setImages] = useState<CarouselFieldArrayItem[]>([]);
 
-  console.log('uploading', uploading, urls);
+  console.log('uploading', uploading, images);
+
+  const change = useCallback((index: number, image: CarouselFieldArrayItem) => {
+    setImages((prev) => {
+      const updated = [...prev];
+
+      updated[index] = image;
+
+      return updated;
+    });
+  }, []);
+
+  const add = useCallback((image: CarouselFieldArrayItem) => {
+    setImages((prev) => [...prev, image]);
+  }, []);
+
+  // const remove = useCallback((index: number) => {
+  //   setImages((prev) => prev.filter((_, i) => i !== index));
+  // }, []);
+
+  // const swap = useCallback(
+  //   (from: number, to: number) => {
+  //     if (from < 0 || to < 0 || from >= images.length || to >= images.length || from === to) {
+  //       return;
+  //     }
+
+  //     setImages((prev) => {
+  //       const updated = [...prev];
+  //       const temp = updated[from];
+
+  //       updated[from] = updated[to];
+  //       updated[to] = temp;
+
+  //       return updated;
+  //     });
+  //   },
+  //   [images.length],
+  // );
 
   return (
     <Modal
@@ -88,7 +130,8 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
                   const base64 = await readFileAsBase64(file);
                   const url = await mockUpload(base64);
 
-                  setUrls((prev) => [...prev, url]);
+                  add({ url, caption: '' });
+
                   setUploading(false);
                 }
               }
@@ -98,18 +141,26 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
           </Button>
         </div>
       }
-      customizedFooterElement={<div>{`已上傳 ${urls.length}/${controller?.maxLength}`}</div>}
+      customizedFooterElement={<div>{`已上傳 ${images.length}/${controller?.maxLength}`}</div>}
       disabledConfirmButton={uploading}
       onClose={() => {
         close();
       }}
       onConfirm={() => {
-        console.log('urls', urls);
+        console.log('images', images);
       }}
     >
       <div className="qdr-carousel-modal__grid">
-        {urls.map((url) => (
-          <CarouselItem key={url} url={url} ratio={controller?.ratio} />
+        {images.map((image, index) => (
+          <CarouselItem
+            key={image.url}
+            url={image.url}
+            caption={image.caption}
+            ratio={controller?.ratio}
+            onChange={(value) => {
+              change(index, { url: image.url, caption: value });
+            }}
+          />
         ))}
       </div>
     </Modal>
