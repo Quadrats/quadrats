@@ -1,4 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 import { Editor } from '@quadrats/core';
 import { Plus } from '@quadrats/icons';
 import { useSlateStatic } from 'slate-react';
@@ -48,6 +50,14 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
 
   console.log('uploading', uploading, images);
 
+  const isOverMaxLength = useMemo(() => {
+    if (controller?.maxLength) {
+      return images.length >= controller.maxLength;
+    }
+
+    return false;
+  }, [controller?.maxLength, images.length]);
+
   const change = useCallback((index: number, image: CarouselFieldArrayItem) => {
     setImages((prev) => {
       const updated = [...prev];
@@ -62,28 +72,21 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
     setImages((prev) => [...prev, image]);
   }, []);
 
-  // const remove = useCallback((index: number) => {
-  //   setImages((prev) => prev.filter((_, i) => i !== index));
-  // }, []);
+  const remove = useCallback((index: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
+  }, []);
 
-  // const swap = useCallback(
-  //   (from: number, to: number) => {
-  //     if (from < 0 || to < 0 || from >= images.length || to >= images.length || from === to) {
-  //       return;
-  //     }
+  const swap = useCallback((from: number, to: number) => {
+    setImages((prev) => {
+      const updated = [...prev];
+      const temp = updated[from];
 
-  //     setImages((prev) => {
-  //       const updated = [...prev];
-  //       const temp = updated[from];
+      updated[from] = updated[to];
+      updated[to] = temp;
 
-  //       updated[from] = updated[to];
-  //       updated[to] = temp;
-
-  //       return updated;
-  //     });
-  //   },
-  //   [images.length],
-  // );
+      return updated;
+    });
+  }, []);
 
   return (
     <Modal
@@ -120,6 +123,7 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
             className="qdr-carousel-modal__side__upload"
             variant="outlined"
             size="large"
+            disabled={isOverMaxLength}
             prefix={<Icon icon={Plus} width={24} height={24} />}
             onClick={async () => {
               const files = await controller?.selectFiles(editor);
@@ -141,8 +145,10 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
           </Button>
         </div>
       }
-      customizedFooterElement={<div>{`已上傳 ${images.length}/${controller?.maxLength}`}</div>}
-      disabledConfirmButton={uploading}
+      customizedFooterElement={
+        <div className="qdr-carousel-modal__counter">{`已上傳 ${images.length}/${controller?.maxLength}`}</div>
+      }
+      disabledConfirmButton={uploading || isOverMaxLength}
       onClose={() => {
         close();
       }}
@@ -150,19 +156,26 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
         console.log('images', images);
       }}
     >
-      <div className="qdr-carousel-modal__grid">
-        {images.map((image, index) => (
-          <CarouselItem
-            key={image.url}
-            url={image.url}
-            caption={image.caption}
-            ratio={controller?.ratio}
-            onChange={(value) => {
-              change(index, { url: image.url, caption: value });
-            }}
-          />
-        ))}
-      </div>
+      <DndProvider backend={HTML5Backend}>
+        <div className="qdr-carousel-modal__grid">
+          {images.map((image, index) => (
+            <CarouselItem
+              key={`${image.url}-${index}`}
+              url={image.url}
+              caption={image.caption}
+              index={index}
+              ratio={controller?.ratio}
+              onChange={(value) => {
+                change(index, { url: image.url, caption: value });
+              }}
+              onRemove={() => {
+                remove(index);
+              }}
+              swap={swap}
+            />
+          ))}
+        </div>
+      </DndProvider>
     </Modal>
   );
 };
