@@ -1,7 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
 import { useDrag, useDrop } from 'react-dnd';
-import { Input } from '@quadrats/react/components';
+import { Input, Icon } from '@quadrats/react/components';
+import { Trash } from '@quadrats/icons';
 
 interface CarouselItemProps {
   url: string;
@@ -13,7 +14,7 @@ interface CarouselItemProps {
   ratio?: [number, number];
 }
 
-const CarouselItem = ({ url, caption, index, onChange, swap, ratio }: CarouselItemProps) => {
+const CarouselItem = ({ url, caption, index, onChange, onRemove, swap, ratio }: CarouselItemProps) => {
   const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
     type: 'CarouselItem',
     collect: (monitor) => ({
@@ -43,6 +44,9 @@ const CarouselItem = ({ url, caption, index, onChange, swap, ratio }: CarouselIt
             'qdr-carousel-modal__item--isOver': isOver,
           })}
         >
+          <div contentEditable={false} className={clsx('qdr-inline-toolbar', 'qdr-carousel-modal__inline-toolbar')}>
+            <Icon className="qdr-inline-toolbar__icon" icon={Trash} width={24} height={24} onClick={onRemove} />
+          </div>
           <img
             src={url}
             className="qdr-carousel-modal__image"

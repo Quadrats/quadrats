@@ -48,8 +48,6 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
   const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState<CarouselFieldArrayItem[]>([]);
 
-  console.log('uploading', uploading, images);
-
   const isOverMaxLength = useMemo(() => {
     if (controller?.maxLength) {
       return images.length >= controller.maxLength;
