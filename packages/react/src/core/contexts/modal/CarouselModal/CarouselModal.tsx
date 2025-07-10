@@ -25,7 +25,7 @@ function readFileAsBase64(file: File): Promise<string> {
   });
 }
 
-function mockUpload(base64: string, onProgress: (percent: number) => void): Promise<string> {
+function upload(base64: string, onProgress: (percent: number) => void): Promise<string> {
   return new Promise((resolve) => {
     let progress = 0;
     const interval = setInterval(() => {
@@ -93,7 +93,7 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
           setImages((prev) => prev.map((u) => (u.file === item.file ? { ...u, progress: p } : u)));
         };
 
-        const url = await mockUpload(item.preview, onProgress);
+        const url = await upload(item.preview, onProgress);
 
         setImages((prev) => prev.map((u) => (u.file === item.file ? { ...u, url } : u)));
       }
@@ -169,7 +169,11 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
               const files = await controller?.selectFiles(editor);
 
               if (files) {
-                await uploadFiles(files);
+                const correctFiles = files.filter(
+                  (f) => controller?.limitSize && f.size <= controller.limitSize * 1024 * 1024,
+                );
+
+                await uploadFiles(correctFiles);
               }
             }}
           >

@@ -1,8 +1,5 @@
-export function getFilesFromInput(options: {
-  accept: ('image/jpeg' | 'image/jpg' | 'image/png')[];
-  limitSize: number;
-}) {
-  const { accept, limitSize } = options;
+export function getFilesFromInput(options: { accept: ('image/jpeg' | 'image/jpg' | 'image/png')[] }) {
+  const { accept } = options;
 
   return new Promise<File[] | undefined>((resolve) => {
     const inputEl = document.createElement('input');
@@ -27,9 +24,7 @@ export function getFilesFromInput(options: {
         const files: File[] = [];
 
         for (const file of fileList) {
-          if (file.size <= limitSize * 1024 * 1024) {
-            files.push(file);
-          }
+          files.push(file);
         }
 
         resolve(files);
