@@ -45,21 +45,23 @@ const FilesDropZone = ({ children, isOverMaxLength, controller, uploadFiles }: F
 
   const handleDrop = useCallback(
     async (event: React.DragEvent<HTMLDivElement>) => {
-      event.preventDefault();
-      setIsDragging(false);
-      setError(false);
+      if (event.dataTransfer?.types?.includes('Files')) {
+        event.preventDefault();
+        setIsDragging(false);
+        setError(false);
 
-      const files = Array.from(event.dataTransfer.files);
+        const files = Array.from(event.dataTransfer.files);
 
-      if (!validateFiles(event)) {
-        return;
+        if (!validateFiles(event)) {
+          return;
+        }
+
+        const correctFiles = files.filter(
+          (f) => validateFile(f) && controller?.limitSize && f.size <= controller.limitSize * 1024 * 1024,
+        );
+
+        await uploadFiles(correctFiles);
       }
-
-      const correctFiles = files.filter(
-        (f) => validateFile(f) && controller?.limitSize && f.size <= controller.limitSize * 1024 * 1024,
-      );
-
-      await uploadFiles(correctFiles);
     },
     [validateFiles, uploadFiles, validateFile, controller?.limitSize],
   );
@@ -71,8 +73,11 @@ const FilesDropZone = ({ children, isOverMaxLength, controller, uploadFiles }: F
       })}
       onDragOver={(e) => {
         e.preventDefault();
-        setIsDragging(true);
-        setError(false);
+
+        if (e.dataTransfer?.types?.includes('Files')) {
+          setIsDragging(true);
+          setError(false);
+        }
       }}
       onDragLeave={() => {
         setIsDragging(false);
