@@ -1,5 +1,5 @@
-export function getFilesFromInput(options: { accept: string[] }) {
-  const { accept } = options;
+export function getFilesFromInput(options: { accept: string[]; limitSize: number }) {
+  const { accept, limitSize } = options;
 
   return new Promise<File[] | undefined>((resolve) => {
     const inputEl = document.createElement('input');
@@ -24,7 +24,9 @@ export function getFilesFromInput(options: { accept: string[] }) {
         const files: File[] = [];
 
         for (const file of fileList) {
-          files.push(file);
+          if (file.size <= limitSize * 1024 * 1024) {
+            files.push(file);
+          }
         }
 
         resolve(files);

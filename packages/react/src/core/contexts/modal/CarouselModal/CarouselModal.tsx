@@ -32,6 +32,13 @@ function mockUpload(base64: string): Promise<string> {
   });
 }
 
+async function upload(file: File) {
+  const base64 = await readFileAsBase64(file);
+  const url = await mockUpload(base64);
+
+  return url;
+}
+
 export interface CarouselModalProps {
   isOpen: boolean;
   close: VoidFunction;
@@ -129,8 +136,7 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
               if (files) {
                 for (const file of files) {
                   setUploading(true);
-                  const base64 = await readFileAsBase64(file);
-                  const url = await mockUpload(base64);
+                  const url = await upload(file);
 
                   add({ url, caption: '' });
 

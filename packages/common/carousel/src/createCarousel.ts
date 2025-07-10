@@ -42,7 +42,7 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
   const accept: string[] = acceptOptions || ['image/*'];
 
   const selectFiles: Carousel<Editor>['selectFiles'] = async () => {
-    const files = await getFilesFromInput({ accept });
+    const files = await getFilesFromInput({ accept, limitSize });
 
     return files;
   };

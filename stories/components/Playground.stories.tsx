@@ -162,7 +162,7 @@ const accordion = createReactAccordion();
 const carousel = createReactCarousel({
   ratio: [4, 2],
   maxLength: 12,
-  limitSize: 6,
+  limitSize: 2,
   getBody: (file) => file,
   getHeaders: (file) => ({
     Authorization: 'Bearer <Your OAuth2 Token>',
