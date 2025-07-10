@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { Editor } from '@quadrats/core';
@@ -58,6 +58,14 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
   const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState<CarouselFieldArrayItem[]>([]);
 
+  useEffect(() => {
+    if (images.some((i) => i.progress !== 100)) {
+      setUploading(true);
+    } else {
+      setUploading(false);
+    }
+  }, [images]);
+
   const isOverMaxLength = useMemo(() => {
     if (controller?.maxLength) {
       return images.length >= controller.maxLength;
@@ -86,8 +94,6 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
 
       setImages((prev) => [...prev, ...items]);
 
-      setUploading(true);
-
       for (const item of items) {
         const onProgress = (p: number) => {
           setImages((prev) => prev.map((u) => (u.file === item.file ? { ...u, progress: p } : u)));
@@ -97,8 +103,6 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
 
         setImages((prev) => prev.map((u) => (u.file === item.file ? { ...u, url } : u)));
       }
-
-      setUploading(false);
     }
   }, []);
 
