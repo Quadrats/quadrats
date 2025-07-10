@@ -42,7 +42,6 @@
       position: absolute;
       inset: 0;
       z-index: 101;
-      // pointer-events: none;
 
       &--error {
         border: 1px solid var(--qdr-error);
