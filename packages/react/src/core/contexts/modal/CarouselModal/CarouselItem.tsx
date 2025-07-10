@@ -17,7 +17,7 @@ interface CarouselItemProps {
 }
 
 const CarouselItem = ({
-  url,
+  // url,
   preview,
   progress,
   caption,
@@ -46,8 +46,6 @@ const CarouselItem = ({
       }
     },
   }));
-
-  console.log('progress', progress, url);
 
   return drop(
     drag(

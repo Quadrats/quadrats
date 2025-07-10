@@ -34,7 +34,7 @@ function mockUpload(base64: string, onProgress: (percent: number) => void): Prom
         clearInterval(interval);
         setTimeout(() => resolve(`https://${base64}.jpg`), 200);
       }
-    }, 100);
+    }, 250);
   });
 }
 
