@@ -1,11 +1,13 @@
 import React from 'react';
 import clsx from 'clsx';
 import { useDrag, useDrop } from 'react-dnd';
-import { Input, Icon } from '@quadrats/react/components';
+import { Input, Icon, Progress } from '@quadrats/react/components';
 import { Trash } from '@quadrats/icons';
 
 interface CarouselItemProps {
   url: string;
+  preview: string;
+  progress: number;
   caption: string;
   index: number;
   onChange: (value: string) => void;
@@ -14,7 +16,17 @@ interface CarouselItemProps {
   ratio?: [number, number];
 }
 
-const CarouselItem = ({ url, caption, index, onChange, onRemove, swap, ratio }: CarouselItemProps) => {
+const CarouselItem = ({
+  url,
+  preview,
+  progress,
+  caption,
+  index,
+  onChange,
+  onRemove,
+  swap,
+  ratio,
+}: CarouselItemProps) => {
   const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
     type: 'CarouselItem',
     collect: (monitor) => ({
@@ -35,6 +47,8 @@ const CarouselItem = ({ url, caption, index, onChange, onRemove, swap, ratio }: 
     },
   }));
 
+  console.log('progress', progress, url);
+
   return drop(
     drag(
       dragPreview(
@@ -44,11 +58,12 @@ const CarouselItem = ({ url, caption, index, onChange, onRemove, swap, ratio }: 
             'qdr-carousel-modal__item--isOver': isOver,
           })}
         >
+          {progress !== 100 && <Progress percentage={progress} />}
           <div contentEditable={false} className={clsx('qdr-inline-toolbar', 'qdr-carousel-modal__inline-toolbar')}>
             <Icon className="qdr-inline-toolbar__icon" icon={Trash} width={24} height={24} onClick={onRemove} />
           </div>
           <img
-            src={url}
+            src={preview}
             className="qdr-carousel-modal__image"
             style={{
               objectFit: ratio ? 'cover' : 'contain',

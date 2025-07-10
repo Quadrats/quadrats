@@ -24,19 +24,18 @@ function readFileAsBase64(file: File): Promise<string> {
   });
 }
 
-function mockUpload(base64: string): Promise<string> {
+function mockUpload(base64: string, onProgress: (percent: number) => void): Promise<string> {
   return new Promise((resolve) => {
-    setTimeout(async () => {
-      resolve(base64);
-    }, 2000);
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 10;
+      onProgress(progress);
+      if (progress >= 100) {
+        clearInterval(interval);
+        setTimeout(() => resolve(`https://${base64}.jpg`), 200);
+      }
+    }, 100);
   });
-}
-
-async function upload(file: File) {
-  const base64 = await readFileAsBase64(file);
-  const url = await mockUpload(base64);
-
-  return url;
 }
 
 export interface CarouselModalProps {
@@ -46,6 +45,9 @@ export interface CarouselModalProps {
 }
 
 export interface CarouselFieldArrayItem {
+  file: File;
+  progress: number;
+  preview: string;
   url: string;
   caption: string;
 }
@@ -63,18 +65,14 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
     return false;
   }, [controller?.maxLength, images.length]);
 
-  const change = useCallback((index: number, image: CarouselFieldArrayItem) => {
+  const change = useCallback((index: number, image: Omit<CarouselFieldArrayItem, 'progress' | 'preview' | 'file'>) => {
     setImages((prev) => {
       const updated = [...prev];
 
-      updated[index] = image;
+      updated[index] = { ...updated[index], ...image };
 
       return updated;
     });
-  }, []);
-
-  const add = useCallback((image: CarouselFieldArrayItem) => {
-    setImages((prev) => [...prev, image]);
   }, []);
 
   const remove = useCallback((index: number) => {
@@ -132,16 +130,30 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
             prefix={<Icon icon={Plus} width={24} height={24} />}
             onClick={async () => {
               const files = await controller?.selectFiles(editor);
+              const items: CarouselFieldArrayItem[] = [];
 
               if (files) {
                 for (const file of files) {
-                  setUploading(true);
-                  const url = await upload(file);
+                  const base64 = await readFileAsBase64(file);
 
-                  add({ url, caption: '' });
-
-                  setUploading(false);
+                  items.push({ file, url: '', caption: '', preview: base64, progress: 0 });
                 }
+
+                setImages((prev) => [...prev, ...items]);
+
+                setUploading(true);
+
+                for (const item of items) {
+                  const onProgress = (p: number) => {
+                    setImages((prev) => prev.map((u) => (u.file === item.file ? { ...u, progress: p } : u)));
+                  };
+
+                  const url = await mockUpload(item.preview, onProgress);
+
+                  setImages((prev) => prev.map((u) => (u.file === item.file ? { ...u, url } : u)));
+                }
+
+                setUploading(false);
               }
             }}
           >
@@ -166,6 +178,8 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
             <CarouselItem
               key={`${image.url}-${index}`}
               url={image.url}
+              preview={image.preview}
+              progress={image.progress}
               caption={image.caption}
               index={index}
               ratio={controller?.ratio}
