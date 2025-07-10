@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { useDrag, useDrop } from 'react-dnd';
 import { Input, Icon, Progress } from '@quadrats/react/components';
@@ -27,6 +27,19 @@ const CarouselItem = ({
   swap,
   ratio,
 }: CarouselItemProps) => {
+  const [inputValue, setInputValue] = useState(caption);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      onChange(inputValue);
+    }, 500);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputValue]);
+
   const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
     type: 'CarouselItem',
     collect: (monitor) => ({
@@ -69,7 +82,7 @@ const CarouselItem = ({
             }}
           />
           <div className="qdr-carousel-modal__input-wrapper">
-            <Input value={caption} onChange={onChange} placeholder="圖片說明或替代文字..." />
+            <Input value={inputValue} onChange={setInputValue} placeholder="圖片說明或替代文字..." />
           </div>
         </div>,
       ),
