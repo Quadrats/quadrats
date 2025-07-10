@@ -26,6 +26,7 @@
     }
 
     &__main {
+      position: relative;
       background-color: var(--qdr-bg);
     }
 
@@ -35,6 +36,67 @@
       line-height: var(--qdr-typography-basic-body2-line-height);
       letter-spacing: var(--qdr-typography-basic-body2-letter-spacing);
       font-weight: var(--qdr-typography-basic-body2-font-weight);
+    }
+
+    &__zone {
+      position: absolute;
+      inset: 0;
+      z-index: 101;
+      // pointer-events: none;
+
+      &--error {
+        border: 1px solid var(--qdr-error);
+      }
+
+      &__wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--qdr-bg);
+        pointer-events: none;
+      }
+
+      &__block {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        width: 360px;
+        padding-bottom: var(--qdr-spacing-14);
+      }
+
+      &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--qdr-action-inactive);
+        padding: var(--qdr-spacing-4);
+        border: 1px solid var(--qdr-divider);
+        background-color: var(--qdr-surface);
+        border-radius: var(--qdr-radius-5);
+      }
+
+      &__title {
+        color: var(--qdr-text-primary);
+        font-size: var(--qdr-typography-basic-h5-font-size);
+        line-height: var(--qdr-typography-basic-h5-line-height);
+        letter-spacing: var(--qdr-typography-basic-h5-letter-spacing);
+        font-weight: var(--qdr-typography-basic-h5-font-weight);
+        text-align: center;
+        margin-top: var(--qdr-spacing-9);
+      }
+
+      &__hint {
+        color: var(--qdr-text-secondary);
+        font-size: var(--qdr-typography-basic-body2-font-size);
+        line-height: var(--qdr-typography-basic-body2-line-height);
+        letter-spacing: var(--qdr-typography-basic-body2-letter-spacing);
+        font-weight: var(--qdr-typography-basic-body2-font-weight);
+        text-align: center;
+        margin-top: var(--qdr-spacing-2);
+      }
     }
 
     &__grid {

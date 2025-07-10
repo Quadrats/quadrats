@@ -6,6 +6,7 @@ import { Plus } from '@quadrats/icons';
 import { useSlateStatic } from 'slate-react';
 import { Carousel } from '@quadrats/common/carousel';
 import { Hints, Button, Modal, Icon } from '@quadrats/react/components';
+import FilesDropZone from './FilesDropZone';
 import CarouselItem from './CarouselItem';
 
 function readFileAsBase64(file: File): Promise<string> {
@@ -202,6 +203,7 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
             />
           ))}
         </div>
+        <FilesDropZone isOverMaxLength={isOverMaxLength} controller={controller} uploadFiles={uploadFiles} />
       </DndProvider>
     </Modal>
   );

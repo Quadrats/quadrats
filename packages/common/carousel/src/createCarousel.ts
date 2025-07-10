@@ -13,7 +13,7 @@ import { getFilesFromInput } from './getFilesFromInput';
 
 export interface CreateCarouselOptions {
   types?: Partial<CarouselTypes>;
-  accept?: string[];
+  accept?: ('image/jpeg' | 'image/jpg' | 'image/png')[];
   ratio?: [number, number];
   maxLength?: number;
   limitSize?: number;
@@ -39,7 +39,7 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
   const types: CarouselTypes = { ...CAROUSEL_TYPES, ...typesOptions };
   const maxLength: number = maxLengthOptions || 10;
   const limitSize: number = limitSizeOptions || 5;
-  const accept: string[] = acceptOptions || ['image/*'];
+  const accept = acceptOptions || ['image/jpeg', 'image/jpg', 'image/png'];
 
   const selectFiles: Carousel<Editor>['selectFiles'] = async () => {
     const files = await getFilesFromInput({ accept, limitSize });

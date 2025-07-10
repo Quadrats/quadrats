@@ -1,4 +1,7 @@
-export function getFilesFromInput(options: { accept: string[]; limitSize: number }) {
+export function getFilesFromInput(options: {
+  accept: ('image/jpeg' | 'image/jpg' | 'image/png')[];
+  limitSize: number;
+}) {
   const { accept, limitSize } = options;
 
   return new Promise<File[] | undefined>((resolve) => {
