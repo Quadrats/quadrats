@@ -65,6 +65,34 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
     return false;
   }, [controller?.maxLength, images.length]);
 
+  const uploadFiles = useCallback(async (files: File[]) => {
+    if (files) {
+      const items: CarouselFieldArrayItem[] = [];
+
+      for (const file of files) {
+        const base64 = await readFileAsBase64(file);
+
+        items.push({ file, url: '', caption: '', preview: base64, progress: 0 });
+      }
+
+      setImages((prev) => [...prev, ...items]);
+
+      setUploading(true);
+
+      for (const item of items) {
+        const onProgress = (p: number) => {
+          setImages((prev) => prev.map((u) => (u.file === item.file ? { ...u, progress: p } : u)));
+        };
+
+        const url = await mockUpload(item.preview, onProgress);
+
+        setImages((prev) => prev.map((u) => (u.file === item.file ? { ...u, url } : u)));
+      }
+
+      setUploading(false);
+    }
+  }, []);
+
   const change = useCallback((index: number, image: Omit<CarouselFieldArrayItem, 'progress' | 'preview' | 'file'>) => {
     setImages((prev) => {
       const updated = [...prev];
@@ -130,30 +158,9 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
             prefix={<Icon icon={Plus} width={24} height={24} />}
             onClick={async () => {
               const files = await controller?.selectFiles(editor);
-              const items: CarouselFieldArrayItem[] = [];
 
               if (files) {
-                for (const file of files) {
-                  const base64 = await readFileAsBase64(file);
-
-                  items.push({ file, url: '', caption: '', preview: base64, progress: 0 });
-                }
-
-                setImages((prev) => [...prev, ...items]);
-
-                setUploading(true);
-
-                for (const item of items) {
-                  const onProgress = (p: number) => {
-                    setImages((prev) => prev.map((u) => (u.file === item.file ? { ...u, progress: p } : u)));
-                  };
-
-                  const url = await mockUpload(item.preview, onProgress);
-
-                  setImages((prev) => prev.map((u) => (u.file === item.file ? { ...u, url } : u)));
-                }
-
-                setUploading(false);
+                await uploadFiles(files);
               }
             }}
           >
@@ -162,7 +169,9 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
         </div>
       }
       customizedFooterElement={
-        <div className="qdr-carousel-modal__counter">{`已上傳 ${images.length}/${controller?.maxLength}`}</div>
+        <div className="qdr-carousel-modal__counter">
+          {`已上傳 ${images.filter((i) => i.progress === 100).length}/${controller?.maxLength}`}
+        </div>
       }
       disabledConfirmButton={uploading || isOverMaxLength}
       onClose={() => {
