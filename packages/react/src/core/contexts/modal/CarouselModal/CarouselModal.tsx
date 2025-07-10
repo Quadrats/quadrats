@@ -66,6 +66,14 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
     return false;
   }, [controller?.maxLength, images.length]);
 
+  const disabledConfirm = useMemo(() => {
+    if (controller?.maxLength) {
+      return uploading || images.length > controller.maxLength;
+    }
+
+    return uploading;
+  }, [controller?.maxLength, images.length, uploading]);
+
   const uploadFiles = useCallback(async (files: File[]) => {
     if (files) {
       const items: CarouselFieldArrayItem[] = [];
@@ -174,7 +182,7 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
           {`已上傳 ${images.filter((i) => i.progress === 100).length}/${controller?.maxLength}`}
         </div>
       }
-      disabledConfirmButton={uploading || isOverMaxLength}
+      disabledConfirmButton={disabledConfirm}
       onClose={() => {
         close();
       }}
@@ -183,27 +191,28 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
       }}
     >
       <DndProvider backend={HTML5Backend}>
-        <div className="qdr-carousel-modal__grid">
-          {images.map((image, index) => (
-            <CarouselItem
-              key={`${image.url}-${index}`}
-              url={image.url}
-              preview={image.preview}
-              progress={image.progress}
-              caption={image.caption}
-              index={index}
-              ratio={controller?.ratio}
-              onChange={(value) => {
-                change(index, { url: image.url, caption: value });
-              }}
-              onRemove={() => {
-                remove(index);
-              }}
-              swap={swap}
-            />
-          ))}
-        </div>
-        <FilesDropZone isOverMaxLength={isOverMaxLength} controller={controller} uploadFiles={uploadFiles} />
+        <FilesDropZone isOverMaxLength={isOverMaxLength} controller={controller} uploadFiles={uploadFiles}>
+          <div className="qdr-carousel-modal__grid">
+            {images.map((image, index) => (
+              <CarouselItem
+                key={`${image.url}-${index}`}
+                url={image.url}
+                preview={image.preview}
+                progress={image.progress}
+                caption={image.caption}
+                index={index}
+                ratio={controller?.ratio}
+                onChange={(value) => {
+                  change(index, { url: image.url, caption: value });
+                }}
+                onRemove={() => {
+                  remove(index);
+                }}
+                swap={swap}
+              />
+            ))}
+          </div>
+        </FilesDropZone>
       </DndProvider>
     </Modal>
   );

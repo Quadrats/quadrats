@@ -26,8 +26,12 @@
     }
 
     &__main {
+      display: flex;
+      flex-direction: column;
       position: relative;
       background-color: var(--qdr-bg);
+      overflow-y: unset;
+      padding: unset;
     }
 
     &__counter {
@@ -39,17 +43,21 @@
     }
 
     &__zone {
-      position: absolute;
-      inset: 0;
-      z-index: 101;
+      flex: 1;
+      align-self: stretch;
+      overflow-y: auto;
+      padding: var(--qdr-spacing-9);
 
       &--error {
         border: 1px solid var(--qdr-error);
       }
 
       &__wrapper {
+        position: absolute;
+        inset: 0;
         width: 100%;
         height: 100%;
+        z-index: 101;
         display: flex;
         align-items: center;
         justify-content: center;

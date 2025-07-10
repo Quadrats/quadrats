@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React, { useState, useCallback } from 'react';
+import React, { ReactNode, useState, useCallback } from 'react';
 import clsx from 'clsx';
 import { Editor } from '@quadrats/core';
 import { Carousel } from '@quadrats/common/carousel';
@@ -7,12 +7,13 @@ import { Plus } from '@quadrats/icons';
 import { Icon } from '@quadrats/react/components';
 
 interface FilesDropZoneProps {
+  children: ReactNode;
   isOverMaxLength: boolean;
   controller?: Carousel<Editor>;
   uploadFiles: (files: File[]) => Promise<void>;
 }
 
-const FilesDropZone = ({ isOverMaxLength, controller, uploadFiles }: FilesDropZoneProps) => {
+const FilesDropZone = ({ children, isOverMaxLength, controller, uploadFiles }: FilesDropZoneProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState(false);
 
@@ -94,6 +95,7 @@ const FilesDropZone = ({ isOverMaxLength, controller, uploadFiles }: FilesDropZo
           </div>
         </div>
       )}
+      {children}
     </div>
   );
 };
