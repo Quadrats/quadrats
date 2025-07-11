@@ -1,4 +1,14 @@
 .qdr-carousel {
+  position: relative;
+  margin: var(--qdr-spacing-14) 0;
+
+  &:hover {
+    .qdr-carousel__inline-toolbar {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
   &-modal {
     &__side {
       display: flex;
@@ -163,6 +173,8 @@
   }
 
   &__placeholder {
+    margin: var(--qdr-spacing-14) 0;
+
     &__icon-wrapper {
       display: flex;
       align-items: center;

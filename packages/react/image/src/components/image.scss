@@ -16,6 +16,7 @@ $qdr-image-resizer-size: 6px;
     border-radius: var(--qdr-radius-1);
     border: 1px solid var(--qdr-divider);
     background-color: var(--qdr-block);
+    margin: var(--qdr-spacing-14) 0;
 
     &__icon {
       color: var(--qdr-action-inactive);
