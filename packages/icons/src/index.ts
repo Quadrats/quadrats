@@ -56,3 +56,4 @@ export { Youtube } from './youtube';
 export { SheetMusic } from './sheet-music';
 export { Drama } from './drama';
 export { Dance } from './dance';
+export { Upload } from './upload';

@@ -3,7 +3,7 @@ import React, { ReactNode, useState, useCallback } from 'react';
 import clsx from 'clsx';
 import { Editor } from '@quadrats/core';
 import { Carousel } from '@quadrats/common/carousel';
-import { Plus } from '@quadrats/icons';
+import { Upload } from '@quadrats/icons';
 import { Icon } from '@quadrats/react/components';
 
 interface FilesDropZoneProps {
@@ -89,7 +89,7 @@ const FilesDropZone = ({ children, isOverMaxLength, controller, uploadFiles }: F
         <div className="qdr-carousel-modal__zone__wrapper">
           <div className="qdr-carousel-modal__zone__block">
             <div className="qdr-carousel-modal__zone__icon">
-              <Icon icon={Plus} width={32} height={32} />
+              <Icon icon={Upload} width={32} height={32} />
             </div>
             <div className="qdr-carousel-modal__zone__title">拖曳檔案到此上傳</div>
             <div className="qdr-carousel-modal__zone__hint">
