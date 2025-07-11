@@ -196,4 +196,23 @@
       background-color: var(--qdr-primary);
     }
   }
+
+  &__caption {
+    color: var(--qdr-text-primary);
+    font-size: var(--qdr-typography-basic-body2-font-size);
+    line-height: var(--qdr-typography-basic-body2-line-height);
+    letter-spacing: var(--qdr-typography-basic-body2-letter-spacing);
+    font-weight: var(--qdr-typography-basic-body2-font-weight);
+    margin-top: var(--qdr-spacing-6);
+  }
+
+  &__images-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__image {
+    border-radius: var(--qdr-radius-1);
+    width: 100%;
+  }
 }
