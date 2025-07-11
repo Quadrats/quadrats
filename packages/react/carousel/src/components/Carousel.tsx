@@ -13,7 +13,7 @@ export function Carousel({
 }) {
   console.log('first', attributes, children, element);
 
-  return <div>Carousel</div>;
+  return <div>{children}</div>;
 }
 
 export default Carousel;

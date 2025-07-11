@@ -195,7 +195,12 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
         close();
       }}
       onConfirm={() => {
-        console.log('images', images);
+        controller?.removeCarouselPlaceholder(editor);
+        controller?.insertCarousel({
+          editor,
+          images: images.map((i) => i.preview),
+          captions: images.map((i) => i.caption),
+        });
       }}
     >
       <DndProvider backend={HTML5Backend}>
