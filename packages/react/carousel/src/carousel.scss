@@ -213,12 +213,19 @@
     }
   }
 
+  &__images-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
   &__slider-wrapper {
+    width: 100%;
     overflow-x: hidden;
     border-radius: var(--qdr-radius-1);
   }
 
   &__slider {
+    width: 100%;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -229,12 +236,8 @@
     }
   }
 
-  &__images-wrapper {
-    display: flex;
-    flex-direction: column;
-  }
-
   &__image {
+    flex: 0 0 100%;
     width: 100%;
     border-radius: var(--qdr-radius-1);
   }
