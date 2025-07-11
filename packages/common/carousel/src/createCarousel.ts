@@ -67,28 +67,29 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
     });
   };
 
-  const createCarouselElement: Carousel<Editor>['createCarouselElement'] = ({ images, captions }) => {
+  const createCarouselElement: Carousel<Editor>['createCarouselElement'] = ({ items }) => {
     const carouselImagesElement: CarouselImagesElement = {
       type: types.carousel_images,
-      images,
+      images: items.map((i) => i.url),
       ratio,
       children: [{ text: '' }],
     };
 
     const carouselCaptionElement: CarouselCaptionElement = {
       type: types.carousel_caption,
-      captions,
+      captions: items.map((i) => i.caption),
       children: [{ text: '' }],
     };
 
     return {
       type: types.carousel,
+      items,
       children: [carouselImagesElement, carouselCaptionElement],
     };
   };
 
-  const insertCarousel: Carousel<Editor>['insertCarousel'] = ({ editor, images, captions }) => {
-    Transforms.insertNodes(editor, createCarouselElement({ images, captions }));
+  const insertCarousel: Carousel<Editor>['insertCarousel'] = ({ editor, items }) => {
+    Transforms.insertNodes(editor, createCarouselElement({ items }));
   };
 
   return {

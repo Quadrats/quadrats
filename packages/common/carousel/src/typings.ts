@@ -6,7 +6,17 @@ export type CarouselCaptionTypeKey = 'carousel_caption';
 
 export type CarouselTypes = Record<CarouselTypeKey | CarouselImagesTypeKey | CarouselCaptionTypeKey, string>;
 
-export interface CarouselElement extends QuadratsElement, WithElementType {}
+export interface CarouselFieldArrayItem {
+  file: File;
+  progress: number;
+  preview: string;
+  url: string;
+  caption: string;
+}
+
+export interface CarouselElement extends QuadratsElement, WithElementType {
+  items: CarouselFieldArrayItem[];
+}
 
 export interface CarouselImagesElement extends QuadratsElement, WithElementType {
   children: [Text];
@@ -55,8 +65,8 @@ export interface Carousel<T extends Editor = Editor> extends Withable {
   types: CarouselTypes;
   insertCarouselPlaceholder(editor: T): void;
   removeCarouselPlaceholder(editor: T): void;
-  createCarouselElement({ images, captions }: { images: string[]; captions: string[] }): CarouselElement;
-  insertCarousel({ editor, images, captions }: { editor: T; images: string[]; captions: string[] }): void;
+  createCarouselElement({ items }: { items: CarouselFieldArrayItem[] }): CarouselElement;
+  insertCarousel({ editor, items }: { editor: T; items: CarouselFieldArrayItem[] }): void;
   accept: string[];
   ratio?: [number, number];
   maxLength: number;

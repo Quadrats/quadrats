@@ -4,7 +4,7 @@ import { DndProvider } from 'react-dnd';
 import { Editor } from '@quadrats/core';
 import { Plus } from '@quadrats/icons';
 import { useSlateStatic } from 'slate-react';
-import { Carousel } from '@quadrats/common/carousel';
+import { Carousel, CarouselFieldArrayItem } from '@quadrats/common/carousel';
 import { Hints, Button, Modal, Icon } from '@quadrats/react/components';
 import FilesDropZone from './FilesDropZone';
 import CarouselItem from './CarouselItem';
@@ -33,7 +33,7 @@ function upload(base64: string, onProgress: (percent: number) => void): Promise<
       onProgress(progress);
       if (progress >= 100) {
         clearInterval(interval);
-        setTimeout(() => resolve(`https://${base64}.jpg`), 200);
+        setTimeout(() => resolve(base64), 200);
       }
     }, 250);
   });
@@ -45,42 +45,34 @@ export interface CarouselModalProps {
   controller?: Carousel<Editor>;
 }
 
-export interface CarouselFieldArrayItem {
-  file: File;
-  progress: number;
-  preview: string;
-  url: string;
-  caption: string;
-}
-
 export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps) => {
   const editor = useSlateStatic();
   const [uploading, setUploading] = useState(false);
-  const [images, setImages] = useState<CarouselFieldArrayItem[]>([]);
+  const [items, setItems] = useState<CarouselFieldArrayItem[]>([]);
 
   useEffect(() => {
-    if (images.some((i) => i.progress !== 100)) {
+    if (items.some((i) => i.progress !== 100)) {
       setUploading(true);
     } else {
       setUploading(false);
     }
-  }, [images]);
+  }, [items]);
 
   const isOverMaxLength = useMemo(() => {
     if (controller?.maxLength) {
-      return images.length >= controller.maxLength;
+      return items.length >= controller.maxLength;
     }
 
     return false;
-  }, [controller?.maxLength, images.length]);
+  }, [controller?.maxLength, items.length]);
 
   const disabledConfirm = useMemo(() => {
     if (controller?.maxLength) {
-      return uploading || images.length > controller.maxLength;
+      return uploading || items.length > controller.maxLength;
     }
 
     return uploading;
-  }, [controller?.maxLength, images.length, uploading]);
+  }, [controller?.maxLength, items.length, uploading]);
 
   const uploadFiles = useCallback(async (files: File[]) => {
     if (files) {
@@ -92,22 +84,22 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
         items.push({ file, url: '', caption: '', preview: base64, progress: 0 });
       }
 
-      setImages((prev) => [...prev, ...items]);
+      setItems((prev) => [...prev, ...items]);
 
       for (const item of items) {
         const onProgress = (p: number) => {
-          setImages((prev) => prev.map((u) => (u.file === item.file ? { ...u, progress: p } : u)));
+          setItems((prev) => prev.map((u) => (u.file === item.file ? { ...u, progress: p } : u)));
         };
 
         const url = await upload(item.preview, onProgress);
 
-        setImages((prev) => prev.map((u) => (u.file === item.file ? { ...u, url } : u)));
+        setItems((prev) => prev.map((u) => (u.file === item.file ? { ...u, url } : u)));
       }
     }
   }, []);
 
   const change = useCallback((index: number, image: Omit<CarouselFieldArrayItem, 'progress' | 'preview' | 'file'>) => {
-    setImages((prev) => {
+    setItems((prev) => {
       const updated = [...prev];
 
       updated[index] = { ...updated[index], ...image };
@@ -117,11 +109,11 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
   }, []);
 
   const remove = useCallback((index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
+    setItems((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
   const swap = useCallback((from: number, to: number) => {
-    setImages((prev) => {
+    setItems((prev) => {
       const updated = [...prev];
       const temp = updated[from];
 
@@ -131,6 +123,8 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
       return updated;
     });
   }, []);
+
+  console.log('items', items);
 
   return (
     <Modal
@@ -187,7 +181,7 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
       }
       customizedFooterElement={
         <div className="qdr-carousel-modal__counter">
-          {`已上傳 ${images.filter((i) => i.progress === 100).length}/${controller?.maxLength}`}
+          {`已上傳 ${items.filter((i) => i.progress === 100).length}/${controller?.maxLength}`}
         </div>
       }
       disabledConfirmButton={disabledConfirm}
@@ -198,25 +192,24 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
         controller?.removeCarouselPlaceholder(editor);
         controller?.insertCarousel({
           editor,
-          images: images.map((i) => i.preview),
-          captions: images.map((i) => i.caption),
+          items,
         });
       }}
     >
       <DndProvider backend={HTML5Backend}>
         <FilesDropZone isOverMaxLength={isOverMaxLength} controller={controller} uploadFiles={uploadFiles}>
           <div className="qdr-carousel-modal__grid">
-            {images.map((image, index) => (
+            {items.map((item, index) => (
               <CarouselItem
-                key={`${image.url}-${index}`}
-                url={image.url}
-                preview={image.preview}
-                progress={image.progress}
-                caption={image.caption}
+                key={`${item.url}-${index}`}
+                url={item.url}
+                preview={item.preview}
+                progress={item.progress}
+                caption={item.caption}
                 index={index}
                 ratio={controller?.ratio}
                 onChange={(value) => {
-                  change(index, { url: image.url, caption: value });
+                  change(index, { url: item.url, caption: value });
                 }}
                 onRemove={() => {
                   remove(index);
