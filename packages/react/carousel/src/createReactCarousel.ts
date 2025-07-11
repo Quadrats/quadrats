@@ -52,7 +52,15 @@ export function createReactCarousel(options: CreateReactCarouselOptions): ReactC
         },
         {
           type: types.carousel_caption,
-          render: renderCarouselCaption as (props: RenderCarouselCaptionElementProps) => JSX.Element,
+          render: (props) => {
+            const { attributes, children, element } = props as RenderCarouselCaptionElementProps;
+
+            return renderCarouselCaption({
+              attributes,
+              element,
+              children,
+            });
+          },
         },
       ]);
     },

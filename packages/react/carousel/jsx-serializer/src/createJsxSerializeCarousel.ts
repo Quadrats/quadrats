@@ -48,20 +48,18 @@ export function createJsxSerializeCarousel(options: CreateJsxSerializeCarouselOp
     {
       type: imagesType,
       render: (props) => {
-        const { children, element, images, hosting } = props as JsxSerializeCarouselImagesElementProps;
+        const { children, element } = props as JsxSerializeCarouselImagesElementProps;
 
         return renderCarouselImages({
           children,
           element,
-          images,
-          hosting,
         });
       },
     },
     {
       type: captionType,
       render: (props) => {
-        const { children, element } = props;
+        const { children, element } = props as JsxSerializeCarouselCaptionElementProps;
 
         return renderCarouselCaption({
           children,
