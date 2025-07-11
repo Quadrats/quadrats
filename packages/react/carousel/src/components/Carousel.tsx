@@ -41,7 +41,7 @@ export function Carousel({
                   controller,
                   initialValue: element.items,
                   onConfirm: (items) => {
-                    console.log('items', items);
+                    controller.updateCarouselElement({ editor, items, path });
                   },
                 });
               },
