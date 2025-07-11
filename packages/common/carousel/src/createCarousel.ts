@@ -86,6 +86,10 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
     };
   };
 
+  const insertCarousel: Carousel<Editor>['insertCarousel'] = ({ editor, images, captions }) => {
+    Transforms.insertNodes(editor, createCarouselElement({ images, captions }));
+  };
+
   return {
     types,
     accept,
@@ -96,6 +100,7 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
     insertCarouselPlaceholder,
     removeCarouselPlaceholder,
     createCarouselElement,
+    insertCarousel,
     getBody,
     getHeaders,
     getUrl,

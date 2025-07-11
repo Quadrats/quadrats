@@ -55,6 +55,7 @@ export interface Carousel<T extends Editor = Editor> extends Withable {
   insertCarouselPlaceholder(editor: T): void;
   removeCarouselPlaceholder(editor: T): void;
   createCarouselElement({ images, captions }: { images: string[]; captions: string[] }): CarouselElement;
+  insertCarousel({ editor, images, captions }: { editor: T; images: string[]; captions: string[] }): void;
   accept: string[];
   ratio?: [number, number];
   maxLength: number;
