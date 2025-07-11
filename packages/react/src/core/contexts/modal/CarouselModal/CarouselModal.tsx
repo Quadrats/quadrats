@@ -43,9 +43,10 @@ export interface CarouselModalProps {
   isOpen: boolean;
   close: VoidFunction;
   controller?: Carousel<Editor>;
+  onConfirm?: (items: CarouselFieldArrayItem[]) => void;
 }
 
-export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps) => {
+export const CarouselModal = ({ isOpen, close, controller, onConfirm }: CarouselModalProps) => {
   const editor = useSlateStatic();
   const [uploading, setUploading] = useState(false);
   const [items, setItems] = useState<CarouselFieldArrayItem[]>([]);
@@ -124,8 +125,6 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
     });
   }, []);
 
-  console.log('items', items);
-
   return (
     <Modal
       isOpen={isOpen}
@@ -189,11 +188,11 @@ export const CarouselModal = ({ isOpen, close, controller }: CarouselModalProps)
         close();
       }}
       onConfirm={() => {
-        controller?.removeCarouselPlaceholder(editor);
-        controller?.insertCarousel({
-          editor,
-          items,
-        });
+        close();
+
+        setTimeout(() => {
+          onConfirm?.(items);
+        }, 0);
       }}
     >
       <DndProvider backend={HTML5Backend}>

@@ -49,6 +49,7 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
         isOpen={modalName === 'carousel-modal'}
         close={close}
         controller={carouselModalConfig?.controller}
+        onConfirm={carouselModalConfig?.onConfirm}
       />
     </ModalContext.Provider>
   );

@@ -21,6 +21,13 @@ export function useCarouselTool(controller: ReactCarousel) {
     if (match) {
       setCarouselModalConfig({
         controller,
+        onConfirm: (items) => {
+          controller.removeCarouselPlaceholder(editor);
+          controller.insertCarousel({
+            editor,
+            items,
+          });
+        },
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
