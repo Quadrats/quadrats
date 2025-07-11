@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import React, { ReactNode, useState, useCallback } from 'react';
 import clsx from 'clsx';
 import { Editor } from '@quadrats/core';
@@ -88,15 +87,8 @@ const FilesDropZone = ({ children, isOverMaxLength, controller, uploadFiles }: F
       {isDragging && (
         <div className="qdr-carousel-modal__zone__wrapper">
           <div className="qdr-carousel-modal__zone__block">
-            <div className="qdr-carousel-modal__zone__icon">
-              <Icon icon={Upload} width={32} height={32} />
-            </div>
-            <div className="qdr-carousel-modal__zone__title">拖曳檔案到此上傳</div>
-            <div className="qdr-carousel-modal__zone__hint">
-              {controller?.ratio
-                ? `僅能上傳 PNG 或 JPG；建議比例為 ${controller.ratio[0]}:${controller.ratio[1]} 且寬度至少達 2000px 以上；檔案大小不可超過 ${controller?.limitSize}MB`
-                : `僅能上傳 PNG 或 JPG；檔案大小不可超過 ${controller?.limitSize}MB`}
-            </div>
+            <Icon icon={Upload} width={24} height={24} />
+            將檔案拖曳到這裡即可上傳
           </div>
         </div>
       )}

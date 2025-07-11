@@ -1,8 +1,9 @@
+/* eslint-disable max-len */
 import React, { useMemo, useCallback, useState, useEffect, useRef } from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { Editor } from '@quadrats/core';
-import { Plus } from '@quadrats/icons';
+import { Plus, Upload } from '@quadrats/icons';
 import { useSlateStatic } from 'slate-react';
 import { Carousel, CarouselFieldArrayItem } from '@quadrats/common/carousel';
 import { Hints, Button, Modal, Icon } from '@quadrats/react/components';
@@ -217,26 +218,42 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
     >
       <DndProvider backend={HTML5Backend}>
         <FilesDropZone isOverMaxLength={isOverMaxLength} controller={controller} uploadFiles={uploadFiles}>
-          <div className="qdr-carousel-modal__grid">
-            {items.map((item, index) => (
-              <CarouselItem
-                key={`${item.url}-${index}`}
-                url={item.url}
-                preview={item.preview}
-                progress={item.progress}
-                caption={item.caption}
-                index={index}
-                ratio={controller?.ratio}
-                onChange={(value) => {
-                  change(index, { url: item.url, caption: value });
-                }}
-                onRemove={() => {
-                  remove(index);
-                }}
-                swap={swap}
-              />
-            ))}
-          </div>
+          {items.length > 0 ? (
+            <div className="qdr-carousel-modal__grid">
+              {items.map((item, index) => (
+                <CarouselItem
+                  key={`${item.url}-${index}`}
+                  url={item.url}
+                  preview={item.preview}
+                  progress={item.progress}
+                  caption={item.caption}
+                  index={index}
+                  ratio={controller?.ratio}
+                  onChange={(value) => {
+                    change(index, { url: item.url, caption: value });
+                  }}
+                  onRemove={() => {
+                    remove(index);
+                  }}
+                  swap={swap}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="qdr-carousel-modal__placeholder">
+              <div className="qdr-carousel-modal__placeholder__block">
+                <div className="qdr-carousel-modal__placeholder__icon">
+                  <Icon icon={Upload} width={32} height={32} />
+                </div>
+                <div className="qdr-carousel-modal__placeholder__title">拖曳檔案到此上傳</div>
+                <div className="qdr-carousel-modal__placeholder__hint">
+                  {controller?.ratio
+                    ? `僅能上傳 PNG 或 JPG；建議比例為 ${controller.ratio[0]}:${controller.ratio[1]} 且寬度至少達 2000px 以上；檔案大小不可超過 ${controller?.limitSize}MB`
+                    : `僅能上傳 PNG 或 JPG；檔案大小不可超過 ${controller?.limitSize}MB`}
+                </div>
+              </div>
+            </div>
+          )}
         </FilesDropZone>
       </DndProvider>
     </Modal>
