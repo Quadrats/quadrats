@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react';
 import {
   Carousel,
   CarouselElement,
@@ -12,7 +13,7 @@ import { RenderElementProps, Editor, WithCreateRenderElement } from '@quadrats/r
 
 export type CarouselContextType = {
   activeIndex: number;
-  setActiveIndex: (index: number) => void;
+  setActiveIndex: Dispatch<SetStateAction<number>>;
 };
 
 export interface RenderCarouselElementProps extends RenderElementProps<CarouselElement> {}

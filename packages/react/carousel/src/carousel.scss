@@ -192,9 +192,34 @@
     background-color: var(--qdr-action-disabled-bg);
     margin: 2.5px;
 
+    &:hover {
+      cursor: pointer;
+    }
+
     &--active {
       background-color: var(--qdr-primary);
     }
+  }
+
+  &__slider-wrapper {
+    overflow-x: hidden;
+    border-radius: var(--qdr-radius-1);
+  }
+
+  &__slider {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    transition: transform var(--qdr-duration-short) var(--qdr-easing-standard);
+  }
+
+  &__images-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__image {
+    width: 100%;
   }
 
   &__caption {
@@ -204,15 +229,5 @@
     letter-spacing: var(--qdr-typography-basic-body2-letter-spacing);
     font-weight: var(--qdr-typography-basic-body2-font-weight);
     margin-top: var(--qdr-spacing-6);
-  }
-
-  &__images-wrapper {
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__image {
-    border-radius: var(--qdr-radius-1);
-    width: 100%;
   }
 }
