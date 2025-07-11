@@ -4,16 +4,19 @@ import { RenderCarouselImagesElementProps } from '../typings';
 
 export function CarouselImages({
   attributes,
-  children,
   element,
 }: {
   attributes?: RenderElementProps['attributes'];
   children: RenderElementProps['children'];
   element: RenderCarouselImagesElementProps['element'];
 }) {
-  console.log('first', attributes, children, element);
+  console.log('CarouselImages', element);
 
-  return <div>CarouselImages</div>;
+  return (
+    <div {...attributes} contentEditable={false}>
+      CarouselImages
+    </div>
+  );
 }
 
 export default CarouselImages;

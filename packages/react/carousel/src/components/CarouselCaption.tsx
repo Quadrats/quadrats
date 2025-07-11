@@ -4,16 +4,19 @@ import { RenderCarouselCaptionElementProps } from '../typings';
 
 export function CarouselCaption({
   attributes,
-  children,
   element,
 }: {
   attributes?: RenderElementProps['attributes'];
   children: RenderElementProps['children'];
   element: RenderCarouselCaptionElementProps['element'];
 }) {
-  console.log('first', attributes, children, element);
+  console.log('CarouselCaption', element);
 
-  return <div>CarouselCaption</div>;
+  return (
+    <div {...attributes} contentEditable={false}>
+      CarouselCaption
+    </div>
+  );
 }
 
 export default CarouselCaption;

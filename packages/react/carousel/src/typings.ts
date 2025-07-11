@@ -10,6 +10,11 @@ import {
 } from '@quadrats/common/carousel';
 import { RenderElementProps, Editor, WithCreateRenderElement } from '@quadrats/react';
 
+export type CarouselContextType = {
+  activeIndex: number;
+  setActiveIndex: (index: number) => void;
+};
+
 export interface RenderCarouselElementProps extends RenderElementProps<CarouselElement> {}
 
 export interface RenderCarouselImagesElementProps extends RenderElementProps<CarouselImagesElement> {}
