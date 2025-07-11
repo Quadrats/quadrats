@@ -16,7 +16,9 @@ export type CarouselContextType = {
   setActiveIndex: Dispatch<SetStateAction<number>>;
 };
 
-export interface RenderCarouselElementProps extends RenderElementProps<CarouselElement> {}
+export interface RenderCarouselElementProps extends RenderElementProps<CarouselElement> {
+  controller: Carousel<Editor>;
+}
 
 export interface RenderCarouselImagesElementProps extends RenderElementProps<CarouselImagesElement> {}
 

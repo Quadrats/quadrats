@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Transforms } from '@quadrats/core';
-import { RenderElementProps, useSlateStatic, ReactEditor } from '@quadrats/react';
+import { RenderElementProps, useSlateStatic, ReactEditor, useModal } from '@quadrats/react';
 import { InlineToolbar } from '@quadrats/react/toolbar';
 import { Edit, Trash } from '@quadrats/icons';
 import { CarouselContext } from '../contexts/CarouselContext';
@@ -10,11 +10,14 @@ export function Carousel({
   attributes,
   children,
   element,
+  controller,
 }: {
   attributes?: RenderElementProps['attributes'];
   children: RenderElementProps['children'];
   element: RenderCarouselElementProps['element'];
+  controller: RenderCarouselElementProps['controller'];
 }) {
+  const { setCarouselModalConfig } = useModal();
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const editor = useSlateStatic();
   const path = ReactEditor.findPath(editor, element);
@@ -34,7 +37,13 @@ export function Carousel({
             {
               icon: Edit,
               onClick: () => {
-                //
+                setCarouselModalConfig({
+                  controller,
+                  initialValue: element.items,
+                  onConfirm: (items) => {
+                    console.log('items', items);
+                  },
+                });
               },
             },
             {

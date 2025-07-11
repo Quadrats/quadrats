@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState, useEffect } from 'react';
+import React, { useMemo, useCallback, useState, useEffect, useRef } from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { Editor } from '@quadrats/core';
@@ -8,6 +8,16 @@ import { Carousel, CarouselFieldArrayItem } from '@quadrats/common/carousel';
 import { Hints, Button, Modal, Icon } from '@quadrats/react/components';
 import FilesDropZone from './FilesDropZone';
 import CarouselItem from './CarouselItem';
+
+function usePreviousValue<T>(value: T): T {
+  const ref = useRef(value);
+
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+
+  return ref.current;
+}
 
 function readFileAsBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -43,13 +53,21 @@ export interface CarouselModalProps {
   isOpen: boolean;
   close: VoidFunction;
   controller?: Carousel<Editor>;
+  initialValue?: CarouselFieldArrayItem[];
   onConfirm?: (items: CarouselFieldArrayItem[]) => void;
 }
 
-export const CarouselModal = ({ isOpen, close, controller, onConfirm }: CarouselModalProps) => {
+export const CarouselModal = ({ isOpen, close, controller, initialValue = [], onConfirm }: CarouselModalProps) => {
   const editor = useSlateStatic();
   const [uploading, setUploading] = useState(false);
   const [items, setItems] = useState<CarouselFieldArrayItem[]>([]);
+  const prevIsOpen = usePreviousValue(isOpen);
+
+  useEffect(() => {
+    if (!prevIsOpen && isOpen && initialValue.length > 0) {
+      setItems(initialValue);
+    }
+  }, [initialValue, isOpen, prevIsOpen]);
 
   useEffect(() => {
     if (items.some((i) => i.progress !== 100)) {
@@ -186,9 +204,11 @@ export const CarouselModal = ({ isOpen, close, controller, onConfirm }: Carousel
       disabledConfirmButton={disabledConfirm}
       onClose={() => {
         close();
+        setItems([]);
       }}
       onConfirm={() => {
         close();
+        setItems([]);
 
         setTimeout(() => {
           onConfirm?.(items);

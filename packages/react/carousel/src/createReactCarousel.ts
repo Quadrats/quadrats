@@ -35,6 +35,7 @@ export function createReactCarousel(options: CreateReactCarouselOptions): ReactC
               attributes,
               element,
               children,
+              controller: core,
             });
           },
         },
