@@ -11,10 +11,12 @@ export interface CarouselElement extends QuadratsElement, WithElementType {}
 export interface CarouselImagesElement extends QuadratsElement, WithElementType {
   children: [Text];
   images: string[];
-  hosting?: string;
 }
 
-export interface CarouselCaptionElement extends QuadratsElement, WithElementType {}
+export interface CarouselCaptionElement extends QuadratsElement, WithElementType {
+  children: [Text];
+  captions: string[];
+}
 
 export interface CarouselPlaceholderElement extends QuadratsElement, WithElementType {
   ratio?: [number, number];
@@ -52,6 +54,7 @@ export interface Carousel<T extends Editor = Editor> extends Withable {
   types: CarouselTypes;
   insertCarouselPlaceholder(editor: T): void;
   removeCarouselPlaceholder(editor: T): void;
+  createCarouselElement({ images, captions }: { images: string[]; captions: string[] }): CarouselElement;
   accept: string[];
   ratio?: [number, number];
   maxLength: number;

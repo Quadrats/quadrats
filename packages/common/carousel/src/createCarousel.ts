@@ -2,6 +2,8 @@ import { Editor, Transforms, Element, QuadratsElement } from '@quadrats/core';
 import {
   Carousel,
   CarouselTypes,
+  CarouselImagesElement,
+  CarouselCaptionElement,
   CarouselPlaceholderElement,
   FileUploaderGetBody,
   FileUploaderGetHeaders,
@@ -65,6 +67,25 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
     });
   };
 
+  const createCarouselElement: Carousel<Editor>['createCarouselElement'] = ({ images, captions }) => {
+    const carouselImagesElement: CarouselImagesElement = {
+      type: types.carousel_images,
+      images,
+      children: [{ text: '' }],
+    };
+
+    const carouselCaptionElement: CarouselCaptionElement = {
+      type: types.carousel_caption,
+      captions,
+      children: [{ text: '' }],
+    };
+
+    return {
+      type: types.carousel,
+      children: [carouselImagesElement, carouselCaptionElement],
+    };
+  };
+
   return {
     types,
     accept,
@@ -74,6 +95,7 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
     selectFiles,
     insertCarouselPlaceholder,
     removeCarouselPlaceholder,
+    createCarouselElement,
     getBody,
     getHeaders,
     getUrl,
