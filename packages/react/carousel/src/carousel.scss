@@ -211,6 +211,10 @@
     align-items: flex-start;
     justify-content: flex-start;
     transition: transform var(--qdr-duration-short) var(--qdr-easing-standard);
+
+    &--isDragging {
+      transition: none;
+    }
   }
 
   &__images-wrapper {
@@ -220,6 +224,7 @@
 
   &__image {
     width: 100%;
+    border-radius: var(--qdr-radius-1);
   }
 
   &__caption {

@@ -1,8 +1,10 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { RenderElementProps } from '@quadrats/react';
 import { useCarousel } from '../hooks/useCarousel';
 import { RenderCarouselImagesElementProps } from '../typings';
+
+const deltaLimit = 100;
 
 export function CarouselImages({
   attributes,
@@ -14,23 +16,53 @@ export function CarouselImages({
 }) {
   const imageRef = useRef<HTMLImageElement | null>(null);
   const { activeIndex, setActiveIndex } = useCarousel();
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [startX, setStartX] = useState<number>(0);
+  const [delta, setDelta] = useState(0);
 
   const images = useMemo(() => element.images, [element.images]);
 
-  // const currentImage = useMemo(() => images[activeIndex], [activeIndex, images]);
+  const onMouseUp = useCallback(() => {
+    setIsDragging(false);
+
+    if (delta < -deltaLimit && activeIndex < images.length - 1) {
+      setActiveIndex((prev) => prev + 1);
+    } else if (delta > deltaLimit && activeIndex > 0) {
+      setActiveIndex((prev) => prev - 1);
+    }
+
+    setDelta(0);
+  }, [activeIndex, delta, images.length, setActiveIndex]);
 
   return (
     <div {...attributes} contentEditable={false} className="qdr-carousel__images-wrapper">
-      <div className="qdr-carousel__slider-wrapper">
+      <div
+        className="qdr-carousel__slider-wrapper"
+        onMouseDown={(e) => {
+          setIsDragging(true);
+          setStartX(e.clientX);
+        }}
+        onMouseMove={(e) => {
+          if (isDragging) {
+            const delta = e.clientX - startX;
+
+            setDelta(delta);
+          }
+        }}
+        onMouseUp={onMouseUp}
+      >
         <div
-          className="qdr-carousel__slider"
+          className={clsx('qdr-carousel__slider', {
+            'qdr-carousel__slider--isDragging': isDragging,
+          })}
           style={{
-            transform: `translateX(${0 - activeIndex * (imageRef.current?.clientWidth ?? 0)}px)`,
+            transform: `translateX(${delta - activeIndex * (imageRef.current?.clientWidth ?? 0)}px)`,
           }}
         >
           {images.map((image) => (
             <img
               ref={imageRef}
+              draggable={false}
               key={image}
               className="qdr-carousel__image"
               src={image}
