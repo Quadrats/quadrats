@@ -1,4 +1,4 @@
-import { Editor, Withable, QuadratsElement, WithElementType, Text } from '@quadrats/core';
+import { Editor, Withable, QuadratsElement, WithElementType, Text, Path } from '@quadrats/core';
 
 export type CarouselTypeKey = 'carousel';
 export type CarouselImagesTypeKey = 'carousel_images';
@@ -67,6 +67,7 @@ export interface Carousel<T extends Editor = Editor> extends Withable {
   removeCarouselPlaceholder(editor: T): void;
   createCarouselElement({ items }: { items: CarouselFieldArrayItem[] }): CarouselElement;
   insertCarousel({ editor, items }: { editor: T; items: CarouselFieldArrayItem[] }): void;
+  updateCarouselElement({ editor, items, path }: { editor: T; items: CarouselFieldArrayItem[]; path: Path }): void;
   accept: string[];
   ratio?: [number, number];
   maxLength: number;

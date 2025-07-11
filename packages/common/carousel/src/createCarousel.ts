@@ -2,6 +2,7 @@ import { Editor, Transforms, Element, QuadratsElement } from '@quadrats/core';
 import {
   Carousel,
   CarouselTypes,
+  CarouselElement,
   CarouselImagesElement,
   CarouselCaptionElement,
   CarouselPlaceholderElement,
@@ -92,6 +93,40 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
     Transforms.insertNodes(editor, createCarouselElement({ items }));
   };
 
+  const updateCarouselElement: Carousel<Editor>['updateCarouselElement'] = ({ editor, items, path }) => {
+    Transforms.setNodes(editor, { items } as CarouselElement, { at: path });
+
+    const imagesEntries = Editor.nodes(editor, {
+      at: path,
+      match: (node) => Element.isElement(node) && (node as QuadratsElement).type === types.carousel_images,
+      mode: 'all',
+    });
+
+    const imagesNode = imagesEntries.next().value;
+
+    const captionEntries = Editor.nodes(editor, {
+      at: path,
+      match: (node) => Element.isElement(node) && (node as QuadratsElement).type === types.carousel_caption,
+      mode: 'all',
+    });
+
+    const captionNode = captionEntries.next().value;
+
+    if (imagesNode) {
+      const [, imagesPath] = imagesNode;
+
+      Transforms.setNodes(editor, { images: items.map((i) => i.url) } as CarouselImagesElement, { at: imagesPath });
+    }
+
+    if (captionNode) {
+      const [, captionPath] = captionNode;
+
+      Transforms.setNodes(editor, { captions: items.map((i) => i.caption) } as CarouselCaptionElement, {
+        at: captionPath,
+      });
+    }
+  };
+
   return {
     types,
     accept,
@@ -103,6 +138,7 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
     removeCarouselPlaceholder,
     createCarouselElement,
     insertCarousel,
+    updateCarouselElement,
     getBody,
     getHeaders,
     getUrl,
