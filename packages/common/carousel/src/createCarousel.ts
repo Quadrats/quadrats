@@ -71,6 +71,7 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
     const carouselImagesElement: CarouselImagesElement = {
       type: types.carousel_images,
       images,
+      ratio,
       children: [{ text: '' }],
     };
 

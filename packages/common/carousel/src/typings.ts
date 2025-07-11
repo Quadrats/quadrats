@@ -10,6 +10,7 @@ export interface CarouselElement extends QuadratsElement, WithElementType {}
 
 export interface CarouselImagesElement extends QuadratsElement, WithElementType {
   children: [Text];
+  ratio?: [number, number];
   images: string[];
 }
 
