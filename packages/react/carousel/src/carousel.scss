@@ -247,6 +247,16 @@
     width: 100%;
     overflow-x: hidden;
     border-radius: var(--qdr-radius-1);
+
+    &:hover {
+      cursor: grab;
+    }
+
+    &--isDragging {
+      &:hover {
+        cursor: grabbing;
+      }
+    }
   }
 
   &__slider {

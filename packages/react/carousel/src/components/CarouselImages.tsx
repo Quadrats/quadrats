@@ -37,7 +37,9 @@ export function CarouselImages({
   return (
     <div {...attributes} contentEditable={false} className="qdr-carousel__images-wrapper">
       <div
-        className="qdr-carousel__slider-wrapper"
+        className={clsx('qdr-carousel__slider-wrapper', {
+          'qdr-carousel__slider-wrapper--isDragging': isDragging,
+        })}
         onMouseDown={(e) => {
           setIsDragging(true);
           setStartX(e.clientX);

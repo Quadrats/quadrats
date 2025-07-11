@@ -234,7 +234,7 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
             >
               {items.map((item, index) => (
                 <CarouselItem
-                  key={`${item.url}-${index}`}
+                  key={`${item.url}-${item.caption || ''}-${index}`}
                   url={item.url}
                   preview={item.preview}
                   progress={item.progress}
