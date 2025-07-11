@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 import React, { useMemo, useCallback, useState, useEffect, useRef } from 'react';
+import clsx from 'clsx';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { Editor } from '@quadrats/core';
@@ -61,6 +62,7 @@ export interface CarouselModalProps {
 export const CarouselModal = ({ isOpen, close, controller, initialValue = [], onConfirm }: CarouselModalProps) => {
   const editor = useSlateStatic();
   const [uploading, setUploading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [items, setItems] = useState<CarouselFieldArrayItem[]>([]);
   const prevIsOpen = usePreviousValue(isOpen);
 
@@ -217,9 +219,19 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
       }}
     >
       <DndProvider backend={HTML5Backend}>
-        <FilesDropZone isOverMaxLength={isOverMaxLength} controller={controller} uploadFiles={uploadFiles}>
+        <FilesDropZone
+          isDragging={isDragging}
+          setIsDragging={setIsDragging}
+          isOverMaxLength={isOverMaxLength}
+          controller={controller}
+          uploadFiles={uploadFiles}
+        >
           {items.length > 0 ? (
-            <div className="qdr-carousel-modal__grid">
+            <div
+              className={clsx('qdr-carousel-modal__grid', {
+                'qdr-carousel-modal__grid--isDragging': isDragging,
+              })}
+            >
               {items.map((item, index) => (
                 <CarouselItem
                   key={`${item.url}-${index}`}

@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useCallback } from 'react';
+import React, { Dispatch, SetStateAction, ReactNode, useState, useCallback } from 'react';
 import clsx from 'clsx';
 import { Editor } from '@quadrats/core';
 import { Carousel } from '@quadrats/common/carousel';
@@ -6,14 +6,22 @@ import { Upload } from '@quadrats/icons';
 import { Icon } from '@quadrats/react/components';
 
 interface FilesDropZoneProps {
+  isDragging: boolean;
+  setIsDragging: Dispatch<SetStateAction<boolean>>;
   children: ReactNode;
   isOverMaxLength: boolean;
   controller?: Carousel<Editor>;
   uploadFiles: (files: File[]) => Promise<void>;
 }
 
-const FilesDropZone = ({ children, isOverMaxLength, controller, uploadFiles }: FilesDropZoneProps) => {
-  const [isDragging, setIsDragging] = useState(false);
+const FilesDropZone = ({
+  isDragging,
+  setIsDragging,
+  children,
+  isOverMaxLength,
+  controller,
+  uploadFiles,
+}: FilesDropZoneProps) => {
   const [error, setError] = useState(false);
 
   const validateFile = useCallback(
@@ -62,7 +70,7 @@ const FilesDropZone = ({ children, isOverMaxLength, controller, uploadFiles }: F
         await uploadFiles(correctFiles);
       }
     },
-    [validateFiles, uploadFiles, validateFile, controller?.limitSize],
+    [setIsDragging, validateFiles, uploadFiles, validateFile, controller?.limitSize],
   );
 
   return (
