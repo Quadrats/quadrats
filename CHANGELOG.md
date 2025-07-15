@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.8](https://github.com/Quadrats/quadrats/compare/v0.7.7...v0.7.8) (2025-07-15)
+
+### Bug Fixes
+
+- **react/image:** fix editor paste behavior when have uploadOptions ([94fe5f2](https://github.com/Quadrats/quadrats/commit/94fe5f252e298efb1add2c0a7754d11999c5d24b))
+
 ## [0.7.7](https://github.com/Quadrats/quadrats/compare/v0.7.6...v0.7.7) (2025-06-30)
 
 ### Bug Fixes
