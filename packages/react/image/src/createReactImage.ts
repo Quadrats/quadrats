@@ -113,23 +113,6 @@ export function createReactImage<Hosting extends string>(
         const { files } = data;
 
         /**
-         * Insert each image when upload options are set.
-         */
-        if (uploadOptions) {
-          const createFileUploaderElement = createFileUploaderElementByType(uploadOptions.type ?? FILE_UPLOADER_TYPE);
-
-          Array.from(files).reduce(async (prev, file) => {
-            await prev;
-
-            return createFileUploaderElement(editor, file, uploadOptions).then((fileUploaderElement) => {
-              insertFileUploaderElement(editor, fileUploaderElement);
-            });
-          }, Promise.resolve());
-
-          return;
-        }
-
-        /**
          * Insert image if inserted text is image url.
          */
         if (text) {
@@ -144,6 +127,23 @@ export function createReactImage<Hosting extends string>(
          * Insert each image which is image.
          */
         if (files.length) {
+          /**
+           * Insert each image when upload options are set.
+           */
+          if (uploadOptions) {
+            const createFileUploaderElement = createFileUploaderElementByType(uploadOptions.type ?? FILE_UPLOADER_TYPE);
+
+            Array.from(files).reduce(async (prev, file) => {
+              await prev;
+
+              return createFileUploaderElement(editor, file, uploadOptions).then((fileUploaderElement) => {
+                insertFileUploaderElement(editor, fileUploaderElement);
+              });
+            }, Promise.resolve());
+
+            return;
+          }
+
           [...files]
             .filter((file) => {
               const [mime] = file.type.split('/');
