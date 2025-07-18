@@ -64,7 +64,11 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
         title={confirmModalConfig?.title ?? ''}
         content={confirmModalConfig?.content ?? ''}
         confirmText={confirmModalConfig?.confirmText ?? ''}
-        onConfirm={confirmModalConfig?.onConfirm ?? (() => {})}
+        onConfirm={confirmModalConfig?.onConfirm}
+        haveFooter={confirmModalConfig?.haveFooter}
+        mask={confirmModalConfig?.mask}
+        maskClosable={confirmModalConfig?.maskClosable}
+        escToExit={confirmModalConfig?.escToExit}
       />
     </ModalContext.Provider>
   );
