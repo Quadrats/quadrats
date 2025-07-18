@@ -17,14 +17,33 @@ export type CreateReactCarouselOptions = CreateCarouselOptions;
 export function createReactCarousel(options: CreateReactCarouselOptions): ReactCarousel {
   const core = createCarousel(options);
 
-  const { types } = core;
+  const { types, confirmModal } = core;
 
   return {
     ...core,
-    createHandlers: () => ({
+    createHandlers: (setNeedConfirmModal) => ({
       onKeyDown(event, editor, next) {
         if (event.key === 'Backspace') {
-          removePreviousElement(event, editor, types.carousel);
+          removePreviousElement({
+            event,
+            editor,
+            type: types.carousel,
+            confirmModal,
+            doConfirm: (remove) => {
+              if (setNeedConfirmModal) {
+                // TODO: i18n
+                setNeedConfirmModal({
+                  title: '確認要刪除？',
+                  content: '你確定要刪除嗎？',
+                  confirmText: '確認',
+                  onConfirm: () => {
+                    remove();
+                    setNeedConfirmModal(null);
+                  },
+                });
+              }
+            },
+          });
         }
 
         next();

@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useState } from 'react';
+import React, { Dispatch, SetStateAction, ReactNode, useCallback, useState, useEffect } from 'react';
 import { EmbedModal } from './EmbedModal/EmbedModal';
 import { CarouselModal } from './CarouselModal/CarouselModal';
 import { ConfirmModal } from './ConfirmModal/ConfirmModal';
@@ -6,9 +6,11 @@ import { ModalContext, ModalName, EmbedModalConfig, CarouselModalConfig, Confirm
 
 export interface ModalProviderProps {
   children: ReactNode;
+  needConfirmModal?: ConfirmModalConfig | null;
+  setNeedConfirmModal?: Dispatch<SetStateAction<ConfirmModalConfig | null>>;
 }
 
-export const ModalProvider = ({ children }: ModalProviderProps) => {
+export const ModalProvider = ({ children, needConfirmModal, setNeedConfirmModal }: ModalProviderProps) => {
   const [modalName, setModalName] = useState<ModalName>('');
   const [isModalClosed, setIsModalClosed] = useState<boolean>(false);
   const [embedModalConfig, setEmbedModalConfig] = useState<EmbedModalConfig | null>(null);
@@ -18,7 +20,18 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
   const close = useCallback(() => {
     setModalName('');
     setIsModalClosed(true);
-  }, []);
+
+    if (needConfirmModal) {
+      setNeedConfirmModal?.(null);
+    }
+  }, [needConfirmModal, setNeedConfirmModal]);
+
+  useEffect(() => {
+    if (needConfirmModal) {
+      setModalName('confirm-modal');
+      setConfirmModalConfig(needConfirmModal);
+    }
+  }, [needConfirmModal]);
 
   return (
     <ModalContext.Provider

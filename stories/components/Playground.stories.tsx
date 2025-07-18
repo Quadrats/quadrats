@@ -48,6 +48,7 @@ import {
   composeRenderLeafs,
   composeHandlers,
   Descendant,
+  ConfirmModalConfig,
 } from '@quadrats/react';
 import { createRenderParagraphElement, renderParagraphElementWithSymbol } from '@quadrats/react/paragraph';
 import { createReactLineBreak, renderLineBreakElementWithSymbol } from '@quadrats/react/line-break';
@@ -239,6 +240,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withReadMore,
   } = props;
 
+  const [needConfirmModal, setNeedConfirmModal] = useState<ConfirmModalConfig | null>(null);
   const editorTheme = useMemo<Theme>(() => (theme === 'Dark' ? 'dark' : 'light'), [theme]);
   const editorLocale = useMemo<LocaleDefinition>(() => (locale === 'Chinese' ? zhTW : enUS), [locale]);
 
@@ -349,7 +351,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
 
     if (withTitles.length) handlers.push(heading.createHandlers());
     if (withAccordion) handlers.push(accordion.createHandlers());
-    if (withCarousel) handlers.push(carousel.createHandlers());
+    if (withCarousel) handlers.push(carousel.createHandlers(setNeedConfirmModal));
     if (withBlockquote) handlers.push(blockquote.createHandlers());
     if (withLists.length) handlers.push(list.createHandlers());
     if (withBold) handlers.push(bold.createHandlers());
@@ -742,6 +744,8 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
             value={value}
             key={Math.random()} // Fixed Slate bug on re-create editor
             onChange={(v: Descendant[]) => setValue(v)}
+            needConfirmModal={needConfirmModal}
+            setNeedConfirmModal={setNeedConfirmModal}
           >
             <Toolbar fixed>{toolbarRenderer}</Toolbar>
             <Toolbar onlyRenderExpanded>{toolbarRenderer}</Toolbar>

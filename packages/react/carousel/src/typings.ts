@@ -9,7 +9,7 @@ import {
   CarouselImagesTypeKey,
   CarouselCaptionTypeKey,
 } from '@quadrats/common/carousel';
-import { RenderElementProps, Editor, WithCreateHandlers, WithCreateRenderElement } from '@quadrats/react';
+import { RenderElementProps, Editor, WithCreateRenderElement, Handlers, ConfirmModalConfig } from '@quadrats/react';
 
 export type CarouselContextType = {
   activeIndex: number;
@@ -43,8 +43,8 @@ export type ReactCarouselCreateRenderElementOptions = {
 
 export interface ReactCarousel
   extends Carousel<Editor>,
-    WithCreateHandlers,
     WithCreateRenderElement<[ReactCarouselCreateRenderElementOptions?]> {
+  createHandlers: (setNeedConfirmModal?: Dispatch<SetStateAction<ConfirmModalConfig | null>>) => Handlers;
   createRenderPlaceholderElement: (params_0?: {
     render?: RenderCarouselPlaceholderElement;
   }) => (props: RenderElementProps) => JSX.Element | null | undefined;
