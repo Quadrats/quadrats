@@ -27,6 +27,7 @@ export interface CreateCarouselOptions {
   ratio?: [number, number];
   maxLength?: number;
   limitSize?: number;
+  confirmModal?: boolean;
   getBody: FileUploaderGetBody;
   getHeaders?: FileUploaderGetHeaders;
   getUrl: FileUploaderGetUrl;
@@ -40,6 +41,7 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
     ratio,
     maxLength: maxLengthOptions,
     limitSize: limitSizeOptions,
+    confirmModal = true,
     getBody,
     getHeaders,
     getUrl,
@@ -146,6 +148,7 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
     ratio,
     maxLength,
     limitSize,
+    confirmModal,
     selectFiles,
     insertCarouselPlaceholder,
     removeCarouselPlaceholder,
