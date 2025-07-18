@@ -1,13 +1,19 @@
 import React, { FC, Key, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Icon from '../Icon';
-import { Info, Success, Warning, Error, IconDefinition } from '@quadrats/icons';
 import { createNotifier } from '../Notifier/createNotifier';
 import { Notifier, NotifierData, NotifierConfig } from '../Notifier/typings';
+import SlideFade, { SlideFadeProps } from '../Transition/SlideFade';
+import { Info, Success, Warning, Error, IconDefinition } from '@quadrats/icons';
+
+export interface MessageConfigProps
+  extends Pick<NotifierConfig, 'duration'>,
+    Pick<
+      SlideFadeProps,
+      'onEnter' | 'onEntering' | 'onEntered' | 'onExit' | 'onExiting' | 'onExited' | 'easing' | 'direction'
+    > {}
 
 export type MessageSeverity = 'success' | 'warning' | 'error' | 'info';
-
-export interface MessageConfigProps extends Pick<NotifierConfig, 'duration'> {}
 
 export interface MessageData extends Omit<NotifierData, 'onClose'>, MessageConfigProps {
   /**
@@ -37,8 +43,14 @@ export type MessageType = FC<MessageData> &
     (message: MessageData['children'], props?: Omit<MessageData, 'children' | 'severity' | 'icon'>) => Key
   >;
 
+/**
+ * The react component for `mezzanine` message.
+ *
+ * Use the API from the Message instance such as `Message.add` and `Message.success`
+ * to display a notification message globally.
+ */
 const Message: MessageType = ((props) => {
-  const { children, duration, icon, severity } = props;
+  const { children, duration, icon, reference, severity, onExited: onExitedProp, ...restTransitionProps } = props;
 
   const [open, setOpen] = useState(true);
 
@@ -54,15 +66,25 @@ const Message: MessageType = ((props) => {
     }
   }, [open, duration]);
 
+  const onExited: SlideFadeProps['onExited'] = (node) => {
+    if (onExitedProp) {
+      onExitedProp(node);
+    }
+
+    if (reference) Message.remove(reference);
+  };
+
   return (
-    <div
-      className={clsx('qdr-message', {
-        [`qdr-message--${severity}`]: !!severity,
-      })}
-    >
-      {icon ? <Icon className="qdr-message__icon" icon={icon} /> : null}
-      <span className="qdr-message__content">{children}</span>
-    </div>
+    <SlideFade in={open} appear onExited={onExited} {...restTransitionProps}>
+      <div
+        className={clsx('qdr-message', {
+          [`qdr-message--${severity}`]: !!severity,
+        })}
+      >
+        {icon ? <Icon className="qdr-message__icon" icon={icon} /> : null}
+        <span className="qdr-message__content">{children}</span>
+      </div>
+    </SlideFade>
   );
 }) as MessageType;
 

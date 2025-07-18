@@ -16,7 +16,8 @@
       "Input/input": "input",
       "Textarea/textarea": "textarea",
       "Hint/hint": "hint",
-      "Modal/modal": "modal"
+      "Modal/modal": "modal",
+      "Message/message": "message"
     }
   }
 }
