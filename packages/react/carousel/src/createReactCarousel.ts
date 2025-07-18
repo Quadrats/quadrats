@@ -1,5 +1,6 @@
+import { Range, Element, QuadratsElement, Transforms } from '@quadrats/core';
 import { createCarousel, CreateCarouselOptions, CAROUSEL_PLACEHOLDER_TYPE } from '@quadrats/common/carousel';
-import { createRenderElement, createRenderElements } from '@quadrats/react';
+import { Editor, createRenderElement, createRenderElements } from '@quadrats/react';
 import {
   defaultRenderCarouselElements,
   defaultRenderCarouselPlaceholderElement,
@@ -20,6 +21,41 @@ export function createReactCarousel(options: CreateReactCarouselOptions): ReactC
 
   return {
     ...core,
+    createHandlers: () => ({
+      onKeyDown(event, editor, next) {
+        if (event.key === 'Backspace') {
+          const { selection } = editor;
+
+          if (selection && Range.isCollapsed(selection)) {
+            const currentEntry = Editor.above(editor, {
+              match: (n) => Element.isElement(n),
+            });
+
+            if (currentEntry) {
+              const [, currentPath] = currentEntry;
+
+              if (Editor.isStart(editor, selection.anchor, currentPath)) {
+                const previousEntry = Editor.previous(editor, {
+                  at: currentPath,
+                  match: (n) => Element.isElement(n) && (n as QuadratsElement).type === types.carousel,
+                });
+
+                if (previousEntry) {
+                  event.preventDefault();
+                  Transforms.removeNodes(editor, {
+                    at: previousEntry[1],
+                  });
+
+                  return;
+                }
+              }
+            }
+          }
+        }
+
+        next();
+      },
+    }),
     createRenderElement: (options = {}) => {
       const renderCarousel = options.carousel || defaultRenderCarouselElements.carousel;
       const renderCarouselImages = options.carousel_images || defaultRenderCarouselElements.carousel_images;

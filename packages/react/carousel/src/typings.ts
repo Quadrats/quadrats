@@ -9,7 +9,7 @@ import {
   CarouselImagesTypeKey,
   CarouselCaptionTypeKey,
 } from '@quadrats/common/carousel';
-import { RenderElementProps, Editor, WithCreateRenderElement } from '@quadrats/react';
+import { RenderElementProps, Editor, WithCreateHandlers, WithCreateRenderElement } from '@quadrats/react';
 
 export type CarouselContextType = {
   activeIndex: number;
@@ -43,6 +43,7 @@ export type ReactCarouselCreateRenderElementOptions = {
 
 export interface ReactCarousel
   extends Carousel<Editor>,
+    WithCreateHandlers,
     WithCreateRenderElement<[ReactCarouselCreateRenderElementOptions?]> {
   createRenderPlaceholderElement: (params_0?: {
     render?: RenderCarouselPlaceholderElement;

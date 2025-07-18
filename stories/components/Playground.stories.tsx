@@ -349,6 +349,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
 
     if (withTitles.length) handlers.push(heading.createHandlers());
     if (withAccordion) handlers.push(accordion.createHandlers());
+    if (withCarousel) handlers.push(carousel.createHandlers());
     if (withBlockquote) handlers.push(blockquote.createHandlers());
     if (withLists.length) handlers.push(list.createHandlers());
     if (withBold) handlers.push(bold.createHandlers());
@@ -367,6 +368,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     heading,
     withTitles,
     withAccordion,
+    withCarousel,
     withBlockquote,
     withLists,
     withBold,

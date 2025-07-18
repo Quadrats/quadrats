@@ -89,11 +89,13 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
   }, [controller?.maxLength, items.length]);
 
   const disabledConfirm = useMemo(() => {
+    const basicCondition = items.length === 0 || uploading;
+
     if (controller?.maxLength) {
-      return uploading || items.length > controller.maxLength;
+      return basicCondition || items.length > controller.maxLength;
     }
 
-    return uploading;
+    return basicCondition;
   }, [controller?.maxLength, items.length, uploading]);
 
   const uploadFiles = useCallback(async (files: File[]) => {
