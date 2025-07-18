@@ -117,7 +117,7 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
 
         const url = await upload(item.preview, onProgress);
 
-        setItems((prev) => prev.map((u) => (u.file === item.file ? { ...u, url } : u)));
+        setItems((prev) => prev.map((u) => (u.file === item.file ? { ...u, preview: url, url } : u)));
       }
     }
   }, []);
