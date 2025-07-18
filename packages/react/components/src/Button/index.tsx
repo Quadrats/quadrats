@@ -8,6 +8,7 @@ export interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'outlined' | 'dashed' | 'tertiary';
   size?: 'small' | 'medium' | 'large';
   prefix?: ReactNode;
+  danger?: boolean;
   disabled?: boolean;
   children: ReactNode;
 }
@@ -19,12 +20,21 @@ const Button = ({
   variant = 'primary',
   size = 'small',
   prefix,
+  danger = false,
   disabled,
   children,
 }: ButtonProps) => {
   return (
     <button
-      className={clsx('qdr-button', `qdr-button--${variant}`, `qdr-button--${size}`, className)}
+      className={clsx(
+        'qdr-button',
+        `qdr-button--${variant}`,
+        `qdr-button--${size}`,
+        {
+          'qdr-button--danger': danger,
+        },
+        className,
+      )}
       type={type}
       disabled={disabled}
       onClick={onClick}

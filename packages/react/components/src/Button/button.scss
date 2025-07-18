@@ -53,6 +53,29 @@
       border-color: var(--qdr-action-disabled-bg);
       cursor: not-allowed;
     }
+
+    &.qdr-button--danger {
+      background-color: var(--qdr-error);
+      color: var(--qdr-on-error);
+      border: 1px solid var(--qdr-error);
+
+      &:hover {
+        background-color: var(--qdr-error-light);
+        border-color: var(--qdr-error-light);
+      }
+
+      &:active {
+        background-color: var(--qdr-error-dark);
+        border-color: var(--qdr-error-dark);
+      }
+
+      &:disabled {
+        color: var(--qdr-action-disabled);
+        background-color: var(--qdr-action-disabled-bg);
+        border-color: var(--qdr-action-disabled-bg);
+        cursor: not-allowed;
+      }
+    }
   }
 
   &--secondary {
@@ -75,6 +98,29 @@
       border-color: var(--qdr-action-disabled);
       background-color: var(--qdr-action-disabled-bg);
       cursor: not-allowed;
+    }
+
+    &.qdr-button--danger {
+      background-color: var(--qdr-surface);
+      color: var(--qdr-error);
+      border: 1px solid var(--qdr-border);
+
+      &:hover {
+        color: var(--qdr-error-light);
+        border-color: var(--qdr-error-light);
+      }
+
+      &:active {
+        color: var(--qdr-error-dark);
+        border-color: var(--qdr-error-dark);
+      }
+
+      &:disabled {
+        color: var(--qdr-action-disabled);
+        border-color: var(--qdr-action-disabled);
+        background-color: var(--qdr-action-disabled-bg);
+        cursor: not-allowed;
+      }
     }
   }
 
@@ -99,6 +145,29 @@
       background-color: var(--qdr-surface);
       cursor: not-allowed;
     }
+
+    &.qdr-button--danger {
+      background-color: var(--qdr-surface);
+      color: var(--qdr-error);
+      border: 1px solid var(--qdr-error);
+
+      &:hover {
+        background-color: var(--qdr-error-hover-bg);
+        border-color: var(--qdr-error-light);
+      }
+
+      &:active {
+        background-color: var(--qdr-error-active-bg);
+        border-color: var(--qdr-error);
+      }
+
+      &:disabled {
+        color: var(--qdr-action-disabled);
+        border-color: var(--qdr-action-disabled);
+        background-color: var(--qdr-surface);
+        cursor: not-allowed;
+      }
+    }
   }
 
   &--dashed {
@@ -122,6 +191,29 @@
       background-color: var(--qdr-surface);
       cursor: not-allowed;
     }
+
+    &.qdr-button--danger {
+      background-color: var(--qdr-surface);
+      color: var(--qdr-error);
+      border: 1px dashed var(--qdr-error);
+
+      &:hover {
+        background-color: var(--qdr-error-hover-bg);
+        border-color: var(--qdr-error-light);
+      }
+
+      &:active {
+        background-color: var(--qdr-error-active-bg);
+        border-color: var(--qdr-error-dark);
+      }
+
+      &:disabled {
+        color: var(--qdr-action-disabled);
+        border-color: var(--qdr-action-disabled);
+        background-color: var(--qdr-surface);
+        cursor: not-allowed;
+      }
+    }
   }
 
   &--tertiary {
@@ -139,6 +231,24 @@
       color: var(--qdr-action-disabled);
       background-color: transparent;
       cursor: not-allowed;
+    }
+
+    &.qdr-button--danger {
+      color: var(--qdr-error);
+
+      &:hover {
+        background-color: var(--qdr-error-hover-bg);
+      }
+
+      &:active {
+        background-color: var(--qdr-error-active-bg);
+      }
+
+      &:disabled {
+        color: var(--qdr-action-disabled);
+        background-color: transparent;
+        cursor: not-allowed;
+      }
     }
   }
 }
