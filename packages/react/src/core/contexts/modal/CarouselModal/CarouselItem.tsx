@@ -60,6 +60,8 @@ const CarouselItem = ({
     },
   }));
 
+  // TODO: i18n
+
   return drop(
     drag(
       dragPreview(

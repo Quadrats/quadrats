@@ -73,6 +73,8 @@ const FilesDropZone = ({
     [setIsDragging, validateFiles, uploadFiles, validateFile, controller?.limitSize],
   );
 
+  // TODO: i18n
+
   return (
     <div
       className={clsx('qdr-carousel-modal__zone', {

@@ -8,7 +8,7 @@ import Button from '../Button';
 import Icon from '../Icon';
 
 export interface ModalProps {
-  title: string | ReactNode;
+  title?: string | ReactNode;
   className?: string;
   closable?: boolean;
   children: ReactNode;
@@ -25,6 +25,7 @@ export interface ModalProps {
   haveConfirmButton?: boolean;
   disabledCloseButton?: boolean;
   disabledConfirmButton?: boolean;
+  dangerConfirmButton?: boolean;
   closeText?: string;
   confirmText?: string;
   onClose: () => void;
@@ -50,6 +51,7 @@ const Modal = ({
   haveConfirmButton = true,
   disabledCloseButton = false,
   disabledConfirmButton = false,
+  dangerConfirmButton = false,
   closeText,
   confirmText,
   onClose,
@@ -83,7 +85,7 @@ const Modal = ({
             </Button>
           )}
           {haveConfirmButton && (
-            <Button variant="primary" disabled={disabledConfirmButton} onClick={onConfirm}>
+            <Button variant="primary" danger={dangerConfirmButton} disabled={disabledConfirmButton} onClick={onConfirm}>
               {confirmText || locale.editor.confirm}
             </Button>
           )}
@@ -94,6 +96,7 @@ const Modal = ({
       customizedFooterElement,
       haveCloseButton,
       disabledCloseButton,
+      dangerConfirmButton,
       onClose,
       closeText,
       locale.editor.cancel,
@@ -126,12 +129,14 @@ const Modal = ({
             className={clsx('qdr-modal__container', `qdr-modal__container--${size}`)}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="qdr-modal__header">
-              {title}
-              {closable && (
-                <Icon className="qdr-modal__header__cancel" icon={Cancel} width={24} height={24} onClick={onClose} />
-              )}
-            </div>
+            {title && (
+              <div className="qdr-modal__header">
+                {title}
+                {closable && (
+                  <Icon className="qdr-modal__header__cancel" icon={Cancel} width={24} height={24} onClick={onClose} />
+                )}
+              </div>
+            )}
             <div
               className={clsx('qdr-modal__body', {
                 'qdr-modal__body--have-footer-height': haveFooter && !sideChildren,

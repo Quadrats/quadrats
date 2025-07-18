@@ -1,7 +1,8 @@
 import React, { ReactNode, useCallback, useState } from 'react';
 import { EmbedModal } from './EmbedModal/EmbedModal';
 import { CarouselModal } from './CarouselModal/CarouselModal';
-import { ModalContext, ModalName, EmbedModalConfig, CarouselModalConfig } from './modal';
+import { ConfirmModal } from './ConfirmModal/ConfirmModal';
+import { ModalContext, ModalName, EmbedModalConfig, CarouselModalConfig, ConfirmModalConfig } from './modal';
 
 export interface ModalProviderProps {
   children: ReactNode;
@@ -12,6 +13,7 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
   const [isModalClosed, setIsModalClosed] = useState<boolean>(false);
   const [embedModalConfig, setEmbedModalConfig] = useState<EmbedModalConfig | null>(null);
   const [carouselModalConfig, setCarouselModalConfig] = useState<CarouselModalConfig | null>(null);
+  const [confirmModalConfig, setConfirmModalConfig] = useState<ConfirmModalConfig | null>(null);
 
   const close = useCallback(() => {
     setModalName('');
@@ -30,6 +32,10 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
         setCarouselModalConfig: (config) => {
           setModalName('carousel-modal');
           setCarouselModalConfig(config);
+        },
+        setConfirmModalConfig: (config) => {
+          setModalName('confirm-modal');
+          setConfirmModalConfig(config);
         },
       }}
     >
@@ -51,6 +57,14 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
         controller={carouselModalConfig?.controller}
         initialValue={carouselModalConfig?.initialValue}
         onConfirm={carouselModalConfig?.onConfirm}
+      />
+      <ConfirmModal
+        isOpen={modalName === 'confirm-modal'}
+        close={close}
+        title={confirmModalConfig?.title ?? ''}
+        content={confirmModalConfig?.content ?? ''}
+        confirmText={confirmModalConfig?.confirmText ?? ''}
+        onConfirm={confirmModalConfig?.onConfirm ?? (() => {})}
       />
     </ModalContext.Provider>
   );

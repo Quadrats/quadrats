@@ -146,6 +146,8 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
     });
   }, []);
 
+  // TODO: i18n
+
   return (
     <Modal
       isOpen={isOpen}

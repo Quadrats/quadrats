@@ -17,7 +17,7 @@ export function Carousel({
   element: RenderCarouselElementProps['element'];
   controller: RenderCarouselElementProps['controller'];
 }) {
-  const { setCarouselModalConfig } = useModal();
+  const { setCarouselModalConfig, setConfirmModalConfig } = useModal();
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const editor = useSlateStatic();
   const path = ReactEditor.findPath(editor, element);
@@ -49,7 +49,19 @@ export function Carousel({
             {
               icon: Trash,
               onClick: () => {
-                Transforms.removeNodes(editor, { at: path });
+                if (controller.confirmModal) {
+                  // TODO: i18n
+                  setConfirmModalConfig({
+                    title: '確認要刪除？',
+                    content: '你確定要刪除嗎？',
+                    confirmText: '確認',
+                    onConfirm: () => {
+                      Transforms.removeNodes(editor, { at: path });
+                    },
+                  });
+                } else {
+                  Transforms.removeNodes(editor, { at: path });
+                }
               },
             },
           ]}
