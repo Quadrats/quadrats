@@ -1,4 +1,11 @@
-import { Editor, Transforms, Element, QuadratsElement } from '@quadrats/core';
+import {
+  Editor,
+  Transforms,
+  Element,
+  QuadratsElement,
+  createParagraphElement,
+  isAboveBlockEmpty,
+} from '@quadrats/core';
 import {
   Carousel,
   CarouselTypes,
@@ -90,7 +97,13 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
   };
 
   const insertCarousel: Carousel<Editor>['insertCarousel'] = ({ editor, items }) => {
-    Transforms.insertNodes(editor, createCarouselElement({ items }));
+    if (isAboveBlockEmpty(editor)) {
+      Transforms.removeNodes(editor, {
+        at: editor.selection?.anchor,
+      });
+    }
+
+    Transforms.insertNodes(editor, [createCarouselElement({ items }), createParagraphElement()]);
   };
 
   const updateCarouselElement: Carousel<Editor>['updateCarouselElement'] = ({ editor, items, path }) => {
