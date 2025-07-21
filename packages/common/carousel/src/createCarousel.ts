@@ -7,16 +7,18 @@ import {
   isAboveBlockEmpty,
 } from '@quadrats/core';
 import {
+  FileUploaderGetBody,
+  FileUploaderGetHeaders,
+  FileUploaderGetUrl,
+  FileUploaderImplement,
+} from '@quadrats/common/file-uploader';
+import {
   Carousel,
   CarouselTypes,
   CarouselElement,
   CarouselImagesElement,
   CarouselCaptionElement,
   CarouselPlaceholderElement,
-  FileUploaderGetBody,
-  FileUploaderGetHeaders,
-  FileUploaderGetUrl,
-  FileUploaderImplement,
 } from './typings';
 import { CAROUSEL_TYPES, CAROUSEL_PLACEHOLDER_TYPE } from './constants';
 import { getFilesFromInput } from './getFilesFromInput';

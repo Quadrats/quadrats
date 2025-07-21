@@ -1,4 +1,9 @@
 {
   "name": "@quadrats/common/carousel",
-  "sideEffects": false
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "file-uploader"
+    ]
+  }
 }

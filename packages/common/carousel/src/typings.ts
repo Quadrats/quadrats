@@ -1,4 +1,10 @@
 import { Editor, Withable, QuadratsElement, WithElementType, Text, Path } from '@quadrats/core';
+import {
+  FileUploaderGetBody,
+  FileUploaderGetHeaders,
+  FileUploaderGetUrl,
+  FileUploaderImplement,
+} from '@quadrats/common/file-uploader';
 
 export type CarouselTypeKey = 'carousel';
 export type CarouselImagesTypeKey = 'carousel_images';
@@ -33,33 +39,6 @@ export interface CarouselPlaceholderElement extends QuadratsElement, WithElement
   ratio?: [number, number];
   children: [Text];
 }
-
-export interface XHRUploadHeaders {
-  [name: string]: string;
-}
-
-interface FileUploaderUploadImplementOnProgressArgs {
-  loaded: number;
-  total: number;
-}
-
-interface FileUploaderUploadImplement {
-  onprogress: ((options: FileUploaderUploadImplementOnProgressArgs) => void) | null;
-}
-
-export interface FileUploaderImplement {
-  onload: (() => void) | null;
-  open: (method: string, url: string | URL) => void;
-  setRequestHeader: (key: string, value: string) => void;
-  send(body?: Document | BodyInit | null): void;
-  readonly status: number;
-  readonly response: any;
-  readonly upload: FileUploaderUploadImplement;
-}
-
-export type FileUploaderGetBody = (file: File) => BodyInit;
-export type FileUploaderGetHeaders = (file: File) => XHRUploadHeaders | Promise<XHRUploadHeaders>;
-export type FileUploaderGetUrl = (file: File) => string;
 
 export interface Carousel<T extends Editor = Editor> extends Withable {
   types: CarouselTypes;

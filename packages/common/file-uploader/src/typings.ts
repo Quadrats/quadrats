@@ -40,7 +40,7 @@ interface FileUploaderUploadImplement {
   onprogress: ((options: FileUploaderUploadImplementOnProgressArgs) => void) | null;
 }
 
-interface FileUploaderImplement {
+export interface FileUploaderImplement {
   onload: (() => void) | null;
   open: (method: string, url: string | URL) => void;
   setRequestHeader: (key: string, value: string) => void;
@@ -68,15 +68,15 @@ export interface FileUploaderCreateFileUploaderElementOptions {
 }
 
 export type FileUploaderUploadOptions = FileUploaderCreateFileUploaderElementOptions &
-GetFilesFromInputOptions &
-TransformsInsertNodesOptions;
+  GetFilesFromInputOptions &
+  TransformsInsertNodesOptions;
 
 export interface FileUploader<T extends Editor = Editor> extends Withable {
   type: string;
   createFileUploaderElement(
     editor: T,
     file: File,
-    options: FileUploaderCreateFileUploaderElementOptions
+    options: FileUploaderCreateFileUploaderElementOptions,
   ): Promise<FileUploaderElement | undefined>;
   upload(editor: T, options: FileUploaderUploadOptions): Promise<void>;
   insertUploaderPlaceholder(editor: T): void;
