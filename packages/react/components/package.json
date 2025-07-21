@@ -17,7 +17,8 @@
       "Textarea/textarea": "textarea",
       "Hint/hint": "hint",
       "Modal/modal": "modal",
-      "Message/message": "message"
+      "Message/message": "message",
+      "components": "components"
     }
   }
 }
