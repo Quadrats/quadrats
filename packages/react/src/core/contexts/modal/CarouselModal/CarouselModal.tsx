@@ -1,55 +1,16 @@
 /* eslint-disable max-len */
-import React, { useMemo, useCallback, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { Editor } from '@quadrats/core';
 import { Plus, Upload } from '@quadrats/icons';
+import { usePreviousValue, readFileAsBase64, upload } from '@quadrats/react/utils';
 import { useSlateStatic } from 'slate-react';
 import { Carousel, CarouselFieldArrayItem } from '@quadrats/common/carousel';
 import { Hints, Button, Modal, Icon } from '@quadrats/react/components';
 import FilesDropZone from './FilesDropZone';
 import CarouselItem from './CarouselItem';
-
-function usePreviousValue<T>(value: T): T {
-  const ref = useRef(value);
-
-  useEffect(() => {
-    ref.current = value;
-  }, [value]);
-
-  return ref.current;
-}
-
-function readFileAsBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        resolve(reader.result);
-      }
-    };
-
-    reader.onerror = () => reject(reader.error);
-
-    reader.readAsDataURL(file);
-  });
-}
-
-function upload(base64: string, onProgress: (percent: number) => void): Promise<string> {
-  return new Promise((resolve) => {
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 10;
-      onProgress(progress);
-      if (progress >= 100) {
-        clearInterval(interval);
-        setTimeout(() => resolve(base64), 200);
-      }
-    }, 250);
-  });
-}
 
 export interface CarouselModalProps {
   isOpen: boolean;

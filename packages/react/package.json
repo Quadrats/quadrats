@@ -13,7 +13,8 @@
     "deps": [
       "_internal",
       "components",
-      "configs"
+      "configs",
+      "utils"
     ],
     "styles": {
       "core/components/editable": "editable"
