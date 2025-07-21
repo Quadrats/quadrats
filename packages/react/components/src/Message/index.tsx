@@ -34,13 +34,18 @@ export interface MessageData extends Omit<NotifierData, 'onClose'>, MessageConfi
    * The severity of the message.
    */
   severity?: MessageSeverity;
+  themeClassName: string;
 }
 
 export type MessageType = FC<MessageData> &
   Notifier<MessageData, MessageConfigProps> &
   Record<
     string,
-    (message: MessageData['children'], props?: Omit<MessageData, 'children' | 'severity' | 'icon'>) => Key
+    (
+      message: MessageData['children'],
+      themeClassName: string,
+      props?: Omit<MessageData, 'children' | 'severity' | 'icon'>,
+    ) => Key
   >;
 
 /**
@@ -50,7 +55,16 @@ export type MessageType = FC<MessageData> &
  * to display a notification message globally.
  */
 const Message: MessageType = ((props) => {
-  const { children, duration, icon, reference, severity, onExited: onExitedProp, ...restTransitionProps } = props;
+  const {
+    children,
+    themeClassName,
+    duration,
+    icon,
+    reference,
+    severity,
+    onExited: onExitedProp,
+    ...restTransitionProps
+  } = props;
 
   const [open, setOpen] = useState(true);
 
@@ -77,9 +91,13 @@ const Message: MessageType = ((props) => {
   return (
     <SlideFade in={open} appear onExited={onExited} {...restTransitionProps}>
       <div
-        className={clsx('qdr-message', {
-          [`qdr-message--${severity}`]: !!severity,
-        })}
+        className={clsx(
+          'qdr-message',
+          {
+            [`qdr-message--${severity}`]: !!severity,
+          },
+          themeClassName,
+        )}
       >
         {icon ? <Icon className="qdr-message__icon" icon={icon} /> : null}
         <span className="qdr-message__content">{children}</span>
@@ -123,10 +141,11 @@ const severities = [
 const validSeverities: MessageSeverity[] = ['success', 'warning', 'error', 'info'];
 
 severities.forEach((severity) => {
-  Message[severity.key] = (message, props) =>
+  Message[severity.key] = (message, themeClassName, props) =>
     Message.add({
       ...props,
       children: message,
+      themeClassName,
       severity: validSeverities.includes(severity.key as MessageSeverity)
         ? (severity.key as MessageSeverity)
         : undefined,
