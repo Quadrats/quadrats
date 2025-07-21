@@ -1,17 +1,12 @@
 import { createContext, useContext } from 'react';
+import { MessageSeverity } from '@quadrats/react/components';
 
 export interface MessageContextValue {
-  success: (text: string) => void;
-  warning: (text: string) => void;
-  error: (text: string) => void;
-  info: (text: string) => void;
+  message: ({ type, content, duration }: { type?: MessageSeverity; content: string; duration?: number }) => void;
 }
 
 export const MessageContext = createContext<MessageContextValue>({
-  success: () => {},
-  warning: () => {},
-  error: () => {},
-  info: () => {},
+  message: () => {},
 });
 
 export function useMessage() {

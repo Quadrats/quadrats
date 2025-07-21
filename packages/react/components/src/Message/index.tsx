@@ -31,7 +31,7 @@ export type MessageType = FC<MessageData> &
     (
       message: MessageData['children'],
       theme: ThemeProps,
-      props?: Omit<MessageData, 'children' | 'severity' | 'icon'>,
+      props?: Omit<MessageData, 'children' | 'theme' | 'severity' | 'icon'>,
     ) => Key
   >;
 

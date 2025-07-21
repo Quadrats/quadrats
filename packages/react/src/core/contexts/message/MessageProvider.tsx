@@ -1,5 +1,5 @@
 import React, { ReactNode, useCallback, useContext } from 'react';
-import { Message } from '@quadrats/react/components';
+import { MessageSeverity, Message } from '@quadrats/react/components';
 import { ThemeContext } from '@quadrats/react/configs';
 import { MessageContext } from './message';
 
@@ -10,33 +10,37 @@ export interface MessageProviderProps {
 export const MessageProvider = ({ children }: MessageProviderProps) => {
   const { props: themeProps } = useContext(ThemeContext);
 
-  const success = useCallback(
-    (text: string) => {
-      Message.success(text, themeProps);
+  const message = useCallback(
+    ({ type, content, duration }: { type?: MessageSeverity; content: string; duration?: number }) => {
+      switch (type) {
+        case 'info': {
+          Message.info(content, themeProps, { duration });
+          break;
+        }
+
+        case 'error': {
+          Message.error(content, themeProps, { duration });
+          break;
+        }
+
+        case 'warning': {
+          Message.warning(content, themeProps, { duration });
+          break;
+        }
+
+        case 'success': {
+          Message.success(content, themeProps, { duration });
+          break;
+        }
+
+        default: {
+          Message.info(content, themeProps, { duration });
+          break;
+        }
+      }
     },
     [themeProps],
   );
 
-  const warning = useCallback(
-    (text: string) => {
-      Message.warning(text, themeProps);
-    },
-    [themeProps],
-  );
-
-  const error = useCallback(
-    (text: string) => {
-      Message.error(text, themeProps);
-    },
-    [themeProps],
-  );
-
-  const info = useCallback(
-    (text: string) => {
-      Message.info(text, themeProps);
-    },
-    [themeProps],
-  );
-
-  return <MessageContext.Provider value={{ success, warning, error, info }}>{children}</MessageContext.Provider>;
+  return <MessageContext.Provider value={{ message }}>{children}</MessageContext.Provider>;
 };
