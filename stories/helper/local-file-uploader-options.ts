@@ -20,7 +20,7 @@ class LocalFileUploaderUpload {
   }
 }
 
-class LocalFileUploader {
+export class LocalFileUploader {
   private emulateStatus = 0;
 
   private emulateResponse: string | null = null;
@@ -65,21 +65,24 @@ class LocalFileUploader {
   }
 }
 
-export default function getLocalFileUploaderOptions<Hosting extends string>(image: ReactImage<Hosting> | Image<Hosting, QuadratsReactEditor>): FileUploaderUploadOptions {
+export default function getLocalFileUploaderOptions<Hosting extends string>(
+  image: ReactImage<Hosting> | Image<Hosting, QuadratsReactEditor>,
+): FileUploaderUploadOptions {
   return {
     accept: ['image/*'],
     createElement: {
       image: {
-        dataURL: dataURL => image.createImageElement(dataURL),
-        response: response => image.createImageElement(response as string),
+        dataURL: (dataURL) => image.createImageElement(dataURL),
+        response: (response) => image.createImageElement(response as string),
       },
     },
-    getBody: file => file,
-    getHeaders: file => ({
+    getBody: (file) => file,
+    getHeaders: (file) => ({
       Authorization: 'Bearer <Your OAuth2 Token>',
       'Content-Type': file.type,
     }),
-    getUrl: file => `https://storage.googleapis.com/upload/storage/v1/b/<Your Bucket Name>/o?uploadType=media&name=${file.name}`,
+    getUrl: (file) =>
+      `https://storage.googleapis.com/upload/storage/v1/b/<Your Bucket Name>/o?uploadType=media&name=${file.name}`,
     uploader: new LocalFileUploader(),
   };
 }

@@ -1,29 +1,22 @@
-import React, { useRef, useMemo, useState, useEffect } from 'react';
-import {
-  Editor,
-  Element,
-} from '@quadrats/core';
-import { useSlateStatic, useLocale } from '@quadrats/react';
+import { useMemo, useEffect } from 'react';
+import { Editor, Element } from '@quadrats/core';
+import { useSlateStatic, useLocale, useModal } from '@quadrats/react';
 import { EMBED_PLACEHOLDER_TYPE, EmbedPlaceholderElement } from '@quadrats/common/embed';
 import { ReactEmbed } from '@quadrats/react/embed';
-import { useModal, Textarea, Input } from '@quadrats/react/components';
 
-export function useEmbedTool<P extends string>(
-  controller: ReactEmbed<P>,
-  provider: P,
-) {
+type ConfigType = {
+  type: 'input' | 'textarea';
+  placeholder: string;
+  confirmText: string;
+  hint: string;
+};
+
+export function useEmbedTool<P extends string>(controller: ReactEmbed<P>, provider: P) {
   const locale = useLocale();
-  const modalConfigRef = useRef('');
   const editor = useSlateStatic();
-  const [isModalClosed, setIsModalClosed] = useState<boolean>(false);
-  const { openModal } = useModal();
+  const { setEmbedModalConfig, isModalClosed, setIsModalClosed } = useModal();
 
-  const config = useMemo((): {
-    type: 'input' | 'textarea',
-    placeholder: string;
-    confirmText: string;
-    hint: string;
-  } => {
+  const config = useMemo((): ConfigType => {
     switch (provider) {
       case 'youtube':
         return {
@@ -89,7 +82,7 @@ export function useEmbedTool<P extends string>(
           hint: '',
         };
     }
-  }, [provider]);
+  }, [locale, provider]);
 
   useEffect(() => {
     const [match] = Editor.nodes(editor, {
@@ -106,51 +99,16 @@ export function useEmbedTool<P extends string>(
     });
 
     if (match) {
-      openModal({
-        title: locale.editor.embedTitle,
-        children: (() => {
-          const EmbedComponent = () => {
-            const [value, setValue] = useState('');
-
-            useEffect(() => {
-              modalConfigRef.current = value;
-            }, [value]);
-
-            if (config.type === 'textarea') {
-              return (
-                <Textarea
-                  value={value}
-                  onChange={setValue}
-                  placeholder={config.placeholder}
-                  hint={config.hint}
-                  height={86}
-                />
-              );
-            }
-
-            return (
-              <Input
-                value={value}
-                onChange={setValue}
-                placeholder={config.placeholder}
-                hint={config.hint}
-              />
-            );
-          };
-
-          return <EmbedComponent />;
-        })(),
-        confirmText: config.confirmText,
-        onClose: () => {
-          setIsModalClosed(true);
-        },
-        onConfirm: () => {
+      setEmbedModalConfig({
+        onConfirm: (value) => {
           controller.removeEmbedPlaceholder(editor);
-          controller.insertEmbed(editor, provider, modalConfigRef.current);
+          controller.insertEmbed(editor, provider, value);
         },
+        ...config,
       });
     }
-  }, [editor, provider, controller, config, modalConfigRef]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config, controller, editor, provider]);
 
   useEffect(() => {
     if (isModalClosed) {
@@ -159,7 +117,7 @@ export function useEmbedTool<P extends string>(
         setIsModalClosed(false);
       }, 250);
     }
-  }, [controller, isModalClosed]);
+  }, [controller, editor, isModalClosed, setIsModalClosed]);
 
   return {
     onClick: () => {

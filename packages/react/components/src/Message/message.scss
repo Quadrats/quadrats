@@ -1,0 +1,53 @@
+.qdr-message {
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+  margin-top: var(--qdr-spacing-4);
+  padding: var(--qdr-spacing-4) var(--qdr-spacing-9) var(--qdr-spacing-4) var(--qdr-spacing-6);
+  gap: var(--qdr-spacing-4);
+  background-color: var(--qdr-surface);
+  border: 1px solid var(--qdr-divider);
+  color: var(--qdr-text-primary);
+  font-size: var(--qdr-typography-basic-body1-font-size);
+  line-height: var(--qdr-typography-basic-body1-line-height);
+  letter-spacing: var(--qdr-typography-basic-body1-letter-spacing);
+  font-weight: var(--qdr-typography-basic-body1-font-weight);
+  flex-shrink: 0;
+  box-sizing: border-box;
+  box-shadow: var(--qdr-shadow-s);
+
+  &--success {
+    .qdr-message__icon {
+      color: var(--qdr-success);
+    }
+  }
+
+  &--warning {
+    .qdr-message__icon {
+      color: var(--qdr-warning);
+    }
+  }
+
+  &--error {
+    .qdr-message__icon {
+      color: var(--qdr-error);
+    }
+  }
+
+  &--info {
+    .qdr-message__icon {
+      color: var(--qdr-primary);
+    }
+  }
+
+  &__root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+}

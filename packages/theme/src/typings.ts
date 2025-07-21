@@ -51,6 +51,11 @@ export interface SpacingObject {
   'radius-5': string;
   'radius-6': string;
 
+  'modal-size-s': string;
+  'modal-size-m': string;
+  'modal-size-l': string;
+  'modal-size-xl': string;
+
   typographyArticleH1FontSize: string;
   typographyArticleH1LineHeight: string;
   typographyArticleH1LetterSpacing: string;

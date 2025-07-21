@@ -19,9 +19,9 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
         }
 
         if (core.isSelectionInAccordionTitle(editor)) {
-          const blockEntry = editor.above(
-            { match: node => (node as QuadratsElement).type === types.accordion_title },
-          );
+          const blockEntry = editor.above({
+            match: (node) => (node as QuadratsElement).type === types.accordion_title,
+          });
 
           if (!blockEntry) return;
 
@@ -36,7 +36,7 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
           const isFirst = Path.equals(currentPath, parentPath.concat(0));
 
           if (isFirst) {
-            if (event.key === 'Backspace' || event.key === 'Delete') {
+            if (event.key === 'Backspace') {
               const text = Editor.string(editor, currentPath);
 
               if (!text) {
@@ -66,9 +66,9 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
         }
 
         if (core.isSelectionInAccordionContent(editor)) {
-          const blockEntry = editor.above(
-            { match: node => (node as QuadratsElement).type === types.accordion_content },
-          );
+          const blockEntry = editor.above({
+            match: (node) => (node as QuadratsElement).type === types.accordion_content,
+          });
 
           if (!blockEntry) return;
 
@@ -79,7 +79,7 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
 
           const text = Editor.string(editor, blockPath);
 
-          if (event.key === 'Backspace' || event.key === 'Delete') {
+          if (event.key === 'Backspace') {
             if (Element.isElement(preNode)) {
               const preType = preNode.type as string;
 
@@ -133,7 +133,7 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
               },
             );
 
-            moveto[(parentPath.length - 1)] += 1;
+            moveto[parentPath.length - 1] += 1;
             Transforms.moveNodes(editor, {
               at: editor.selection,
               to: moveto,
@@ -149,8 +149,7 @@ export function createReactAccordion(options: CreateReactAccordionOptions = {}):
     createRenderElement: (options = {}) => {
       const renderAccordion = options.accordion || defaultRenderAccordionElements.accordion;
       const renderAccordionTitle = options.accordion_title || defaultRenderAccordionElements.accordion_title;
-      const renderAccordionContent = options.accordion_content
-        || defaultRenderAccordionElements.accordion_content;
+      const renderAccordionContent = options.accordion_content || defaultRenderAccordionElements.accordion_content;
 
       return createRenderElements([
         {

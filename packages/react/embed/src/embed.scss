@@ -69,7 +69,8 @@
     }
   }
 
-  &-youtube, &-vimeo {
+  &-youtube,
+  &-vimeo {
     &__placeholder {
       display: flex;
       flex-direction: column;
@@ -169,7 +170,9 @@
     }
   }
 
-  &-instagram, &-facebook, &-twitter {
+  &-instagram,
+  &-facebook,
+  &-twitter {
     display: flex;
     align-items: flex-start;
 

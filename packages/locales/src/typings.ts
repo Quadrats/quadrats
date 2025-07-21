@@ -67,10 +67,12 @@ export interface LocaleDefinition {
       inputPlaceholder: string;
     };
     toolbar: {
+      accordion: string;
       alignCenter: string;
       alignLeft: string;
       alignRight: string;
       bold: string;
+      carousel: string;
       dance: string;
       divider: string;
       drama: string;

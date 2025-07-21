@@ -4,8 +4,10 @@ export { InputProps, default as Input } from './Input';
 export { TextareaProps, default as Textarea } from './Textarea';
 export { IconProps, default as Icon } from './Icon';
 export { ModalProps, default as Modal } from './Modal';
-export * from './Modal/contexts/modal';
-export * from './Modal/contexts/ModalProvider';
+export { MessageSeverity, default as Message } from './Message';
 export { PortalProps, default as Portal } from './Portal';
 export { ProgressProps, default as Progress } from './Progress';
 export { TooltipProps, default as Tooltip } from './Tooltip';
+
+export * from './Notifier/typings';
+export * from './Notifier/createNotifier';

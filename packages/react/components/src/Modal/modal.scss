@@ -1,7 +1,6 @@
 .qdr-modal {
   position: fixed;
   inset: 0;
-  background: rgb(0 0 0 / 50%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,6 +8,10 @@
   pointer-events: none;
   transition: opacity var(--qdr-duration-short) var(--qdr-easing-standard);
   z-index: 9999;
+
+  &--mask {
+    background: rgb(0 0 0 / 50%);
+  }
 
   &--opened {
     opacity: 1;
@@ -24,7 +27,9 @@
     &-enter-active {
       transform: translateY(0);
       opacity: 1;
-      transition: transform var(--qdr-duration-short) var(--qdr-easing-standard), opacity var(--qdr-duration-short) var(--qdr-easing-standard);
+      transition:
+        transform var(--qdr-duration-short) var(--qdr-easing-standard),
+        opacity var(--qdr-duration-short) var(--qdr-easing-standard);
     }
 
     &-exit {
@@ -35,14 +40,32 @@
     &-exit-active {
       transform: translateY(-200px);
       opacity: 0;
-      transition: transform var(--qdr-duration-short) var(--qdr-easing-standard), opacity var(--qdr-duration-short) var(--qdr-easing-standard);
+      transition:
+        transform var(--qdr-duration-short) var(--qdr-easing-standard),
+        opacity var(--qdr-duration-short) var(--qdr-easing-standard);
     }
   }
 
   &__container {
-    width: 520px;
     background-color: #fff;
     box-shadow: var(--qdr-shadow-xl);
+    margin: var(--qdr-spacing-8);
+
+    &--small {
+      width: var(--qdr-modal-size-s);
+    }
+
+    &--medium {
+      width: var(--qdr-modal-size-m);
+    }
+
+    &--large {
+      width: var(--qdr-modal-size-l);
+    }
+
+    &--extraLarge {
+      width: var(--qdr-modal-size-xl);
+    }
   }
 
   &__header {
@@ -70,7 +93,98 @@
   }
 
   &__body {
+    max-height: calc(
+      100svh - 2 * var(--qdr-spacing-8) - 2 * var(--qdr-spacing-5) - var(--qdr-typography-basic-h5-font-size) *
+        var(--qdr-typography-basic-h5-line-height)
+    );
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    &--have-footer-height {
+      max-height: calc(
+        100svh - 2 * var(--qdr-spacing-8) - 2 * var(--qdr-spacing-5) - var(--qdr-typography-basic-h5-font-size) *
+          var(--qdr-typography-basic-h5-line-height) - 2 *
+          var(--qdr-spacing-6) - var(--qdr-typography-basic-button2-font-size) *
+          var(--qdr-typography-basic-button2-line-height)
+      );
+    }
+  }
+
+  &__side-body {
+    display: flex;
+    flex-direction: column;
+    width: 280px;
+    border-right: 1px solid var(--qdr-divider);
+    align-self: stretch;
+  }
+
+  &__main,
+  &__side {
+    flex: 1;
     padding: var(--qdr-spacing-9);
+    box-sizing: border-box;
+    align-self: stretch;
+  }
+
+  &__main {
+    overflow-y: auto;
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--qdr-spacing-6) var(--qdr-spacing-9);
+    border-top: 1px solid var(--qdr-divider);
+
+    &__actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--qdr-spacing-4);
+    }
+  }
+}
+
+.qdr-confirm-modal {
+  &__container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: var(--qdr-spacing-4);
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--qdr-warning);
+  }
+
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: var(--qdr-spacing-4);
+  }
+
+  &__title {
+    color: var(--qdr-text-primary);
+    font-size: var(--qdr-typography-basic-h4-font-size);
+    line-height: var(--qdr-typography-basic-h4-line-height);
+    letter-spacing: var(--qdr-typography-basic-h4-letter-spacing);
+    font-weight: var(--qdr-typography-basic-h4-font-weight);
+  }
+
+  &__content {
+    color: var(--qdr-text-primary);
+    font-size: var(--qdr-typography-basic-body1-font-size);
+    line-height: var(--qdr-typography-basic-body1-line-height);
+    letter-spacing: var(--qdr-typography-basic-body1-letter-spacing);
+    font-weight: var(--qdr-typography-basic-body1-font-weight);
   }
 
   &__footer {
@@ -78,7 +192,6 @@
     align-items: center;
     justify-content: flex-end;
     gap: var(--qdr-spacing-4);
-    padding: var(--qdr-spacing-6) var(--qdr-spacing-9);
-    border-top: 1px solid var(--qdr-divider);
+    margin-top: var(--qdr-spacing-9);
   }
 }

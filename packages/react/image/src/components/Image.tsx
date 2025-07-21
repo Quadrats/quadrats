@@ -3,7 +3,7 @@ import { Transforms, Editor } from '@quadrats/core';
 import { ImageFigureElement } from '@quadrats/common/image';
 import { AlignLeft, AlignCenter, AlignRight, Trash } from '@quadrats/icons';
 import { ReactEditor, useSlateStatic } from '@quadrats/react';
-import { InlineToolbar } from '../../../toolbar/src';
+import { InlineToolbar } from '@quadrats/react/toolbar';
 import { RenderImageElementProps } from '../typings';
 // import { useImageResizer } from '../hooks/useImageResizer';
 
@@ -28,7 +28,7 @@ function Image(props: RenderImageElementProps) {
       {...attributes}
       className="qdr-image"
       onClick={() => Transforms.select(editor, ReactEditor.findPath(editor, element))}
-      onMouseDown={event => event.preventDefault()}
+      onMouseDown={(event) => event.preventDefault()}
       role="img"
     >
       <div className="qdr-image__spacer">{children}</div>

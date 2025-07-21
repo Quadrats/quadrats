@@ -1,0 +1,17 @@
+{
+  "name": "@quadrats/react/carousel",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "quadratsConfig": {
+    "deps": [
+      "__ROOT__",
+      "toolbar",
+      "utils"
+    ],
+    "styles": {
+      "carousel": "carousel"
+    }
+  }
+}

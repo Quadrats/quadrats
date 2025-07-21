@@ -69,10 +69,12 @@ export const zhTW: LocaleDefinition = {
       inputPlaceholder: '請在此輸入或貼上 Youtube、Vimeo 或其他影片連結，並按下 Enter',
     },
     toolbar: {
+      accordion: 'Accordion',
       alignCenter: 'Align Center',
       alignLeft: 'Align Left',
       alignRight: 'Align Right',
       bold: 'Bold',
+      carousel: 'Carousel',
       dance: 'Dance',
       divider: 'Divider',
       drama: 'Drama',

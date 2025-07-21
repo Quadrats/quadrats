@@ -21,6 +21,12 @@ export { default as DefaultElement } from './components/DefaultElement';
 export { default as DefaultLeaf } from './components/DefaultLeaf';
 export { default as Quadrats, QuadratsProps } from './components/Quadrats';
 
+export * from './contexts/modal/modal';
+export * from './contexts/modal/ModalProvider';
+
+export * from './contexts/message/message';
+export * from './contexts/message/MessageProvider';
+
 export { composeHandlers } from './composeHandlers';
 export { composeRenderElements } from './composeRenderElements';
 export { composeRenderLeafs } from './composeRenderLeafs';

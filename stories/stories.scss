@@ -1,12 +1,6 @@
 @use '../packages/theme/theming/register.scss';
 @use '../packages/theme/theming/styles.scss';
-@import url('../packages/react/components/src/Progress/progress.scss');
-@import url('../packages/react/components/src/Tooltip/tooltip.scss');
-@import url('../packages/react/components/src/Button/button.scss');
-@import url('../packages/react/components/src/Modal/modal.scss');
-@import url('../packages/react/components/src/Hint/hint.scss');
-@import url('../packages/react/components/src/Input/input.scss');
-@import url('../packages/react/components/src/Textarea/textarea.scss');
+@import url('../packages/react/components/src/components.scss');
 @import url('../packages/react/src/core/components/editable.scss');
 @import url('../packages/react/toolbar/src/components/toolbar.scss');
 @import url('../packages/react/file-uploader/src/components/file-uploader.scss');
@@ -20,6 +14,7 @@
 @import url('../packages/react/list/src/list.scss');
 @import url('../packages/react/embed/src/embed.scss');
 @import url('../packages/react/accordion/src/accordion.scss');
+@import url('../packages/react/carousel/src/carousel.scss');
 @import url('../packages/react/input-block/src/input-block.scss');
 
 @mixin stories-block {
