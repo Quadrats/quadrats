@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction } from 'react';
 import { Slate } from 'slate-react';
 import { ConfigsProvider, ConfigsProviderProps } from '@quadrats/react/configs';
 import { ModalProvider } from '../contexts/modal/ModalProvider';
+import { MessageProvider } from '../contexts/message/MessageProvider';
 import { ConfirmModalConfig } from '../contexts/modal/modal';
 import { Descendant } from '..';
 
@@ -22,9 +23,11 @@ function Quadrats(props: QuadratsProps) {
   return (
     <ConfigsProvider theme={theme} locale={locale}>
       <Slate editor={editor} onChange={onChange} initialValue={value}>
-        <ModalProvider needConfirmModal={needConfirmModal} setNeedConfirmModal={setNeedConfirmModal}>
-          {children}
-        </ModalProvider>
+        <MessageProvider>
+          <ModalProvider needConfirmModal={needConfirmModal} setNeedConfirmModal={setNeedConfirmModal}>
+            {children}
+          </ModalProvider>
+        </MessageProvider>
       </Slate>
     </ConfigsProvider>
   );
