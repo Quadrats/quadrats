@@ -81,7 +81,7 @@ const Message: MessageType = ((props) => {
         )}
         style={theme.style}
       >
-        {icon ? <Icon className="qdr-message__icon" icon={icon} /> : null}
+        {icon ? <Icon className="qdr-message__icon" icon={icon} width={24} height={24} /> : null}
         <span className="qdr-message__content">{children}</span>
       </div>
     </SlideFade>
