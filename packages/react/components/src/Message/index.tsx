@@ -1,5 +1,6 @@
 import React, { FC, Key, useEffect, useState } from 'react';
 import clsx from 'clsx';
+import { ThemeProps } from '@quadrats/react/configs';
 import Icon from '../Icon';
 import { createNotifier } from '../Notifier/createNotifier';
 import { Notifier, NotifierData, NotifierConfig } from '../Notifier/typings';
@@ -16,25 +17,11 @@ export interface MessageConfigProps
 export type MessageSeverity = 'success' | 'warning' | 'error' | 'info';
 
 export interface MessageData extends Omit<NotifierData, 'onClose'>, MessageConfigProps {
-  /**
-   * If given, the message will be closed after the amount of time.
-   * You can use `Message.config` to overwrite.
-   * @default 3000
-   */
   duration?: NotifierData['duration'];
-  /**
-   * message icon prefix
-   */
   icon?: IconDefinition;
-  /**
-   * The key of message.
-   */
   reference?: Key;
-  /**
-   * The severity of the message.
-   */
   severity?: MessageSeverity;
-  themeClassName: string;
+  theme: ThemeProps;
 }
 
 export type MessageType = FC<MessageData> &
@@ -43,21 +30,15 @@ export type MessageType = FC<MessageData> &
     string,
     (
       message: MessageData['children'],
-      themeClassName: string,
+      theme: ThemeProps,
       props?: Omit<MessageData, 'children' | 'severity' | 'icon'>,
     ) => Key
   >;
 
-/**
- * The react component for `mezzanine` message.
- *
- * Use the API from the Message instance such as `Message.add` and `Message.success`
- * to display a notification message globally.
- */
 const Message: MessageType = ((props) => {
   const {
     children,
-    themeClassName,
+    theme,
     duration,
     icon,
     reference,
@@ -96,8 +77,9 @@ const Message: MessageType = ((props) => {
           {
             [`qdr-message--${severity}`]: !!severity,
           },
-          themeClassName,
+          theme.className,
         )}
+        style={theme.style}
       >
         {icon ? <Icon className="qdr-message__icon" icon={icon} /> : null}
         <span className="qdr-message__content">{children}</span>
@@ -141,11 +123,11 @@ const severities = [
 const validSeverities: MessageSeverity[] = ['success', 'warning', 'error', 'info'];
 
 severities.forEach((severity) => {
-  Message[severity.key] = (message, themeClassName, props) =>
+  Message[severity.key] = (message, theme, props) =>
     Message.add({
       ...props,
       children: message,
-      themeClassName,
+      theme,
       severity: validSeverities.includes(severity.key as MessageSeverity)
         ? (severity.key as MessageSeverity)
         : undefined,
