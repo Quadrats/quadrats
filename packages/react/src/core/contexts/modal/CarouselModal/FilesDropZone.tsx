@@ -4,6 +4,7 @@ import { Editor } from '@quadrats/core';
 import { Carousel } from '@quadrats/common/carousel';
 import { Upload } from '@quadrats/icons';
 import { Icon } from '@quadrats/react/components';
+import { useMessage } from '../../message/message';
 
 interface FilesDropZoneProps {
   isDragging: boolean;
@@ -23,6 +24,7 @@ const FilesDropZone = ({
   uploadFiles,
 }: FilesDropZoneProps) => {
   const [error, setError] = useState(false);
+  const { message } = useMessage();
 
   const validateFile = useCallback(
     (file: File) => {
@@ -67,10 +69,16 @@ const FilesDropZone = ({
           (f) => validateFile(f) && controller?.limitSize && f.size <= controller.limitSize * 1024 * 1024,
         );
 
-        await uploadFiles(correctFiles);
+        if (correctFiles.length !== files.length) {
+          message({ type: 'error', content: '檔案過大或類型錯誤。' });
+        }
+
+        if (correctFiles.length > 0) {
+          await uploadFiles(correctFiles);
+        }
       }
     },
-    [setIsDragging, validateFiles, uploadFiles, validateFile, controller?.limitSize],
+    [setIsDragging, validateFiles, validateFile, controller?.limitSize, message, uploadFiles],
   );
 
   // TODO: i18n

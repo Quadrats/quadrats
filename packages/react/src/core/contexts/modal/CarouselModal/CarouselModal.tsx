@@ -9,6 +9,7 @@ import { usePreviousValue, readFileAsBase64, upload } from '@quadrats/react/util
 import { useSlateStatic } from 'slate-react';
 import { Carousel, CarouselFieldArrayItem } from '@quadrats/common/carousel';
 import { Hints, Button, Modal, Icon } from '@quadrats/react/components';
+import { useMessage } from '../../message/message';
 import FilesDropZone from './FilesDropZone';
 import CarouselItem from './CarouselItem';
 
@@ -25,6 +26,7 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
   const [uploading, setUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [items, setItems] = useState<CarouselFieldArrayItem[]>([]);
+  const { message } = useMessage();
   const prevIsOpen = usePreviousValue(isOpen);
 
   useEffect(() => {
@@ -156,7 +158,13 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
                   (f) => controller?.limitSize && f.size <= controller.limitSize * 1024 * 1024,
                 );
 
-                await uploadFiles(correctFiles);
+                if (correctFiles.length !== files.length) {
+                  message({ type: 'error', content: '檔案過大。' });
+                }
+
+                if (correctFiles.length > 0) {
+                  await uploadFiles(correctFiles);
+                }
               }
             }}
           >
