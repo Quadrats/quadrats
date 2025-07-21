@@ -61,29 +61,39 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
     return basicCondition;
   }, [controller?.maxLength, items.length, uploading]);
 
-  const uploadFiles = useCallback(async (files: File[]) => {
-    if (files) {
-      const items: CarouselFieldArrayItem[] = [];
+  const uploadFiles = useCallback(
+    async (files: File[]) => {
+      if (files && controller) {
+        const items: CarouselFieldArrayItem[] = [];
 
-      for (const file of files) {
-        const base64 = await readFileAsBase64(file);
+        for (const file of files) {
+          const base64 = await readFileAsBase64(file);
 
-        items.push({ file, url: '', caption: '', preview: base64, progress: 0 });
+          items.push({ file, url: '', caption: '', preview: base64, progress: 0 });
+        }
+
+        setItems((prev) => [...prev, ...items]);
+
+        for (const item of items) {
+          const onProgress = (p: number) => {
+            setItems((prev) => prev.map((u) => (u.file === item.file ? { ...u, progress: p } : u)));
+          };
+
+          const url = await upload({
+            file: item.file,
+            getBody: controller?.getBody,
+            getHeaders: controller?.getHeaders,
+            getUrl: controller?.getUrl,
+            uploader: controller?.uploader,
+            onProgress,
+          });
+
+          setItems((prev) => prev.map((u) => (u.file === item.file ? { ...u, preview: url, url } : u)));
+        }
       }
-
-      setItems((prev) => [...prev, ...items]);
-
-      for (const item of items) {
-        const onProgress = (p: number) => {
-          setItems((prev) => prev.map((u) => (u.file === item.file ? { ...u, progress: p } : u)));
-        };
-
-        const url = await upload(item.preview, onProgress);
-
-        setItems((prev) => prev.map((u) => (u.file === item.file ? { ...u, preview: url, url } : u)));
-      }
-    }
-  }, []);
+    },
+    [controller],
+  );
 
   const change = useCallback((index: number, image: Omit<CarouselFieldArrayItem, 'progress' | 'preview' | 'file'>) => {
     setItems((prev) => {
