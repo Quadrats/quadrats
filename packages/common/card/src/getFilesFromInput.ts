@@ -8,7 +8,7 @@ export function getFilesFromInput(options: { accept: ('image/jpeg' | 'image/jpg'
       inputEl.accept = accept.join(',');
     }
 
-    inputEl.multiple = true;
+    inputEl.multiple = false;
     inputEl.type = 'file';
 
     inputEl.addEventListener('cancel', () => {

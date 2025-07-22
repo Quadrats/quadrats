@@ -1,4 +1,4 @@
-import { Editor, Withable } from '@quadrats/core';
+import { Editor, Withable, QuadratsElement, WithElementType } from '@quadrats/core';
 import {
   FileUploaderGetBody,
   FileUploaderGetHeaders,
@@ -12,11 +12,13 @@ export type CardContentsTypeKey = 'card_contents';
 
 export type CardTypes = Record<CardTypeKey | CardImageTypeKey | CardContentsTypeKey, string>;
 
+export interface CardPlaceholderElement extends QuadratsElement, WithElementType {}
+
 export interface Card<T extends Editor = Editor> extends Withable {
   types: CardTypes;
   insertCardPlaceholder(editor: T): void;
   removeCardPlaceholder(editor: T): void;
-  selectFiles(editor: T): Promise<File[] | undefined>;
+  accept: string[];
   getBody: FileUploaderGetBody;
   getHeaders?: FileUploaderGetHeaders;
   getUrl: FileUploaderGetUrl;
