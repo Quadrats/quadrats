@@ -20,6 +20,9 @@ export function getIconNameInGroup(iconOriginName: string, locale: LocaleDefinit
     case 'bold':
       return locale.editor.toolbar.bold;
 
+    case 'card':
+      return locale.editor.toolbar.card;
+
     case 'carousel':
       return locale.editor.toolbar.carousel;
 
