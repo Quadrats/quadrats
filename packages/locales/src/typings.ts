@@ -8,7 +8,7 @@ export interface LocaleDefinition {
     accordion: {
       titlePlaceholder: string;
       contentPlaceholder: string;
-    },
+    };
     facebook: {
       inputPlaceholder: string;
       blockPlaceholder: string;
@@ -72,6 +72,7 @@ export interface LocaleDefinition {
       alignLeft: string;
       alignRight: string;
       bold: string;
+      card: string;
       carousel: string;
       dance: string;
       divider: string;
@@ -106,6 +107,6 @@ export interface LocaleDefinition {
       video: string;
       vimeo: string;
       youtube: string;
-    },
+    };
   };
 }

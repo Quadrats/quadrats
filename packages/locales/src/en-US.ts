@@ -74,6 +74,7 @@ export const enUS: LocaleDefinition = {
       alignLeft: 'Align Left',
       alignRight: 'Align Right',
       bold: 'Bold',
+      card: 'Card',
       carousel: 'Carousel',
       dance: 'Dance',
       divider: 'Divider',
