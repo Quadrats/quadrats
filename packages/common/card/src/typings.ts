@@ -12,6 +12,14 @@ export type CardContentsTypeKey = 'card_contents';
 
 export type CardTypes = Record<CardTypeKey | CardImageTypeKey | CardContentsTypeKey, string>;
 
+export interface CardElement extends QuadratsElement, WithElementType {}
+
+export interface CardImageElement extends QuadratsElement, WithElementType {
+  src: string;
+}
+
+export interface CardContentsElement extends QuadratsElement, WithElementType {}
+
 export interface CardPlaceholderElement extends QuadratsElement, WithElementType {}
 
 export interface Card<T extends Editor = Editor> extends Withable {
