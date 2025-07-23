@@ -27,7 +27,14 @@ export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
         onConfirm();
       }}
     >
-      <Input value={titleValue} onChange={setTitleValue} label="標題" placeholder="請輸入標題" maxLength={30} />
+      <Input
+        value={titleValue}
+        onChange={setTitleValue}
+        label="標題"
+        placeholder="請輸入標題"
+        maxLength={30}
+        required
+      />
       <Textarea
         value={descriptionValue}
         onChange={setDescriptionValue}
@@ -35,6 +42,7 @@ export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
         placeholder="請輸入簡述"
         height={86}
         maxLength={50}
+        required
       />
       <Input value={remarkValue} onChange={setRemarkValue} label="備註" placeholder="請輸入備註資訊" maxLength={30} />
     </Modal>

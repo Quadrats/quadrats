@@ -10,6 +10,7 @@ export interface InputProps {
   isError?: boolean;
   hint?: string;
   maxLength?: number;
+  required?: boolean;
 }
 
 const Input = ({
@@ -21,29 +22,22 @@ const Input = ({
   isError,
   hint,
   maxLength,
+  required = false,
 }: InputProps) => {
-  const isLimited = useMemo(
-    () => (maxLength && value && value.length >= maxLength), [maxLength, value],
-  );
+  const isLimited = useMemo(() => maxLength && value && value.length >= maxLength, [maxLength, value]);
 
   return (
-    <div
-      className={clsx(
-        'qdr-input',
-      )}
-    >
+    <div className={clsx('qdr-input')}>
       {label && (
-        <span className="qdr-input__label">
+        <p className="qdr-input__label">
           {label}
-        </span>
+          {required && <span className="qdr-input__required-mark">*</span>}
+        </p>
       )}
       <input
-        className={clsx(
-          'qdr-input__input',
-          {
-            'qdr-input__input--error': isError,
-          },
-        )}
+        className={clsx('qdr-input__input', {
+          'qdr-input__input--error': isError,
+        })}
         value={value}
         onChange={(e) => {
           onChange?.(e.target.value);
@@ -55,19 +49,14 @@ const Input = ({
       />
       {(hint || maxLength) && (
         <div className="qdr-input__hint-wrapper">
-          <span className="qdr-input__hint">
-            {hint}
-          </span>
+          <span className="qdr-input__hint">{hint}</span>
           {maxLength && (
             <span
-              className={clsx(
-                'qdr-input__counter',
-                {
-                  'qdr-input__counter--limited': isLimited,
-                  'qdr-input__counter--error': isError,
-                  'qdr-input__counter--disabled': disabled,
-                },
-              )}
+              className={clsx('qdr-input__counter', {
+                'qdr-input__counter--limited': isLimited,
+                'qdr-input__counter--error': isError,
+                'qdr-input__counter--disabled': disabled,
+              })}
             >
               {`${value ? value.length : 0}/${maxLength}`}
             </span>

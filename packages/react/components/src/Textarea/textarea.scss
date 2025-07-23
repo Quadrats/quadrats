@@ -11,6 +11,13 @@
     line-height: var(--qdr-typography-basic-h6-line-height);
     letter-spacing: var(--qdr-typography-basic-h6-letter-spacing);
     font-weight: var(--qdr-typography-basic-h6-font-weight);
+    margin: 0;
+  }
+
+  &__required-mark {
+    display: inline-block;
+    margin-left: var(--qdr-spacing-2);
+    color: var(--qdr-error);
   }
 
   &__textarea {
@@ -28,7 +35,8 @@
     font-weight: var(--qdr-typography-basic-body1-font-weight);
     transition: border var(--qdr-duration-short) var(--qdr-easing-standard);
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       border-color: var(--qdr-primary);
     }
 
@@ -39,7 +47,8 @@
     &--error {
       border-color: var(--qdr-error);
 
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         border-color: var(--qdr-error);
       }
     }

@@ -11,6 +11,7 @@ export interface TextareaProps {
   isError?: boolean;
   hint?: string;
   maxLength?: number;
+  required?: boolean;
 }
 
 const Textarea = ({
@@ -23,30 +24,23 @@ const Textarea = ({
   isError,
   hint,
   maxLength,
+  required = false,
 }: TextareaProps) => {
-  const isLimited = useMemo(
-    () => (maxLength && value && value.length >= maxLength), [maxLength, value],
-  );
+  const isLimited = useMemo(() => maxLength && value && value.length >= maxLength, [maxLength, value]);
 
   return (
-    <div
-      className={clsx(
-        'qdr-textarea',
-      )}
-    >
+    <div className={clsx('qdr-textarea')}>
       {label && (
-        <span className="qdr-textarea__label">
+        <p className="qdr-textarea__label">
           {label}
-        </span>
+          {required && <span className="qdr-textarea__required-mark">*</span>}
+        </p>
       )}
       <textarea
         style={{ height }}
-        className={clsx(
-          'qdr-textarea__textarea',
-          {
-            'qdr-textarea__textarea--error': isError,
-          },
-        )}
+        className={clsx('qdr-textarea__textarea', {
+          'qdr-textarea__textarea--error': isError,
+        })}
         value={value}
         onChange={(e) => {
           onChange?.(e.target.value);
@@ -57,19 +51,14 @@ const Textarea = ({
       />
       {(hint || maxLength) && (
         <div className="qdr-textarea__hint-wrapper">
-          <span className="qdr-textarea__hint">
-            {hint}
-          </span>
+          <span className="qdr-textarea__hint">{hint}</span>
           {maxLength && (
             <span
-              className={clsx(
-                'qdr-textarea__counter',
-                {
-                  'qdr-textarea__counter--limited': isLimited,
-                  'qdr-textarea__counter--error': isError,
-                  'qdr-textarea__counter--disabled': disabled,
-                },
-              )}
+              className={clsx('qdr-textarea__counter', {
+                'qdr-textarea__counter--limited': isLimited,
+                'qdr-textarea__counter--error': isError,
+                'qdr-textarea__counter--disabled': disabled,
+              })}
             >
               {`${value ? value.length : 0}/${maxLength}`}
             </span>
