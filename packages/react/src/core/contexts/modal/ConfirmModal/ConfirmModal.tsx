@@ -34,7 +34,6 @@ export const ConfirmModal = ({
     <Modal
       isOpen={isOpen}
       className="qdr-confirm-modal"
-      confirmText="確認"
       size="small"
       mask={mask}
       maskClosable={maskClosable}
