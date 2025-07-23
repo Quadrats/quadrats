@@ -4,7 +4,6 @@ import { CARD_PLACEHOLDER_TYPE, CardPlaceholderElement } from '@quadrats/common/
 import { useSlateStatic, useModal } from '@quadrats/react';
 import { ReactCard } from '@quadrats/react/card';
 
-// TODO: i18n
 export function useCardTool(controller: ReactCard) {
   const editor = useSlateStatic();
   const { setCardModalConfig, isModalClosed, setIsModalClosed } = useModal();
@@ -21,7 +20,6 @@ export function useCardTool(controller: ReactCard) {
 
     if (match) {
       setCardModalConfig({
-        confirmText: '建立卡片',
         onConfirm: () => {
           controller.removeCardPlaceholder(editor);
         },

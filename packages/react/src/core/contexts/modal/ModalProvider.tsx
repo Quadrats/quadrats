@@ -87,7 +87,6 @@ export const ModalProvider = ({ children, needConfirmModal, setNeedConfirmModal 
       <CardModal
         isOpen={modalName === 'card-modal'}
         close={close}
-        confirmText={cardModalConfig?.confirmText || ''}
         onConfirm={() => {
           cardModalConfig?.onConfirm?.();
         }}
