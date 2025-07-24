@@ -17,7 +17,7 @@ interface CarouselItemProps {
 }
 
 const CarouselItem = ({
-  // url,
+  url,
   preview,
   progress,
   caption,
@@ -61,7 +61,6 @@ const CarouselItem = ({
   }));
 
   // TODO: i18n
-
   return drop(
     drag(
       dragPreview(
@@ -76,7 +75,7 @@ const CarouselItem = ({
             <Icon className="qdr-inline-toolbar__icon" icon={Trash} width={24} height={24} onClick={onRemove} />
           </div>
           <img
-            src={preview}
+            src={url || preview}
             className="qdr-carousel-modal__image"
             style={{
               objectFit: ratio ? 'cover' : 'contain',

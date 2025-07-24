@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Textarea, Input, Modal, SegmentedControl, Toggle } from '@quadrats/react/components';
+import { Textarea, Input, Modal, SegmentedControl, Toggle, ImageUploader } from '@quadrats/react/components';
 
 export interface CardModalProps {
   isOpen: boolean;
@@ -47,6 +47,7 @@ export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
         value={alignment}
         onChange={setAlignment}
       />
+      <ImageUploader width={240} ratio={[3, 2]} />
       <Input
         value={titleValue}
         onChange={setTitleValue}
