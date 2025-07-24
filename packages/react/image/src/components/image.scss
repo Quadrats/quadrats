@@ -6,6 +6,22 @@ $qdr-image-resizer-size: 6px;
   position: relative;
   user-select: none;
 
+  &--with-inline-toolbar {
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: transparent;
+      transition: background-color var(--qdr-duration-short) var(--qdr-easing-standard);
+    }
+
+    &:hover {
+      &::after {
+        background-color: var(--qdr-overlay-dark);
+      }
+    }
+  }
+
   &__placeholder {
     display: flex;
     flex-direction: column;

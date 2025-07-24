@@ -148,6 +148,21 @@
       }
     }
 
+    &__image-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: transparent;
+        transition: background-color var(--qdr-duration-short) var(--qdr-easing-standard);
+      }
+    }
+
     &__item {
       display: flex;
       flex-direction: column;
@@ -162,6 +177,12 @@
         box-shadow:
           0 0 0 2px var(--qdr-surface),
           0 0 0 4px var(--qdr-primary-light);
+
+        .qdr-carousel-modal__image-wrapper {
+          &::after {
+            background-color: var(--qdr-overlay-dark);
+          }
+        }
 
         .qdr-carousel-modal__inline-toolbar {
           opacity: 1;

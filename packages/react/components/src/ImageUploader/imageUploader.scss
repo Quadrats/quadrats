@@ -46,7 +46,19 @@
     align-items: center;
     justify-content: center;
 
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: transparent;
+      transition: background-color var(--qdr-duration-short) var(--qdr-easing-standard);
+    }
+
     &:hover {
+      &::after {
+        background-color: var(--qdr-overlay-dark);
+      }
+
       .qdr-image-uploader__inline-toolbar {
         opacity: 1;
         pointer-events: auto;
