@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Textarea, Input, Modal, SegmentedControl } from '@quadrats/react/components';
+import { Textarea, Input, Modal, SegmentedControl, Toggle } from '@quadrats/react/components';
 
 export interface CardModalProps {
   isOpen: boolean;
@@ -13,6 +13,7 @@ export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
   const [titleValue, setTitleValue] = useState('');
   const [descriptionValue, setDescriptionValue] = useState('');
   const [remarkValue, setRemarkValue] = useState('');
+  const [haveLink, setHaveLink] = useState<boolean>(true);
 
   return (
     <Modal
@@ -64,6 +65,7 @@ export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
         required
       />
       <Input value={remarkValue} onChange={setRemarkValue} label="備註" placeholder="請輸入備註資訊" maxLength={30} />
+      <Toggle checked={haveLink} onChange={setHaveLink} />
     </Modal>
   );
 };

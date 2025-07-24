@@ -8,6 +8,7 @@ export { MessageSeverity, default as Message } from './Message';
 export { PortalProps, default as Portal } from './Portal';
 export { ProgressProps, default as Progress } from './Progress';
 export { SegmentedControlProps, default as SegmentedControl } from './SegmentedControl';
+export { ToggleProps, default as Toggle } from './Toggle';
 export { TooltipProps, default as Tooltip } from './Tooltip';
 
 export * from './Notifier/typings';

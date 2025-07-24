@@ -19,6 +19,7 @@
       "Modal/modal": "modal",
       "Message/message": "message",
       "SegmentedControl/segmentedControl": "segmentedControl",
+      "Toggle/toggle": "toggle",
       "components": "components"
     }
   }
