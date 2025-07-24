@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Textarea, Input, Modal, SegmentedControl, Toggle, ImageUploader } from '@quadrats/react/components';
+import { useMessage } from '../../message/message';
 
 export interface CardModalProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ export interface CardModalProps {
 
 // TODO: i18n
 export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
+  const { message } = useMessage();
   const [alignment, setAlignment] = useState('left');
   const [titleValue, setTitleValue] = useState('');
   const [descriptionValue, setDescriptionValue] = useState('');
@@ -47,7 +49,14 @@ export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
         value={alignment}
         onChange={setAlignment}
       />
-      <ImageUploader width={240} ratio={[3, 2]} />
+      <ImageUploader
+        width={240}
+        ratio={[3, 2]}
+        limitSize={2}
+        onOverLimitSize={() => {
+          message({ type: 'error', content: '檔案過大' });
+        }}
+      />
       <Input
         value={titleValue}
         onChange={setTitleValue}

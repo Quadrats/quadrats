@@ -41,6 +41,18 @@
     transition: color var(--qdr-duration-short) var(--qdr-easing-standard);
   }
 
+  &--error {
+    border-color: var(--qdr-error) !important;
+
+    .qdr-image-uploader__icon {
+      color: var(--qdr-error);
+    }
+
+    .qdr-image-uploader__main-text {
+      color: var(--qdr-error);
+    }
+  }
+
   &--disabled {
     cursor: not-allowed;
     border-color: var(--qdr-border) !important;

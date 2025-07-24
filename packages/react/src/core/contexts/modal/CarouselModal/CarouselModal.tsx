@@ -43,6 +43,21 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
     }
   }, [items]);
 
+  const acceptText = useMemo(() => {
+    if (
+      controller?.accept.find((a) => a === 'image/jpeg' || a === 'image/jpg') &&
+      controller?.accept.find((a) => a === 'image/png')
+    ) {
+      return '檔案格式：限 JPG 或 PNG。';
+    } else if (controller?.accept.find((a) => a === 'image/png')) {
+      return '檔案格式：限 PNG。';
+    } else if (controller?.accept.find((a) => a === 'image/jpeg' || a === 'image/jpg')) {
+      return '檔案格式：限 JPG。';
+    }
+
+    return '';
+  }, [controller?.accept]);
+
   const isOverMaxLength = useMemo(() => {
     if (controller?.maxLength) {
       return items.length >= controller.maxLength;
@@ -143,7 +158,7 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
                   text: `數量限制：至少 1 張，至多 ${controller?.maxLength} 張。`,
                 },
                 {
-                  text: '檔案格式：限 JPG 或 PNG。',
+                  text: acceptText,
                 },
                 controller?.ratio && {
                   text: `檔案尺寸：最佳比例為 ${controller.ratio[0]}:${controller.ratio[1]}。建議圖片寬度達 2000px 以上，高度不限。`,
