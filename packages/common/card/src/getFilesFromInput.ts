@@ -1,4 +1,6 @@
-export function getFilesFromInput(options: { accept: ('image/jpeg' | 'image/jpg' | 'image/png')[] }) {
+import { ImageAccept } from '@quadrats/common/file-uploader';
+
+export function getFilesFromInput(options: { accept: ImageAccept[] }) {
   const { accept } = options;
 
   return new Promise<File[] | undefined>((resolve) => {

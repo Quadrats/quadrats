@@ -1,5 +1,6 @@
 import { Editor, Transforms, Element, QuadratsElement } from '@quadrats/core';
 import {
+  ImageAccept,
   FileUploaderGetBody,
   FileUploaderGetHeaders,
   FileUploaderGetUrl,
@@ -10,7 +11,7 @@ import { CARD_TYPES, CARD_PLACEHOLDER_TYPE } from './constants';
 
 export interface CreateCardOptions {
   types?: Partial<CardTypes>;
-  accept?: ('image/jpeg' | 'image/jpg' | 'image/png')[];
+  accept?: ImageAccept[];
   getBody: FileUploaderGetBody;
   getHeaders?: FileUploaderGetHeaders;
   getUrl: FileUploaderGetUrl;

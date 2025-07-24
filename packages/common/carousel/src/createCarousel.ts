@@ -7,6 +7,7 @@ import {
   isAboveBlockEmpty,
 } from '@quadrats/core';
 import {
+  ImageAccept,
   FileUploaderGetBody,
   FileUploaderGetHeaders,
   FileUploaderGetUrl,
@@ -25,7 +26,7 @@ import { getFilesFromInput } from './getFilesFromInput';
 
 export interface CreateCarouselOptions {
   types?: Partial<CarouselTypes>;
-  accept?: ('image/jpeg' | 'image/jpg' | 'image/png')[];
+  accept?: ImageAccept[];
   ratio?: [number, number];
   maxLength?: number;
   limitSize?: number;
