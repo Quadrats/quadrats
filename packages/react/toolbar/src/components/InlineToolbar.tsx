@@ -9,10 +9,12 @@ export interface InlineToolbarProps {
     icon: IconDefinition;
     onClick: VoidFunction;
     active: boolean;
+    disabled?: boolean;
   }[];
   rightIcons: {
     icon: IconDefinition;
     onClick: VoidFunction;
+    disabled?: boolean;
   }[];
 }
 
@@ -21,34 +23,40 @@ function InlineToolbar({ className, leftIcons, rightIcons }: InlineToolbarProps)
     <div contentEditable={false} className={clsx('qdr-inline-toolbar', className)}>
       {leftIcons.length > 0 && (
         <div className="qdr-inline-toolbar__wrapper">
-          {leftIcons.map(icon => (
+          {leftIcons.map((icon) => (
             <Icon
               key={icon.icon.name}
-              className={clsx(
-                'qdr-inline-toolbar__icon',
-                {
-                  'qdr-inline-toolbar__icon--active': icon.active,
-                },
-              )}
+              className={clsx('qdr-inline-toolbar__icon', {
+                'qdr-inline-toolbar__icon--active': icon.active,
+                'qdr-inline-toolbar__icon--disabled': icon.disabled,
+              })}
               icon={icon.icon}
               width={24}
               height={24}
-              onClick={icon.onClick}
+              onClick={() => {
+                if (!icon.disabled) {
+                  icon.onClick();
+                }
+              }}
             />
           ))}
         </div>
       )}
-      {leftIcons.length > 0 && rightIcons.length > 0 && (
-        <div className="qdr-inline-toolbar__divider" />
-      )}
-      {rightIcons.map(icon => (
+      {leftIcons.length > 0 && rightIcons.length > 0 && <div className="qdr-inline-toolbar__divider" />}
+      {rightIcons.map((icon) => (
         <Icon
           key={icon.icon.name}
-          className="qdr-inline-toolbar__icon"
+          className={clsx('qdr-inline-toolbar__icon', {
+            'qdr-inline-toolbar__icon--disabled': icon.disabled,
+          })}
           icon={icon.icon}
           width={24}
           height={24}
-          onClick={icon.onClick}
+          onClick={() => {
+            if (!icon.disabled) {
+              icon.onClick();
+            }
+          }}
         />
       ))}
     </div>

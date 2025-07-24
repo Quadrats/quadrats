@@ -39,6 +39,8 @@ const ImageUploader = ({
 }: ImageUploaderProps) => {
   const [isError, setIsError] = useState<boolean>(false);
 
+  console.log('imageUploaderItem', imageUploaderItem);
+
   const onProgress = useCallback(
     (p: number) => {
       setImageUploaderItem((prev) => {
@@ -150,12 +152,16 @@ const ImageUploader = ({
             {imageUploaderItem.progress !== 100 && <Progress percentage={imageUploaderItem.progress} />}
             <div contentEditable={false} className={clsx('qdr-inline-toolbar', 'qdr-image-uploader__inline-toolbar')}>
               <Icon
-                className="qdr-inline-toolbar__icon"
+                className={clsx('qdr-inline-toolbar__icon', {
+                  'qdr-inline-toolbar__icon--disabled': disabled,
+                })}
                 icon={Trash}
                 width={24}
                 height={24}
                 onClick={() => {
-                  setImageUploaderItem(() => null);
+                  if (!disabled) {
+                    setImageUploaderItem(() => null);
+                  }
                 }}
               />
             </div>
