@@ -4,7 +4,6 @@
   align-items: center;
   justify-content: center;
   gap: var(--qdr-spacing-4);
-  padding: var(--qdr-spacing-4);
   border: 1px dashed var(--qdr-border);
   background-color: var(--qdr-block);
   border-radius: var(--qdr-radius-1);
@@ -39,6 +38,28 @@
     letter-spacing: var(--qdr-typography-basic-body1-letter-spacing);
     font-weight: var(--qdr-typography-basic-body1-font-weight);
     transition: color var(--qdr-duration-short) var(--qdr-easing-standard);
+  }
+
+  &__image-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      .qdr-image-uploader__inline-toolbar {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+  }
+
+  &__image {
+    width: 100%;
+  }
+
+  &--have-item {
+    cursor: default;
   }
 
   &--error {

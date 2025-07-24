@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { Textarea, Input, Modal, SegmentedControl, Toggle, ImageUploader } from '@quadrats/react/components';
+import {
+  Textarea,
+  Input,
+  Modal,
+  SegmentedControl,
+  Toggle,
+  ImageUploader,
+  ImageUploaderItem,
+} from '@quadrats/react/components';
 import { useMessage } from '../../message/message';
 
 export interface CardModalProps {
@@ -12,6 +20,7 @@ export interface CardModalProps {
 export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
   const { message } = useMessage();
   const [alignment, setAlignment] = useState('left');
+  const [imageUploaderItem, setImageUploaderItem] = useState<ImageUploaderItem | null>(null);
   const [titleValue, setTitleValue] = useState('');
   const [descriptionValue, setDescriptionValue] = useState('');
   const [remarkValue, setRemarkValue] = useState('');
@@ -50,6 +59,8 @@ export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
         onChange={setAlignment}
       />
       <ImageUploader
+        imageUploaderItem={imageUploaderItem}
+        setImageUploaderItem={setImageUploaderItem}
         width={240}
         ratio={[3, 2]}
         limitSize={2}

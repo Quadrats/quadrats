@@ -1,6 +1,6 @@
 export { ButtonProps, default as Button } from './Button';
 export { HintProps, default as Hint, HintsProps, Hints } from './Hint';
-export { ImageUploaderProps, default as ImageUploader } from './ImageUploader';
+export { ImageUploaderItem, ImageUploaderProps, default as ImageUploader } from './ImageUploader';
 export { InputProps, default as Input } from './Input';
 export { TextareaProps, default as Textarea } from './Textarea';
 export { IconProps, default as Icon } from './Icon';
