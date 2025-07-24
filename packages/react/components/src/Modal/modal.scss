@@ -74,6 +74,7 @@
     justify-content: space-between;
     gap: var(--qdr-spacing-4);
     padding: var(--qdr-spacing-5) var(--qdr-spacing-9);
+    background-color: var(--qdr-surface);
     color: var(--qdr-text-primary);
     font-size: var(--qdr-typography-basic-h5-font-size);
     line-height: var(--qdr-typography-basic-h5-line-height);
@@ -123,6 +124,7 @@
   &__side {
     flex: 1;
     padding: var(--qdr-spacing-9);
+    background-color: var(--qdr-surface);
     box-sizing: border-box;
     align-self: stretch;
   }
@@ -136,6 +138,7 @@
     align-items: center;
     justify-content: space-between;
     padding: var(--qdr-spacing-6) var(--qdr-spacing-9);
+    background-color: var(--qdr-surface);
     border-top: 1px solid var(--qdr-divider);
 
     &__actions {
