@@ -18,6 +18,7 @@
       "Hint/hint": "hint",
       "Modal/modal": "modal",
       "Message/message": "message",
+      "SegmentedControl/segmentedControl": "segmentedControl",
       "components": "components"
     }
   }

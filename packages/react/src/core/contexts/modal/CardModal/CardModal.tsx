@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Textarea, Input, Modal } from '@quadrats/react/components';
+import { Textarea, Input, Modal, SegmentedControl } from '@quadrats/react/components';
 
 export interface CardModalProps {
   isOpen: boolean;
@@ -9,6 +9,7 @@ export interface CardModalProps {
 
 // TODO: i18n
 export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
+  const [alignment, setAlignment] = useState('left');
   const [titleValue, setTitleValue] = useState('');
   const [descriptionValue, setDescriptionValue] = useState('');
   const [remarkValue, setRemarkValue] = useState('');
@@ -27,6 +28,24 @@ export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
         onConfirm();
       }}
     >
+      <SegmentedControl
+        options={[
+          {
+            value: 'left',
+            label: '左圖右文',
+          },
+          {
+            value: 'right',
+            label: '右圖左文',
+          },
+          {
+            value: 'none',
+            label: '沒有圖',
+          },
+        ]}
+        value={alignment}
+        onChange={setAlignment}
+      />
       <Input
         value={titleValue}
         onChange={setTitleValue}
