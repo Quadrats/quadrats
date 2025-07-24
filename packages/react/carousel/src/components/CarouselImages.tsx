@@ -62,17 +62,18 @@ export function CarouselImages({
           }}
         >
           {images.map((image) => (
-            <img
-              ref={imageRef}
-              draggable={false}
-              key={image}
-              className="qdr-carousel__image"
-              src={image}
-              style={{
-                objectFit: element.ratio ? 'cover' : 'contain',
-                aspectRatio: element.ratio ? `${element.ratio[0]} / ${element.ratio[1]}` : '3 / 2',
-              }}
-            />
+            <div key={image} className="qdr-carousel__image-wrapper">
+              <img
+                ref={imageRef}
+                draggable={false}
+                className="qdr-carousel__image"
+                src={image}
+                style={{
+                  objectFit: element.ratio ? 'cover' : 'contain',
+                  aspectRatio: element.ratio ? `${element.ratio[0]} / ${element.ratio[1]}` : '3 / 2',
+                }}
+              />
+            </div>
           ))}
         </div>
       </div>

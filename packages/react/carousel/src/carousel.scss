@@ -2,6 +2,34 @@
   position: relative;
   margin: var(--qdr-spacing-14) 0;
 
+  &__image-wrapper {
+    flex: 0 0 100%;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--qdr-radius-1);
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: transparent;
+      transition: background-color var(--qdr-duration-short) var(--qdr-easing-standard);
+    }
+  }
+
+  &--with-inline-toolbar {
+    &:hover {
+      .qdr-carousel__image-wrapper {
+        &::after {
+          background-color: var(--qdr-overlay-dark);
+        }
+      }
+    }
+  }
+
   &:hover {
     .qdr-carousel__inline-toolbar {
       opacity: 1;
@@ -294,7 +322,6 @@
   }
 
   &__image {
-    flex: 0 0 100%;
     width: 100%;
     border-radius: var(--qdr-radius-1);
   }

@@ -29,7 +29,7 @@ export function Carousel({
         setActiveIndex,
       }}
     >
-      <div {...attributes} contentEditable={false} className="qdr-carousel">
+      <div {...attributes} contentEditable={false} className="qdr-carousel qdr-carousel--with-inline-toolbar">
         <InlineToolbar
           className="qdr-carousel__inline-toolbar"
           leftIcons={[]}

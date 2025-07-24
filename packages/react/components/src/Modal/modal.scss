@@ -10,7 +10,7 @@
   z-index: 9999;
 
   &--mask {
-    background: rgb(0 0 0 / 50%);
+    background-color: var(--qdr-overlay-dark);
   }
 
   &--opened {
