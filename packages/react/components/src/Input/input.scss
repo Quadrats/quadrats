@@ -21,6 +21,7 @@
   }
 
   &__input {
+    background-color: var(--qdr-surface);
     border: 1px solid var(--qdr-border);
     outline: none;
     padding: 0 var(--qdr-spacing-12) 0 var(--qdr-spacing-6);

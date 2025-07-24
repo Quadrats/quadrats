@@ -21,6 +21,7 @@
   }
 
   &__textarea {
+    background-color: var(--qdr-surface);
     font-family: unset;
     border: 1px solid var(--qdr-border);
     outline: none;
