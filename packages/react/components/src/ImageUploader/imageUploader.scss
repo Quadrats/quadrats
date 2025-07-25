@@ -18,6 +18,12 @@
     background-color: var(--qdr-bg);
   }
 
+  &__previewer {
+    border-style: solid;
+    cursor: default;
+    overflow: hidden;
+  }
+
   &__wrapper {
     display: flex;
     flex-direction: column;
@@ -70,12 +76,9 @@
     width: 100%;
   }
 
-  &--have-item {
-    cursor: default;
-  }
-
   &--error {
     border-color: var(--qdr-error) !important;
+    background-color: var(--qdr-error-hover-bg);
 
     .qdr-image-uploader__icon {
       color: var(--qdr-error);

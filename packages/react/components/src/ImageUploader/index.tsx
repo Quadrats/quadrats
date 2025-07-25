@@ -3,7 +3,7 @@ import { ImageAccept } from '@quadrats/common/file-uploader';
 import { readFileAsBase64, mockUpload } from '@quadrats/react/utils';
 import { Trash } from '@quadrats/icons';
 import clsx from 'clsx';
-import { Plus } from '@quadrats/icons';
+import { Plus, Image } from '@quadrats/icons';
 import Icon from '../Icon';
 import { Hints } from '../Hint';
 import Progress from '../Progress';
@@ -106,19 +106,24 @@ const ImageUploader = ({
             progress: 0,
           }));
 
-          const url = await mockUpload(base64, onProgress);
+          try {
+            const url = await mockUpload(base64, onProgress);
 
-          setImageUploaderItem((prev) => {
-            if (prev) {
-              return {
-                ...prev,
-                preview: url,
-                url,
-              };
-            }
+            setImageUploaderItem((prev) => {
+              if (prev) {
+                return {
+                  ...prev,
+                  preview: url,
+                  url,
+                };
+              }
 
-            return prev;
-          });
+              return prev;
+            });
+          } catch (error) {
+            setIsError(true);
+            setImageUploaderItem(() => null);
+          }
         }
       }
     }
@@ -138,16 +143,11 @@ const ImageUploader = ({
 
   return (
     <div className="qdr-image-uploader__wrapper">
-      <div
-        className={clsx('qdr-image-uploader', {
-          'qdr-image-uploader--have-item': imageUploaderItem,
-          'qdr-image-uploader--error': isError,
-          'qdr-image-uploader--disabled': disabled,
-        })}
-        style={{ width, aspectRatio: ratio ? `${ratio[0]} / ${ratio[1]}` : '1 / 1' }}
-        onClick={onUpload}
-      >
-        {imageUploaderItem ? (
+      {imageUploaderItem ? (
+        <div
+          className="qdr-image-uploader qdr-image-uploader__previewer"
+          style={{ width, aspectRatio: ratio ? `${ratio[0]} / ${ratio[1]}` : '1 / 1' }}
+        >
           <div className="qdr-image-uploader__image-wrapper">
             {imageUploaderItem.progress !== 100 && <Progress percentage={imageUploaderItem.progress} />}
             <div contentEditable={false} className={clsx('qdr-inline-toolbar', 'qdr-image-uploader__inline-toolbar')}>
@@ -174,13 +174,29 @@ const ImageUploader = ({
               }}
             />
           </div>
-        ) : (
-          <>
-            <Icon icon={Plus} width={24} height={24} className="qdr-image-uploader__icon" />
-            <span className="qdr-image-uploader__main-text">上傳</span>
-          </>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div
+          className={clsx('qdr-image-uploader', {
+            'qdr-image-uploader--error': isError,
+            'qdr-image-uploader--disabled': disabled,
+          })}
+          style={{ width, aspectRatio: ratio ? `${ratio[0]} / ${ratio[1]}` : '1 / 1' }}
+          onClick={onUpload}
+        >
+          {isError ? (
+            <>
+              <Icon icon={Image} width={24} height={24} className="qdr-image-uploader__icon" />
+              <span className="qdr-image-uploader__main-text">上傳錯誤</span>
+            </>
+          ) : (
+            <>
+              <Icon icon={Plus} width={24} height={24} className="qdr-image-uploader__icon" />
+              <span className="qdr-image-uploader__main-text">上傳</span>
+            </>
+          )}
+        </div>
+      )}
       <Hints
         style={{ width }}
         hints={[
