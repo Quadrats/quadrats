@@ -16,6 +16,7 @@ export type CardTypes = Record<CardTypeKey | CardImageTypeKey | CardContentsType
 export type CardAlignment = 'leftImageRightText' | 'rightImageLeftText' | 'noImage';
 
 export interface CardElement extends QuadratsElement, WithElementType {
+  confirmModal: boolean;
   alignment: CardAlignment;
   imageItem: {
     file: File;

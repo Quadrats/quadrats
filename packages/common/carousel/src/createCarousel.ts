@@ -96,6 +96,7 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
 
     return {
       type: types.carousel,
+      confirmModal,
       items,
       children: [carouselImagesElement, carouselCaptionElement],
     };

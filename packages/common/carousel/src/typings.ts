@@ -23,6 +23,7 @@ export interface CarouselFieldArrayItem {
 }
 
 export interface CarouselElement extends QuadratsElement, WithElementType {
+  confirmModal: boolean;
   items: CarouselFieldArrayItem[];
 }
 
