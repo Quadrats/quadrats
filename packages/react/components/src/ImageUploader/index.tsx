@@ -42,8 +42,6 @@ const ImageUploader = ({
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
-  console.log('imageUploaderItem', imageUploaderItem);
-
   const onProgress = useCallback(
     (p: number) => {
       setImageUploaderItem((prev) => {
@@ -165,11 +163,11 @@ const ImageUploader = ({
 
   const acceptText = useMemo(() => {
     if (accept.find((a) => a === 'image/jpeg' || a === 'image/jpg') && accept.find((a) => a === 'image/png')) {
-      return '檔案格式：限 JPG 或 PNG。';
+      return 'JPG 或 PNG';
     } else if (accept.find((a) => a === 'image/png')) {
-      return '檔案格式：限 PNG。';
+      return 'PNG';
     } else if (accept.find((a) => a === 'image/jpeg' || a === 'image/jpg')) {
-      return '檔案格式：限 JPG。';
+      return 'JPG';
     }
 
     return '';
@@ -216,7 +214,7 @@ const ImageUploader = ({
             'qdr-image-uploader--error': isError,
             'qdr-image-uploader--disabled': disabled,
           })}
-          style={{ width, aspectRatio: ratio ? `${ratio[0]} / ${ratio[1]}` : '1 / 1' }}
+          style={isDragging ? undefined : { width, aspectRatio: ratio ? `${ratio[0]} / ${ratio[1]}` : '1 / 1' }}
           onClick={async () => {
             const file = await onSelectFile();
 
@@ -244,7 +242,18 @@ const ImageUploader = ({
           ) : (
             <>
               <Icon icon={Plus} width={24} height={24} className="qdr-image-uploader__icon" />
-              <span className="qdr-image-uploader__main-text">上傳</span>
+              {isDragging ? (
+                <div className="qdr-image-uploader__dragging-wrapper">
+                  <span className="qdr-image-uploader__main-text">點擊或拖曳檔案到此上傳</span>
+                  <span className="qdr-image-uploader__info-text">
+                    {ratio
+                      ? `僅能上傳 ${acceptText}；建議比例為 ${ratio[0]}:${ratio[1]} 且寬度至少達 2000px 以上；檔案大小不可超過 ${limitSize}MB`
+                      : `僅能上傳 ${acceptText}；檔案大小不可超過 ${limitSize}MB`}
+                  </span>
+                </div>
+              ) : (
+                <span className="qdr-image-uploader__main-text">上傳</span>
+              )}
             </>
           )}
         </div>
@@ -253,7 +262,7 @@ const ImageUploader = ({
         style={{ width }}
         hints={[
           {
-            text: acceptText,
+            text: `檔案格式：限 ${acceptText}。`,
           },
           ratio && {
             text: `檔案尺寸：最佳比例為 ${ratio[0]}:${ratio[1]}。建議圖片寬度達 2000px 以上，高度不限。`,

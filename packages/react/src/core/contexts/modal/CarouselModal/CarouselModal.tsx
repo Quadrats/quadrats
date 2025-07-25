@@ -48,11 +48,11 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
       controller?.accept.find((a) => a === 'image/jpeg' || a === 'image/jpg') &&
       controller?.accept.find((a) => a === 'image/png')
     ) {
-      return '檔案格式：限 JPG 或 PNG。';
+      return 'JPG 或 PNG';
     } else if (controller?.accept.find((a) => a === 'image/png')) {
-      return '檔案格式：限 PNG。';
+      return 'PNG';
     } else if (controller?.accept.find((a) => a === 'image/jpeg' || a === 'image/jpg')) {
-      return '檔案格式：限 JPG。';
+      return 'JPG';
     }
 
     return '';
@@ -164,7 +164,7 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
                   text: `數量限制：至少 1 張，至多 ${controller?.maxLength} 張。`,
                 },
                 {
-                  text: acceptText,
+                  text: `檔案格式：限 ${acceptText}。`,
                 },
                 controller?.ratio && {
                   text: `檔案尺寸：最佳比例為 ${controller.ratio[0]}:${controller.ratio[1]}。建議圖片寬度達 2000px 以上，高度不限。`,
@@ -265,8 +265,8 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
                 <div className="qdr-carousel-modal__placeholder__title">拖曳檔案到此上傳</div>
                 <div className="qdr-carousel-modal__placeholder__hint">
                   {controller?.ratio
-                    ? `僅能上傳 PNG 或 JPG；建議比例為 ${controller.ratio[0]}:${controller.ratio[1]} 且寬度至少達 2000px 以上；檔案大小不可超過 ${controller?.limitSize}MB`
-                    : `僅能上傳 PNG 或 JPG；檔案大小不可超過 ${controller?.limitSize}MB`}
+                    ? `僅能上傳 ${acceptText}；建議比例為 ${controller.ratio[0]}:${controller.ratio[1]} 且寬度至少達 2000px 以上；檔案大小不可超過 ${controller?.limitSize}MB`
+                    : `僅能上傳 ${acceptText}；檔案大小不可超過 ${controller?.limitSize}MB`}
                 </div>
               </div>
             </div>
