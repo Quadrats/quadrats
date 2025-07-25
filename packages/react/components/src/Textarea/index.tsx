@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import clsx from 'clsx';
+import BaseField from '../BaseField';
 
 export interface TextareaProps {
   label?: string;
@@ -33,13 +34,7 @@ const Textarea = ({
   const isLimited = useMemo(() => maxLength && value && value.length >= maxLength, [maxLength, value]);
 
   return (
-    <div className={clsx('qdr-textarea', className)} style={{ width }}>
-      {label && (
-        <p className="qdr-textarea__label">
-          {label}
-          {required && <span className="qdr-textarea__required-mark">*</span>}
-        </p>
-      )}
+    <BaseField className={clsx('qdr-textarea', className)} label={label} required={required} width={width}>
       <textarea
         style={{ height }}
         className={clsx('qdr-textarea__textarea', {
@@ -69,7 +64,7 @@ const Textarea = ({
           )}
         </div>
       )}
-    </div>
+    </BaseField>
   );
 };
 

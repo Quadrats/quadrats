@@ -1,3 +1,4 @@
+export { BaseFieldProps, default as BaseField } from './BaseField';
 export { ButtonProps, default as Button } from './Button';
 export { HintProps, default as Hint, HintsProps, Hints } from './Hint';
 export { ImageUploaderItem, ImageUploaderProps, default as ImageUploader } from './ImageUploader';

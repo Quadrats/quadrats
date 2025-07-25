@@ -1,0 +1,22 @@
+.qdr-base-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: var(--qdr-spacing-2);
+
+  &__label {
+    color: var(--qdr-text-secondary);
+    font-size: var(--qdr-typography-basic-h6-font-size);
+    line-height: var(--qdr-typography-basic-h6-line-height);
+    letter-spacing: var(--qdr-typography-basic-h6-letter-spacing);
+    font-weight: var(--qdr-typography-basic-h6-font-weight);
+    margin: 0;
+  }
+
+  &__required-mark {
+    display: inline-block;
+    margin-left: var(--qdr-spacing-2);
+    color: var(--qdr-error);
+  }
+}

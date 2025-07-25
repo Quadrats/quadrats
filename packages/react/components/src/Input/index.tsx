@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import clsx from 'clsx';
+import BaseField from '../BaseField';
 
 export interface InputProps {
   label?: string;
@@ -31,13 +32,7 @@ const Input = ({
   const isLimited = useMemo(() => maxLength && value && value.length >= maxLength, [maxLength, value]);
 
   return (
-    <div className={clsx('qdr-input', className)} style={{ width }}>
-      {label && (
-        <p className="qdr-input__label">
-          {label}
-          {required && <span className="qdr-input__required-mark">*</span>}
-        </p>
-      )}
+    <BaseField className={clsx('qdr-input', className)} label={label} required={required} width={width}>
       <input
         className={clsx('qdr-input__input', {
           'qdr-input__input--error': isError,
@@ -67,7 +62,7 @@ const Input = ({
           )}
         </div>
       )}
-    </div>
+    </BaseField>
   );
 };
 

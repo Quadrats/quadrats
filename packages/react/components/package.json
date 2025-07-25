@@ -10,6 +10,7 @@
       "configs"
     ],
     "styles": {
+      "BaseField/baseField": "baseField",
       "Progress/progress": "progress",
       "Tooltip/tooltip": "tooltip",
       "Button/button": "button",
