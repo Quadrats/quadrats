@@ -67,14 +67,8 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
   }, [controller?.maxLength, items.length]);
 
   const disabledConfirm = useMemo(() => {
-    const basicCondition = items.length === 0 || uploading;
-
-    if (controller?.maxLength) {
-      return basicCondition || items.length > controller.maxLength;
-    }
-
-    return basicCondition;
-  }, [controller?.maxLength, items.length, uploading]);
+    return items.length === 0;
+  }, [items.length]);
 
   const uploadFiles = useCallback(
     async (files: File[]) => {
@@ -214,12 +208,18 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
         setItems([]);
       }}
       onConfirm={() => {
-        close();
-        setItems([]);
+        if (uploading) {
+          message({ type: 'error', content: '檔案上傳中，無法建立' });
+        } else if (controller?.maxLength && items.length > controller.maxLength) {
+          message({ type: 'error', content: '超過數量上限，請刪除已存在圖片' });
+        } else {
+          close();
+          setItems([]);
 
-        setTimeout(() => {
-          onConfirm?.(items);
-        }, 0);
+          setTimeout(() => {
+            onConfirm?.(items);
+          }, 0);
+        }
       }}
     >
       <DndProvider backend={HTML5Backend}>
