@@ -18,6 +18,7 @@ export interface CarouselFieldArrayItem {
   preview: string;
   url: string;
   caption: string;
+  isError?: boolean;
 }
 
 export interface CarouselElement extends QuadratsElement, WithElementType {

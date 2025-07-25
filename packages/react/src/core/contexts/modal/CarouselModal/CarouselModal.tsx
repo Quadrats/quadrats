@@ -94,16 +94,22 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
             setItems((prev) => prev.map((u) => (u.file === item.file ? { ...u, progress: p } : u)));
           };
 
-          const url = await upload({
-            file: item.file,
-            getBody: controller?.getBody,
-            getHeaders: controller?.getHeaders,
-            getUrl: controller?.getUrl,
-            uploader: controller?.uploader,
-            onProgress,
-          });
+          try {
+            const url = await upload({
+              file: item.file,
+              getBody: controller?.getBody,
+              getHeaders: controller?.getHeaders,
+              getUrl: controller?.getUrl,
+              uploader: controller?.uploader,
+              onProgress,
+            });
 
-          setItems((prev) => prev.map((u) => (u.file === item.file ? { ...u, preview: url, url } : u)));
+            setItems((prev) => prev.map((u) => (u.file === item.file ? { ...u, preview: url, url } : u)));
+          } catch (error) {
+            setItems((prev) =>
+              prev.map((u) => (u.file === item.file ? { ...u, preview: '', url: '', isError: true } : u)),
+            );
+          }
         }
       }
     },
@@ -239,6 +245,7 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
                   caption={item.caption}
                   index={index}
                   ratio={controller?.ratio}
+                  isError={item.isError}
                   onChange={(value) => {
                     change(index, { url: item.url, caption: value });
                   }}
