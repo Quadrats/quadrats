@@ -20,6 +20,7 @@ export function useCardTool(controller: ReactCard) {
 
     if (match) {
       setCardModalConfig({
+        controller,
         onConfirm: () => {
           controller.removeCardPlaceholder(editor);
         },

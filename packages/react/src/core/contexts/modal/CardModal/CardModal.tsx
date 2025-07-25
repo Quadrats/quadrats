@@ -1,4 +1,6 @@
 import React, { useState, useCallback } from 'react';
+import { Editor } from '@quadrats/core';
+import { Card, CardAlignment } from '@quadrats/common/card';
 import {
   Textarea,
   Input,
@@ -11,7 +13,7 @@ import {
 import { useMessage } from '../../message/message';
 
 export type CardModalValues = {
-  alignment: string;
+  alignment: CardAlignment;
   title: string;
   description: string;
   remark: string;
@@ -22,14 +24,33 @@ export type CardModalValues = {
 export interface CardModalProps {
   isOpen: boolean;
   close: VoidFunction;
+  controller?: Card<Editor>;
   onConfirm: () => void;
 }
 
+const options: {
+  value: CardAlignment;
+  label: string;
+}[] = [
+  {
+    value: 'leftImageRightText',
+    label: '左圖右文',
+  },
+  {
+    value: 'rightImageLeftText',
+    label: '右圖左文',
+  },
+  {
+    value: 'noImage',
+    label: '純文字顯示',
+  },
+];
+
 // TODO: i18n
-export const CardModal = ({ isOpen, close, onConfirm: onConfirmProps }: CardModalProps) => {
+export const CardModal = ({ isOpen, close, controller, onConfirm: onConfirmProps }: CardModalProps) => {
   const { message } = useMessage();
   const [values, setValues] = useState<CardModalValues>({
-    alignment: 'left',
+    alignment: 'leftImageRightText',
     title: '',
     description: '',
     remark: '',
@@ -59,22 +80,9 @@ export const CardModal = ({ isOpen, close, onConfirm: onConfirmProps }: CardModa
       <div className="qdr-card-modal__block">
         <p className="qdr-card-modal__block-title">顯示設定</p>
         <SegmentedControl
-          options={[
-            {
-              value: 'left',
-              label: '左圖右文',
-            },
-            {
-              value: 'right',
-              label: '右圖左文',
-            },
-            {
-              value: 'none',
-              label: '純文字顯示',
-            },
-          ]}
+          options={options}
           value={values.alignment}
-          onChange={(value) => setValues((prev) => ({ ...prev, alignment: value }))}
+          onChange={(value) => setValues((prev) => ({ ...prev, alignment: value as CardAlignment }))}
         />
       </div>
       <div className="qdr-card-modal__block">
@@ -85,8 +93,9 @@ export const CardModal = ({ isOpen, close, onConfirm: onConfirmProps }: CardModa
             imageUploaderItem={imageUploaderItem}
             setImageUploaderItem={setImageUploaderItem}
             width={240}
-            ratio={[3, 2]}
-            limitSize={2}
+            accept={controller?.accept}
+            ratio={controller?.ratio}
+            limitSize={controller?.limitSize}
             onOverLimitSize={() => {
               message({ type: 'error', content: '圖片檔案過大，檔案需小於 2MB' });
             }}

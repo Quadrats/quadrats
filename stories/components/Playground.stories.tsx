@@ -179,6 +179,8 @@ const carousel = createReactCarousel({
 });
 
 const card = createReactCard({
+  ratio: [3, 2],
+  limitSize: 2,
   getBody: (file) => file,
   getHeaders: (file) => ({
     Authorization: 'Bearer <Your OAuth2 Token>',

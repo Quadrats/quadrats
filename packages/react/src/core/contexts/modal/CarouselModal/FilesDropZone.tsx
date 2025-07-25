@@ -27,7 +27,7 @@ const FilesDropZone = ({
 
   const validateFile = useCallback(
     (file: File) => {
-      if (!controller?.accept.includes(file.type)) {
+      if (!controller?.accept.find((a) => a === file.type)) {
         return false;
       }
 
