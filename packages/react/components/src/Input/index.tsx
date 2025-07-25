@@ -3,6 +3,8 @@ import clsx from 'clsx';
 
 export interface InputProps {
   label?: string;
+  className?: string;
+  width?: number;
   value?: string;
   onChange?: (value: string) => void;
   placeholder?: string;
@@ -15,6 +17,8 @@ export interface InputProps {
 
 const Input = ({
   label,
+  className,
+  width,
   value = '',
   onChange,
   placeholder,
@@ -27,7 +31,7 @@ const Input = ({
   const isLimited = useMemo(() => maxLength && value && value.length >= maxLength, [maxLength, value]);
 
   return (
-    <div className={clsx('qdr-input')}>
+    <div className={clsx('qdr-input', className)} style={{ width }}>
       {label && (
         <p className="qdr-input__label">
           {label}

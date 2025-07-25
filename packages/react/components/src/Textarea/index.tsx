@@ -3,6 +3,8 @@ import clsx from 'clsx';
 
 export interface TextareaProps {
   label?: string;
+  className?: string;
+  width?: number;
   value?: string;
   onChange?: (value: string) => void;
   placeholder?: string;
@@ -16,6 +18,8 @@ export interface TextareaProps {
 
 const Textarea = ({
   label,
+  className,
+  width,
   value = '',
   onChange,
   placeholder,
@@ -29,7 +33,7 @@ const Textarea = ({
   const isLimited = useMemo(() => maxLength && value && value.length >= maxLength, [maxLength, value]);
 
   return (
-    <div className={clsx('qdr-textarea')}>
+    <div className={clsx('qdr-textarea', className)} style={{ width }}>
       {label && (
         <p className="qdr-textarea__label">
           {label}
