@@ -1,4 +1,10 @@
 .qdr-input {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: var(--qdr-spacing-2);
+  align-self: stretch;
   position: relative;
 
   &__input {
@@ -61,12 +67,25 @@
   }
 
   &__counter {
+    position: absolute;
+    right: 0;
+    bottom: calc(
+      -1 *
+        (
+          var(--qdr-typography-basic-caption-font-size) * var(--qdr-typography-basic-caption-line-height) +
+            var(--qdr-spacing-2)
+        )
+    );
     color: var(--qdr-text-secondary);
     font-size: var(--qdr-typography-basic-caption-font-size);
     line-height: var(--qdr-typography-basic-caption-line-height);
     letter-spacing: var(--qdr-typography-basic-caption-letter-spacing);
     font-weight: var(--qdr-typography-basic-caption-font-weight);
     transition: color var(--qdr-duration-short) var(--qdr-easing-standard);
+
+    &--have-hint {
+      bottom: 0;
+    }
 
     &--limited {
       color: var(--qdr-primary);

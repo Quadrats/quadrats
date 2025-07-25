@@ -19,4 +19,16 @@
     margin-left: var(--qdr-spacing-2);
     color: var(--qdr-error);
   }
+
+  &__error-message {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--qdr-spacing-2);
+    color: var(--qdr-error);
+    font-size: var(--qdr-typography-basic-caption-font-size);
+    line-height: var(--qdr-typography-basic-caption-line-height);
+    letter-spacing: var(--qdr-typography-basic-caption-letter-spacing);
+    font-weight: var(--qdr-typography-basic-caption-font-weight);
+  }
 }

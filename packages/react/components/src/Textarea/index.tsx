@@ -34,36 +34,39 @@ const Textarea = ({
   const isLimited = useMemo(() => maxLength && value && value.length >= maxLength, [maxLength, value]);
 
   return (
-    <BaseField className={clsx('qdr-textarea', className)} label={label} required={required} width={width}>
-      <textarea
-        style={{ height }}
-        className={clsx('qdr-textarea__textarea', {
-          'qdr-textarea__textarea--error': isError,
-        })}
-        value={value}
-        onChange={(e) => {
-          onChange?.(e.target.value);
-        }}
-        maxLength={maxLength}
-        placeholder={placeholder}
-        disabled={disabled}
-      />
-      {(hint || maxLength) && (
-        <div className="qdr-textarea__hint-wrapper">
-          <span className="qdr-textarea__hint">{hint}</span>
-          {maxLength && (
-            <span
-              className={clsx('qdr-textarea__counter', {
-                'qdr-textarea__counter--limited': isLimited,
-                'qdr-textarea__counter--error': isError,
-                'qdr-textarea__counter--disabled': disabled,
-              })}
-            >
-              {`${value ? value.length : 0}/${maxLength}`}
-            </span>
-          )}
-        </div>
-      )}
+    <BaseField className={className} label={label} required={required} width={width}>
+      <div className="qdr-textarea">
+        <textarea
+          style={{ height }}
+          className={clsx('qdr-textarea__textarea', {
+            'qdr-textarea__textarea--error': isError,
+          })}
+          value={value}
+          onChange={(e) => {
+            onChange?.(e.target.value);
+          }}
+          maxLength={maxLength}
+          placeholder={placeholder}
+          disabled={disabled}
+        />
+        {hint && (
+          <div className="qdr-textarea__hint-wrapper">
+            <span className="qdr-textarea__hint">{hint}</span>
+          </div>
+        )}
+        {maxLength && (
+          <span
+            className={clsx('qdr-textarea__counter', {
+              'qdr-textarea__counter--have-hint': hint,
+              'qdr-textarea__counter--limited': isLimited,
+              'qdr-textarea__counter--error': isError,
+              'qdr-textarea__counter--disabled': disabled,
+            })}
+          >
+            {`${value ? value.length : 0}/${maxLength}`}
+          </span>
+        )}
+      </div>
     </BaseField>
   );
 };
