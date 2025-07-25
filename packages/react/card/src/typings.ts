@@ -10,6 +10,7 @@ import {
   CardContentsTypeKey,
 } from '@quadrats/common/card';
 import { RenderElementProps, Editor, WithCreateRenderElement, Handlers, ConfirmModalConfig } from '@quadrats/react';
+import { LocaleDefinition } from '@quadrats/locales';
 
 export interface RenderCardElementProps extends RenderElementProps<CardElement> {
   controller: Card<Editor>;
@@ -35,7 +36,10 @@ export type ReactCardCreateRenderElementOptions = {
 };
 
 export interface ReactCard extends Card<Editor>, WithCreateRenderElement<[ReactCardCreateRenderElementOptions?]> {
-  createHandlers: (setNeedConfirmModal?: Dispatch<SetStateAction<ConfirmModalConfig | null>>) => Handlers;
+  createHandlers: (
+    setNeedConfirmModal?: Dispatch<SetStateAction<ConfirmModalConfig | null>>,
+    locale?: LocaleDefinition,
+  ) => Handlers;
   createRenderPlaceholderElement: (params_0?: {
     render?: RenderCardPlaceholderElement;
   }) => (props: RenderElementProps) => JSX.Element | null | undefined;

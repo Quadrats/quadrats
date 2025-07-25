@@ -370,8 +370,8 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
 
     if (withTitles.length) handlers.push(heading.createHandlers());
     if (withAccordion) handlers.push(accordion.createHandlers());
-    if (withCarousel) handlers.push(carousel.createHandlers(setNeedConfirmModal));
-    if (withCard) handlers.push(card.createHandlers(setNeedConfirmModal));
+    if (withCarousel) handlers.push(carousel.createHandlers(setNeedConfirmModal, editorLocale));
+    if (withCard) handlers.push(card.createHandlers(setNeedConfirmModal, editorLocale));
     if (withBlockquote) handlers.push(blockquote.createHandlers());
     if (withLists.length) handlers.push(list.createHandlers());
     if (withBold) handlers.push(bold.createHandlers());
@@ -401,6 +401,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withHighlight,
     withCustomHighlights,
     withImage,
+    editorLocale,
   ]);
 
   const renderElement = useMemo(() => {

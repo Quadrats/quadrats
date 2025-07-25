@@ -18,10 +18,10 @@ export function createReactCard(options: CreateReactCardOptions): ReactCard {
 
   return {
     ...core,
-    createHandlers: (setNeedConfirmModal) => ({
+    createHandlers: (setNeedConfirmModal, locale) => ({
       onKeyDown(event, editor, next) {
         if (event.key === 'Backspace') {
-          console.log('setNeedConfirmModal', editor, setNeedConfirmModal);
+          console.log('setNeedConfirmModal', editor, setNeedConfirmModal, locale);
         }
 
         next();
