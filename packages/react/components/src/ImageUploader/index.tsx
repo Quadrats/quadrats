@@ -24,6 +24,7 @@ export interface ImageUploaderProps {
   limitSize?: number;
   disabled?: boolean;
   onOverLimitSize?: VoidFunction;
+  onErrorAccept?: VoidFunction;
 }
 
 // TODO: i18n
@@ -36,7 +37,9 @@ const ImageUploader = ({
   limitSize = 5,
   disabled = false,
   onOverLimitSize,
+  onErrorAccept,
 }: ImageUploaderProps) => {
+  const [isDragging, setIsDragging] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
   console.log('imageUploaderItem', imageUploaderItem);
@@ -57,41 +60,8 @@ const ImageUploader = ({
     [setImageUploaderItem],
   );
 
-  const onSelectFile = useCallback(async () => {
-    setIsError(false);
-
-    return new Promise<File | undefined>((resolve) => {
-      const inputEl = document.createElement('input');
-
-      if (accept) {
-        inputEl.accept = accept.join(',');
-      }
-
-      inputEl.multiple = false;
-      inputEl.type = 'file';
-
-      inputEl.addEventListener('cancel', () => {
-        resolve(undefined);
-      });
-
-      inputEl.addEventListener('change', () => {
-        const { files: fileList } = inputEl;
-
-        if (!fileList || !fileList.length) {
-          resolve(undefined);
-        } else {
-          resolve(fileList[0]);
-        }
-      });
-
-      inputEl.click();
-    });
-  }, [accept]);
-
-  const onUpload = useCallback(async () => {
-    if (!disabled && !imageUploaderItem) {
-      const file = await onSelectFile();
-
+  const onUpload = useCallback(
+    async (file?: File) => {
       if (file) {
         if (file.size > limitSize * 1024 * 1024) {
           setIsError(true);
@@ -126,8 +96,72 @@ const ImageUploader = ({
           }
         }
       }
+    },
+    [limitSize, onOverLimitSize, onProgress, setImageUploaderItem],
+  );
+
+  const onSelectFile = useCallback(async () => {
+    if (!disabled && !imageUploaderItem) {
+      setIsError(false);
+
+      return new Promise<File | undefined>((resolve) => {
+        const inputEl = document.createElement('input');
+
+        if (accept) {
+          inputEl.accept = accept.join(',');
+        }
+
+        inputEl.multiple = false;
+        inputEl.type = 'file';
+
+        inputEl.addEventListener('cancel', () => {
+          resolve(undefined);
+        });
+
+        inputEl.addEventListener('change', () => {
+          const { files: fileList } = inputEl;
+
+          if (!fileList || !fileList.length) {
+            resolve(undefined);
+          } else {
+            resolve(fileList[0]);
+          }
+        });
+
+        inputEl.click();
+      });
     }
-  }, [disabled, imageUploaderItem, limitSize, onOverLimitSize, onProgress, onSelectFile, setImageUploaderItem]);
+  }, [accept, disabled, imageUploaderItem]);
+
+  const handleDrop = useCallback(
+    async (event: React.DragEvent<HTMLDivElement>) => {
+      if (event.dataTransfer?.types?.includes('Files') && !disabled && !imageUploaderItem) {
+        event.preventDefault();
+        setIsDragging(false);
+        setIsError(false);
+
+        const files = Array.from(event.dataTransfer.files);
+        const targetFile = files[0];
+
+        if (targetFile.size > limitSize * 1024 * 1024) {
+          setIsError(true);
+          onOverLimitSize?.();
+
+          return;
+        }
+
+        if (!accept.find((a) => a === targetFile.type)) {
+          setIsError(true);
+          onErrorAccept?.();
+
+          return;
+        }
+
+        await onUpload(targetFile);
+      }
+    },
+    [accept, disabled, imageUploaderItem, limitSize, onErrorAccept, onOverLimitSize, onUpload],
+  );
 
   const acceptText = useMemo(() => {
     if (accept.find((a) => a === 'image/jpeg' || a === 'image/jpg') && accept.find((a) => a === 'image/png')) {
@@ -178,11 +212,29 @@ const ImageUploader = ({
       ) : (
         <div
           className={clsx('qdr-image-uploader', {
+            'qdr-image-uploader--dragging': isDragging,
             'qdr-image-uploader--error': isError,
             'qdr-image-uploader--disabled': disabled,
           })}
           style={{ width, aspectRatio: ratio ? `${ratio[0]} / ${ratio[1]}` : '1 / 1' }}
-          onClick={onUpload}
+          onClick={async () => {
+            const file = await onSelectFile();
+
+            await onUpload(file);
+          }}
+          onDragOver={(e) => {
+            e.preventDefault();
+
+            if (e.dataTransfer?.types?.includes('Files')) {
+              setIsDragging(true);
+              setIsError(false);
+            }
+          }}
+          onDragLeave={() => {
+            setIsDragging(false);
+            setIsError(false);
+          }}
+          onDrop={handleDrop}
         >
           {isError ? (
             <>

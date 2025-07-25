@@ -67,6 +67,9 @@ export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
         onOverLimitSize={() => {
           message({ type: 'error', content: '圖片檔案過大，檔案需小於 2MB' });
         }}
+        onErrorAccept={() => {
+          message({ type: 'error', content: '圖片類型錯誤' });
+        }}
       />
       <Input
         value={titleValue}

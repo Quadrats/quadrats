@@ -13,7 +13,8 @@
     border-color var(--qdr-duration-short) var(--qdr-easing-standard),
     background-color var(--qdr-duration-short) var(--qdr-easing-standard);
 
-  &:hover {
+  &:hover,
+  &--dragging {
     border-color: var(--qdr-primary);
     background-color: var(--qdr-bg);
   }
