@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react';
+import React, { Ref, useMemo } from 'react';
 import clsx from 'clsx';
 import BaseField, { BaseFieldProps } from '../BaseField';
 
 export interface InputProps extends Omit<BaseFieldProps, 'children'> {
   value?: string;
   onChange?: (value: string) => void;
+  inputRef?: Ref<HTMLInputElement>;
   placeholder?: string;
   disabled?: boolean;
   isError?: boolean;
@@ -18,6 +19,7 @@ const Input = ({
   width,
   value = '',
   onChange,
+  inputRef,
   placeholder,
   disabled,
   isError,
@@ -32,6 +34,7 @@ const Input = ({
     <BaseField className={className} label={label} required={required} width={width} errorMessage={errorMessage}>
       <div className="qdr-input">
         <input
+          ref={inputRef}
           className={clsx('qdr-input__input', {
             'qdr-input__input--error': isError,
           })}
