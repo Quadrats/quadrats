@@ -134,10 +134,6 @@
       overflow-y: auto;
       padding: var(--qdr-spacing-9);
 
-      &--error {
-        border: 1px solid var(--qdr-error);
-      }
-
       &__wrapper {
         position: absolute;
         inset: 0;

@@ -65,7 +65,7 @@ export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
         ratio={[3, 2]}
         limitSize={2}
         onOverLimitSize={() => {
-          message({ type: 'error', content: '檔案過大' });
+          message({ type: 'error', content: '圖片檔案過大，檔案需小於 2MB' });
         }}
       />
       <Input

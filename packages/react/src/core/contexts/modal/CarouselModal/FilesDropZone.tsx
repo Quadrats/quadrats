@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, ReactNode, useState, useCallback } from 'react';
+import React, { Dispatch, SetStateAction, ReactNode, useCallback } from 'react';
 import clsx from 'clsx';
 import { Editor } from '@quadrats/core';
 import { Carousel } from '@quadrats/common/carousel';
@@ -23,7 +23,6 @@ const FilesDropZone = ({
   controller,
   uploadFiles,
 }: FilesDropZoneProps) => {
-  const [error, setError] = useState(false);
   const { message } = useMessage();
 
   const validateFile = useCallback(
@@ -42,14 +41,16 @@ const FilesDropZone = ({
       const files = Array.from(event.dataTransfer.files);
 
       if (!files || isOverMaxLength) {
-        setError(true);
+        if (isOverMaxLength) {
+          message({ type: 'error', content: '超過數量上限，請刪除已存在圖片' });
+        }
 
         return false;
       }
 
       return true;
     },
-    [isOverMaxLength],
+    [isOverMaxLength, message],
   );
 
   const handleDrop = useCallback(
@@ -57,7 +58,6 @@ const FilesDropZone = ({
       if (event.dataTransfer?.types?.includes('Files')) {
         event.preventDefault();
         setIsDragging(false);
-        setError(false);
 
         const files = Array.from(event.dataTransfer.files);
 
@@ -69,8 +69,12 @@ const FilesDropZone = ({
           (f) => validateFile(f) && controller?.limitSize && f.size <= controller.limitSize * 1024 * 1024,
         );
 
-        if (correctFiles.length !== files.length) {
-          message({ type: 'error', content: '檔案過大或類型錯誤。' });
+        if (files.find((f) => !validateFile(f))) {
+          message({ type: 'error', content: '檔案類型錯誤。' });
+        }
+
+        if (files.find((f) => controller?.limitSize && f.size > controller.limitSize * 1024 * 1024)) {
+          message({ type: 'error', content: `圖片檔案過大，檔案需小於 ${controller?.limitSize}MB` });
         }
 
         if (correctFiles.length > 0) {
@@ -85,20 +89,16 @@ const FilesDropZone = ({
 
   return (
     <div
-      className={clsx('qdr-carousel-modal__zone', {
-        'qdr-carousel-modal__zone--error': error,
-      })}
+      className={clsx('qdr-carousel-modal__zone')}
       onDragOver={(e) => {
         e.preventDefault();
 
         if (e.dataTransfer?.types?.includes('Files')) {
           setIsDragging(true);
-          setError(false);
         }
       }}
       onDragLeave={() => {
         setIsDragging(false);
-        setError(false);
       }}
       onDrop={handleDrop}
     >

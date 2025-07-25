@@ -190,7 +190,7 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
                 );
 
                 if (correctFiles.length !== files.length) {
-                  message({ type: 'error', content: '檔案過大。' });
+                  message({ type: 'error', content: `圖片檔案過大，檔案需小於 ${controller?.limitSize}MB` });
                 }
 
                 if (correctFiles.length > 0) {
