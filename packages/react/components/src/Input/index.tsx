@@ -1,11 +1,8 @@
 import React, { useMemo } from 'react';
 import clsx from 'clsx';
-import BaseField from '../BaseField';
+import BaseField, { BaseFieldProps } from '../BaseField';
 
-export interface InputProps {
-  label?: string;
-  className?: string;
-  width?: number;
+export interface InputProps extends Omit<BaseFieldProps, 'children'> {
   value?: string;
   onChange?: (value: string) => void;
   placeholder?: string;
@@ -13,7 +10,6 @@ export interface InputProps {
   isError?: boolean;
   hint?: string;
   maxLength?: number;
-  required?: boolean;
 }
 
 const Input = ({
@@ -27,12 +23,13 @@ const Input = ({
   isError,
   hint,
   maxLength,
+  errorMessage,
   required = false,
 }: InputProps) => {
   const isLimited = useMemo(() => maxLength && value && value.length >= maxLength, [maxLength, value]);
 
   return (
-    <BaseField className={className} label={label} required={required} width={width}>
+    <BaseField className={className} label={label} required={required} width={width} errorMessage={errorMessage}>
       <div className="qdr-input">
         <input
           className={clsx('qdr-input__input', {

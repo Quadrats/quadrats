@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Textarea,
   Input,
@@ -26,7 +26,7 @@ export interface CardModalProps {
 }
 
 // TODO: i18n
-export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
+export const CardModal = ({ isOpen, close, onConfirm: onConfirmProps }: CardModalProps) => {
   const { message } = useMessage();
   const [values, setValues] = useState<CardModalValues>({
     alignment: 'left',
@@ -40,6 +40,10 @@ export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
   const [imageUploaderItem, setImageUploaderItem] = useState<ImageUploaderItem | null>(null);
   const [haveLink, setHaveLink] = useState<boolean>(true);
 
+  const onConfirm = useCallback(() => {
+    onConfirmProps();
+  }, [onConfirmProps]);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -50,9 +54,7 @@ export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
       onClose={() => {
         close();
       }}
-      onConfirm={() => {
-        onConfirm();
-      }}
+      onConfirm={onConfirm}
     >
       <div className="qdr-card-modal__block">
         <p className="qdr-card-modal__block-title">顯示設定</p>
@@ -79,6 +81,7 @@ export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
         <p className="qdr-card-modal__block-title">基本設定</p>
         <div className="qdr-card-modal__block-content">
           <ImageUploader
+            label="圖片"
             imageUploaderItem={imageUploaderItem}
             setImageUploaderItem={setImageUploaderItem}
             width={240}
@@ -90,6 +93,7 @@ export const CardModal = ({ isOpen, close, onConfirm }: CardModalProps) => {
             onErrorAccept={() => {
               message({ type: 'error', content: '圖片類型錯誤' });
             }}
+            required
           />
           <Input
             value={values.title}
