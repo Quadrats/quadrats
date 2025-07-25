@@ -1,8 +1,16 @@
 import React, { Dispatch, SetStateAction, ReactNode, useCallback, useState, useEffect } from 'react';
 import { EmbedModal } from './EmbedModal/EmbedModal';
 import { CarouselModal } from './CarouselModal/CarouselModal';
+import { CardModal } from './CardModal/CardModal';
 import { ConfirmModal } from './ConfirmModal/ConfirmModal';
-import { ModalContext, ModalName, EmbedModalConfig, CarouselModalConfig, ConfirmModalConfig } from './modal';
+import {
+  ModalContext,
+  ModalName,
+  EmbedModalConfig,
+  CarouselModalConfig,
+  CardModalConfig,
+  ConfirmModalConfig,
+} from './modal';
 
 export interface ModalProviderProps {
   children: ReactNode;
@@ -15,6 +23,7 @@ export const ModalProvider = ({ children, needConfirmModal, setNeedConfirmModal 
   const [isModalClosed, setIsModalClosed] = useState<boolean>(false);
   const [embedModalConfig, setEmbedModalConfig] = useState<EmbedModalConfig | null>(null);
   const [carouselModalConfig, setCarouselModalConfig] = useState<CarouselModalConfig | null>(null);
+  const [cardModalConfig, setCardModalConfig] = useState<CardModalConfig | null>(null);
   const [confirmModalConfig, setConfirmModalConfig] = useState<ConfirmModalConfig | null>(null);
 
   const close = useCallback(() => {
@@ -46,6 +55,10 @@ export const ModalProvider = ({ children, needConfirmModal, setNeedConfirmModal 
           setModalName('carousel-modal');
           setCarouselModalConfig(config);
         },
+        setCardModalConfig: (config) => {
+          setModalName('card-modal');
+          setCardModalConfig(config);
+        },
         setConfirmModalConfig: (config) => {
           setModalName('confirm-modal');
           setConfirmModalConfig(config);
@@ -70,6 +83,14 @@ export const ModalProvider = ({ children, needConfirmModal, setNeedConfirmModal 
         controller={carouselModalConfig?.controller}
         initialValue={carouselModalConfig?.initialValue}
         onConfirm={carouselModalConfig?.onConfirm}
+      />
+      <CardModal
+        isOpen={modalName === 'card-modal'}
+        close={close}
+        controller={cardModalConfig?.controller}
+        onConfirm={() => {
+          cardModalConfig?.onConfirm?.();
+        }}
       />
       <ConfirmModal
         isOpen={modalName === 'confirm-modal'}

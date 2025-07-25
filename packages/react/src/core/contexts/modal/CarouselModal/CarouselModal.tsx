@@ -43,6 +43,21 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
     }
   }, [items]);
 
+  const acceptText = useMemo(() => {
+    if (
+      controller?.accept.find((a) => a === 'image/jpeg' || a === 'image/jpg') &&
+      controller?.accept.find((a) => a === 'image/png')
+    ) {
+      return 'JPG 或 PNG';
+    } else if (controller?.accept.find((a) => a === 'image/png')) {
+      return 'PNG';
+    } else if (controller?.accept.find((a) => a === 'image/jpeg' || a === 'image/jpg')) {
+      return 'JPG';
+    }
+
+    return '';
+  }, [controller?.accept]);
+
   const isOverMaxLength = useMemo(() => {
     if (controller?.maxLength) {
       return items.length >= controller.maxLength;
@@ -79,16 +94,22 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
             setItems((prev) => prev.map((u) => (u.file === item.file ? { ...u, progress: p } : u)));
           };
 
-          const url = await upload({
-            file: item.file,
-            getBody: controller?.getBody,
-            getHeaders: controller?.getHeaders,
-            getUrl: controller?.getUrl,
-            uploader: controller?.uploader,
-            onProgress,
-          });
+          try {
+            const url = await upload({
+              file: item.file,
+              getBody: controller?.getBody,
+              getHeaders: controller?.getHeaders,
+              getUrl: controller?.getUrl,
+              uploader: controller?.uploader,
+              onProgress,
+            });
 
-          setItems((prev) => prev.map((u) => (u.file === item.file ? { ...u, preview: url, url } : u)));
+            setItems((prev) => prev.map((u) => (u.file === item.file ? { ...u, preview: url, url } : u)));
+          } catch (error) {
+            setItems((prev) =>
+              prev.map((u) => (u.file === item.file ? { ...u, preview: '', url: '', isError: true } : u)),
+            );
+          }
         }
       }
     },
@@ -143,7 +164,7 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
                   text: `數量限制：至少 1 張，至多 ${controller?.maxLength} 張。`,
                 },
                 {
-                  text: '檔案格式：限 JPG 或 PNG。',
+                  text: `檔案格式：限 ${acceptText}。`,
                 },
                 controller?.ratio && {
                   text: `檔案尺寸：最佳比例為 ${controller.ratio[0]}:${controller.ratio[1]}。建議圖片寬度達 2000px 以上，高度不限。`,
@@ -169,7 +190,7 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
                 );
 
                 if (correctFiles.length !== files.length) {
-                  message({ type: 'error', content: '檔案過大。' });
+                  message({ type: 'error', content: `圖片檔案過大，檔案需小於 ${controller?.limitSize}MB` });
                 }
 
                 if (correctFiles.length > 0) {
@@ -224,6 +245,7 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
                   caption={item.caption}
                   index={index}
                   ratio={controller?.ratio}
+                  isError={item.isError}
                   onChange={(value) => {
                     change(index, { url: item.url, caption: value });
                   }}
@@ -243,8 +265,8 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
                 <div className="qdr-carousel-modal__placeholder__title">拖曳檔案到此上傳</div>
                 <div className="qdr-carousel-modal__placeholder__hint">
                   {controller?.ratio
-                    ? `僅能上傳 PNG 或 JPG；建議比例為 ${controller.ratio[0]}:${controller.ratio[1]} 且寬度至少達 2000px 以上；檔案大小不可超過 ${controller?.limitSize}MB`
-                    : `僅能上傳 PNG 或 JPG；檔案大小不可超過 ${controller?.limitSize}MB`}
+                    ? `僅能上傳 ${acceptText}；建議比例為 ${controller.ratio[0]}:${controller.ratio[1]} 且寬度至少達 2000px 以上；檔案大小不可超過 ${controller?.limitSize}MB`
+                    : `僅能上傳 ${acceptText}；檔案大小不可超過 ${controller?.limitSize}MB`}
                 </div>
               </div>
             </div>

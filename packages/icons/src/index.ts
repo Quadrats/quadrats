@@ -13,6 +13,7 @@ export { Blockquote } from './blockquote';
 export { BlockLeft } from './block-left';
 export { BlockRight } from './block-right';
 export { Bold } from './bold';
+export { Card } from './card';
 export { Carousel } from './carousel';
 export { Check } from './check';
 export { Cancel } from './cancel';

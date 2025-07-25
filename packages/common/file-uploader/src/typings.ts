@@ -9,6 +9,8 @@ import {
 } from '@quadrats/core';
 import { GetFilesFromInputOptions } from './getFilesFromInput';
 
+export type ImageAccept = 'image/jpeg' | 'image/jpg' | 'image/png';
+
 export interface XHRUploadHeaders {
   [name: string]: string;
 }

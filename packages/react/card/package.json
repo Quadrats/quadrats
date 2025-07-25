@@ -1,0 +1,17 @@
+{
+  "name": "@quadrats/react/card",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "quadratsConfig": {
+    "deps": [
+      "__ROOT__",
+      "toolbar",
+      "utils"
+    ],
+    "styles": {
+      "card": "card"
+    }
+  }
+}

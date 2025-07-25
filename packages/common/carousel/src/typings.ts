@@ -1,5 +1,6 @@
 import { Editor, Withable, QuadratsElement, WithElementType, Text, Path } from '@quadrats/core';
 import {
+  ImageAccept,
   FileUploaderGetBody,
   FileUploaderGetHeaders,
   FileUploaderGetUrl,
@@ -18,6 +19,7 @@ export interface CarouselFieldArrayItem {
   preview: string;
   url: string;
   caption: string;
+  isError?: boolean;
 }
 
 export interface CarouselElement extends QuadratsElement, WithElementType {
@@ -47,7 +49,7 @@ export interface Carousel<T extends Editor = Editor> extends Withable {
   createCarouselElement({ items }: { items: CarouselFieldArrayItem[] }): CarouselElement;
   insertCarousel({ editor, items }: { editor: T; items: CarouselFieldArrayItem[] }): void;
   updateCarouselElement({ editor, items, path }: { editor: T; items: CarouselFieldArrayItem[]; path: Path }): void;
-  accept: string[];
+  accept: ImageAccept[];
   ratio?: [number, number];
   maxLength: number;
   limitSize: number;

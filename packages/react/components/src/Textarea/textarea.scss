@@ -4,16 +4,11 @@
   align-items: flex-start;
   justify-content: flex-start;
   gap: var(--qdr-spacing-2);
-
-  &__label {
-    color: var(--qdr-text-secondary);
-    font-size: var(--qdr-typography-basic-h6-font-size);
-    line-height: var(--qdr-typography-basic-h6-line-height);
-    letter-spacing: var(--qdr-typography-basic-h6-letter-spacing);
-    font-weight: var(--qdr-typography-basic-h6-font-weight);
-  }
+  align-self: stretch;
+  position: relative;
 
   &__textarea {
+    background-color: var(--qdr-surface);
     font-family: unset;
     border: 1px solid var(--qdr-border);
     outline: none;
@@ -28,7 +23,8 @@
     font-weight: var(--qdr-typography-basic-body1-font-weight);
     transition: border var(--qdr-duration-short) var(--qdr-easing-standard);
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       border-color: var(--qdr-primary);
     }
 
@@ -39,7 +35,8 @@
     &--error {
       border-color: var(--qdr-error);
 
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         border-color: var(--qdr-error);
       }
     }
@@ -72,12 +69,25 @@
   }
 
   &__counter {
+    position: absolute;
+    right: 0;
+    bottom: calc(
+      -1 *
+        (
+          var(--qdr-typography-basic-caption-font-size) * var(--qdr-typography-basic-caption-line-height) +
+            var(--qdr-spacing-2)
+        )
+    );
     color: var(--qdr-text-secondary);
     font-size: var(--qdr-typography-basic-caption-font-size);
     line-height: var(--qdr-typography-basic-caption-line-height);
     letter-spacing: var(--qdr-typography-basic-caption-letter-spacing);
     font-weight: var(--qdr-typography-basic-caption-font-weight);
     transition: color var(--qdr-duration-short) var(--qdr-easing-standard);
+
+    &--have-hint {
+      bottom: 0;
+    }
 
     &--limited {
       color: var(--qdr-primary);

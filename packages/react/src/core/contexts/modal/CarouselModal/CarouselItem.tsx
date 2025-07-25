@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { useDrag, useDrop } from 'react-dnd';
 import { Input, Icon, Progress } from '@quadrats/react/components';
-import { Trash } from '@quadrats/icons';
+import { Trash, Image } from '@quadrats/icons';
 
 interface CarouselItemProps {
   url: string;
@@ -14,10 +14,11 @@ interface CarouselItemProps {
   onRemove: VoidFunction;
   swap: (from: number, to: number) => void;
   ratio?: [number, number];
+  isError?: boolean;
 }
 
 const CarouselItem = ({
-  // url,
+  url,
   preview,
   progress,
   caption,
@@ -26,6 +27,7 @@ const CarouselItem = ({
   onRemove,
   swap,
   ratio,
+  isError,
 }: CarouselItemProps) => {
   const [inputValue, setInputValue] = useState(caption);
 
@@ -61,7 +63,6 @@ const CarouselItem = ({
   }));
 
   // TODO: i18n
-
   return drop(
     drag(
       dragPreview(
@@ -75,14 +76,28 @@ const CarouselItem = ({
           <div contentEditable={false} className={clsx('qdr-inline-toolbar', 'qdr-carousel-modal__inline-toolbar')}>
             <Icon className="qdr-inline-toolbar__icon" icon={Trash} width={24} height={24} onClick={onRemove} />
           </div>
-          <img
-            src={preview}
-            className="qdr-carousel-modal__image"
-            style={{
-              objectFit: ratio ? 'cover' : 'contain',
-              aspectRatio: ratio ? `${ratio[0]} / ${ratio[1]}` : '3 /2',
-            }}
-          />
+          <div className="qdr-carousel-modal__image-wrapper">
+            {isError ? (
+              <div
+                className="qdr-carousel-modal__error-wrapper"
+                style={{
+                  aspectRatio: ratio ? `${ratio[0]} / ${ratio[1]}` : '3 /2',
+                }}
+              >
+                <Icon className="qdr-carousel-modal__error-icon" icon={Image} width={48} height={48} />
+                <p className="qdr-carousel-modal__error-text">上傳錯誤</p>
+              </div>
+            ) : (
+              <img
+                src={url || preview}
+                className="qdr-carousel-modal__image"
+                style={{
+                  objectFit: ratio ? 'cover' : 'contain',
+                  aspectRatio: ratio ? `${ratio[0]} / ${ratio[1]}` : '3 /2',
+                }}
+              />
+            )}
+          </div>
           <div className="qdr-carousel-modal__input-wrapper">
             <Input value={inputValue} onChange={setInputValue} placeholder="圖片說明或替代文字..." />
           </div>

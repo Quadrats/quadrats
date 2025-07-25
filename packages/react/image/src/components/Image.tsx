@@ -26,7 +26,7 @@ function Image(props: RenderImageElementProps) {
   return (
     <div
       {...attributes}
-      className="qdr-image"
+      className="qdr-image qdr-image--with-inline-toolbar"
       onClick={() => Transforms.select(editor, ReactEditor.findPath(editor, element))}
       onMouseDown={(event) => event.preventDefault()}
       role="img"

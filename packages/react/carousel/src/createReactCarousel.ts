@@ -21,7 +21,7 @@ export function createReactCarousel(options: CreateReactCarouselOptions): ReactC
 
   return {
     ...core,
-    createHandlers: (setNeedConfirmModal) => ({
+    createHandlers: (setNeedConfirmModal, locale) => ({
       onKeyDown(event, editor, next) {
         if (event.key === 'Backspace') {
           removePreviousElement({
@@ -32,10 +32,11 @@ export function createReactCarousel(options: CreateReactCarouselOptions): ReactC
             doConfirm: (remove) => {
               if (setNeedConfirmModal) {
                 // TODO: i18n
+                console.log('locale', locale);
                 setNeedConfirmModal({
-                  title: '確認要刪除？',
-                  content: '你確定要刪除嗎？',
-                  confirmText: '確認',
+                  title: '刪除輪播',
+                  content: '是否確認刪除此輪播？刪除後將立即移除，且此操作無法復原。',
+                  confirmText: '刪除輪播',
                   onConfirm: () => {
                     remove();
                     setNeedConfirmModal(null);

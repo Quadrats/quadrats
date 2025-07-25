@@ -27,7 +27,7 @@
       _get-main-color-transformed-palette(secondary, $styles),
       _get-main-color-transformed-palette(error, $styles),
       _get-main-color-transformed-palette(warning, $styles),
-      _get-main-color-transformed-palette(success, $styles),
+      _get-main-color-transformed-palette(success, $styles)
     );
 
     @each $name, $value in $default-styles {

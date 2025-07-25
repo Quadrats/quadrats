@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import {
   Accordion as AccordionIcon,
   Carousel as CarouselIcon,
+  Card as CardIcon,
   Bold as BoldIcon,
   Italic as ItalicIcon,
   Underline as UnderlineIcon,
@@ -59,6 +60,7 @@ import { createReactStrikethrough } from '@quadrats/react/strikethrough';
 import { createReactHighlight } from '@quadrats/react/highlight';
 import { createReactAccordion } from '@quadrats/react/accordion';
 import { createReactCarousel } from '@quadrats/react/carousel';
+import { createReactCard } from '@quadrats/react/card';
 import { createReactBlockquote } from '@quadrats/react/blockquote';
 import { createReactDivider } from '@quadrats/react/divider';
 import { createReactEmbed } from '@quadrats/react/embed';
@@ -115,6 +117,7 @@ import { Toolbar, ToolbarGroupIcon, TOOLBAR_DIVIDER } from '@quadrats/react/tool
 import { ToggleMarkToolbarIcon } from '@quadrats/react/toggle-mark/toolbar';
 import { AccordionToolbarIcon } from '@quadrats/react/accordion/toolbar';
 import { CarouselToolbarIcon } from '@quadrats/react/carousel/toolbar';
+import { CardToolbarIcon } from '@quadrats/react/card/toolbar';
 import { BlockquoteToolbarIcon } from '@quadrats/react/blockquote/toolbar';
 import { DividerToolbarIcon } from '@quadrats/react/divider/toolbar';
 import { EmbedToolbarIcon } from '@quadrats/react/embed/toolbar';
@@ -141,6 +144,7 @@ import { createJsxSerializeLineBreak } from '@quadrats/react/line-break/jsx-seri
 import { createJsxSerializeParagraph } from '@quadrats/react/paragraph/jsx-serializer';
 import { createJsxSerializeAccordion } from '@quadrats/react/accordion/jsx-serializer';
 import { createJsxSerializeCarousel } from '@quadrats/react/carousel/jsx-serializer';
+import { createJsxSerializeCard } from '@quadrats/react/card/jsx-serializer';
 import { createJsxSerializeBlockquote } from '@quadrats/react/blockquote/jsx-serializer';
 import { createJsxSerializeHeading } from '@quadrats/react/heading/jsx-serializer';
 import { createJsxSerializeList } from '@quadrats/react/list/jsx-serializer';
@@ -163,6 +167,19 @@ const accordion = createReactAccordion();
 const carousel = createReactCarousel({
   ratio: [16, 9],
   maxLength: 12,
+  limitSize: 2,
+  getBody: (file) => file,
+  getHeaders: (file) => ({
+    Authorization: 'Bearer <Your OAuth2 Token>',
+    'Content-Type': file.type,
+  }),
+  getUrl: (file) =>
+    `https://storage.googleapis.com/upload/storage/v1/b/<Your Bucket Name>/o?uploadType=media&name=${file.name}`,
+  uploader: new LocalFileUploader(),
+});
+
+const card = createReactCard({
+  ratio: [3, 2],
   limitSize: 2,
   getBody: (file) => file,
   getHeaders: (file) => ({
@@ -201,6 +218,7 @@ export interface PlaygroundEditorProps {
   withTitles: ('h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6')[];
   withAccordion: boolean;
   withCarousel: boolean;
+  withCard: boolean;
   withBlockquote: boolean;
   withLists: ('ol' | 'ul')[];
   withDivider: boolean;
@@ -224,6 +242,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withTitles,
     withAccordion,
     withCarousel,
+    withCard,
     withBlockquote,
     withLists,
     withDivider,
@@ -316,6 +335,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
         if (withTitles.length) editorWithOptions.push(heading.with);
         if (withAccordion) editorWithOptions.push(accordion.with);
         if (withCarousel) editorWithOptions.push(carousel.with);
+        if (withCard) editorWithOptions.push(card.with);
         if (withBlockquote) editorWithOptions.push(blockquote.with);
         if (withLists.length) editorWithOptions.push(list.with);
         if (withDivider) editorWithOptions.push(divider.with);
@@ -333,6 +353,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       heading.with,
       withAccordion,
       withCarousel,
+      withCard,
       withBlockquote,
       withLists.length,
       withDivider,
@@ -351,7 +372,8 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
 
     if (withTitles.length) handlers.push(heading.createHandlers());
     if (withAccordion) handlers.push(accordion.createHandlers());
-    if (withCarousel) handlers.push(carousel.createHandlers(setNeedConfirmModal));
+    if (withCarousel) handlers.push(carousel.createHandlers(setNeedConfirmModal, editorLocale));
+    if (withCard) handlers.push(card.createHandlers(setNeedConfirmModal, editorLocale));
     if (withBlockquote) handlers.push(blockquote.createHandlers());
     if (withLists.length) handlers.push(list.createHandlers());
     if (withBold) handlers.push(bold.createHandlers());
@@ -371,6 +393,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withTitles,
     withAccordion,
     withCarousel,
+    withCard,
     withBlockquote,
     withLists,
     withBold,
@@ -380,6 +403,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withHighlight,
     withCustomHighlights,
     withImage,
+    editorLocale,
   ]);
 
   const renderElement = useMemo(() => {
@@ -460,6 +484,11 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       elements.push(carousel.createRenderPlaceholderElement());
     }
 
+    if (withCard) {
+      elements.push(card.createRenderElement());
+      elements.push(card.createRenderPlaceholderElement());
+    }
+
     if (withBlockquote) {
       elements.push(blockquote.createRenderElement());
     }
@@ -478,6 +507,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withEmbeds,
     withAccordion,
     withCarousel,
+    withCard,
     withBlockquote,
     embed,
   ]);
@@ -503,6 +533,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       const unlinkTool = <UnlinkToolbarIcon icon={UnlinkIcon} controller={link} />;
       const accordionTool = <AccordionToolbarIcon icon={AccordionIcon} controller={accordion} />;
       const carouselTool = <CarouselToolbarIcon icon={CarouselIcon} controller={carousel} />;
+      const cardTool = <CardToolbarIcon icon={CardIcon} controller={card} />;
       const blockquoteTool = <BlockquoteToolbarIcon icon={BlockquoteIcon} controller={blockquote} />;
       const footnoteTool = <FootnoteToolbarIcon icon={FnIcon} controller={footnote} />;
 
@@ -556,6 +587,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
           {~withTitles.indexOf('h6') ? <HeadingToolbarIcon icon={Heading6Icon} controller={heading} level={6} /> : null}
           {withAccordion ? accordionTool : null}
           {withCarousel ? carouselTool : null}
+          {withCard ? cardTool : null}
           {withBlockquote ? blockquoteTool : null}
           {~withLists.indexOf('ul') ? (
             <ListToolbarIcon icon={UnorderedListIcon} controller={list} listTypeKey="ul" />
@@ -563,7 +595,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
           {~withLists.indexOf('ol') ? (
             <ListToolbarIcon icon={OrderedListIcon} controller={list} listTypeKey="ol" />
           ) : null}
-          {withTitles.length || withAccordion || withCarousel || withBlockquote || withLists.length
+          {withTitles.length || withAccordion || withCarousel || withCard || withBlockquote || withLists.length
             ? TOOLBAR_DIVIDER
             : null}
           {withDivider ? <DividerToolbarIcon icon={DividerIcon} controller={divider} /> : null}
@@ -613,6 +645,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       heading,
       withAccordion,
       withCarousel,
+      withCard,
       withLists,
       withDivider,
       withEmbeds,
@@ -647,6 +680,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withTitles,
     withAccordion,
     withCarousel,
+    withCard,
     withBlockquote,
     withLists,
     withDivider,
@@ -680,6 +714,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     // Elements
     if (withAccordion) elements.push(createJsxSerializeAccordion());
     if (withCarousel) elements.push(createJsxSerializeCarousel());
+    if (withCard) elements.push(createJsxSerializeCard());
     if (withBlockquote) elements.push(createJsxSerializeBlockquote());
     if (withTitles.length) elements.push(createJsxSerializeHeading());
     if (withLists.length) elements.push(createJsxSerializeList());
@@ -717,6 +752,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withTitles,
     withAccordion,
     withCarousel,
+    withCard,
     withBlockquote,
     withLists,
     withDivider,
@@ -788,6 +824,7 @@ export const Editor: Story = {
     withTitles: ['h1', 'h2', 'h3'],
     withAccordion: true,
     withCarousel: true,
+    withCard: true,
     withBlockquote: false,
     withLists: ['ol', 'ul'],
     withDivider: true,
@@ -817,6 +854,10 @@ export const Editor: Story = {
     },
     withCarousel: {
       name: 'Carousel',
+      control: { type: 'boolean' },
+    },
+    withCard: {
+      name: 'Card',
       control: { type: 'boolean' },
     },
     withBlockquote: {
