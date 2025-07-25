@@ -12,6 +12,9 @@ import { CARD_TYPES, CARD_PLACEHOLDER_TYPE } from './constants';
 export interface CreateCardOptions {
   types?: Partial<CardTypes>;
   accept?: ImageAccept[];
+  ratio?: [number, number];
+  limitSize?: number;
+  confirmModal?: boolean;
   getBody: FileUploaderGetBody;
   getHeaders?: FileUploaderGetHeaders;
   getUrl: FileUploaderGetUrl;
@@ -19,14 +22,26 @@ export interface CreateCardOptions {
 }
 
 export function createCard(options: CreateCardOptions): Card<Editor> {
-  const { types: typesOptions, accept: acceptOptions, getBody, getHeaders, getUrl, uploader } = options;
+  const {
+    types: typesOptions,
+    accept: acceptOptions,
+    ratio,
+    limitSize: limitSizeOptions,
+    confirmModal = true,
+    getBody,
+    getHeaders,
+    getUrl,
+    uploader,
+  } = options;
 
   const types: CardTypes = { ...CARD_TYPES, ...typesOptions };
+  const limitSize: number = limitSizeOptions || 5;
   const accept = acceptOptions || ['image/jpeg', 'image/jpg', 'image/png'];
 
   const insertCardPlaceholder: Card<Editor>['insertCardPlaceholder'] = (editor) => {
     const cardPlaceholderElement: CardPlaceholderElement = {
       type: CARD_PLACEHOLDER_TYPE,
+      ratio,
       children: [{ text: '' }],
     };
 
@@ -44,6 +59,9 @@ export function createCard(options: CreateCardOptions): Card<Editor> {
   return {
     types,
     accept,
+    ratio,
+    limitSize,
+    confirmModal,
     insertCardPlaceholder,
     removeCardPlaceholder,
     getBody,
