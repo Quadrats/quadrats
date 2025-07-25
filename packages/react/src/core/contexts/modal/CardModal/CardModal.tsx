@@ -25,7 +25,15 @@ export interface CardModalProps {
   isOpen: boolean;
   close: VoidFunction;
   controller?: Card<Editor>;
-  onConfirm: () => void;
+  onConfirm: ({
+    values,
+    imageItem,
+    haveLink,
+  }: {
+    values: CardModalValues;
+    imageItem: ImageUploaderItem | null;
+    haveLink: boolean;
+  }) => void;
 }
 
 const options: {
@@ -60,10 +68,47 @@ export const CardModal = ({ isOpen, close, controller, onConfirm: onConfirmProps
 
   const [imageUploaderItem, setImageUploaderItem] = useState<ImageUploaderItem | null>(null);
   const [haveLink, setHaveLink] = useState<boolean>(true);
+  const [errors, setErrors] = useState<{ field: string; message: string }[]>([]);
 
   const onConfirm = useCallback(() => {
-    onConfirmProps();
-  }, [onConfirmProps]);
+    const errorItems: { field: string; message: string }[] = [];
+
+    setErrors([]);
+
+    if (values.alignment !== 'noImage' && (!imageUploaderItem || (imageUploaderItem && !imageUploaderItem.url))) {
+      errorItems.push({ field: 'image', message: '必填欄位' });
+    }
+
+    if (!values.title) {
+      errorItems.push({ field: 'title', message: '必填欄位' });
+    }
+
+    if (!values.description) {
+      errorItems.push({ field: 'description', message: '必填欄位' });
+    }
+
+    if (haveLink) {
+      const urlValidation = /^http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/;
+
+      if (!values.linkText) {
+        errorItems.push({ field: 'linkText', message: '必填欄位' });
+      }
+
+      if (!values.linkUrl) {
+        errorItems.push({ field: 'linkUrl', message: '必填欄位' });
+      }
+
+      if (values.linkUrl && !urlValidation.test(values.linkUrl)) {
+        errorItems.push({ field: 'linkUrl', message: '格式錯誤' });
+      }
+    }
+
+    if (errorItems.length > 0) {
+      setErrors(errorItems);
+    } else {
+      onConfirmProps({ values, imageItem: imageUploaderItem, haveLink });
+    }
+  }, [imageUploaderItem, onConfirmProps, haveLink, values]);
 
   return (
     <Modal
@@ -88,22 +133,25 @@ export const CardModal = ({ isOpen, close, controller, onConfirm: onConfirmProps
       <div className="qdr-card-modal__block">
         <p className="qdr-card-modal__block-title">基本設定</p>
         <div className="qdr-card-modal__block-content">
-          <ImageUploader
-            label="圖片"
-            imageUploaderItem={imageUploaderItem}
-            setImageUploaderItem={setImageUploaderItem}
-            width={240}
-            accept={controller?.accept}
-            ratio={controller?.ratio}
-            limitSize={controller?.limitSize}
-            onOverLimitSize={() => {
-              message({ type: 'error', content: '圖片檔案過大，檔案需小於 2MB' });
-            }}
-            onErrorAccept={() => {
-              message({ type: 'error', content: '圖片類型錯誤' });
-            }}
-            required
-          />
+          {values.alignment !== 'noImage' && (
+            <ImageUploader
+              label="圖片"
+              imageUploaderItem={imageUploaderItem}
+              setImageUploaderItem={setImageUploaderItem}
+              width={240}
+              accept={controller?.accept}
+              ratio={controller?.ratio}
+              limitSize={controller?.limitSize}
+              onOverLimitSize={() => {
+                message({ type: 'error', content: '圖片檔案過大，檔案需小於 2MB' });
+              }}
+              onErrorAccept={() => {
+                message({ type: 'error', content: '圖片類型錯誤' });
+              }}
+              required
+              errorMessage={errors.find((e) => e.field === 'image')?.message ?? ''}
+            />
+          )}
           <Input
             value={values.title}
             className="qdr-card-modal__block-field"
@@ -112,6 +160,7 @@ export const CardModal = ({ isOpen, close, controller, onConfirm: onConfirmProps
             placeholder="請輸入標題"
             maxLength={30}
             required
+            errorMessage={errors.find((e) => e.field === 'title')?.message ?? ''}
           />
           <Textarea
             value={values.description}
@@ -122,6 +171,7 @@ export const CardModal = ({ isOpen, close, controller, onConfirm: onConfirmProps
             height={86}
             maxLength={50}
             required
+            errorMessage={errors.find((e) => e.field === 'description')?.message ?? ''}
           />
           <Input
             value={values.remark}
@@ -141,25 +191,29 @@ export const CardModal = ({ isOpen, close, controller, onConfirm: onConfirmProps
             <span>顯示按鈕</span>
           </div>
         </div>
-        <div className="qdr-card-modal__link-wrapper">
-          <Input
-            value={values.linkText}
-            onChange={(value) => setValues((prev) => ({ ...prev, linkText: value }))}
-            width={180}
-            label="顯示文字"
-            placeholder="請輸入顯示文字"
-            maxLength={6}
-            required
-          />
-          <Input
-            value={values.linkUrl}
-            onChange={(value) => setValues((prev) => ({ ...prev, linkUrl: value }))}
-            className="qdr-card-modal__url-field"
-            label="連結"
-            placeholder="貼上連結，如 https://..."
-            required
-          />
-        </div>
+        {haveLink && (
+          <div className="qdr-card-modal__link-wrapper">
+            <Input
+              value={values.linkText}
+              onChange={(value) => setValues((prev) => ({ ...prev, linkText: value }))}
+              width={180}
+              label="顯示文字"
+              placeholder="請輸入顯示文字"
+              maxLength={6}
+              required
+              errorMessage={errors.find((e) => e.field === 'linkText')?.message ?? ''}
+            />
+            <Input
+              value={values.linkUrl}
+              onChange={(value) => setValues((prev) => ({ ...prev, linkUrl: value }))}
+              className="qdr-card-modal__url-field"
+              label="連結"
+              placeholder="貼上連結，如 https://..."
+              required
+              errorMessage={errors.find((e) => e.field === 'linkUrl')?.message ?? ''}
+            />
+          </div>
+        )}
       </div>
     </Modal>
   );
