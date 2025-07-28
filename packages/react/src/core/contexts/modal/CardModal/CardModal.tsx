@@ -106,7 +106,7 @@ export const CardModal = ({ isOpen, close, controller, onConfirm: onConfirmProps
     if (errorItems.length > 0) {
       setErrors(errorItems);
     } else {
-      onConfirmProps({ values, imageItem: imageUploaderItem, haveLink });
+      onConfirmProps({ values, imageItem: values.alignment === 'noImage' ? null : imageUploaderItem, haveLink });
     }
   }, [imageUploaderItem, onConfirmProps, haveLink, values]);
 

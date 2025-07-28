@@ -10,6 +10,8 @@ export function CardImage({
   children: RenderElementProps['children'];
   element: RenderCardImageElementProps['element'];
 }) {
+  if (!element.src) return null;
+
   return (
     <div {...attributes} contentEditable={false} className="qdr-card__image-wrapper">
       <img

@@ -45,6 +45,7 @@ export interface CardImageElement extends QuadratsElement, WithElementType {
 
 export interface CardContentsElement extends QuadratsElement, WithElementType {
   children: [Text];
+  alignment: CardAlignment;
   title: string;
   description: string;
   remark: string;

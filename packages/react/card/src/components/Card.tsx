@@ -17,7 +17,7 @@ export function Card({
   controller: RenderCardElementProps['controller'];
 }) {
   return (
-    <div {...attributes} contentEditable={false} className={clsx('qdr-card', `qdr-card'--${element.alignment}`)}>
+    <div {...attributes} contentEditable={false} className={clsx('qdr-card', `qdr-card--${element.alignment}`)}>
       <InlineToolbar
         className="qdr-card__inline-toolbar"
         leftIcons={[]}
@@ -47,7 +47,7 @@ export function CardWithoutToolbar({
   element: RenderCardElementProps['element'];
 }) {
   return (
-    <div {...attributes} contentEditable={false} className={clsx('qdr-card', `qdr-card'--${element.alignment}`)}>
+    <div {...attributes} contentEditable={false} className={clsx('qdr-card', `qdr-card--${element.alignment}`)}>
       {children}
     </div>
   );

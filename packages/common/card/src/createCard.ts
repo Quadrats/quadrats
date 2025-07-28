@@ -67,6 +67,7 @@ export function createCard(options: CreateCardOptions): Card<Editor> {
     const cardContentsElement: CardContentsElement = {
       type: types.card_contents,
       children: [{ text: '' }],
+      alignment: cardValues.alignment,
       title: cardValues.title,
       description: cardValues.description,
       remark: cardValues.remark,
@@ -118,6 +119,7 @@ export function createCard(options: CreateCardOptions): Card<Editor> {
       Transforms.setNodes(
         editor,
         {
+          alignment: cardValues.alignment,
           title: cardValues.title,
           description: cardValues.description,
           remark: cardValues.remark,
@@ -134,6 +136,28 @@ export function createCard(options: CreateCardOptions): Card<Editor> {
 
   const updateCardAlignment: Card<Editor>['updateCardAlignment'] = ({ editor, alignment, path }) => {
     Transforms.setNodes(editor, { alignment } as CardElement, { at: path });
+
+    const contentsEntries = Editor.nodes(editor, {
+      at: path,
+      match: (node) => Element.isElement(node) && (node as QuadratsElement).type === types.card_contents,
+      mode: 'all',
+    });
+
+    const contentsNode = contentsEntries.next().value;
+
+    if (contentsNode) {
+      const [, contentsPath] = contentsNode;
+
+      Transforms.setNodes(
+        editor,
+        {
+          alignment,
+        } as CardContentsElement,
+        {
+          at: contentsPath,
+        },
+      );
+    }
   };
 
   return {
