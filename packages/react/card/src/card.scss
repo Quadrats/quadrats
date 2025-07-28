@@ -137,4 +137,32 @@
     font-weight: var(--qdr-typography-article-body2-font-weight);
     margin: var(--qdr-spacing-2) 0 0;
   }
+
+  &__link-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    margin-top: var(--qdr-spacing-9);
+
+    &--rightImageLeftText {
+      justify-content: flex-start;
+    }
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--qdr-spacing-1);
+    color: var(--qdr-primary);
+    font-size: var(--qdr-typography-article-h6-font-size);
+    line-height: var(--qdr-typography-article-h6-line-height);
+    letter-spacing: var(--qdr-typography-article-h6-letter-spacing);
+    font-weight: var(--qdr-typography-article-h6-font-weight);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--qdr-primary-light);
+    }
+  }
 }
