@@ -90,6 +90,46 @@
     }
   }
 
+  &__placeholder {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: var(--qdr-spacing-6);
+    border-radius: var(--qdr-radius-3);
+    border: 1px solid var(--qdr-border);
+    background-color: var(--qdr-block);
+    margin: var(--qdr-spacing-12) 0;
+    padding: var(--qdr-spacing-6);
+
+    &__line {
+      align-self: stretch;
+      height: 16px;
+      border-radius: var(--qdr-radius-6);
+      opacity: 0.2;
+      background: linear-gradient(90deg, var(--qdr-action-inactive) 0%, var(--qdr-divider) 100%);
+      margin-top: var(--qdr-spacing-1);
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+
+  &__placeholder-image-wrapper {
+    width: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--qdr-radius-1);
+    background-color: var(--qdr-bg);
+    color: var(--qdr-action-inactive);
+  }
+
+  &__placeholder-contents {
+    flex: 1;
+  }
+
   &__image-wrapper {
     width: 240px;
     display: flex;

@@ -22,7 +22,7 @@ export function CardContents({
       </div>
       {element.haveLink && (
         <div className={clsx('qdr-card__link-wrapper', `qdr-card__link-wrapper--${element.alignment}`)}>
-          <a href={element.linkUrl} className="qdr-card__link">
+          <a href={element.linkUrl} className="qdr-card__link" target="_blank" rel="noreferrer">
             {element.linkText}
             <Icon icon={ChevronRight} width={20} height={20} className="qdr-card__link-icon" />
           </a>
