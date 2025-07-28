@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { RenderElementProps } from '@quadrats/react';
 import { InlineToolbar } from '@quadrats/react/toolbar';
 import { Edit, Trash } from '@quadrats/icons';
@@ -7,7 +8,7 @@ import { RenderCardElementProps } from '../typings';
 export function Card({
   attributes,
   children,
-  // element,
+  element,
   // controller,
 }: {
   attributes?: RenderElementProps['attributes'];
@@ -16,7 +17,7 @@ export function Card({
   controller: RenderCardElementProps['controller'];
 }) {
   return (
-    <div {...attributes} contentEditable={false} className="qdr-card">
+    <div {...attributes} contentEditable={false} className={clsx('qdr-card', `qdr-card'--${element.alignment}`)}>
       <InlineToolbar
         className="qdr-card__inline-toolbar"
         leftIcons={[]}
@@ -39,13 +40,14 @@ export function Card({
 export function CardWithoutToolbar({
   attributes,
   children,
+  element,
 }: {
   attributes?: RenderElementProps['attributes'];
   children: RenderElementProps['children'];
   element: RenderCardElementProps['element'];
 }) {
   return (
-    <div {...attributes} contentEditable={false} className="qdr-card">
+    <div {...attributes} contentEditable={false} className={clsx('qdr-card', `qdr-card'--${element.alignment}`)}>
       {children}
     </div>
   );

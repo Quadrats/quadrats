@@ -1,7 +1,21 @@
 .qdr-card {
+  position: relative;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
+  gap: var(--qdr-spacing-6);
+  border-radius: var(--qdr-radius-3);
+  border: 1px solid var(--qdr-border);
+  background-color: var(--qdr-block);
+  margin: var(--qdr-spacing-12) 0;
+  padding: var(--qdr-spacing-6);
+
+  &:hover {
+    .qdr-card__inline-toolbar {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
 
   &-modal {
     &__main {
@@ -70,5 +84,18 @@
     &__url-field {
       flex: 1;
     }
+  }
+
+  &__image-wrapper {
+    width: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--qdr-radius-1);
+  }
+
+  &__image {
+    width: 100%;
+    border-radius: var(--qdr-radius-1);
   }
 }
