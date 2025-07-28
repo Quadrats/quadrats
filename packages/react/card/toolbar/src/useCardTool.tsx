@@ -21,8 +21,21 @@ export function useCardTool(controller: ReactCard) {
     if (match) {
       setCardModalConfig({
         controller,
-        onConfirm: () => {
+        onConfirm: ({ values, imageItem, haveLink }) => {
           controller.removeCardPlaceholder(editor);
+          controller.insertCard({
+            editor,
+            cardValues: {
+              alignment: values.alignment,
+              imageItem,
+              title: values.title,
+              description: values.description,
+              remark: values.remark,
+              haveLink,
+              linkText: values.linkText,
+              linkUrl: values.linkUrl,
+            },
+          });
         },
       });
     }

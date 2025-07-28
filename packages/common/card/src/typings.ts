@@ -24,7 +24,7 @@ export type CardImageItem = {
 
 export type CardElementValues = {
   alignment: CardAlignment;
-  imageItem: CardImageItem;
+  imageItem: CardImageItem | null;
   title: string;
   description: string;
   remark: string;

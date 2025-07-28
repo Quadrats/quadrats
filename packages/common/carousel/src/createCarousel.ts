@@ -1,11 +1,4 @@
-import {
-  Editor,
-  Transforms,
-  Element,
-  QuadratsElement,
-  createParagraphElement,
-  isAboveBlockEmpty,
-} from '@quadrats/core';
+import { Editor, Transforms, Element, QuadratsElement, createParagraphElement } from '@quadrats/core';
 import {
   ImageAccept,
   FileUploaderGetBody,
@@ -103,12 +96,6 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
   };
 
   const insertCarousel: Carousel<Editor>['insertCarousel'] = ({ editor, items }) => {
-    if (isAboveBlockEmpty(editor)) {
-      Transforms.removeNodes(editor, {
-        at: editor.selection?.anchor,
-      });
-    }
-
     Transforms.insertNodes(editor, [createCarouselElement({ items }), createParagraphElement()]);
   };
 

@@ -1,11 +1,4 @@
-import {
-  Editor,
-  Transforms,
-  Element,
-  QuadratsElement,
-  isAboveBlockEmpty,
-  createParagraphElement,
-} from '@quadrats/core';
+import { Editor, Transforms, Element, QuadratsElement, createParagraphElement } from '@quadrats/core';
 import {
   ImageAccept,
   FileUploaderGetBody,
@@ -66,7 +59,7 @@ export function createCard(options: CreateCardOptions): Card<Editor> {
   const createCardElement: Card<Editor>['createCardElement'] = (cardValues) => {
     const cardImageElement: CardImageElement = {
       type: types.card_image,
-      src: cardValues.imageItem.url,
+      src: cardValues.imageItem?.url || '',
       ratio,
       children: [{ text: '' }],
     };
@@ -91,12 +84,6 @@ export function createCard(options: CreateCardOptions): Card<Editor> {
   };
 
   const insertCard: Card<Editor>['insertCard'] = ({ editor, cardValues }) => {
-    if (isAboveBlockEmpty(editor)) {
-      Transforms.removeNodes(editor, {
-        at: editor.selection?.anchor,
-      });
-    }
-
     Transforms.insertNodes(editor, [createCardElement(cardValues), createParagraphElement()]);
   };
 
@@ -122,7 +109,7 @@ export function createCard(options: CreateCardOptions): Card<Editor> {
     if (imageNode) {
       const [, imagePath] = imageNode;
 
-      Transforms.setNodes(editor, { src: cardValues.imageItem.url } as CardImageElement, { at: imagePath });
+      Transforms.setNodes(editor, { src: cardValues.imageItem?.url || '' } as CardImageElement, { at: imagePath });
     }
 
     if (contentsNode) {
