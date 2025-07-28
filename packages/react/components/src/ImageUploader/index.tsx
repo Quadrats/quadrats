@@ -1,6 +1,12 @@
 import React, { Dispatch, SetStateAction, useState, useMemo, useCallback } from 'react';
-import { ImageAccept } from '@quadrats/common/file-uploader';
-import { readFileAsBase64, mockUpload } from '@quadrats/react/utils';
+import {
+  FileUploaderGetBody,
+  FileUploaderGetHeaders,
+  FileUploaderGetUrl,
+  FileUploaderImplement,
+  ImageAccept,
+} from '@quadrats/common/file-uploader';
+import { readFileAsBase64, upload } from '@quadrats/react/utils';
 import { Trash } from '@quadrats/icons';
 import clsx from 'clsx';
 import { Plus, Image } from '@quadrats/icons';
@@ -17,6 +23,10 @@ export type ImageUploaderItem = {
 };
 
 export interface ImageUploaderProps extends Omit<BaseFieldProps, 'children'> {
+  getBody: FileUploaderGetBody;
+  getHeaders?: FileUploaderGetHeaders;
+  getUrl: FileUploaderGetUrl;
+  uploader?: FileUploaderImplement;
   imageUploaderItem: ImageUploaderItem | null;
   setImageUploaderItem: Dispatch<SetStateAction<ImageUploaderItem | null>>;
   accept?: ImageAccept[];
@@ -31,6 +41,10 @@ export interface ImageUploaderProps extends Omit<BaseFieldProps, 'children'> {
 const ImageUploader = ({
   label,
   className,
+  getBody,
+  getHeaders,
+  getUrl,
+  uploader,
   imageUploaderItem,
   setImageUploaderItem,
   width = 140,
@@ -79,7 +93,14 @@ const ImageUploader = ({
           }));
 
           try {
-            const url = await mockUpload(base64, onProgress);
+            const url = await upload({
+              file,
+              getBody,
+              getHeaders,
+              getUrl,
+              uploader,
+              onProgress,
+            });
 
             setImageUploaderItem((prev) => {
               if (prev) {
@@ -99,7 +120,7 @@ const ImageUploader = ({
         }
       }
     },
-    [limitSize, onOverLimitSize, onProgress, setImageUploaderItem],
+    [getBody, getHeaders, getUrl, limitSize, onOverLimitSize, onProgress, setImageUploaderItem, uploader],
   );
 
   const onSelectFile = useCallback(async () => {

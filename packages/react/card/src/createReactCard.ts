@@ -1,6 +1,6 @@
 import { createCard, CreateCardOptions, CARD_PLACEHOLDER_TYPE } from '@quadrats/common/card';
 import { createRenderElement, createRenderElements } from '@quadrats/react';
-// import { removePreviousElement } from '@quadrats/react/utils';
+import { removePreviousElement } from '@quadrats/react/utils';
 import { defaultRenderCardElements, defaultRenderCardPlaceholderElement } from './defaultRenderCardElements';
 import {
   ReactCard,
@@ -14,14 +14,34 @@ export type CreateReactCardOptions = CreateCardOptions;
 export function createReactCard(options: CreateReactCardOptions): ReactCard {
   const core = createCard(options);
 
-  const { types } = core;
+  const { types, confirmModal } = core;
 
   return {
     ...core,
     createHandlers: (setNeedConfirmModal, locale) => ({
       onKeyDown(event, editor, next) {
         if (event.key === 'Backspace') {
-          console.log('setNeedConfirmModal', editor, setNeedConfirmModal, locale);
+          removePreviousElement({
+            event,
+            editor,
+            type: types.card,
+            confirmModal,
+            doConfirm: (remove) => {
+              if (setNeedConfirmModal) {
+                // TODO: i18n
+                console.log('locale', locale);
+                setNeedConfirmModal({
+                  title: '刪除卡片',
+                  content: '是否確認刪除此卡片？刪除後將立即移除，且此操作無法復原。',
+                  confirmText: '刪除卡片',
+                  onConfirm: () => {
+                    remove();
+                    setNeedConfirmModal(null);
+                  },
+                });
+              }
+            },
+          });
         }
 
         next();

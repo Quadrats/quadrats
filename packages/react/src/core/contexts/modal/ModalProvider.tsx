@@ -88,6 +88,7 @@ export const ModalProvider = ({ children, needConfirmModal, setNeedConfirmModal 
         isOpen={modalName === 'card-modal'}
         close={close}
         controller={cardModalConfig?.controller}
+        initialValue={cardModalConfig?.initialValue}
         onConfirm={({ values, imageItem, haveLink }) => {
           cardModalConfig?.onConfirm?.({
             values,

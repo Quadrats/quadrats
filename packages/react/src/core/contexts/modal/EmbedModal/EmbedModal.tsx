@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Textarea, Input, Modal } from '@quadrats/react/components';
 import { useLocale } from '@quadrats/react/configs';
 
@@ -15,6 +15,15 @@ export interface EmbedModalProps {
 export const EmbedModal = ({ isOpen, close, placeholder, confirmText, hint, type, onConfirm }: EmbedModalProps) => {
   const [value, setValue] = useState('');
   const locale = useLocale();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      textareaRef.current?.focus();
+      inputRef.current?.focus();
+    }
+  }, [isOpen]);
 
   return (
     <Modal
@@ -30,9 +39,16 @@ export const EmbedModal = ({ isOpen, close, placeholder, confirmText, hint, type
       }}
     >
       {type === 'textarea' ? (
-        <Textarea value={value} onChange={setValue} placeholder={placeholder} hint={hint} height={86} />
+        <Textarea
+          textareaRef={textareaRef}
+          value={value}
+          onChange={setValue}
+          placeholder={placeholder}
+          hint={hint}
+          height={86}
+        />
       ) : (
-        <Input value={value} onChange={setValue} placeholder={placeholder} hint={hint} />
+        <Input inputRef={inputRef} value={value} onChange={setValue} placeholder={placeholder} hint={hint} />
       )}
     </Modal>
   );

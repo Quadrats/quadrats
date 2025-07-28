@@ -15,6 +15,7 @@ export { BlockRight } from './block-right';
 export { Bold } from './bold';
 export { Card } from './card';
 export { Carousel } from './carousel';
+export { ChevronRight } from './chevron-right';
 export { Check } from './check';
 export { Cancel } from './cancel';
 export { Divider } from './divider';

@@ -1,6 +1,7 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Editor } from '@quadrats/core';
 import { Card, CardAlignment } from '@quadrats/common/card';
+import { usePreviousValue } from '@quadrats/react/utils';
 import {
   Textarea,
   Input,
@@ -25,6 +26,11 @@ export interface CardModalProps {
   isOpen: boolean;
   close: VoidFunction;
   controller?: Card<Editor>;
+  initialValue?: {
+    values: CardModalValues;
+    imageItem: ImageUploaderItem | null;
+    haveLink: boolean;
+  };
   onConfirm: ({
     values,
     imageItem,
@@ -55,7 +61,7 @@ const options: {
 ];
 
 // TODO: i18n
-export const CardModal = ({ isOpen, close, controller, onConfirm: onConfirmProps }: CardModalProps) => {
+export const CardModal = ({ isOpen, close, controller, initialValue, onConfirm: onConfirmProps }: CardModalProps) => {
   const { message } = useMessage();
   const [values, setValues] = useState<CardModalValues>({
     alignment: 'leftImageRightText',
@@ -69,6 +75,20 @@ export const CardModal = ({ isOpen, close, controller, onConfirm: onConfirmProps
   const [imageUploaderItem, setImageUploaderItem] = useState<ImageUploaderItem | null>(null);
   const [haveLink, setHaveLink] = useState<boolean>(true);
   const [errors, setErrors] = useState<{ field: string; message: string }[]>([]);
+  const uploading = useMemo(() => imageUploaderItem && imageUploaderItem.progress !== 100, [imageUploaderItem]);
+  const prevIsOpen = usePreviousValue(isOpen);
+
+  useEffect(() => {
+    if (!prevIsOpen && isOpen && initialValue) {
+      setValues({
+        ...initialValue.values,
+      });
+
+      setHaveLink(initialValue.haveLink);
+
+      setImageUploaderItem(initialValue.imageItem);
+    }
+  }, [initialValue, isOpen, prevIsOpen]);
 
   const onConfirm = useCallback(() => {
     const errorItems: { field: string; message: string }[] = [];
@@ -106,7 +126,7 @@ export const CardModal = ({ isOpen, close, controller, onConfirm: onConfirmProps
     if (errorItems.length > 0) {
       setErrors(errorItems);
     } else {
-      onConfirmProps({ values, imageItem: imageUploaderItem, haveLink });
+      onConfirmProps({ values, imageItem: values.alignment === 'noImage' ? null : imageUploaderItem, haveLink });
     }
   }, [imageUploaderItem, onConfirmProps, haveLink, values]);
 
@@ -117,6 +137,8 @@ export const CardModal = ({ isOpen, close, controller, onConfirm: onConfirmProps
       title="建立卡片"
       confirmText="建立卡片"
       mainAreaClassName="qdr-card-modal__main"
+      closable={!uploading}
+      maskClosable={!uploading}
       onClose={() => {
         close();
       }}
@@ -133,9 +155,13 @@ export const CardModal = ({ isOpen, close, controller, onConfirm: onConfirmProps
       <div className="qdr-card-modal__block">
         <p className="qdr-card-modal__block-title">基本設定</p>
         <div className="qdr-card-modal__block-content">
-          {values.alignment !== 'noImage' && (
+          {values.alignment !== 'noImage' && controller && (
             <ImageUploader
               label="圖片"
+              getBody={controller.getBody}
+              getHeaders={controller.getHeaders}
+              getUrl={controller.getUrl}
+              uploader={controller.uploader}
               imageUploaderItem={imageUploaderItem}
               setImageUploaderItem={setImageUploaderItem}
               width={240}

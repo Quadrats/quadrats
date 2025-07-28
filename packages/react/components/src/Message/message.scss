@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   max-width: 100%;
-  margin-top: var(--qdr-spacing-4);
+  margin-top: var(--qdr-spacing-6);
   padding: var(--qdr-spacing-4) var(--qdr-spacing-9) var(--qdr-spacing-4) var(--qdr-spacing-6);
   gap: var(--qdr-spacing-4);
   background-color: var(--qdr-surface);
@@ -15,6 +15,10 @@
   flex-shrink: 0;
   box-sizing: border-box;
   box-shadow: var(--qdr-shadow-s);
+
+  &:first-child {
+    margin-top: var(--qdr-spacing-7);
+  }
 
   &--success {
     .qdr-message__icon {

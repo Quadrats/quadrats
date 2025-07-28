@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react';
+import React, { Ref, useMemo } from 'react';
 import clsx from 'clsx';
 import BaseField, { BaseFieldProps } from '../BaseField';
 
 export interface TextareaProps extends Omit<BaseFieldProps, 'children'> {
   value?: string;
   onChange?: (value: string) => void;
+  textareaRef?: Ref<HTMLTextAreaElement>;
   placeholder?: string;
   height?: number;
   disabled?: boolean;
@@ -19,6 +20,7 @@ const Textarea = ({
   width,
   value = '',
   onChange,
+  textareaRef,
   placeholder,
   height,
   disabled,
@@ -34,6 +36,7 @@ const Textarea = ({
     <BaseField className={className} label={label} required={required} width={width} errorMessage={errorMessage}>
       <div className="qdr-textarea">
         <textarea
+          ref={textareaRef}
           style={{ height }}
           className={clsx('qdr-textarea__textarea', {
             'qdr-textarea__textarea--error': isError,
