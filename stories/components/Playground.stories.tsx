@@ -51,7 +51,11 @@ import {
   Descendant,
   ConfirmModalConfig,
 } from '@quadrats/react';
-import { createRenderParagraphElement, renderParagraphElementWithSymbol } from '@quadrats/react/paragraph';
+import {
+  createReactParagraph,
+  createRenderParagraphElement,
+  renderParagraphElementWithSymbol,
+} from '@quadrats/react/paragraph';
 import { createReactLineBreak, renderLineBreakElementWithSymbol } from '@quadrats/react/line-break';
 import { createReactBold } from '@quadrats/react/bold';
 import { createReactItalic } from '@quadrats/react/italic';
@@ -123,6 +127,7 @@ import { DividerToolbarIcon } from '@quadrats/react/divider/toolbar';
 import { EmbedToolbarIcon } from '@quadrats/react/embed/toolbar';
 import { FileUploaderToolbarIcon } from '@quadrats/react/file-uploader/toolbar';
 import { HeadingToolbarIcon } from '@quadrats/react/heading/toolbar';
+import { ParagraphToolbarIcon } from '@quadrats/react/paragraph/toolbar';
 import { LinkToolbarIcon, UnlinkToolbarIcon } from '@quadrats/react/link/toolbar';
 import { ListToolbarIcon } from '@quadrats/react/list/toolbar';
 import { FootnoteToolbarIcon } from '@quadrats/react/footnote/toolbar';
@@ -159,6 +164,7 @@ import { createJsxSerializer } from '@quadrats/react/jsx-serializer';
 import JSONPretty from 'react-json-pretty';
 
 // Default
+const paragraph = createReactParagraph();
 const lineBreak = createReactLineBreak();
 
 // Options
@@ -579,6 +585,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
 
       return (
         <>
+          <ParagraphToolbarIcon icon={ParagraphIcon} controller={paragraph} />
           {~withTitles.indexOf('h1') ? <HeadingToolbarIcon icon={Heading1Icon} controller={heading} level={1} /> : null}
           {~withTitles.indexOf('h2') ? <HeadingToolbarIcon icon={Heading2Icon} controller={heading} level={2} /> : null}
           {~withTitles.indexOf('h3') ? <HeadingToolbarIcon icon={Heading3Icon} controller={heading} level={3} /> : null}
@@ -629,6 +636,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
           ) : null}
           {withReadMore ? <ReadMoreToolbarIcon icon={ReadMoreIcon} controller={readMore} /> : null}
           <ToolbarGroupIcon icon={ParagraphIcon}>
+            <ParagraphToolbarIcon icon={ParagraphIcon} controller={paragraph} />
             <HeadingToolbarIcon icon={Heading1Icon} controller={heading} level={1} />
             <HeadingToolbarIcon icon={Heading2Icon} controller={heading} level={2} />
             <HeadingToolbarIcon icon={Heading3Icon} controller={heading} level={3} />
