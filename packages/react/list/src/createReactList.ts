@@ -11,12 +11,13 @@ export function createReactList(options: CreateReactListOptions = {}): ReactList
 
   return {
     ...core,
-    createRenderElement: (options = {}) => createRenderElements(
-      (['ol', 'ul', 'li'] as ListTypeKey[]).map(key => ({
-        type: core.types[key],
-        render: options[key] || defaultRenderListElements[key],
-      })),
-    ),
+    createRenderElement: (options = {}) =>
+      createRenderElements(
+        (['ol', 'ul', 'li'] as ListTypeKey[]).map((key) => ({
+          type: core.types[key],
+          render: options[key] || defaultRenderListElements[key],
+        })),
+      ),
     createHandlers: () => ({
       onKeyDown: (event, editor, next) => {
         if (event.key === 'Tab') {
@@ -34,7 +35,7 @@ export function createReactList(options: CreateReactListOptions = {}): ReactList
               return Element.isElement(ancestor) && (ancestor.type === 'ol' || ancestor.type === 'ul');
             }).length;
 
-            if (depth >= 4) {
+            if (depth >= core.labels) {
               return;
             }
 

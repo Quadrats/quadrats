@@ -1,12 +1,4 @@
-import {
-  Editor,
-  QuadratsElement,
-  Location,
-  Node,
-  NodeEntry,
-  Withable,
-  WithElementType,
-} from '@quadrats/core';
+import { Editor, QuadratsElement, Location, Node, NodeEntry, Withable, WithElementType } from '@quadrats/core';
 
 export type ListRootTypeKey = 'ol' | 'ul';
 export type ListItemTypeKey = 'li';
@@ -29,6 +21,7 @@ export interface List<T extends Editor = Editor> extends Withable {
    * An object which keys are `ul`, `ol`, `li` and values are the corresponding element types.
    */
   types: ListTypes;
+  labels: number;
   isListElement(node: Node): node is QuadratsElement;
   isListItemElement(node: Node): node is QuadratsElement;
   isSelectionInList(editor: T, listTypeKey: ListRootTypeKey): boolean;

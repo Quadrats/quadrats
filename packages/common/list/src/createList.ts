@@ -22,21 +22,20 @@ import { LIST_TYPES } from './constants';
 
 export interface CreateListOptions {
   types?: Partial<ListTypes>;
+  labels?: number;
 }
 
 export function createList(options: CreateListOptions = {}): List {
+  const labels = options.labels ?? 4;
   const types: ListTypes = { ...LIST_TYPES, ...options.types };
-  const isListElement: List['isListElement'] = (
-    node,
-  ): node is QuadratsElement => [types.ol, types.ul].includes((node as QuadratsElement).type as string);
+  const isListElement: List['isListElement'] = (node): node is QuadratsElement =>
+    [types.ol, types.ul].includes((node as QuadratsElement).type as string);
 
-  const isListItemElement: List['isListElement'] = (node): node is QuadratsElement => (
-    node as QuadratsElement).type === types.li;
+  const isListItemElement: List['isListElement'] = (node): node is QuadratsElement =>
+    (node as QuadratsElement).type === types.li;
 
-  const isSelectionInList: List['isSelectionInList'] = (
-    editor,
-    listTypeKey,
-  ) => isNodesTypeIn(editor, [types[listTypeKey]]);
+  const isSelectionInList: List['isSelectionInList'] = (editor, listTypeKey) =>
+    isNodesTypeIn(editor, [types[listTypeKey]]);
 
   const getAboveListAndItem: List['getAboveListAndItem'] = (editor, options = {}) => {
     const { at = editor.selection } = options;
@@ -203,6 +202,7 @@ export function createList(options: CreateListOptions = {}): List {
 
   return {
     types,
+    labels,
     isListElement,
     isListItemElement,
     isSelectionInList,
