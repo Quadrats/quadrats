@@ -1,4 +1,4 @@
-import { Editor, Transforms, Element, QuadratsElement, createParagraphElement } from '@quadrats/core';
+import { Editor, Transforms, Element, QuadratsElement, createParagraphElement, Node } from '@quadrats/core';
 import {
   ImageAccept,
   FileUploaderGetBody,
@@ -151,6 +151,40 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
     getUrl,
     uploader,
     with(editor) {
+      const { normalizeNode } = editor;
+
+      editor.normalizeNode = (entry) => {
+        const [node, path] = entry;
+
+        if (Element.isElement(node)) {
+          const type = (node as QuadratsElement).type;
+
+          if (type === types.carousel) {
+            for (const [child, childPath] of Node.children(editor, path)) {
+              if (
+                Element.isElement(child) &&
+                (child as QuadratsElement).type !== types.carousel_caption &&
+                (child as QuadratsElement).type !== types.carousel_images
+              ) {
+                Transforms.removeNodes(editor, { at: childPath });
+
+                return;
+              }
+            }
+          } else if (type === types.carousel_caption || type === types.carousel_images) {
+            for (const [child, childPath] of Node.children(editor, path)) {
+              if (Element.isElement(child)) {
+                Transforms.removeNodes(editor, { at: childPath });
+
+                return;
+              }
+            }
+          }
+        }
+
+        normalizeNode(entry);
+      };
+
       return editor;
     },
   };
