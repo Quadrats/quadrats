@@ -1,5 +1,5 @@
 import React from 'react';
-import { Transforms, Editor } from '@quadrats/core';
+import { Transforms, Element, Editor, QuadratsElement } from '@quadrats/core';
 import { ImageFigureElement } from '@quadrats/common/image';
 import { AlignLeft, AlignCenter, AlignRight, Trash } from '@quadrats/icons';
 import { ReactEditor, useSlateStatic } from '@quadrats/react';
@@ -18,9 +18,15 @@ function Image(props: RenderImageElementProps) {
 
   const editor = useSlateStatic();
   const path = ReactEditor.findPath(editor, element);
-  const parentEntry = Editor.parent(editor, path);
-  const parentNode = parentEntry[0] as ImageFigureElement;
-  const parentPath = parentEntry[1];
+
+  const parentEntry = Editor.above(editor, {
+    at: path,
+    match: (node) => Element.isElement(node) && (node as QuadratsElement).type === element.figureType,
+    mode: 'lowest',
+  });
+
+  const parentNode = parentEntry?.[0] as ImageFigureElement;
+  const parentPath = parentEntry?.[1];
   // const { focusedAndSelected, imageRef, onResizeStart } = useImageResizer(element, resizeImage);
 
   return (

@@ -33,8 +33,9 @@ function InlineToolbar({ className, leftIcons, rightIcons }: InlineToolbarProps)
               icon={icon.icon}
               width={24}
               height={24}
-              onClick={() => {
+              onClick={(e) => {
                 if (!icon.disabled) {
+                  e.preventDefault();
                   icon.onClick();
                 }
               }}
@@ -52,8 +53,9 @@ function InlineToolbar({ className, leftIcons, rightIcons }: InlineToolbarProps)
           icon={icon.icon}
           width={24}
           height={24}
-          onClick={() => {
+          onClick={(e) => {
             if (!icon.disabled) {
+              e.preventDefault();
               icon.onClick();
             }
           }}
