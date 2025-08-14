@@ -73,17 +73,17 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
   const uploadFiles = useCallback(
     async (files: File[]) => {
       if (files && controller) {
-        const items: CarouselFieldArrayItem[] = [];
+        const currentItems: CarouselFieldArrayItem[] = [];
 
         for (const file of files) {
           const base64 = await readFileAsBase64(file);
 
-          items.push({ file, url: '', caption: '', preview: base64, progress: 0 });
+          currentItems.push({ file, url: '', caption: '', preview: base64, progress: 0 });
         }
 
-        setItems((prev) => [...prev, ...items]);
+        setItems((prev) => [...prev, ...currentItems]);
 
-        for (const item of items) {
+        for (const item of currentItems) {
           const onProgress = (p: number) => {
             setItems((prev) => prev.map((u) => (u.file === item.file ? { ...u, progress: p } : u)));
           };
@@ -98,7 +98,15 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
               onProgress,
             });
 
-            setItems((prev) => prev.map((u) => (u.file === item.file ? { ...u, preview: url, url } : u)));
+            setItems((prev) => {
+              if (prev.filter((p) => !!p.url).length >= controller.maxLength) {
+                message({ type: 'error', content: '超過數量上限，剩下圖片無法上傳' });
+
+                return prev.filter((p) => !!p.url);
+              }
+
+              return prev.map((u) => (u.file === item.file ? { ...u, preview: url, url } : u));
+            });
           } catch (error) {
             setItems((prev) =>
               prev.map((u) => (u.file === item.file ? { ...u, preview: '', url: '', isError: true } : u)),
@@ -107,7 +115,7 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
         }
       }
     },
-    [controller],
+    [controller, message],
   );
 
   const change = useCallback((index: number, image: Omit<CarouselFieldArrayItem, 'progress' | 'preview' | 'file'>) => {
