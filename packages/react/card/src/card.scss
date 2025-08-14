@@ -191,6 +191,7 @@
     letter-spacing: var(--qdr-typography-article-h5-letter-spacing);
     font-weight: var(--qdr-typography-article-h5-font-weight);
     margin: 0;
+    word-break: break-word;
   }
 
   &__description {
@@ -200,6 +201,7 @@
     letter-spacing: var(--qdr-typography-article-body2-letter-spacing);
     font-weight: var(--qdr-typography-article-body2-font-weight);
     margin: var(--qdr-spacing-4) 0 0;
+    word-break: break-word;
   }
 
   &__remark {
