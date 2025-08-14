@@ -13,18 +13,11 @@ import {
   Range,
   Transforms,
 } from '@quadrats/core';
-import {
-  Image,
-  ImageCaptionElement,
-  ImageElement,
-  ImageFigureElement,
-  ImageSizeSteps,
-  ImageTypes,
-} from './typings';
+import { Image, ImageCaptionElement, ImageElement, ImageFigureElement, ImageSizeSteps, ImageTypes } from './typings';
 import { IMAGE_TYPES } from './constants';
 
 function resolveSizeSteps(steps: ImageSizeSteps): ImageSizeSteps {
-  let sortedSteps = steps.filter(step => step > 0 && step < 100).sort();
+  let sortedSteps = steps.filter((step) => step > 0 && step < 100).sort();
 
   if (!sortedSteps.includes(100)) {
     sortedSteps = [...sortedSteps, 100];
@@ -53,27 +46,24 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
     options?: GetAboveByTypesOptions,
   ) => getAboveByTypes<ImageFigureElement>(editor, [types.figure], options);
 
-  const getAboveImageCaption: Image<Hosting>['getAboveImageCaption'] = (
-    editor,
-    options,
-  ) => getAboveByTypes(editor, [types.caption], options);
+  const getAboveImageCaption: Image<Hosting>['getAboveImageCaption'] = (editor, options) =>
+    getAboveByTypes(editor, [types.caption], options);
 
-  const isNodesInImage = (
-    editor: Editor,
-    options?: IsNodesTypeInOptions,
-  ) => isNodesTypeIn(editor, [types.image], options);
+  const isNodesInImage = (editor: Editor, options?: IsNodesTypeInOptions) =>
+    isNodesTypeIn(editor, [types.image], options);
 
-  const isSelectionInImage: Image<Hosting>['isSelectionInImage'] = editor => isNodesInImage(editor);
+  const isSelectionInImage: Image<Hosting>['isSelectionInImage'] = (editor) => isNodesInImage(editor);
 
-  const isSelectionInImageCaption: Image<Hosting>['isSelectionInImageCaption']
-    = editor => isNodesTypeIn(editor, [types.caption]);
+  const isSelectionInImageCaption: Image<Hosting>['isSelectionInImageCaption'] = (editor) =>
+    isNodesTypeIn(editor, [types.caption]);
 
-  const isCollapsedOnImage: Image<Hosting>['isCollapsedOnImage']
-    = editor => !!editor.selection && Range.isCollapsed(editor.selection) && isSelectionInImage(editor);
+  const isCollapsedOnImage: Image<Hosting>['isCollapsedOnImage'] = (editor) =>
+    !!editor.selection && Range.isCollapsed(editor.selection) && isSelectionInImage(editor);
 
   const createImageElement: Image<Hosting>['createImageElement'] = (src, hosting) => {
     const imageElement: ImageElement = {
       type: types.image,
+      figureType: types.figure,
       src,
       hosting,
       children: [{ text: '' }],
@@ -109,7 +99,7 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
       return percentage;
     }
 
-    const lowerIndex = sizeSteps.findIndex(step => step >= percentage) - 1;
+    const lowerIndex = sizeSteps.findIndex((step) => step >= percentage) - 1;
     const upperIndex = lowerIndex + 1;
 
     if (lowerIndex < 0) {
@@ -160,9 +150,7 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
     insertImage,
     resizeImage,
     with(editor) {
-      const {
-        deleteBackward, deleteForward, insertBreak, isVoid, normalizeNode,
-      } = editor;
+      const { deleteBackward, deleteForward, insertBreak, isVoid, normalizeNode } = editor;
 
       const deleteCollapsed = (origin: VoidFunction, isEdgeMethodName: 'isStart' | 'isEnd') => {
         const { selection } = editor;
@@ -173,7 +161,7 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
         if (selection && Range.isCollapsed(selection)) {
           const [, captionPath] = getAboveImageCaption(editor) || [];
 
-          if ((captionPath && Editor[isEdgeMethodName](editor, selection.focus, captionPath))) {
+          if (captionPath && Editor[isEdgeMethodName](editor, selection.focus, captionPath)) {
             return;
           }
         }
@@ -215,7 +203,7 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
         insertBreak();
       };
 
-      editor.isVoid = element => (element as QuadratsElement).type === types.image || isVoid(element);
+      editor.isVoid = (element) => (element as QuadratsElement).type === types.image || isVoid(element);
 
       editor.normalizeNode = (entry) => {
         const [node, path] = entry;
@@ -228,12 +216,12 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
               return;
             }
           } else if ((node as QuadratsElement).type === types.image) {
-            const { src, width, hosting } = node as (ImageElement & ImageFigureElement);
+            const { src, width, hosting } = node as ImageElement & ImageFigureElement;
 
             if (
-              typeof src !== 'string'
-              || !(width == null || typeof width === 'number')
-              || !(hosting == null || typeof hosting === 'string')
+              typeof src !== 'string' ||
+              !(width == null || typeof width === 'number') ||
+              !(hosting == null || typeof hosting === 'string')
             ) {
               const [, figurePath] = getAboveImageFigure(editor, { at: path }) || [];
 
