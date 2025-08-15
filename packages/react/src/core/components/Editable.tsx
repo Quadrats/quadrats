@@ -73,6 +73,7 @@ function Editable(props: EditableProps) {
         const match = Editor.above(editor, {
           at: path,
           match: (n) => Element.isElement(n),
+          mode: 'lowest',
         });
 
         if (match) {

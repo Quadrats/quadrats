@@ -41,7 +41,8 @@
     gap: var(--qdr-spacing-4);
   }
 
-  &__title, &__content {
+  &__title,
+  &__content {
     position: relative;
     align-self: stretch;
     color: var(--qdr-text-primary);
@@ -57,6 +58,7 @@
     &__placeholder {
       position: absolute;
       left: 0;
+      top: 0;
       color: var(--qdr-text-secondary);
       pointer-events: none;
     }
@@ -71,6 +73,7 @@
     &__placeholder {
       position: absolute;
       left: 0;
+      top: 0;
       color: var(--qdr-text-secondary);
       pointer-events: none;
     }
