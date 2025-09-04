@@ -45,6 +45,7 @@ export { Spotify } from './spotify';
 export { ReadMore } from './read-more';
 export { Strikethrough } from './strikethrough';
 export { Success } from './success';
+export { Table } from './table';
 export { Edit } from './edit';
 export { Trash } from './trash';
 export { Twitter } from './twitter';
