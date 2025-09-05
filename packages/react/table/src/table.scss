@@ -1,0 +1,88 @@
+.qdr-table {
+  display: flex;
+  flex-direction: column;
+  gap: var(--qdr-spacing-4);
+  margin: var(--qdr-spacing-11) 0;
+  overflow: hidden;
+
+  &__title {
+    position: relative;
+    margin: 0;
+    font-size: var(--qdr-typography-article-h6-font-size);
+    line-height: var(--qdr-typography-article-h6-line-height);
+    letter-spacing: var(--qdr-typography-article-h6-letter-spacing);
+    font-weight: var(--qdr-typography-article-h6-font-weight);
+    color: var(--qdr-text-primary);
+    background-color: var(--qdr-surface-secondary);
+
+    &__placeholder {
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--qdr-text-secondary);
+      pointer-events: none;
+    }
+  }
+
+  &__main {
+    width: 100%;
+    margin: 0;
+    border: 1px solid var(--qdr-border);
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  &__header {
+    background-color: var(--qdr-surface-tertiary);
+  }
+
+  &__header-row {
+    border-bottom: 1px solid var(--qdr-border);
+  }
+
+  &__body {
+    background-color: var(--qdr-surface-primary);
+  }
+
+  &__row {
+    border-bottom: 1px solid var(--qdr-divider);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background-color: var(--qdr-surface-secondary);
+    }
+  }
+
+  &__cell {
+    position: relative;
+    padding: var(--qdr-spacing-3) var(--qdr-spacing-4);
+    font-size: var(--qdr-typography-article-body1-font-size);
+    line-height: var(--qdr-typography-article-body1-line-height);
+    letter-spacing: var(--qdr-typography-article-body1-letter-spacing);
+    font-weight: var(--qdr-typography-article-body1-font-weight);
+    color: var(--qdr-text-primary);
+    border-right: 1px solid var(--qdr-divider);
+    vertical-align: top;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    &--header {
+      font-weight: var(--qdr-typography-article-h6-font-weight);
+      color: var(--qdr-text-primary);
+      background-color: var(--qdr-surface-tertiary);
+    }
+
+    &__placeholder {
+      position: absolute;
+      left: var(--qdr-spacing-4);
+      top: var(--qdr-spacing-3);
+      color: var(--qdr-text-secondary);
+      pointer-events: none;
+    }
+  }
+}

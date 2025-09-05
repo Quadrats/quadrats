@@ -1,0 +1,15 @@
+{
+  "name": "@quadrats/react/table",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "quadratsConfig": {
+    "deps": [
+      "__ROOT__"
+    ],
+    "styles": {
+      "table": "table"
+    }
+  }
+}

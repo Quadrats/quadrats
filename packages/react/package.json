@@ -42,6 +42,7 @@
     "@quadrats/locales": "^0.7.0",
     "@quadrats/theme": "^0.7.4",
     "@quadrats/utils": "^0.7.2",
+    "@tanstack/react-table": "^8.21.3",
     "@types/is-hotkey": "^0.1.9",
     "@types/react-transition-group": "^4.4.9",
     "clsx": "^2.1.1",
