@@ -1,6 +1,6 @@
 import { Editor, QuadratsElement, GetNodesOptions, Node, NodeEntry, Withable, WithElementType } from '@quadrats/core';
 
-export interface ParagraphElement extends QuadratsElement, WithElementType {
+export interface ParagraphElement extends QuadratsElement {
   align?: 'left' | 'center' | 'right';
 }
 
