@@ -9,5 +9,5 @@ export type QuadratsElement = {
 };
 
 export type QuadratsText = {
-  text: string
+  text: string;
 };
