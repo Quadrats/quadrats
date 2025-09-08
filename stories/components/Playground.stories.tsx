@@ -35,6 +35,9 @@ import {
   Dance as DanceIcon,
   PodcastApple as PodcastAppleIcon,
   Spotify as SpotifyIcon,
+  AlignLeft as AlignLeftIcon,
+  AlignCenter as AlignCenterIcon,
+  AlignRight as AlignRightIcon,
 } from '@quadrats/icons';
 import { ConfigsProvider } from '@quadrats/react/configs';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -62,6 +65,7 @@ import { createReactItalic } from '@quadrats/react/italic';
 import { createReactUnderline } from '@quadrats/react/underline';
 import { createReactStrikethrough } from '@quadrats/react/strikethrough';
 import { createReactHighlight } from '@quadrats/react/highlight';
+import { createReactAlign } from '@quadrats/react/align';
 import { createReactAccordion } from '@quadrats/react/accordion';
 import { createReactCarousel } from '@quadrats/react/carousel';
 import { createReactCard } from '@quadrats/react/card';
@@ -119,6 +123,7 @@ import { createReactInputBlock } from '@quadrats/react/input-block';
 
 import { Toolbar, ToolbarGroupIcon, TOOLBAR_DIVIDER } from '@quadrats/react/toolbar';
 import { ToggleMarkToolbarIcon } from '@quadrats/react/toggle-mark/toolbar';
+import { AlignToolbarIcon } from '@quadrats/react/align/toolbar';
 import { AccordionToolbarIcon } from '@quadrats/react/accordion/toolbar';
 import { CarouselToolbarIcon } from '@quadrats/react/carousel/toolbar';
 import { CardToolbarIcon } from '@quadrats/react/card/toolbar';
@@ -204,6 +209,7 @@ const italic = createReactItalic();
 const underline = createReactUnderline();
 const strikethrough = createReactStrikethrough();
 const highlight = createReactHighlight();
+const align = createReactAlign();
 const sheetMusic = createReactHighlight('sheet-music');
 const drama = createReactHighlight('drama');
 const dance = createReactHighlight('dance');
@@ -229,6 +235,7 @@ export interface PlaygroundEditorProps {
   withLists: ('ol' | 'ul')[];
   withDivider: boolean;
   withEmbeds: ('youtube' | 'vimeo' | 'instagram' | 'facebook' | 'twitter' | 'podcastApple' | 'spotify')[];
+  withAlign: boolean;
   withBold: boolean;
   withItalic: boolean;
   withUnderline: boolean;
@@ -253,6 +260,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withLists,
     withDivider,
     withEmbeds,
+    withAlign,
     withBold,
     withItalic,
     withUnderline,
@@ -384,6 +392,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     if (withLists.length) handlers.push(list.createHandlers());
     if (withBold) handlers.push(bold.createHandlers());
     if (withItalic) handlers.push(italic.createHandlers());
+    if (withAlign) handlers.push(align.createHandlers());
     if (withUnderline) handlers.push(underline.createHandlers());
     if (withStrikethrough) handlers.push(strikethrough.createHandlers());
     if (withHighlight) handlers.push(highlight.createHandlers());
@@ -402,6 +411,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withCard,
     withBlockquote,
     withLists,
+    withAlign,
     withBold,
     withItalic,
     withUnderline,
@@ -635,6 +645,13 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
             <EmbedToolbarIcon icon={SpotifyIcon} controller={embed} provider="spotify" />
           ) : null}
           {withReadMore ? <ReadMoreToolbarIcon icon={ReadMoreIcon} controller={readMore} /> : null}
+          {withAlign ? (
+            <ToolbarGroupIcon icon={AlignLeftIcon}>
+              <AlignToolbarIcon icon={AlignLeftIcon} controller={align} value="left" />
+              <AlignToolbarIcon icon={AlignCenterIcon} controller={align} value="center" />
+              <AlignToolbarIcon icon={AlignRightIcon} controller={align} value="right" />
+            </ToolbarGroupIcon>
+          ) : null}
           <ToolbarGroupIcon icon={ParagraphIcon}>
             <ParagraphToolbarIcon icon={ParagraphIcon} controller={paragraph} />
             <HeadingToolbarIcon icon={Heading1Icon} controller={heading} level={1} />
@@ -659,6 +676,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       withEmbeds,
       embed,
       withReadMore,
+      withAlign,
       withBold,
       withItalic,
       withUnderline,
@@ -839,6 +857,7 @@ export const Editor: Story = {
     locale: 'Chinese',
     theme: 'Default',
     withEmbeds: ['youtube', 'vimeo'],
+    withAlign: true,
     withBold: true,
     withItalic: true,
     withUnderline: false,
@@ -885,6 +904,10 @@ export const Editor: Story = {
       name: 'Embed',
       options: ['youtube', 'vimeo', 'instagram', 'facebook', 'twitter', 'podcastApple', 'spotify'],
       control: { type: 'inline-check' },
+    },
+    withAlign: {
+      name: 'Text Align',
+      control: { type: 'boolean' },
     },
     withBold: {
       name: 'Bold',
