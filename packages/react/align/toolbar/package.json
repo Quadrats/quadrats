@@ -1,0 +1,11 @@
+{
+  "name": "@quadrats/react/align/toolbar",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "__ROOT__",
+      "toolbar",
+      "align"
+    ]
+  }
+}
