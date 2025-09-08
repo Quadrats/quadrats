@@ -1,11 +1,10 @@
-import { Editor, Transforms, Element, PARAGRAPH_TYPE } from '@quadrats/core';
-import { ALIGN_TYPE } from './constants';
-import { AlignValue } from './typings';
+import { Editor, Transforms, Element, PARAGRAPH_TYPE, QuadratsElement } from '@quadrats/core';
 import { ParagraphElement } from '@quadrats/common/paragraph';
 import { HEADING_TYPE, HeadingElement } from '@quadrats/common/heading';
-import { QuadratsReactEditor } from '@quadrats/react';
+import { ALIGN_TYPE } from './constants';
+import { AlignValue } from './typings';
 
-export interface Align<E extends Editor = QuadratsReactEditor> {
+export interface Align<E extends Editor = Editor> {
   type: string;
   isAlignActive: (editor: E, value: AlignValue) => boolean;
   setAlign: (editor: E, value: AlignValue) => void;
@@ -25,7 +24,12 @@ export function createAlign(): Align {
       if (!selection) return false;
 
       const [match] = Editor.nodes(editor, {
-        match: (n) => !!(Element.isElement(n) && n.type && ALIGNABLE_TYPES.includes(n.type)),
+        match: (n) =>
+          !!(
+            Element.isElement(n) &&
+            (n as QuadratsElement).type &&
+            ALIGNABLE_TYPES.includes((n as QuadratsElement).type)
+          ),
       });
 
       if (!match) return false;
@@ -36,12 +40,22 @@ export function createAlign(): Align {
     },
     setAlign: (editor, value) => {
       Transforms.setNodes(editor, { [type]: value } as ParagraphElement | HeadingElement, {
-        match: (n) => !!(Element.isElement(n) && n.type && ALIGNABLE_TYPES.includes(n.type)),
+        match: (n) =>
+          !!(
+            Element.isElement(n) &&
+            (n as QuadratsElement).type &&
+            ALIGNABLE_TYPES.includes((n as QuadratsElement).type)
+          ),
       });
     },
     removeAlign: (editor) => {
       Transforms.unsetNodes(editor, [type], {
-        match: (n) => !!(Element.isElement(n) && n.type && ALIGNABLE_TYPES.includes(n.type)),
+        match: (n) =>
+          !!(
+            Element.isElement(n) &&
+            (n as QuadratsElement).type &&
+            ALIGNABLE_TYPES.includes((n as QuadratsElement).type)
+          ),
       });
     },
   };
