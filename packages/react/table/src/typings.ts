@@ -12,6 +12,7 @@ import {
 } from '@quadrats/common/table';
 import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps } from '@quadrats/react';
 import { Table as TanStackTable, Row, Cell, ColumnDef } from '@tanstack/react-table';
+import { Dispatch, SetStateAction } from 'react';
 
 export type TableRowData = {
   [key: string]: any;
@@ -54,6 +55,9 @@ export type TableContextType = {
   // Maximum limits status
   isReachMaximumColumns: boolean;
   isReachMaximumRows: boolean;
+  // Selection state
+  tableSelectedOn: 'table' | 'header' | 'row' | 'column' | undefined;
+  setTableSelectedOn: Dispatch<SetStateAction<TableContextType['tableSelectedOn']>>;
   // TanStack Table utilities
   getRowById: (rowId: string) => Row<TableRowData> | undefined;
   getCellById: (rowId: string, columnId: string) => Cell<TableRowData, any> | undefined;

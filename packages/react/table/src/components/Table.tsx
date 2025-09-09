@@ -13,6 +13,9 @@ import {
   TABLE_ROW_TYPE,
 } from '@quadrats/common/table';
 import { useTableActions } from '../hooks/useTableActions';
+import { Icon } from '@quadrats/react/components';
+import { Drag } from '@quadrats/icons';
+import { useTableStates } from '../hooks/useTableStates';
 
 const columnHelper = createColumnHelper<TableRowData>();
 
@@ -26,6 +29,7 @@ function Table({
   element: RenderTableElementProps['element'];
 }) {
   const { addColumn, addRow, addColumnAndRow } = useTableActions(element);
+  const { tableSelectedOn, setTableSelectedOn } = useTableStates();
 
   const { tableData, columnCount, rowCount, slateNodeMap } = useMemo(() => {
     const childElements = element.children.filter((child) => Element.isElement(child));
@@ -216,6 +220,8 @@ function Table({
       addColumnAndRow,
       isReachMaximumColumns,
       isReachMaximumRows,
+      tableSelectedOn,
+      setTableSelectedOn,
     }),
     [
       table,
@@ -235,6 +241,8 @@ function Table({
       addColumnAndRow,
       isReachMaximumColumns,
       isReachMaximumRows,
+      tableSelectedOn,
+      setTableSelectedOn,
     ],
   );
 
@@ -242,6 +250,14 @@ function Table({
     <TableContext.Provider value={contextValue}>
       <div {...attributes} className="qdr-table">
         {children}
+        <button
+          type="button"
+          onClick={() => setTableSelectedOn((prev) => (prev === 'table' ? undefined : 'table'))}
+          className="qdr-table__selection"
+          title={tableSelectedOn === 'table' ? 'Deselect Table' : 'Select Table'}
+        >
+          <Icon icon={Drag} width={20} height={20} />
+        </button>
       </div>
     </TableContext.Provider>
   );

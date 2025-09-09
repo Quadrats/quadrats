@@ -1,8 +1,11 @@
 import React from 'react';
-import { RenderElementProps } from '@quadrats/react';
+import clsx from 'clsx';
+import { ReactEditor, RenderElementProps, useModal, useSlateStatic } from '@quadrats/react';
 import { Icon } from '@quadrats/react/components';
-import { Plus } from '@quadrats/icons';
+import { Plus, Trash } from '@quadrats/icons';
 import { useTable } from '../hooks/useTable';
+import { InlineToolbar } from '@quadrats/react/toolbar';
+import { Transforms } from 'slate';
 
 function TableMain(props: {
   attributes?: RenderElementProps['attributes'];
@@ -11,10 +14,43 @@ function TableMain(props: {
 }) {
   const { attributes, children } = props;
 
-  const { addColumn, addRow, addColumnAndRow, isReachMaximumColumns, isReachMaximumRows } = useTable();
+  const { setConfirmModalConfig } = useModal();
+  const editor = useSlateStatic();
+  const {
+    addColumn,
+    addRow,
+    addColumnAndRow,
+    isReachMaximumColumns,
+    isReachMaximumRows,
+    tableSelectedOn,
+    tableElement,
+  } = useTable();
+
+  const tablePath = ReactEditor.findPath(editor, tableElement);
 
   return (
-    <div className="qdr-table__mainWrapper">
+    <div
+      className={clsx('qdr-table__mainWrapper', { 'qdr-table__mainWrapper--selected': tableSelectedOn === 'table' })}
+    >
+      <InlineToolbar
+        className="qdr-table__inline-table-toolbar"
+        leftIcons={[]}
+        rightIcons={[
+          {
+            icon: Trash,
+            onClick: () => {
+              setConfirmModalConfig({
+                title: '刪除表格',
+                content: '是否確認刪除此表格？刪除後將立即移除，且此操作無法復原。',
+                confirmText: '刪除表格',
+                onConfirm: () => {
+                  Transforms.removeNodes(editor, { at: tablePath });
+                },
+              });
+            },
+          },
+        ]}
+      />
       <table {...attributes} className="qdr-table__main">
         {children}
       </table>
