@@ -8,6 +8,7 @@ import {
   TableHeaderTypeKey,
   TableRowTypeKey,
   TableCellTypeKey,
+  TableBodyTypeKey,
 } from '@quadrats/common/table';
 import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps } from '@quadrats/react';
 import { Table as TanStackTable, Row, Cell, ColumnDef } from '@tanstack/react-table';
@@ -46,6 +47,13 @@ export type TableContextType = {
   // Data manipulation functions
   updateCellData: (rowIndex: number, columnId: string, value: any) => void;
   getCellData: (rowIndex: number, columnId: string) => any;
+  // Table structure manipulation
+  addColumn: VoidFunction;
+  addRow: VoidFunction;
+  addColumnAndRow: VoidFunction;
+  // Maximum limits status
+  isReachMaximumColumns: boolean;
+  isReachMaximumRows: boolean;
   // TanStack Table utilities
   getRowById: (rowId: string) => Row<TableRowData> | undefined;
   getCellById: (rowId: string, columnId: string) => Cell<TableRowData, any> | undefined;
@@ -86,6 +94,14 @@ export type TableRenderElements = Record<
     }) => JSX.Element | null | undefined
   > &
   Record<
+    TableBodyTypeKey,
+    (props: {
+      attributes?: RenderElementProps['attributes'];
+      children: RenderElementProps['children'];
+      element: RenderElementProps['element'];
+    }) => JSX.Element | null | undefined
+  > &
+  Record<
     TableRowTypeKey,
     (props: {
       attributes?: RenderElementProps['attributes'];
@@ -108,6 +124,7 @@ export type ReactTableCreateRenderElementOptions = {
     | TableTitleTypeKey
     | TableMainTypeKey
     | TableHeaderTypeKey
+    | TableBodyTypeKey
     | TableRowTypeKey
     | TableCellTypeKey]?: TableRenderElements[K];
 };

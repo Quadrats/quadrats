@@ -3,7 +3,16 @@ import { createColumnHelper, getCoreRowModel, useReactTable } from '@tanstack/re
 import { RenderElementProps } from '@quadrats/react';
 import { Element, Node } from '@quadrats/core';
 import { TableContext } from '../contexts/TableContext';
-import { RenderTableElementProps, TableRowData, CellPosition, RowPosition } from '../typings';
+import { RenderTableElementProps, TableRowData, TableContextType } from '../typings';
+import {
+  TABLE_BODY_TYPE,
+  TABLE_HEADER_TYPE,
+  TABLE_MAIN_TYPE,
+  TABLE_MAX_COLUMNS,
+  TABLE_MAX_ROWS,
+  TABLE_ROW_TYPE,
+} from '@quadrats/common/table';
+import { useTableActions } from '../hooks/useTableActions';
 
 const columnHelper = createColumnHelper<TableRowData>();
 
@@ -16,33 +25,31 @@ function Table({
   children: RenderElementProps['children'];
   element: RenderTableElementProps['element'];
 }) {
-  // Extract and process table data from Slate element structure
+  const { addColumn, addRow, addColumnAndRow } = useTableActions(element);
+
   const { tableData, columnCount, rowCount, slateNodeMap } = useMemo(() => {
     const childElements = element.children.filter((child) => Element.isElement(child));
 
-    // Find table_main element which contains the actual table structure
-    const tableMainElement = childElements.find((child) => (child as any).type?.includes('table_main'));
+    const tableMainElement = childElements.find((child) => child.type.includes(TABLE_MAIN_TYPE));
 
     if (!tableMainElement) {
       return { tableData: [], columnCount: 0, rowCount: 0, slateNodeMap: new Map() };
     }
 
-    const tableMainChildren = (tableMainElement as any).children.filter((child: any) => Element.isElement(child));
+    const tableMainChildren = tableMainElement.children.filter((child) => Element.isElement(child));
+    const headerElement = tableMainChildren.find((child) => child.type.includes(TABLE_HEADER_TYPE));
+    const bodyElement = tableMainChildren.find((child) => child.type.includes(TABLE_BODY_TYPE));
+    const rowElements = bodyElement
+      ? bodyElement.children.filter((child) => Element.isElement(child) && child.type.includes(TABLE_ROW_TYPE))
+      : [];
 
-    // Find header and rows within table_main
-    const headerElement = tableMainChildren.find((child: any) => child.type?.includes('table_header'));
-    const rowElements = tableMainChildren.filter((child: any) => child.type?.includes('table_row'));
-
-    const cols = headerElement ? (headerElement as any).children.length : 0;
+    const cols = rowElements.length > 0 && Element.isElement(rowElements[0]) ? rowElements[0].children.length : 0;
     const rows = rowElements.length + (headerElement ? 1 : 0);
 
-    // Create mapping between Slate nodes and table positions
     const nodeMap = new Map<Node, { rowIndex: number; columnIndex: number; isHeader: boolean }>();
 
-    // Create table data structure that syncs with Slate
     const data: TableRowData[] = [];
 
-    // Add header row if exists
     if (headerElement) {
       const headerRow: TableRowData = {
         _rowIndex: 0,
@@ -51,12 +58,11 @@ function Table({
         _rowId: 'header_0',
       };
 
-      (headerElement as any).children.forEach((cell: any, index: number) => {
+      headerElement.children.forEach((cell: Node, index: number) => {
         const columnId = `col_${index}`;
 
         headerRow[columnId] = cell;
 
-        // Map cell node to its position
         nodeMap.set(cell, {
           rowIndex: 0,
           columnIndex: index,
@@ -67,8 +73,9 @@ function Table({
       data.push(headerRow);
     }
 
-    // Add body rows
-    rowElements.forEach((rowElement: any, rowIndex: number) => {
+    rowElements.forEach((rowElement, rowIndex) => {
+      if (!Element.isElement(rowElement)) return;
+
       const actualRowIndex = rowIndex + (headerElement ? 1 : 0);
       const row: TableRowData = {
         _rowIndex: actualRowIndex,
@@ -77,12 +84,11 @@ function Table({
         _rowId: `row_${actualRowIndex}`,
       };
 
-      (rowElement as any).children.forEach((cell: any, cellIndex: number) => {
+      rowElement.children.forEach((cell: Node, cellIndex: number) => {
         const columnId = `col_${cellIndex}`;
 
         row[columnId] = cell;
 
-        // Map cell node to its position
         nodeMap.set(cell, {
           rowIndex: actualRowIndex,
           columnIndex: cellIndex,
@@ -101,7 +107,6 @@ function Table({
     };
   }, [element]);
 
-  // Create columns for TanStack Table
   const columns = useMemo(() => {
     return Array.from({ length: columnCount }, (_, index) =>
       columnHelper.accessor(`col_${index}`, {
@@ -112,7 +117,6 @@ function Table({
     );
   }, [columnCount]);
 
-  // Create TanStack Table instance
   const table = useReactTable({
     data: tableData,
     columns,
@@ -120,9 +124,8 @@ function Table({
     getRowId: (row) => row._rowId,
   });
 
-  // Helper functions for context
-  const getCellPosition = useCallback(
-    (targetNode: Node): CellPosition | null => {
+  const getCellPosition: TableContextType['getCellPosition'] = useCallback(
+    (targetNode) => {
       const nodeInfo = slateNodeMap.get(targetNode);
 
       if (!nodeInfo) return null;
@@ -138,9 +141,8 @@ function Table({
     [slateNodeMap],
   );
 
-  const getRowPosition = useCallback(
-    (targetNode: Node): RowPosition | null => {
-      // Try to find if the node is a row itself
+  const getRowPosition: TableContextType['getRowPosition'] = useCallback(
+    (targetNode) => {
       for (const [node, info] of slateNodeMap.entries()) {
         if (node === targetNode) {
           return {
@@ -156,14 +158,13 @@ function Table({
     [slateNodeMap],
   );
 
-  const updateCellData = useCallback((rowIndex: number, columnId: string, value: any) => {
+  const updateCellData: TableContextType['updateCellData'] = useCallback((rowIndex, columnId, value) => {
     // This would need to update the Slate editor
-    // For now, we'll just log the intention
     console.log('Update cell data:', { rowIndex, columnId, value });
   }, []);
 
-  const getCellData = useCallback(
-    (rowIndex: number, columnId: string) => {
+  const getCellData: TableContextType['getCellData'] = useCallback(
+    (rowIndex, columnId) => {
       const row = tableData.find((r) => r._rowIndex === rowIndex);
 
       return row ? row[columnId] : null;
@@ -171,15 +172,15 @@ function Table({
     [tableData],
   );
 
-  const getRowById = useCallback(
-    (rowId: string) => {
+  const getRowById: TableContextType['getRowById'] = useCallback(
+    (rowId) => {
       return table.getRowModel().rows.find((row) => row.id === rowId);
     },
     [table],
   );
 
-  const getCellById = useCallback(
-    (rowId: string, columnId: string) => {
+  const getCellById: TableContextType['getCellById'] = useCallback(
+    (rowId, columnId) => {
       const row = getRowById(rowId);
 
       return row ? row.getVisibleCells().find((cell) => cell.column.id === columnId) : undefined;
@@ -187,7 +188,16 @@ function Table({
     [getRowById],
   );
 
-  const contextValue = useMemo(
+  // Calculate if maximum limits are reached
+  const isReachMaximumColumns: TableContextType['isReachMaximumColumns'] = useMemo(() => {
+    return columnCount >= TABLE_MAX_COLUMNS;
+  }, [columnCount]);
+
+  const isReachMaximumRows: TableContextType['isReachMaximumRows'] = useMemo(() => {
+    return rowCount >= TABLE_MAX_ROWS;
+  }, [rowCount]);
+
+  const contextValue: TableContextType = useMemo(
     () => ({
       table,
       tableElement: element,
@@ -201,6 +211,11 @@ function Table({
       getCellData,
       getRowById,
       getCellById,
+      addColumn,
+      addRow,
+      addColumnAndRow,
+      isReachMaximumColumns,
+      isReachMaximumRows,
     }),
     [
       table,
@@ -215,6 +230,11 @@ function Table({
       getCellData,
       getRowById,
       getCellById,
+      addColumn,
+      addRow,
+      addColumnAndRow,
+      isReachMaximumColumns,
+      isReachMaximumRows,
     ],
   );
 

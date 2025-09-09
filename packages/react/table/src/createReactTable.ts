@@ -1,5 +1,6 @@
 import { createTable, CreateTableOptions, TableElement } from '@quadrats/common/table';
 import { createRenderElements, RenderElementProps } from '@quadrats/react';
+import { Editor, Element, Text } from '@quadrats/core';
 import { defaultRenderTableElements } from './defaultRenderTableElements';
 import { ReactTable } from './typings';
 
@@ -12,13 +13,75 @@ export function createReactTable(options: CreateReactTableOptions = {}): ReactTa
   return {
     ...core,
     createHandlers: () => ({
-      onKeyDown(event, _editor, next) {
+      onKeyDown(event, editor, next) {
         if (event.nativeEvent.isComposing) {
           return;
         }
 
-        // Handle table-specific keyboard events here
-        // For now, delegate to next handler
+        if (core.isSelectionInTableCell(editor)) {
+          const checkCurrentCellHasContent = () => {
+            if (!editor.selection) return false;
+
+            const [cellNode] = Editor.node(editor, editor.selection);
+
+            if (Text.isText(cellNode)) {
+              return cellNode.text.trim() !== '';
+            }
+
+            if (!Element.isElement(cellNode)) return false;
+
+            const hasContent = cellNode.children.some((child) => {
+              if (Text.isText(child)) {
+                return child.text.trim() !== '';
+              }
+
+              return Element.isElement(child);
+            });
+
+            return hasContent;
+          };
+
+          if (event.key === 'Enter') {
+            event.preventDefault();
+
+            const currentCellHasContent = checkCurrentCellHasContent();
+
+            if (currentCellHasContent) {
+              // Insert soft break
+              Editor.insertText(editor, '\n');
+            } else {
+              // Move to next cell
+              core.moveToNextCell(editor, types);
+            }
+
+            return;
+          }
+
+          if (event.key === 'Tab') {
+            event.preventDefault();
+            // shift+tab
+            if (event.shiftKey) return;
+
+            core.moveToNextCell(editor, types);
+
+            return;
+          }
+
+          if (event.key === 'Backspace' || event.key === 'Delete') {
+            const currentCellHasContent = checkCurrentCellHasContent();
+
+            if (currentCellHasContent) {
+              // Allow default behavior (delete characters)
+              next();
+            } else {
+              // Prevent deletion when cell is empty
+              event.preventDefault();
+            }
+
+            return;
+          }
+        }
+
         next();
       },
     }),
@@ -27,6 +90,7 @@ export function createReactTable(options: CreateReactTableOptions = {}): ReactTa
       const renderTableTitle = options.table_title || defaultRenderTableElements.table_title;
       const renderTableMain = options.table_main || defaultRenderTableElements.table_main;
       const renderTableHeader = options.table_header || defaultRenderTableElements.table_header;
+      const renderTableBody = options.table_body || defaultRenderTableElements.table_body;
       const renderTableRow = options.table_row || defaultRenderTableElements.table_row;
       const renderTableCell = options.table_cell || defaultRenderTableElements.table_cell;
 
@@ -73,6 +137,18 @@ export function createReactTable(options: CreateReactTableOptions = {}): ReactTa
             const { attributes, children, element } = props as RenderElementProps;
 
             return renderTableHeader({
+              attributes,
+              element,
+              children,
+            });
+          },
+        },
+        {
+          type: types.table_body,
+          render: (props) => {
+            const { attributes, children, element } = props as RenderElementProps;
+
+            return renderTableBody({
               attributes,
               element,
               children,
