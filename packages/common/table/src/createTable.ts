@@ -1,4 +1,4 @@
-import { Editor, Transforms } from '@quadrats/core';
+import { Editor, Element, isNodesTypeIn, Transforms } from '@quadrats/core';
 import { Table, TableTypes } from './typings';
 import { TABLE_TYPES } from './constants';
 
@@ -12,12 +12,7 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
   const types: TableTypes = { ...TABLE_TYPES, ...typesOptions };
 
   const createTableElement: Table<Editor>['createTableElement'] = (rows, cols) => {
-    const headerCells = Array.from({ length: cols }, () => ({
-      type: types.table_cell,
-      children: [{ text: '' }],
-    }));
-
-    const bodyRows = Array.from({ length: rows - 1 }, () => ({
+    const bodyRows = Array.from({ length: rows }, () => ({
       type: types.table_row,
       children: Array.from({ length: cols }, () => ({
         type: types.table_cell,
@@ -33,24 +28,98 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
           type: types.table_main,
           children: [
             {
-              type: types.table_header,
-              children: headerCells,
+              type: types.table_body,
+              children: bodyRows,
             },
-            ...bodyRows,
           ],
         },
       ],
     };
   };
 
+  const isSelectionInTableMain: Table<Editor>['isSelectionInTableMain'] = (editor) =>
+    isNodesTypeIn(editor, [types.table_main]);
+
+  const isSelectionInTableCell: Table<Editor>['isSelectionInTableCell'] = (editor) =>
+    isNodesTypeIn(editor, [types.table_cell]);
+
+  const isSelectionInTableRow: Table<Editor>['isSelectionInTableRow'] = (editor) =>
+    isNodesTypeIn(editor, [types.table_row]);
+
+  const isSelectionInTableHeader: Table<Editor>['isSelectionInTableHeader'] = (editor) =>
+    isNodesTypeIn(editor, [types.table_header]);
+
+  const isSelectionInTableBody: Table<Editor>['isSelectionInTableBody'] = (editor) =>
+    isNodesTypeIn(editor, [types.table_body]);
+
   const insertTable: Table<Editor>['insertTable'] = (editor, rows, cols) => {
     Transforms.insertNodes(editor, createTableElement(rows, cols));
+  };
+
+  const moveToNextCell: Table<Editor>['moveToNextCell'] = (editor, types) => {
+    if (!editor.selection) return;
+
+    try {
+      const cellEntry = Editor.above(editor, {
+        match: (n) => Element.isElement(n) && n.type === types.table_cell,
+      });
+
+      if (!cellEntry) return;
+
+      const [, cellPath] = cellEntry;
+
+      const rowEntry = Editor.above(editor, {
+        at: cellPath,
+        match: (n) => Element.isElement(n) && n.type === types.table_row,
+      });
+
+      if (!rowEntry) return;
+
+      const [currentRow, rowPath] = rowEntry;
+      const cellIndex = cellPath[cellPath.length - 1];
+      const nextCellIndex = cellIndex + 1;
+
+      if (nextCellIndex < currentRow.children.length) {
+        const targetCellPath = [...rowPath, nextCellIndex];
+        const point = Editor.start(editor, targetCellPath);
+
+        Transforms.select(editor, point);
+      } else {
+        const tableBodyEntry = Editor.above(editor, {
+          at: rowPath,
+          match: (n) => Element.isElement(n) && n.type === types.table_body,
+        });
+
+        if (!tableBodyEntry) return;
+
+        const [tableBody, tableBodyPath] = tableBodyEntry;
+        const currentRowIndex = rowPath[rowPath.length - 1];
+        const nextRowIndex = currentRowIndex + 1;
+
+        if (nextRowIndex < tableBody.children.length) {
+          const nextRowPath = [...tableBodyPath, nextRowIndex];
+          const targetCellPath = [...nextRowPath, 0];
+
+          const point = Editor.start(editor, targetCellPath);
+
+          Transforms.select(editor, point);
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to move to next cell:', error);
+    }
   };
 
   return {
     types,
     createTableElement,
     insertTable,
+    isSelectionInTableMain,
+    isSelectionInTableCell,
+    isSelectionInTableRow,
+    isSelectionInTableHeader,
+    isSelectionInTableBody,
+    moveToNextCell,
     with(editor) {
       return editor;
     },
