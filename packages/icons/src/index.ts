@@ -19,6 +19,7 @@ export { ChevronRight } from './chevron-right';
 export { Check } from './check';
 export { Cancel } from './cancel';
 export { Divider } from './divider';
+export { Drag } from './drag';
 export { Erase } from './erase';
 export { Error } from './error';
 export { Facebook } from './facebook';
