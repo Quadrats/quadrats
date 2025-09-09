@@ -8,7 +8,7 @@ import { useLocale, useTheme } from '@quadrats/react/configs';
 import DefaultLeaf from './DefaultLeaf';
 import { RenderElementProps, RenderLeafProps } from '../typings/renderer';
 import { CompositionProvider } from '../contexts/composition/CompositionProvider';
-import { PLACEHOLDER_KEY } from '..';
+import { PLACEHOLDER_KEY } from '../constants';
 
 export type EditableProps = Omit<SlateEditableProps, 'renderLeaf' | 'renderElement'> & {
   renderLeaf?: (props: RenderLeafProps) => JSX.Element;

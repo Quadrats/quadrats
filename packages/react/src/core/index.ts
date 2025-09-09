@@ -1,5 +1,6 @@
 import { QuadratsEditor, QuadratsElement, QuadratsText } from '@quadrats/core';
 import { ReactEditor } from 'slate-react';
+import { PLACEHOLDER_KEY } from './constants';
 
 export {
   useSlateStatic,
@@ -37,10 +38,9 @@ export { createReactEditor } from './createReactEditor';
 export { createRenderElement } from './createRenderElement';
 export { createRenderElements } from './createRenderElements';
 export { createRenderMark } from './createRenderMark';
+export { PLACEHOLDER_KEY };
 
 export type QuadratsReactEditor = QuadratsEditor & ReactEditor;
-
-export const PLACEHOLDER_KEY = '__quadrats-placeholder__';
 
 declare module '@quadrats/core' {
   interface CustomTypes {
