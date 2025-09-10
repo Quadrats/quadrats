@@ -53,7 +53,6 @@ function Table({
     };
   }, [element]);
 
-  // Calculate if maximum limits are reached
   const isReachMaximumColumns: TableContextType['isReachMaximumColumns'] = useMemo(() => {
     return columnCount >= TABLE_MAX_COLUMNS;
   }, [columnCount]);
@@ -95,9 +94,9 @@ function Table({
         {children}
         <button
           type="button"
-          onClick={() => setTableSelectedOn((prev) => (prev === 'table' ? undefined : 'table'))}
+          onClick={() => setTableSelectedOn((prev) => (prev?.region === 'table' ? undefined : { region: 'table' }))}
           className="qdr-table__selection"
-          title={tableSelectedOn === 'table' ? 'Deselect Table' : 'Select Table'}
+          title={tableSelectedOn?.region === 'table' ? 'Deselect Table' : 'Select Table'}
         >
           <Icon icon={Drag} width={20} height={20} />
         </button>

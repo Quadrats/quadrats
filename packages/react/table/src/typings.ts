@@ -13,6 +13,10 @@ import {
 import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps } from '@quadrats/react';
 import { Dispatch, SetStateAction } from 'react';
 
+export type TableHeaderContextType = {
+  isHeader: boolean;
+};
+
 export type TableContextType = {
   tableElement: TableElement;
   columnCount: number;
@@ -25,7 +29,12 @@ export type TableContextType = {
   isReachMaximumColumns: boolean;
   isReachMaximumRows: boolean;
   // Selection state
-  tableSelectedOn: 'table' | 'header' | 'row' | 'column' | undefined;
+  tableSelectedOn:
+    | {
+        region: 'table' | 'header' | 'row' | 'column';
+        index?: number;
+      }
+    | undefined;
   setTableSelectedOn: Dispatch<SetStateAction<TableContextType['tableSelectedOn']>>;
 };
 

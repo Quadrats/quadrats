@@ -30,7 +30,9 @@ function TableMain(props: {
 
   return (
     <div
-      className={clsx('qdr-table__mainWrapper', { 'qdr-table__mainWrapper--selected': tableSelectedOn === 'table' })}
+      className={clsx('qdr-table__mainWrapper', {
+        'qdr-table__mainWrapper--selected': tableSelectedOn?.region === 'table',
+      })}
     >
       <InlineToolbar
         className="qdr-table__inline-table-toolbar"

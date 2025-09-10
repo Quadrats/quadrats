@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { RenderElementProps } from '@quadrats/react';
+import { TableHeaderContext } from '../contexts/TableHeaderContext';
+import { TableHeaderContextType } from '../typings';
 
 function TableHeader(props: {
   attributes?: RenderElementProps['attributes'];
@@ -8,10 +10,14 @@ function TableHeader(props: {
 }) {
   const { attributes, children } = props;
 
+  const tableHeaderContextValue: TableHeaderContextType = useMemo(() => ({ isHeader: true }), []);
+
   return (
-    <thead {...attributes}>
-      <tr className="qdr-table__header-row">{children}</tr>
-    </thead>
+    <TableHeaderContext.Provider value={tableHeaderContextValue}>
+      <thead {...attributes}>
+        <tr className="qdr-table__header-row">{children}</tr>
+      </thead>
+    </TableHeaderContext.Provider>
   );
 }
 

@@ -28,6 +28,26 @@
   }
 }
 
+@mixin cell-action {
+  position: absolute;
+  z-index: 0;
+  width: 20px;
+  height: 24px;
+  padding: 0;
+  border-radius: var(--qdr-radius-1);
+  border: 1px solid var(--qdr-primary-active-bg);
+  background-color: var(--qdr-primary-hover-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+
+  &:hover,
+  &--active {
+    opacity: 1;
+  }
+}
+
 .qdr-table {
   width: 100%;
   display: flex;
@@ -137,6 +157,7 @@
     color: var(--qdr-text-primary);
     border-right: 1px solid var(--qdr-divider);
     vertical-align: top;
+    text-align: left;
 
     &:last-child {
       border-right: none;
@@ -147,6 +168,22 @@
       color: var(--qdr-text-primary);
       background-color: var(--qdr-surface-tertiary);
     }
+  }
+
+  &__cell-row-action {
+    @include cell-action();
+
+    left: -10px;
+    top: calc(50% - 12px);
+  }
+
+  &__cell-column-action {
+    @include cell-action();
+
+    left: calc(50% - 10px);
+    top: -12px;
+    transform: rotate(90deg);
+    transform-origin: center;
   }
 
   &__btn-icon {
