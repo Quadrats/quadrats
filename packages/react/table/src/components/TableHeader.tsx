@@ -9,9 +9,9 @@ function TableHeader(props: {
   const { attributes, children } = props;
 
   return (
-    <tr {...attributes} className="qdr-table__header-row">
-      {children}
-    </tr>
+    <thead {...attributes}>
+      <tr className="qdr-table__header-row">{children}</tr>
+    </thead>
   );
 }
 

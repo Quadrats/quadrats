@@ -1,4 +1,4 @@
-import { Editor, Node } from '@quadrats/core';
+import { Editor } from '@quadrats/core';
 import {
   Table,
   TableElement,
@@ -11,43 +11,12 @@ import {
   TableBodyTypeKey,
 } from '@quadrats/common/table';
 import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps } from '@quadrats/react';
-import { Table as TanStackTable, Row, Cell, ColumnDef } from '@tanstack/react-table';
 import { Dispatch, SetStateAction } from 'react';
 
-export type TableRowData = {
-  [key: string]: any;
-  _rowIndex: number;
-  _isHeader?: boolean;
-  _slateNode?: Node;
-};
-
-export type CellPosition = {
-  rowIndex: number;
-  columnIndex: number;
-  columnId: string;
-  isHeader: boolean;
-  cellId: string;
-};
-
-export type RowPosition = {
-  rowIndex: number;
-  isHeader: boolean;
-  rowId: string;
-};
-
 export type TableContextType = {
-  table: TanStackTable<TableRowData>;
   tableElement: TableElement;
   columnCount: number;
   rowCount: number;
-  columns: ColumnDef<TableRowData>[];
-  data: TableRowData[];
-  // Helper functions to get position info
-  getCellPosition: (element: Node) => CellPosition | null;
-  getRowPosition: (element: Node) => RowPosition | null;
-  // Data manipulation functions
-  updateCellData: (rowIndex: number, columnId: string, value: any) => void;
-  getCellData: (rowIndex: number, columnId: string) => any;
   // Table structure manipulation
   addColumn: VoidFunction;
   addRow: VoidFunction;
@@ -58,9 +27,6 @@ export type TableContextType = {
   // Selection state
   tableSelectedOn: 'table' | 'header' | 'row' | 'column' | undefined;
   setTableSelectedOn: Dispatch<SetStateAction<TableContextType['tableSelectedOn']>>;
-  // TanStack Table utilities
-  getRowById: (rowId: string) => Row<TableRowData> | undefined;
-  getCellById: (rowId: string, columnId: string) => Cell<TableRowData, any> | undefined;
 };
 
 export type RenderTableElementProps = RenderElementProps<TableElement>;

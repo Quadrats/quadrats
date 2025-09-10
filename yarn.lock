@@ -3539,7 +3539,6 @@ __metadata:
     "@quadrats/locales": "npm:^0.7.0"
     "@quadrats/theme": "npm:^0.7.4"
     "@quadrats/utils": "npm:^0.7.2"
-    "@tanstack/react-table": "npm:^8.21.3"
     "@types/is-hotkey": "npm:^0.1.9"
     "@types/react-transition-group": "npm:^4.4.9"
     clsx: "npm:^2.1.1"
@@ -5151,25 +5150,6 @@ __metadata:
     "@types/express": "npm:^4.7.0"
     file-system-cache: "npm:2.3.0"
   checksum: 10c0/4219a92a6e7762ac5a1dae101aa1072f4c37607f6f2173ae70d224ddc294d9f70e55462eb42028a87e676840f2e87f1bc0e82b28bbb35207278405868b467eb7
-  languageName: node
-  linkType: hard
-
-"@tanstack/react-table@npm:^8.21.3":
-  version: 8.21.3
-  resolution: "@tanstack/react-table@npm:8.21.3"
-  dependencies:
-    "@tanstack/table-core": "npm:8.21.3"
-  peerDependencies:
-    react: ">=16.8"
-    react-dom: ">=16.8"
-  checksum: 10c0/85d1d0fcb690ecc011f68a5a61c96f82142e31a0270dcf9cbc699a6f36715b1653fe6ff1518302a6d08b7093351fc4cabefd055a7db3cd8ac01e068956b0f944
-  languageName: node
-  linkType: hard
-
-"@tanstack/table-core@npm:8.21.3":
-  version: 8.21.3
-  resolution: "@tanstack/table-core@npm:8.21.3"
-  checksum: 10c0/40e3560e6d55e07cc047024aa7f83bd47a9323d21920d4adabba8071fd2d21230c48460b26cedf392588f8265b9edc133abb1b0d6d0adf4dae0970032900a8c9
   languageName: node
   linkType: hard
 

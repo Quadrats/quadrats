@@ -48,7 +48,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         const headerPath = ReactEditor.findPath(editor, tableHeaderElement);
         const newHeaderCell = {
           type: TABLE_CELL_TYPE,
-          children: [{ text: `Column ${tableHeaderElement.children.length + 1}` }],
+          children: [{ text: '' }],
         };
 
         const headerCellPath = [...headerPath, tableHeaderElement.children.length];
@@ -161,7 +161,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           const headerPath = ReactEditor.findPath(editor, tableHeaderElement);
           const newHeaderCell = {
             type: TABLE_CELL_TYPE,
-            children: [{ text: `Column ${tableHeaderElement.children.length + 1}` }],
+            children: [{ text: '' }],
           };
 
           const headerCellPath = [...headerPath, tableHeaderElement.children.length];
