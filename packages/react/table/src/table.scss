@@ -48,6 +48,10 @@
   }
 }
 
+@mixin cell-selected($border-position) {
+  border-#{$border-position}: 2px solid var(--qdr-primary-light);
+}
+
 .qdr-table {
   width: 100%;
   display: flex;
@@ -101,9 +105,13 @@
   &__main {
     width: 100%;
     margin: 0;
-    border: 1px solid var(--qdr-border);
     border-collapse: collapse;
     table-layout: fixed;
+  }
+
+  &__inline-table-toolbar {
+    top: -50px;
+    right: 50%;
   }
 
   &__mainWrapper {
@@ -155,18 +163,30 @@
     letter-spacing: var(--qdr-typography-article-body1-letter-spacing);
     font-weight: var(--qdr-typography-article-body1-font-weight);
     color: var(--qdr-text-primary);
-    border-right: 1px solid var(--qdr-divider);
+    border: 1px solid var(--qdr-border);
     vertical-align: top;
     text-align: left;
-
-    &:last-child {
-      border-right: none;
-    }
 
     &--header {
       font-weight: var(--qdr-typography-article-h6-font-weight);
       color: var(--qdr-text-primary);
       background-color: var(--qdr-surface-tertiary);
+    }
+
+    &--top-active {
+      @include cell-selected('top');
+    }
+
+    &--right-active {
+      @include cell-selected('right');
+    }
+
+    &--bottom-active {
+      @include cell-selected('bottom');
+    }
+
+    &--left-active {
+      @include cell-selected('left');
     }
   }
 
@@ -216,5 +236,9 @@
     bottom: -24px;
     width: 20px;
     height: 20px;
+  }
+
+  &__delete {
+    color: var(--qdr-error);
   }
 }

@@ -15,7 +15,7 @@ function TableCell(props: {
   element: RenderElementProps['element'];
 }) {
   const { attributes, children, element } = props;
-  const { tableSelectedOn, setTableSelectedOn } = useTable();
+  const { tableSelectedOn, setTableSelectedOn, columnCount, rowCount } = useTable();
   const { isHeader } = useContext(TableHeaderContext);
   const editor = useSlateStatic();
 
@@ -36,17 +36,6 @@ function TableCell(props: {
         // Header is always row 0 ?
         rowIndex = 0;
       } else if (rowNode.type.includes(TABLE_ROW_TYPE)) {
-        const tableMainPath = rowPath.slice(0, -1);
-        const tableMainNode = Node.get(editor, tableMainPath);
-
-        if (!Element.isElement(tableMainNode) || !tableMainNode.type.includes(TABLE_MAIN_TYPE)) {
-          return { columnIndex, rowIndex: -1 };
-        }
-
-        const hasHeader = tableMainNode.children.some(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-        );
-
         const tableBodyPath = rowPath.slice(0, -1);
         const tableBodyNode = Node.get(editor, tableBodyPath);
 
@@ -54,10 +43,20 @@ function TableCell(props: {
           return { columnIndex, rowIndex: -1 };
         }
 
+        const tableMainPath = tableBodyPath.slice(0, -1);
+        const tableMainNode = Node.get(editor, tableMainPath);
+
+        if (!Element.isElement(tableMainNode) || !tableMainNode.type.includes(TABLE_MAIN_TYPE)) {
+          return { columnIndex, rowIndex: -1 };
+        }
+
+        const headerCount = tableMainNode.children.filter(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
+        ).length;
+
         const rowIndexInBody = rowPath[rowPath.length - 1];
 
-        // If there's a header, body rows start from index 1 ?
-        rowIndex = hasHeader ? rowIndexInBody + 1 : rowIndexInBody;
+        rowIndex = rowIndexInBody + headerCount;
       }
 
       return { columnIndex, rowIndex };
@@ -71,7 +70,32 @@ function TableCell(props: {
   const TagName = isHeader ? 'th' : 'td';
 
   return (
-    <TagName {...attributes} className={`qdr-table__cell ${isHeader ? 'qdr-table__cell--header' : ''}`}>
+    <TagName
+      {...attributes}
+      className={clsx('qdr-table__cell', {
+        'qdr-table__cell--header': isHeader,
+        'qdr-table__cell--top-active':
+          (tableSelectedOn?.region === 'row' && tableSelectedOn?.index === cellPosition.rowIndex) ||
+          (tableSelectedOn?.region === 'column' &&
+            tableSelectedOn?.index === cellPosition.columnIndex &&
+            cellPosition.rowIndex === 0),
+        'qdr-table__cell--right-active':
+          (tableSelectedOn?.region === 'column' && tableSelectedOn?.index === cellPosition.columnIndex) ||
+          (tableSelectedOn?.region === 'row' &&
+            tableSelectedOn?.index === cellPosition.rowIndex &&
+            cellPosition.columnIndex === columnCount - 1),
+        'qdr-table__cell--bottom-active':
+          (tableSelectedOn?.region === 'row' && tableSelectedOn?.index === cellPosition.rowIndex) ||
+          (tableSelectedOn?.region === 'column' &&
+            tableSelectedOn?.index === cellPosition.columnIndex &&
+            cellPosition.rowIndex === rowCount - 1),
+        'qdr-table__cell--left-active':
+          (tableSelectedOn?.region === 'column' && tableSelectedOn?.index === cellPosition.columnIndex) ||
+          (tableSelectedOn?.region === 'row' &&
+            tableSelectedOn?.index === cellPosition.rowIndex &&
+            cellPosition.columnIndex === 0),
+      })}
+    >
       {children}
       {cellPosition.columnIndex === 0 && (
         <button

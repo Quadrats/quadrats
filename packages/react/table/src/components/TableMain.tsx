@@ -36,20 +36,24 @@ function TableMain(props: {
     >
       <InlineToolbar
         className="qdr-table__inline-table-toolbar"
-        leftIcons={[]}
-        rightIcons={[
+        iconGroups={[
           {
-            icon: Trash,
-            onClick: () => {
-              setConfirmModalConfig({
-                title: '刪除表格',
-                content: '是否確認刪除此表格？刪除後將立即移除，且此操作無法復原。',
-                confirmText: '刪除表格',
-                onConfirm: () => {
-                  Transforms.removeNodes(editor, { at: tablePath });
+            icons: [
+              {
+                icon: Trash,
+                className: 'qdr-table__delete',
+                onClick: () => {
+                  setConfirmModalConfig({
+                    title: '刪除表格',
+                    content: '是否確認刪除此表格？刪除後將立即移除，且此操作無法復原。',
+                    confirmText: '刪除表格',
+                    onConfirm: () => {
+                      Transforms.removeNodes(editor, { at: tablePath });
+                    },
+                  });
                 },
-              });
-            },
+              },
+            ],
           },
         ]}
       />
