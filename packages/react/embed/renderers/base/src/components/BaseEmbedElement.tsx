@@ -44,53 +44,58 @@ const BaseEmbedElement = ({
       {children(
         <InlineToolbar
           className="qdr-embed__inline-toolbar"
-          leftIcons={
+          iconGroups={[
             haveAlignConfig
-              ? [
-                  {
-                    icon: AlignLeft,
-                    onClick: () => {
-                      Transforms.setNodes(editor, { align: 'left' } as EmbedElement, { at: path });
+              ? {
+                  enabledBgColor: true,
+                  icons: [
+                    {
+                      icon: AlignLeft,
+                      onClick: () => {
+                        Transforms.setNodes(editor, { align: 'left' } as EmbedElement, { at: path });
+                      },
+                      active: element.align === 'left' || !element.align,
                     },
-                    active: element.align === 'left' || !element.align,
-                  },
-                  {
-                    icon: AlignCenter,
-                    onClick: () => {
-                      Transforms.setNodes(editor, { align: 'center' } as EmbedElement, { at: path });
+                    {
+                      icon: AlignCenter,
+                      onClick: () => {
+                        Transforms.setNodes(editor, { align: 'center' } as EmbedElement, { at: path });
+                      },
+                      active: element.align === 'center',
                     },
-                    active: element.align === 'center',
-                  },
-                  {
-                    icon: AlignRight,
-                    onClick: () => {
-                      Transforms.setNodes(editor, { align: 'right' } as EmbedElement, { at: path });
+                    {
+                      icon: AlignRight,
+                      onClick: () => {
+                        Transforms.setNodes(editor, { align: 'right' } as EmbedElement, { at: path });
+                      },
+                      active: element.align === 'right',
                     },
-                    active: element.align === 'right',
-                  },
-                ]
-              : []
-          }
-          rightIcons={[
+                  ],
+                }
+              : { icons: [] },
             {
-              icon: Edit,
-              onClick: () => {
-                setEmbedModalConfig({
-                  placeholder: placeholder || '',
-                  confirmText: confirmText || '',
-                  hint: hint || '',
-                  type,
-                  onConfirm: (value) => {
-                    onConfirm?.(editor, path, value);
+              icons: [
+                {
+                  icon: Edit,
+                  onClick: () => {
+                    setEmbedModalConfig({
+                      placeholder: placeholder || '',
+                      confirmText: confirmText || '',
+                      hint: hint || '',
+                      type,
+                      onConfirm: (value) => {
+                        onConfirm?.(editor, path, value);
+                      },
+                    });
                   },
-                });
-              },
-            },
-            {
-              icon: Trash,
-              onClick: () => {
-                Transforms.removeNodes(editor, { at: path });
-              },
+                },
+                {
+                  icon: Trash,
+                  onClick: () => {
+                    Transforms.removeNodes(editor, { at: path });
+                  },
+                },
+              ],
             },
           ]}
         />,
