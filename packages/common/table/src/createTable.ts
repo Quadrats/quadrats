@@ -29,10 +29,15 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
           children: [
             {
               type: types.table_header,
-              children: Array.from({ length: cols }, () => ({
-                type: types.table_cell,
-                children: [{ text: '' }],
-              })),
+              children: [
+                {
+                  type: types.table_row,
+                  children: Array.from({ length: cols }, () => ({
+                    type: types.table_cell,
+                    children: [{ text: '' }],
+                  })),
+                },
+              ],
             },
             {
               type: types.table_body,
@@ -86,27 +91,58 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
       const cellIndex = cellPath[cellPath.length - 1];
       const nextCellIndex = cellIndex + 1;
 
+      // Try to move to next cell in current row
       if (nextCellIndex < currentRow.children.length) {
         const targetCellPath = [...rowPath, nextCellIndex];
         const point = Editor.start(editor, targetCellPath);
 
         Transforms.select(editor, point);
-      } else {
-        const tableBodyEntry = Editor.above(editor, {
-          at: rowPath,
-          match: (n) => Element.isElement(n) && n.type === types.table_body,
+
+        return;
+      }
+
+      // Current row is full, try to move to next row
+      const tableContainerEntry = Editor.above(editor, {
+        at: rowPath,
+        match: (n) => Element.isElement(n) && [types.table_header, types.table_body].includes(n.type),
+      });
+
+      if (!tableContainerEntry) return;
+
+      const [tableContainer, tableContainerPath] = tableContainerEntry;
+      const currentRowIndex = rowPath[rowPath.length - 1];
+      const nextRowIndex = currentRowIndex + 1;
+
+      // Try to move to next row in current container (header or body)
+      if (nextRowIndex < tableContainer.children.length) {
+        const nextRowPath = [...tableContainerPath, nextRowIndex];
+        const targetCellPath = [...nextRowPath, 0];
+        const point = Editor.start(editor, targetCellPath);
+
+        Transforms.select(editor, point);
+
+        return;
+      }
+
+      // If we're in header and no more rows, try to move to body
+      if (Element.isElement(tableContainer) && tableContainer.type === types.table_header) {
+        const tableMainEntry = Editor.above(editor, {
+          at: tableContainerPath,
+          match: (n) => Element.isElement(n) && n.type === types.table_main,
         });
 
-        if (!tableBodyEntry) return;
+        if (!tableMainEntry) return;
 
-        const [tableBody, tableBodyPath] = tableBodyEntry;
-        const currentRowIndex = rowPath[rowPath.length - 1];
-        const nextRowIndex = currentRowIndex + 1;
+        const [tableMain] = tableMainEntry;
+        const tableBody = tableMain.children.find(
+          (child) => Element.isElement(child) && child.type === types.table_body,
+        );
 
-        if (nextRowIndex < tableBody.children.length) {
-          const nextRowPath = [...tableBodyPath, nextRowIndex];
-          const targetCellPath = [...nextRowPath, 0];
-
+        if (tableBody && Element.isElement(tableBody) && tableBody.children.length > 0) {
+          const tableMainPath = tableMainEntry[1];
+          const tableBodyIndex = tableMain.children.findIndex((child) => child === tableBody);
+          const firstRowPath = [...tableMainPath, tableBodyIndex, 0];
+          const targetCellPath = [...firstRowPath, 0];
           const point = Editor.start(editor, targetCellPath);
 
           Transforms.select(editor, point);
