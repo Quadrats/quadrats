@@ -41,35 +41,42 @@ function Image(props: RenderImageElementProps) {
       <div contentEditable={false} style={{ position: 'relative' }}>
         <InlineToolbar
           className="qdr-image__inline-toolbar"
-          leftIcons={[
+          iconGroups={[
             {
-              icon: AlignLeft,
-              onClick: () => {
-                Transforms.setNodes(editor, { align: 'start' } as ImageFigureElement, { at: parentPath });
-              },
-              active: parentNode.align === 'start' || !parentNode.align,
+              enabledBgColor: true,
+              icons: [
+                {
+                  icon: AlignLeft,
+                  onClick: () => {
+                    Transforms.setNodes(editor, { align: 'start' } as ImageFigureElement, { at: parentPath });
+                  },
+                  active: parentNode.align === 'start' || !parentNode.align,
+                },
+                {
+                  icon: AlignCenter,
+                  onClick: () => {
+                    Transforms.setNodes(editor, { align: 'center' } as ImageFigureElement, { at: parentPath });
+                  },
+                  active: parentNode.align === 'center',
+                },
+                {
+                  icon: AlignRight,
+                  onClick: () => {
+                    Transforms.setNodes(editor, { align: 'end' } as ImageFigureElement, { at: parentPath });
+                  },
+                  active: parentNode.align === 'end',
+                },
+              ],
             },
             {
-              icon: AlignCenter,
-              onClick: () => {
-                Transforms.setNodes(editor, { align: 'center' } as ImageFigureElement, { at: parentPath });
-              },
-              active: parentNode.align === 'center',
-            },
-            {
-              icon: AlignRight,
-              onClick: () => {
-                Transforms.setNodes(editor, { align: 'end' } as ImageFigureElement, { at: parentPath });
-              },
-              active: parentNode.align === 'end',
-            },
-          ]}
-          rightIcons={[
-            {
-              icon: Trash,
-              onClick: () => {
-                Transforms.removeNodes(editor, { at: parentPath });
-              },
+              icons: [
+                {
+                  icon: Trash,
+                  onClick: () => {
+                    Transforms.removeNodes(editor, { at: parentPath });
+                  },
+                },
+              ],
             },
           ]}
         />
