@@ -5,9 +5,10 @@ import { Element, Node } from '@quadrats/core';
 import { ReactEditor } from 'slate-react';
 import { TableHeaderContext } from '../contexts/TableHeaderContext';
 import { Icon } from '@quadrats/react/components';
-import { Drag } from '@quadrats/icons';
+import { Drag, Trash } from '@quadrats/icons';
 import { TABLE_ROW_TYPE, TABLE_HEADER_TYPE, TABLE_MAIN_TYPE, TABLE_BODY_TYPE } from '@quadrats/common/table';
 import { useTable } from '../hooks/useTable';
+import { InlineToolbar } from '@quadrats/react/toolbar';
 
 function TableCell(props: {
   attributes?: RenderElementProps['attributes'];
@@ -15,13 +16,13 @@ function TableCell(props: {
   element: RenderElementProps['element'];
 }) {
   const { attributes, children, element } = props;
-  const { tableSelectedOn, setTableSelectedOn, columnCount, rowCount } = useTable();
+  const { tableSelectedOn, setTableSelectedOn, columnCount, rowCount, deleteRow, deleteColumn } = useTable();
   const { isHeader } = useContext(TableHeaderContext);
   const editor = useSlateStatic();
+  const cellPath = ReactEditor.findPath(editor, element);
 
   const cellPosition = useMemo(() => {
     try {
-      const cellPath = ReactEditor.findPath(editor, element);
       const rowPath = cellPath.slice(0, -1);
       const rowNode = Node.get(editor, rowPath);
 
@@ -32,31 +33,45 @@ function TableCell(props: {
       const columnIndex = cellPath[cellPath.length - 1];
       let rowIndex = -1;
 
-      if (rowNode.type.includes(TABLE_HEADER_TYPE)) {
-        // Header is always row 0 ?
-        rowIndex = 0;
-      } else if (rowNode.type.includes(TABLE_ROW_TYPE)) {
-        const tableBodyPath = rowPath.slice(0, -1);
-        const tableBodyNode = Node.get(editor, tableBodyPath);
+      if (rowNode.type.includes(TABLE_ROW_TYPE)) {
+        const tableRowWrapperPath = rowPath.slice(0, -1);
+        const tableRowWrapperNode = Node.get(editor, tableRowWrapperPath);
 
-        if (!Element.isElement(tableBodyNode) || !tableBodyNode.type.includes(TABLE_BODY_TYPE)) {
+        if (
+          !Element.isElement(tableRowWrapperNode) ||
+          ![TABLE_BODY_TYPE, TABLE_HEADER_TYPE].includes(tableRowWrapperNode.type)
+        ) {
           return { columnIndex, rowIndex: -1 };
         }
 
-        const tableMainPath = tableBodyPath.slice(0, -1);
+        const tableMainPath = tableRowWrapperPath.slice(0, -1);
         const tableMainNode = Node.get(editor, tableMainPath);
 
         if (!Element.isElement(tableMainNode) || !tableMainNode.type.includes(TABLE_MAIN_TYPE)) {
           return { columnIndex, rowIndex: -1 };
         }
 
-        const headerCount = tableMainNode.children.filter(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-        ).length;
+        const rowIndexInWrapper = rowPath[rowPath.length - 1];
 
-        const rowIndexInBody = rowPath[rowPath.length - 1];
+        if (tableRowWrapperNode.type.includes(TABLE_HEADER_TYPE)) {
+          // This is a header row, rowIndex is just its position within header
+          rowIndex = rowIndexInWrapper;
+        } else {
+          // This is a body row, rowIndex should account for total header rows
+          const headerElement = tableMainNode.children.find(
+            (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
+          );
 
-        rowIndex = rowIndexInBody + headerCount;
+          let totalHeaderRows = 0;
+
+          if (headerElement && Element.isElement(headerElement)) {
+            totalHeaderRows = headerElement.children.filter(
+              (child) => Element.isElement(child) && child.type.includes(TABLE_ROW_TYPE),
+            ).length;
+          }
+
+          rowIndex = rowIndexInWrapper + totalHeaderRows;
+        }
       }
 
       return { columnIndex, rowIndex };
@@ -65,35 +80,30 @@ function TableCell(props: {
 
       return { columnIndex: -1, rowIndex: -1 };
     }
-  }, [editor, element]);
+  }, [editor, cellPath]);
 
   const TagName = isHeader ? 'th' : 'td';
+
+  const isSelectedInSameRow = tableSelectedOn?.region === 'row' && tableSelectedOn?.index === cellPosition.rowIndex;
+  const isSelectedInSameColumn =
+    tableSelectedOn?.region === 'column' && tableSelectedOn?.index === cellPosition.columnIndex;
+
+  const isSelectionTriggerByMe =
+    (isSelectedInSameRow && cellPosition.columnIndex === 0) || (isSelectedInSameColumn && cellPosition.rowIndex === 0);
 
   return (
     <TagName
       {...attributes}
       className={clsx('qdr-table__cell', {
         'qdr-table__cell--header': isHeader,
-        'qdr-table__cell--top-active':
-          (tableSelectedOn?.region === 'row' && tableSelectedOn?.index === cellPosition.rowIndex) ||
-          (tableSelectedOn?.region === 'column' &&
-            tableSelectedOn?.index === cellPosition.columnIndex &&
-            cellPosition.rowIndex === 0),
+        'qdr-table__cell--top-active': isSelectedInSameRow || (isSelectedInSameColumn && cellPosition.rowIndex === 0),
         'qdr-table__cell--right-active':
-          (tableSelectedOn?.region === 'column' && tableSelectedOn?.index === cellPosition.columnIndex) ||
-          (tableSelectedOn?.region === 'row' &&
-            tableSelectedOn?.index === cellPosition.rowIndex &&
-            cellPosition.columnIndex === columnCount - 1),
+          isSelectedInSameColumn || (isSelectedInSameRow && cellPosition.columnIndex === columnCount - 1),
         'qdr-table__cell--bottom-active':
-          (tableSelectedOn?.region === 'row' && tableSelectedOn?.index === cellPosition.rowIndex) ||
-          (tableSelectedOn?.region === 'column' &&
-            tableSelectedOn?.index === cellPosition.columnIndex &&
-            cellPosition.rowIndex === rowCount - 1),
+          isSelectedInSameRow || (isSelectedInSameColumn && cellPosition.rowIndex === rowCount - 1),
         'qdr-table__cell--left-active':
-          (tableSelectedOn?.region === 'column' && tableSelectedOn?.index === cellPosition.columnIndex) ||
-          (tableSelectedOn?.region === 'row' &&
-            tableSelectedOn?.index === cellPosition.rowIndex &&
-            cellPosition.columnIndex === 0),
+          isSelectedInSameColumn || (isSelectedInSameRow && cellPosition.columnIndex === 0),
+        'qdr-table__cell--is-selection-trigger-by-me': isSelectionTriggerByMe,
       })}
     >
       {children}
@@ -111,8 +121,7 @@ function TableCell(props: {
             })
           }
           className={clsx('qdr-table__cell-row-action', {
-            'qdr-table__cell-row-action--active':
-              tableSelectedOn?.region === 'row' && tableSelectedOn?.index === cellPosition.rowIndex,
+            'qdr-table__cell-row-action--active': isSelectedInSameRow,
           })}
         >
           <Icon icon={Drag} width={20} height={20} />
@@ -132,13 +141,37 @@ function TableCell(props: {
             })
           }
           className={clsx('qdr-table__cell-column-action', {
-            'qdr-table__cell-column-action--active':
-              tableSelectedOn?.region === 'column' && tableSelectedOn?.index === cellPosition.columnIndex,
+            'qdr-table__cell-column-action--active': isSelectedInSameColumn,
           })}
         >
           <Icon icon={Drag} width={20} height={20} />
         </button>
       )}
+      {cellPosition.columnIndex === 0 || cellPosition.rowIndex === 0 ? (
+        <InlineToolbar
+          className="qdr-table__cell__inline-table-toolbar"
+          iconGroups={[
+            {
+              icons: [
+                {
+                  icon: Trash,
+                  className: 'qdr-table__delete',
+                  onClick: () => {
+                    // Determine whether to delete row or column based on current selection
+                    if (tableSelectedOn?.region === 'row' && typeof tableSelectedOn.index === 'number') {
+                      deleteRow(tableSelectedOn.index);
+                      setTableSelectedOn(undefined); // Clear selection after deletion
+                    } else if (tableSelectedOn?.region === 'column' && typeof tableSelectedOn.index === 'number') {
+                      deleteColumn(tableSelectedOn.index);
+                      setTableSelectedOn(undefined); // Clear selection after deletion
+                    }
+                  },
+                },
+              ],
+            },
+          ]}
+        />
+      ) : null}
     </TagName>
   );
 }

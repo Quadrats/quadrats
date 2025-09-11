@@ -25,7 +25,7 @@ function Table({
   children: RenderElementProps['children'];
   element: RenderTableElementProps['element'];
 }) {
-  const { addColumn, addRow, addColumnAndRow } = useTableActions(element);
+  const { addColumn, addRow, addColumnAndRow, deleteRow, deleteColumn } = useTableActions(element);
   const { tableSelectedOn, setTableSelectedOn } = useTableStates();
 
   const { columnCount, rowCount } = useMemo(() => {
@@ -39,13 +39,19 @@ function Table({
 
     const tableMainChildren = tableMainElement.children.filter((child) => Element.isElement(child));
     const headerElement = tableMainChildren.find((child) => child.type.includes(TABLE_HEADER_TYPE));
+    const headerRowElements = headerElement
+      ? headerElement.children.filter((child) => Element.isElement(child) && child.type.includes(TABLE_ROW_TYPE))
+      : [];
+
     const bodyElement = tableMainChildren.find((child) => child.type.includes(TABLE_BODY_TYPE));
-    const rowElements = bodyElement
+    const bodyRowElements = bodyElement
       ? bodyElement.children.filter((child) => Element.isElement(child) && child.type.includes(TABLE_ROW_TYPE))
       : [];
 
-    const cols = rowElements.length > 0 && Element.isElement(rowElements[0]) ? rowElements[0].children.length : 0;
-    const rows = rowElements.length + (headerElement ? 1 : 0);
+    const cols =
+      bodyRowElements.length > 0 && Element.isElement(bodyRowElements[0]) ? bodyRowElements[0].children.length : 0;
+
+    const rows = headerRowElements.length + bodyRowElements.length;
 
     return {
       columnCount: cols,
@@ -69,6 +75,8 @@ function Table({
       addColumn,
       addRow,
       addColumnAndRow,
+      deleteRow,
+      deleteColumn,
       isReachMaximumColumns,
       isReachMaximumRows,
       tableSelectedOn,
@@ -81,6 +89,8 @@ function Table({
       addColumn,
       addRow,
       addColumnAndRow,
+      deleteRow,
+      deleteColumn,
       isReachMaximumColumns,
       isReachMaximumRows,
       tableSelectedOn,

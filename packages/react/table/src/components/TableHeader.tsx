@@ -14,9 +14,7 @@ function TableHeader(props: {
 
   return (
     <TableHeaderContext.Provider value={tableHeaderContextValue}>
-      <thead {...attributes}>
-        <tr className="qdr-table__header-row">{children}</tr>
-      </thead>
+      <thead {...attributes}>{children}</thead>
     </TableHeaderContext.Provider>
   );
 }

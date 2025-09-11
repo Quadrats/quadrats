@@ -25,6 +25,8 @@ export type TableContextType = {
   addColumn: VoidFunction;
   addRow: VoidFunction;
   addColumnAndRow: VoidFunction;
+  deleteRow: (rowIndex: number) => void;
+  deleteColumn: (columnIndex: number) => void;
   // Maximum limits status
   isReachMaximumColumns: boolean;
   isReachMaximumRows: boolean;
