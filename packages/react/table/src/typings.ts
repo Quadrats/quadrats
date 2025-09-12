@@ -38,6 +38,14 @@ export type TableContextType = {
       }
     | undefined;
   setTableSelectedOn: Dispatch<SetStateAction<TableContextType['tableSelectedOn']>>;
+  // Hover state
+  tableHoveredOn:
+    | {
+        columnIndex: number;
+        rowIndex: number;
+      }
+    | undefined;
+  setTableHoveredOn: Dispatch<SetStateAction<TableContextType['tableHoveredOn']>>;
 };
 
 export type RenderTableElementProps = RenderElementProps<TableElement>;

@@ -26,7 +26,7 @@ function Table({
   element: RenderTableElementProps['element'];
 }) {
   const { addColumn, addRow, addColumnAndRow, deleteRow, deleteColumn } = useTableActions(element);
-  const { tableSelectedOn, setTableSelectedOn } = useTableStates();
+  const { tableSelectedOn, setTableSelectedOn, tableHoveredOn, setTableHoveredOn } = useTableStates();
 
   const { columnCount, rowCount } = useMemo(() => {
     const childElements = element.children.filter((child) => Element.isElement(child));
@@ -81,6 +81,8 @@ function Table({
       isReachMaximumRows,
       tableSelectedOn,
       setTableSelectedOn,
+      tableHoveredOn,
+      setTableHoveredOn,
     }),
     [
       element,
@@ -95,6 +97,8 @@ function Table({
       isReachMaximumRows,
       tableSelectedOn,
       setTableSelectedOn,
+      tableHoveredOn,
+      setTableHoveredOn,
     ],
   );
 

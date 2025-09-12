@@ -16,8 +16,18 @@ function TableCell(props: {
   element: RenderElementProps['element'];
 }) {
   const { attributes, children, element } = props;
-  const { tableSelectedOn, setTableSelectedOn, columnCount, rowCount, deleteRow, deleteColumn, addRow, addColumn } =
-    useTable();
+  const {
+    tableSelectedOn,
+    setTableSelectedOn,
+    tableHoveredOn,
+    setTableHoveredOn,
+    columnCount,
+    rowCount,
+    deleteRow,
+    deleteColumn,
+    addRow,
+    addColumn,
+  } = useTable();
 
   const { isHeader } = useContext(TableHeaderContext);
   const editor = useSlateStatic();
@@ -96,6 +106,12 @@ function TableCell(props: {
   return (
     <TagName
       {...attributes}
+      onMouseEnter={() => {
+        setTableHoveredOn({ columnIndex: cellPosition.columnIndex, rowIndex: cellPosition.rowIndex });
+      }}
+      onMouseLeave={() => {
+        setTableHoveredOn(undefined);
+      }}
       className={clsx('qdr-table__cell', {
         'qdr-table__cell--header': isHeader,
         'qdr-table__cell--top-active': isSelectedInSameRow || (isSelectedInSameColumn && cellPosition.rowIndex === 0),
@@ -123,7 +139,8 @@ function TableCell(props: {
             })
           }
           className={clsx('qdr-table__cell-row-action', {
-            'qdr-table__cell-row-action--active': isSelectedInSameRow,
+            'qdr-table__cell-row-action--active':
+              isSelectedInSameRow || (tableHoveredOn?.rowIndex === cellPosition.rowIndex && !tableSelectedOn),
           })}
         >
           <Icon icon={Drag} width={20} height={20} />
@@ -143,7 +160,8 @@ function TableCell(props: {
             })
           }
           className={clsx('qdr-table__cell-column-action', {
-            'qdr-table__cell-column-action--active': isSelectedInSameColumn,
+            'qdr-table__cell-column-action--active':
+              isSelectedInSameColumn || (tableHoveredOn?.columnIndex === cellPosition.columnIndex && !tableSelectedOn),
           })}
         >
           <Icon icon={Drag} width={20} height={20} />
