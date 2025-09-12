@@ -110,7 +110,7 @@ export function createReactTable(options: CreateReactTableOptions = {}): ReactTa
         {
           type: types.table_title,
           render: (props) => {
-            const { attributes, children, element } = props as RenderElementProps;
+            const { attributes, children, element } = props as RenderElementProps<TableElement>;
 
             return renderTableTitle({
               attributes,
@@ -122,7 +122,7 @@ export function createReactTable(options: CreateReactTableOptions = {}): ReactTa
         {
           type: types.table_main,
           render: (props) => {
-            const { attributes, children, element } = props as RenderElementProps;
+            const { attributes, children, element } = props as RenderElementProps<TableElement>;
 
             return renderTableMain({
               attributes,
@@ -134,7 +134,7 @@ export function createReactTable(options: CreateReactTableOptions = {}): ReactTa
         {
           type: types.table_header,
           render: (props) => {
-            const { attributes, children, element } = props as RenderElementProps;
+            const { attributes, children, element } = props as RenderElementProps<TableElement>;
 
             return renderTableHeader({
               attributes,
@@ -146,7 +146,7 @@ export function createReactTable(options: CreateReactTableOptions = {}): ReactTa
         {
           type: types.table_body,
           render: (props) => {
-            const { attributes, children, element } = props as RenderElementProps;
+            const { attributes, children, element } = props as RenderElementProps<TableElement>;
 
             return renderTableBody({
               attributes,
@@ -158,7 +158,7 @@ export function createReactTable(options: CreateReactTableOptions = {}): ReactTa
         {
           type: types.table_row,
           render: (props) => {
-            const { attributes, children, element } = props as RenderElementProps;
+            const { attributes, children, element } = props as RenderElementProps<TableElement>;
 
             return renderTableRow({
               attributes,
@@ -170,7 +170,7 @@ export function createReactTable(options: CreateReactTableOptions = {}): ReactTa
         {
           type: types.table_cell,
           render: (props) => {
-            const { attributes, children, element } = props as RenderElementProps;
+            const { attributes, children, element } = props as RenderElementProps<TableElement>;
 
             return renderTableCell({
               attributes,

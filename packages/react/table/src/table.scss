@@ -52,6 +52,10 @@
   border-#{$border-position}: 2px solid var(--qdr-primary-light);
 }
 
+@mixin title-bg {
+  background-color: var(--qdr-bg);
+}
+
 .qdr-table {
   width: 100%;
   display: flex;
@@ -102,6 +106,10 @@
     }
   }
 
+  &__header {
+    @include title-bg();
+  }
+
   &__main {
     width: 100%;
     margin: 0;
@@ -134,10 +142,6 @@
     }
   }
 
-  &__header {
-    background-color: var(--qdr-surface-tertiary);
-  }
-
   &__body {
     background-color: var(--qdr-surface-primary);
   }
@@ -157,7 +161,7 @@
     &--header {
       font-weight: var(--qdr-typography-article-h6-font-weight);
       color: var(--qdr-text-primary);
-      background-color: var(--qdr-surface-tertiary);
+      @include title-bg();
     }
 
     &--top-active {

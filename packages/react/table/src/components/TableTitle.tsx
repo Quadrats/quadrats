@@ -2,12 +2,9 @@ import React, { useMemo } from 'react';
 import { Editor, Path } from '@quadrats/core';
 import { ReactEditor, useQuadrats, useComposition } from '@quadrats/react';
 import { RenderElementProps } from '@quadrats/react';
+import { TableElement } from '@quadrats/common/table';
 
-function TableTitle(props: {
-  attributes?: RenderElementProps['attributes'];
-  children: RenderElementProps['children'];
-  element: RenderElementProps['element'];
-}) {
+function TableTitle(props: RenderElementProps<TableElement>) {
   const { compositionPath } = useComposition();
   const { attributes, children, element } = props;
   const editor = useQuadrats();

@@ -5,16 +5,28 @@ import { Element, Node } from '@quadrats/core';
 import { ReactEditor } from 'slate-react';
 import { TableHeaderContext } from '../contexts/TableHeaderContext';
 import { Icon } from '@quadrats/react/components';
-import { AddColumnAtLeft, AddColumnAtRight, AddRowAtBottom, AddRowAtTop, Drag, Trash } from '@quadrats/icons';
-import { TABLE_ROW_TYPE, TABLE_HEADER_TYPE, TABLE_MAIN_TYPE, TABLE_BODY_TYPE } from '@quadrats/common/table';
+import {
+  AddColumnAtLeft,
+  AddColumnAtRight,
+  AddRowAtBottom,
+  AddRowAtTop,
+  Drag,
+  TableRemoveTitle,
+  TableSetColumnTitle,
+  TableSetRowTitle,
+  Trash,
+} from '@quadrats/icons';
+import {
+  TABLE_ROW_TYPE,
+  TABLE_HEADER_TYPE,
+  TABLE_MAIN_TYPE,
+  TABLE_BODY_TYPE,
+  TableElement,
+} from '@quadrats/common/table';
 import { useTable } from '../hooks/useTable';
 import { InlineToolbar } from '@quadrats/react/toolbar';
 
-function TableCell(props: {
-  attributes?: RenderElementProps['attributes'];
-  children: RenderElementProps['children'];
-  element: RenderElementProps['element'];
-}) {
+function TableCell(props: RenderElementProps<TableElement>) {
   const { attributes, children, element } = props;
   const {
     tableSelectedOn,
@@ -27,6 +39,10 @@ function TableCell(props: {
     deleteColumn,
     addRow,
     addColumn,
+    moveRowToBody,
+    moveRowToHeader,
+    unsetColumnAsTitle,
+    setColumnAsTitle,
   } = useTable();
 
   const { isHeader } = useContext(TableHeaderContext);
@@ -113,7 +129,7 @@ function TableCell(props: {
         setTableHoveredOn(undefined);
       }}
       className={clsx('qdr-table__cell', {
-        'qdr-table__cell--header': isHeader,
+        'qdr-table__cell--header': isHeader || element.treatAsTitle,
         'qdr-table__cell--top-active': isSelectedInSameRow || (isSelectedInSameColumn && cellPosition.rowIndex === 0),
         'qdr-table__cell--right-active':
           isSelectedInSameColumn || (isSelectedInSameRow && cellPosition.columnIndex === columnCount - 1),
@@ -174,6 +190,63 @@ function TableCell(props: {
             {
               icons: (() => {
                 if (tableSelectedOn?.region === 'row') {
+                  return isHeader
+                    ? [
+                        {
+                          icon: TableRemoveTitle,
+                          onClick: () => {
+                            if (typeof tableSelectedOn.index === 'number') {
+                              moveRowToBody(tableSelectedOn.index);
+                              setTableSelectedOn(undefined);
+                            }
+                          },
+                        },
+                      ]
+                    : [
+                        {
+                          icon: TableSetColumnTitle,
+                          onClick: () => {
+                            if (typeof tableSelectedOn.index === 'number') {
+                              moveRowToHeader(tableSelectedOn.index);
+                              setTableSelectedOn(undefined);
+                            }
+                          },
+                        },
+                      ];
+                }
+
+                if (tableSelectedOn?.region === 'column') {
+                  return element.treatAsTitle
+                    ? [
+                        {
+                          icon: TableRemoveTitle,
+                          onClick: () => {
+                            if (typeof tableSelectedOn.index === 'number') {
+                              unsetColumnAsTitle(tableSelectedOn.index);
+                              setTableSelectedOn(undefined);
+                            }
+                          },
+                        },
+                      ]
+                    : [
+                        {
+                          icon: TableSetRowTitle,
+                          onClick: () => {
+                            if (typeof tableSelectedOn.index === 'number') {
+                              setColumnAsTitle(tableSelectedOn.index);
+                              setTableSelectedOn(undefined);
+                            }
+                          },
+                        },
+                      ];
+                }
+
+                return [];
+              })(),
+            },
+            {
+              icons: (() => {
+                if (tableSelectedOn?.region === 'row') {
                   const addRowAtBottomAction = {
                     icon: AddRowAtBottom,
                     onClick: () => {
@@ -202,7 +275,12 @@ function TableCell(props: {
                     icon: AddColumnAtLeft,
                     onClick: () => {
                       if (typeof tableSelectedOn.index === 'number') {
-                        addColumn({ position: 'left', columnIndex: tableSelectedOn.index });
+                        addColumn({
+                          position: 'left',
+                          columnIndex: tableSelectedOn.index,
+                          treatAsTitle: element.treatAsTitle,
+                        });
+
                         setTableSelectedOn(undefined);
                       }
                     },
@@ -212,7 +290,12 @@ function TableCell(props: {
                     icon: AddColumnAtRight,
                     onClick: () => {
                       if (typeof tableSelectedOn.index === 'number') {
-                        addColumn({ position: 'right', columnIndex: tableSelectedOn.index });
+                        addColumn({
+                          position: 'right',
+                          columnIndex: tableSelectedOn.index,
+                          treatAsTitle: element.treatAsTitle,
+                        });
+
                         setTableSelectedOn(undefined);
                       }
                     },

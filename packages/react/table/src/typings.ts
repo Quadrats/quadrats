@@ -22,11 +22,15 @@ export type TableContextType = {
   columnCount: number;
   rowCount: number;
   // Table structure manipulation
-  addColumn: (options?: { position?: 'left' | 'right'; columnIndex?: number }) => void;
+  addColumn: (options?: { position?: 'left' | 'right'; columnIndex?: number; treatAsTitle?: boolean }) => void;
   addRow: (options?: { position?: 'top' | 'bottom'; rowIndex?: number }) => void;
   addColumnAndRow: VoidFunction;
   deleteRow: (rowIndex: number) => void;
   deleteColumn: (columnIndex: number) => void;
+  moveRowToBody: (rowIndex: number) => void;
+  moveRowToHeader: (rowIndex: number) => void;
+  unsetColumnAsTitle: (columnIndex: number) => void;
+  setColumnAsTitle: (columnIndex: number) => void;
   // Maximum limits status
   isReachMaximumColumns: boolean;
   isReachMaximumRows: boolean;
@@ -52,60 +56,14 @@ export type RenderTableElementProps = RenderElementProps<TableElement>;
 
 export type TableRenderElements = Record<
   TableTypeKey,
-  (props: {
-    attributes?: RenderElementProps['attributes'];
-    children: RenderElementProps['children'];
-    element: RenderTableElementProps['element'];
-  }) => JSX.Element | null | undefined
+  (props: RenderElementProps<TableElement>) => JSX.Element | null | undefined
 > &
-  Record<
-    TableTitleTypeKey,
-    (props: {
-      attributes?: RenderElementProps['attributes'];
-      children: RenderElementProps['children'];
-      element: RenderElementProps['element'];
-    }) => JSX.Element | null | undefined
-  > &
-  Record<
-    TableMainTypeKey,
-    (props: {
-      attributes?: RenderElementProps['attributes'];
-      children: RenderElementProps['children'];
-      element: RenderElementProps['element'];
-    }) => JSX.Element | null | undefined
-  > &
-  Record<
-    TableHeaderTypeKey,
-    (props: {
-      attributes?: RenderElementProps['attributes'];
-      children: RenderElementProps['children'];
-      element: RenderElementProps['element'];
-    }) => JSX.Element | null | undefined
-  > &
-  Record<
-    TableBodyTypeKey,
-    (props: {
-      attributes?: RenderElementProps['attributes'];
-      children: RenderElementProps['children'];
-      element: RenderElementProps['element'];
-    }) => JSX.Element | null | undefined
-  > &
-  Record<
-    TableRowTypeKey,
-    (props: {
-      attributes?: RenderElementProps['attributes'];
-      children: RenderElementProps['children'];
-      element: RenderElementProps['element'];
-    }) => JSX.Element | null | undefined
-  > &
-  Record<
-    TableCellTypeKey,
-    (props: {
-      attributes?: RenderElementProps['attributes'];
-      children: RenderElementProps['children'];
-      element: RenderElementProps['element'];
-    }) => JSX.Element | null | undefined
-  >;
+  Record<TableTitleTypeKey, (props: RenderElementProps<TableElement>) => JSX.Element | null | undefined> &
+  Record<TableMainTypeKey, (props: RenderElementProps<TableElement>) => JSX.Element | null | undefined> &
+  Record<TableHeaderTypeKey, (props: RenderElementProps<TableElement>) => JSX.Element | null | undefined> &
+  Record<TableBodyTypeKey, (props: RenderElementProps<TableElement>) => JSX.Element | null | undefined> &
+  Record<TableRowTypeKey, (props: RenderElementProps<TableElement>) => JSX.Element | null | undefined> &
+  Record<TableCellTypeKey, (props: RenderElementProps<TableElement>) => JSX.Element | null | undefined>;
 
 export type ReactTableCreateRenderElementOptions = {
   [K in

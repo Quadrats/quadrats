@@ -25,7 +25,18 @@ function Table({
   children: RenderElementProps['children'];
   element: RenderTableElementProps['element'];
 }) {
-  const { addColumn, addRow, addColumnAndRow, deleteRow, deleteColumn } = useTableActions(element);
+  const {
+    addColumn,
+    addRow,
+    addColumnAndRow,
+    deleteRow,
+    deleteColumn,
+    moveRowToBody,
+    moveRowToHeader,
+    unsetColumnAsTitle,
+    setColumnAsTitle,
+  } = useTableActions(element);
+
   const { tableSelectedOn, setTableSelectedOn, tableHoveredOn, setTableHoveredOn } = useTableStates();
 
   const { columnCount, rowCount } = useMemo(() => {
@@ -77,6 +88,10 @@ function Table({
       addColumnAndRow,
       deleteRow,
       deleteColumn,
+      moveRowToBody,
+      moveRowToHeader,
+      unsetColumnAsTitle,
+      setColumnAsTitle,
       isReachMaximumColumns,
       isReachMaximumRows,
       tableSelectedOn,
@@ -93,6 +108,10 @@ function Table({
       addColumnAndRow,
       deleteRow,
       deleteColumn,
+      moveRowToBody,
+      moveRowToHeader,
+      unsetColumnAsTitle,
+      setColumnAsTitle,
       isReachMaximumColumns,
       isReachMaximumRows,
       tableSelectedOn,

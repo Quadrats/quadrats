@@ -6,12 +6,9 @@ import { Plus, Trash } from '@quadrats/icons';
 import { useTable } from '../hooks/useTable';
 import { InlineToolbar } from '@quadrats/react/toolbar';
 import { Transforms } from 'slate';
+import { TableElement } from '@quadrats/common/table';
 
-function TableMain(props: {
-  attributes?: RenderElementProps['attributes'];
-  children: RenderElementProps['children'];
-  element: RenderElementProps['element'];
-}) {
+function TableMain(props: RenderElementProps<TableElement>) {
   const { attributes, children } = props;
 
   const { setConfirmModalConfig } = useModal();

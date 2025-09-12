@@ -18,7 +18,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
   const addColumn: TableContextType['addColumn'] = useCallback(
     (options = {}) => {
-      const { position = 'right', columnIndex } = options;
+      const { position = 'right', columnIndex, treatAsTitle } = options;
 
       try {
         const tableMainElement = element.children.find(
@@ -73,6 +73,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
             if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
               const newCell = {
                 type: TABLE_CELL_TYPE,
+                treatAsTitle,
                 children: [{ text: '' }],
               };
 
@@ -91,6 +92,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
             const newCell = {
               type: TABLE_CELL_TYPE,
+              treatAsTitle,
               children: [{ text: '' }],
             };
 
@@ -147,11 +149,37 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
         const columnCount = firstRow.children.length;
 
+        // Check which columns are title columns by examining existing rows
+        const columnTitleStatus: boolean[] = Array.from({ length: columnCount }, () => false);
+
+        // Check all existing rows to determine title column status
+        const allRows = [
+          ...(tableHeaderElement && Element.isElement(tableHeaderElement) ? tableHeaderElement.children : []),
+          ...tableBodyElement.children,
+        ];
+
+        allRows.forEach((row) => {
+          if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+            row.children.forEach((cell, cellIndex) => {
+              if (
+                Element.isElement(cell) &&
+                cell.type.includes(TABLE_CELL_TYPE) &&
+                cell.treatAsTitle &&
+                cellIndex < columnCount
+              ) {
+                columnTitleStatus[cellIndex] = true;
+              }
+            });
+          }
+        });
+
+        // Create new row with appropriate treatAsTitle properties
         const newRow = {
           type: TABLE_ROW_TYPE,
-          children: Array.from({ length: columnCount }, () => ({
+          children: Array.from({ length: columnCount }, (_, index) => ({
             type: TABLE_CELL_TYPE,
             children: [{ text: '' }],
+            ...(columnTitleStatus[index] ? { treatAsTitle: true } : {}),
           })),
         };
 
@@ -282,11 +310,39 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         if (Element.isElement(firstRow)) {
           const newColumnCount = firstRow.children.length + 1; // +1 because we just added a column
 
+          // Check which columns are title columns by examining existing rows
+          const columnTitleStatus: boolean[] = Array.from({ length: newColumnCount }, () => false);
+
+          // Check all existing rows to determine title column status
+          const allRows = [
+            ...(tableHeaderElement && Element.isElement(tableHeaderElement) ? tableHeaderElement.children : []),
+            ...tableBodyElement.children,
+          ];
+
+          allRows.forEach((row) => {
+            if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+              row.children.forEach((cell, cellIndex) => {
+                if (
+                  Element.isElement(cell) &&
+                  cell.type.includes(TABLE_CELL_TYPE) &&
+                  cell.treatAsTitle &&
+                  cellIndex < newColumnCount - 1 // Exclude the newly added column
+                ) {
+                  columnTitleStatus[cellIndex] = true;
+                }
+              });
+            }
+          });
+
+          // The newly added column (last one) is not a title column by default
+          columnTitleStatus[newColumnCount - 1] = false;
+
           const newRow = {
             type: TABLE_ROW_TYPE,
-            children: Array.from({ length: newColumnCount }, () => ({
+            children: Array.from({ length: newColumnCount }, (_, index) => ({
               type: TABLE_CELL_TYPE,
               children: [{ text: '' }],
+              ...(columnTitleStatus[index] ? { treatAsTitle: true } : {}),
             })),
           };
 
@@ -300,8 +356,8 @@ export function useTableActions(element: RenderTableElementProps['element']) {
     }
   }, [editor, element]);
 
-  const deleteRow = useCallback(
-    (rowIndex: number) => {
+  const deleteRow: TableContextType['deleteRow'] = useCallback(
+    (rowIndex) => {
       try {
         const tableMainElement = element.children.find(
           (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
@@ -372,8 +428,8 @@ export function useTableActions(element: RenderTableElementProps['element']) {
     [editor, element],
   );
 
-  const deleteColumn = useCallback(
-    (columnIndex: number) => {
+  const deleteColumn: TableContextType['deleteColumn'] = useCallback(
+    (columnIndex) => {
       try {
         const tableMainElement = element.children.find(
           (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
@@ -444,11 +500,370 @@ export function useTableActions(element: RenderTableElementProps['element']) {
     [editor, element],
   );
 
+  const moveRowToBody: TableContextType['moveRowToBody'] = useCallback(
+    (rowIndex: number) => {
+      try {
+        const tableMainElement = element.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
+        );
+
+        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+
+        const tableBodyElement = tableMainElement.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
+        );
+
+        const tableHeaderElement = tableMainElement.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
+        );
+
+        if (
+          !tableBodyElement ||
+          !Element.isElement(tableBodyElement) ||
+          !tableHeaderElement ||
+          !Element.isElement(tableHeaderElement)
+        )
+          return;
+
+        // Check if the row exists in header (rowIndex should be within header range)
+        if (rowIndex >= tableHeaderElement.children.length) {
+          console.warn('Invalid header row index:', rowIndex);
+
+          return;
+        }
+
+        const rowToMove = tableHeaderElement.children[rowIndex];
+
+        if (!Element.isElement(rowToMove) || !rowToMove.type.includes(TABLE_ROW_TYPE)) return;
+
+        const tableHeaderPath = ReactEditor.findPath(editor, tableHeaderElement);
+        const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
+        const rowPath = [...tableHeaderPath, rowIndex];
+
+        // Move row to the end of body
+        const bodyTargetPath = [...tableBodyPath, tableBodyElement.children.length];
+
+        Transforms.moveNodes(editor, {
+          at: rowPath,
+          to: bodyTargetPath,
+        });
+      } catch (error) {
+        console.warn('Failed to move row to body:', error);
+      }
+    },
+    [editor, element],
+  );
+
+  const moveRowToHeader: TableContextType['moveRowToHeader'] = useCallback(
+    (rowIndex: number) => {
+      try {
+        const tableMainElement = element.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
+        );
+
+        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+
+        const tableBodyElement = tableMainElement.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
+        );
+
+        const tableHeaderElement = tableMainElement.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
+        );
+
+        if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
+
+        // Calculate the correct body row index
+        const headerRowCount =
+          tableHeaderElement && Element.isElement(tableHeaderElement) ? tableHeaderElement.children.length : 0;
+
+        const bodyRowIndex = rowIndex - headerRowCount;
+
+        // Check if the body row index is valid
+        if (bodyRowIndex < 0 || bodyRowIndex >= tableBodyElement.children.length) {
+          console.warn('Invalid body row index:', bodyRowIndex);
+
+          return;
+        }
+
+        // Check if the row exists
+        const rowToMove = tableBodyElement.children[bodyRowIndex];
+
+        if (!Element.isElement(rowToMove) || !rowToMove.type.includes(TABLE_ROW_TYPE)) return;
+
+        const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
+        const rowPath = [...tableBodyPath, bodyRowIndex];
+
+        // If header doesn't exist, create it first
+        if (!tableHeaderElement || !Element.isElement(tableHeaderElement)) {
+          const newHeader = {
+            type: TABLE_HEADER_TYPE,
+            children: [],
+          };
+
+          const tableMainPath = ReactEditor.findPath(editor, tableMainElement);
+          const headerInsertPath = [...tableMainPath, 0];
+
+          Transforms.insertNodes(editor, newHeader, { at: headerInsertPath });
+
+          // Get the newly created header element
+          const updatedTableMainElement = element.children.find(
+            (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
+          );
+
+          if (!updatedTableMainElement || !Element.isElement(updatedTableMainElement)) return;
+
+          const updatedTableHeaderElement = updatedTableMainElement.children.find(
+            (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
+          );
+
+          if (!updatedTableHeaderElement || !Element.isElement(updatedTableHeaderElement)) return;
+
+          const updatedTableHeaderPath = ReactEditor.findPath(editor, updatedTableHeaderElement);
+          const headerTargetPath = [...updatedTableHeaderPath, 0];
+
+          // Move the row to the newly created header
+          Transforms.moveNodes(editor, {
+            at: rowPath,
+            to: headerTargetPath,
+          });
+        } else {
+          // Move row to the end of existing header
+          const tableHeaderPath = ReactEditor.findPath(editor, tableHeaderElement);
+          const headerTargetPath = [...tableHeaderPath, tableHeaderElement.children.length];
+
+          Transforms.moveNodes(editor, {
+            at: rowPath,
+            to: headerTargetPath,
+          });
+        }
+      } catch (error) {
+        console.warn('Failed to move row to header:', error);
+      }
+    },
+    [editor, element],
+  );
+
+  const unsetColumnAsTitle: TableContextType['unsetColumnAsTitle'] = useCallback(
+    (columnIndex: number) => {
+      try {
+        const tableMainElement = element.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
+        );
+
+        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+
+        const tableBodyElement = tableMainElement.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
+        );
+
+        const tableHeaderElement = tableMainElement.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
+        );
+
+        if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
+
+        // Function to process a container (header or body)
+        const processContainer = (containerElement: Element) => {
+          if (!Element.isElement(containerElement)) return;
+
+          const containerPath = ReactEditor.findPath(editor, containerElement);
+
+          // Find the target insertion index (after all remaining title columns)
+          let targetColumnIndex = 0;
+
+          // Check first row to find where non-title columns should start
+          const firstRow = containerElement.children[0];
+
+          if (Element.isElement(firstRow) && firstRow.type.includes(TABLE_ROW_TYPE)) {
+            // Count title columns (excluding the one we're unsetting)
+            for (let i = 0; i < firstRow.children.length; i++) {
+              const cell = firstRow.children[i];
+
+              if (
+                Element.isElement(cell) &&
+                cell.type.includes(TABLE_CELL_TYPE) &&
+                (cell as any).treatAsTitle &&
+                i !== columnIndex // Exclude the column we're unsetting
+              ) {
+                targetColumnIndex = i + 1;
+              }
+            }
+          }
+
+          // Unset treatAsTitle for all cells in the column first
+          containerElement.children.forEach((row, rowIndex) => {
+            if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+              const cell = row.children[columnIndex];
+
+              if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
+                const cellPath = [...containerPath, rowIndex, columnIndex];
+
+                Transforms.unsetNodes(editor, 'treatAsTitle', { at: cellPath });
+              }
+            }
+          });
+
+          // Move the column to the end of title columns if needed
+          if (columnIndex < targetColumnIndex) {
+            // We need to move the column to position targetColumnIndex
+            // Since we're moving from left to right, we need to adjust for the removed column
+            const actualTargetIndex = targetColumnIndex - 1;
+
+            // Move each cell in the column to the new position
+            // Note: We need to move from bottom to top to avoid path conflicts
+            for (let rowIndex = containerElement.children.length - 1; rowIndex >= 0; rowIndex--) {
+              const row = containerElement.children[rowIndex];
+
+              if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+                const fromPath = [...containerPath, rowIndex, columnIndex];
+                const toPath = [...containerPath, rowIndex, actualTargetIndex];
+
+                Transforms.moveNodes(editor, {
+                  at: fromPath,
+                  to: toPath,
+                });
+              }
+            }
+          }
+        };
+
+        // Process header if it exists
+        if (tableHeaderElement && Element.isElement(tableHeaderElement)) {
+          processContainer(tableHeaderElement);
+        }
+
+        // Process body
+        processContainer(tableBodyElement);
+      } catch (error) {
+        console.warn('Failed to unset column as title:', error);
+      }
+    },
+    [editor, element],
+  );
+
+  const setColumnAsTitle: TableContextType['setColumnAsTitle'] = useCallback(
+    (columnIndex: number) => {
+      try {
+        const tableMainElement = element.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
+        );
+
+        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+
+        const tableBodyElement = tableMainElement.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
+        );
+
+        const tableHeaderElement = tableMainElement.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
+        );
+
+        if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
+
+        // Function to process a container (header or body)
+        const processContainer = (containerElement: Element) => {
+          if (!Element.isElement(containerElement)) return;
+
+          const containerPath = ReactEditor.findPath(editor, containerElement);
+
+          // Find the target insertion index for title columns
+          let targetColumnIndex = 0;
+
+          // Check first row to find existing title columns
+          const firstRow = containerElement.children[0];
+
+          if (Element.isElement(firstRow) && firstRow.type.includes(TABLE_ROW_TYPE)) {
+            // Count existing title columns to determine insertion position
+            for (let i = 0; i < firstRow.children.length; i++) {
+              const cell = firstRow.children[i];
+
+              if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE) && (cell as any).treatAsTitle) {
+                targetColumnIndex = i + 1;
+              } else {
+                break; // Stop at first non-title column
+              }
+            }
+          }
+
+          // If the column is already a title column and at the correct position, just set the property
+          if (
+            Element.isElement(firstRow) &&
+            firstRow.type.includes(TABLE_ROW_TYPE) &&
+            columnIndex < targetColumnIndex
+          ) {
+            // Just ensure all cells in this column have treatAsTitle: true
+            containerElement.children.forEach((row, rowIndex) => {
+              if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+                const cell = row.children[columnIndex];
+
+                if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
+                  const cellPath = [...containerPath, rowIndex, columnIndex];
+
+                  Transforms.setNodes(editor, { treatAsTitle: true } as Partial<Element>, { at: cellPath });
+                }
+              }
+            });
+
+            return;
+          }
+
+          // Set treatAsTitle for all cells in the column first
+          containerElement.children.forEach((row, rowIndex) => {
+            if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+              const cell = row.children[columnIndex];
+
+              if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
+                const cellPath = [...containerPath, rowIndex, columnIndex];
+
+                Transforms.setNodes(editor, { treatAsTitle: true } as Partial<Element>, { at: cellPath });
+              }
+            }
+          });
+
+          // Move the column to the correct position if needed
+          if (columnIndex !== targetColumnIndex) {
+            // Move each cell in the column to the new position
+            // Note: We need to move from bottom to top to avoid path conflicts
+            for (let rowIndex = containerElement.children.length - 1; rowIndex >= 0; rowIndex--) {
+              const row = containerElement.children[rowIndex];
+
+              if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+                const fromPath = [...containerPath, rowIndex, columnIndex];
+                const toPath = [...containerPath, rowIndex, targetColumnIndex];
+
+                Transforms.moveNodes(editor, {
+                  at: fromPath,
+                  to: toPath,
+                });
+              }
+            }
+          }
+        };
+
+        // Process header if it exists
+        if (tableHeaderElement && Element.isElement(tableHeaderElement)) {
+          processContainer(tableHeaderElement);
+        }
+
+        // Process body
+        processContainer(tableBodyElement);
+      } catch (error) {
+        console.warn('Failed to set column as title:', error);
+      }
+    },
+    [editor, element],
+  );
+
   return {
     addColumn,
     addRow,
     addColumnAndRow,
     deleteRow,
     deleteColumn,
+    moveRowToBody,
+    moveRowToHeader,
+    unsetColumnAsTitle,
+    setColumnAsTitle,
   };
 }
