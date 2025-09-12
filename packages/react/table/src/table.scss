@@ -113,7 +113,8 @@
   &__cell__inline-table-toolbar {
     pointer-events: none;
     top: -50px;
-    right: 50%;
+    left: 0;
+    right: unset;
   }
 
   &__mainWrapper {

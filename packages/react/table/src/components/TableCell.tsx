@@ -5,7 +5,7 @@ import { Element, Node } from '@quadrats/core';
 import { ReactEditor } from 'slate-react';
 import { TableHeaderContext } from '../contexts/TableHeaderContext';
 import { Icon } from '@quadrats/react/components';
-import { Drag, Trash } from '@quadrats/icons';
+import { AddColumnAtLeft, AddColumnAtRight, AddRowAtBottom, AddRowAtTop, Drag, Trash } from '@quadrats/icons';
 import { TABLE_ROW_TYPE, TABLE_HEADER_TYPE, TABLE_MAIN_TYPE, TABLE_BODY_TYPE } from '@quadrats/common/table';
 import { useTable } from '../hooks/useTable';
 import { InlineToolbar } from '@quadrats/react/toolbar';
@@ -151,6 +151,63 @@ function TableCell(props: {
         <InlineToolbar
           className="qdr-table__cell__inline-table-toolbar"
           iconGroups={[
+            {
+              icons: (() => {
+                if (tableSelectedOn?.region === 'row') {
+                  const addRowAtBottomAction = {
+                    icon: AddRowAtBottom,
+                    onClick: () => {
+                      /** @TODO add row at bottom */
+                    },
+                  };
+
+                  const addRowAtTopAction = {
+                    icon: AddRowAtTop,
+                    onClick: () => {
+                      /** @TODO add row at top */
+                    },
+                  };
+
+                  if (cellPosition.rowIndex === 0) {
+                    return [addRowAtBottomAction];
+                  }
+
+                  if (cellPosition.rowIndex === rowCount - 1) {
+                    return [addRowAtTopAction];
+                  }
+
+                  return [addRowAtBottomAction, addRowAtTopAction];
+                }
+
+                if (tableSelectedOn?.region === 'column') {
+                  const addColumnAtLeftAction = {
+                    icon: AddColumnAtLeft,
+                    onClick: () => {
+                      /** @TODO add column at left */
+                    },
+                  };
+
+                  const addColumnAtRightAction = {
+                    icon: AddColumnAtRight,
+                    onClick: () => {
+                      /** @TODO add column at right */
+                    },
+                  };
+
+                  if (cellPosition.columnIndex === 0) {
+                    return [addColumnAtRightAction];
+                  }
+
+                  if (cellPosition.columnIndex === columnCount - 1) {
+                    return [addColumnAtLeftAction];
+                  }
+
+                  return [addColumnAtLeftAction, addColumnAtRightAction];
+                }
+
+                return [];
+              })(),
+            },
             {
               icons: [
                 {
