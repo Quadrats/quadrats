@@ -12,14 +12,6 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
   const types: TableTypes = { ...TABLE_TYPES, ...typesOptions };
 
   const createTableElement: Table<Editor>['createTableElement'] = (rows, cols) => {
-    const bodyRows = Array.from({ length: rows - 1 }, () => ({
-      type: types.table_row,
-      children: Array.from({ length: cols }, () => ({
-        type: types.table_cell,
-        children: [{ text: '' }],
-      })),
-    }));
-
     return {
       type: types.table,
       children: [
@@ -41,7 +33,13 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
             },
             {
               type: types.table_body,
-              children: bodyRows,
+              children: Array.from({ length: rows - 1 }, () => ({
+                type: types.table_row,
+                children: Array.from({ length: cols }, () => ({
+                  type: types.table_cell,
+                  children: [{ text: '' }],
+                })),
+              })),
             },
           ],
         },

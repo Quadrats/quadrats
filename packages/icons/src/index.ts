@@ -51,6 +51,8 @@ export { ReadMore } from './read-more';
 export { Strikethrough } from './strikethrough';
 export { Success } from './success';
 export { Table } from './table';
+export { TableSetColumnTitle } from './table-set-column-title';
+export { TableSetRowTitle } from './table-set-row-title';
 export { Edit } from './edit';
 export { Trash } from './trash';
 export { Twitter } from './twitter';
