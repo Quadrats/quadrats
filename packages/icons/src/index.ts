@@ -53,6 +53,7 @@ export { Success } from './success';
 export { Table } from './table';
 export { TableSetColumnTitle } from './table-set-column-title';
 export { TableSetRowTitle } from './table-set-row-title';
+export { TableRemoveTitle } from './table-remove-title';
 export { Edit } from './edit';
 export { Trash } from './trash';
 export { Twitter } from './twitter';
