@@ -20,8 +20,10 @@ export type TableTypes = Record<
 >;
 
 export interface TableElement extends QuadratsElement, WithElementType {
+  treatAsTitle?: boolean;
   children: {
     type: string;
+    treatAsTitle?: boolean;
     children: TableElement['children'] | Text[];
   }[];
 }
