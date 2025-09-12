@@ -16,7 +16,9 @@ function TableCell(props: {
   element: RenderElementProps['element'];
 }) {
   const { attributes, children, element } = props;
-  const { tableSelectedOn, setTableSelectedOn, columnCount, rowCount, deleteRow, deleteColumn } = useTable();
+  const { tableSelectedOn, setTableSelectedOn, columnCount, rowCount, deleteRow, deleteColumn, addRow, addColumn } =
+    useTable();
+
   const { isHeader } = useContext(TableHeaderContext);
   const editor = useSlateStatic();
   const cellPath = ReactEditor.findPath(editor, element);
@@ -157,24 +159,22 @@ function TableCell(props: {
                   const addRowAtBottomAction = {
                     icon: AddRowAtBottom,
                     onClick: () => {
-                      /** @TODO add row at bottom */
+                      if (typeof tableSelectedOn.index === 'number') {
+                        addRow({ position: 'bottom', rowIndex: tableSelectedOn.index });
+                        setTableSelectedOn(undefined);
+                      }
                     },
                   };
 
                   const addRowAtTopAction = {
                     icon: AddRowAtTop,
                     onClick: () => {
-                      /** @TODO add row at top */
+                      if (typeof tableSelectedOn.index === 'number') {
+                        addRow({ position: 'top', rowIndex: tableSelectedOn.index });
+                        setTableSelectedOn(undefined);
+                      }
                     },
                   };
-
-                  if (cellPosition.rowIndex === 0) {
-                    return [addRowAtBottomAction];
-                  }
-
-                  if (cellPosition.rowIndex === rowCount - 1) {
-                    return [addRowAtTopAction];
-                  }
 
                   return [addRowAtBottomAction, addRowAtTopAction];
                 }
@@ -183,24 +183,22 @@ function TableCell(props: {
                   const addColumnAtLeftAction = {
                     icon: AddColumnAtLeft,
                     onClick: () => {
-                      /** @TODO add column at left */
+                      if (typeof tableSelectedOn.index === 'number') {
+                        addColumn({ position: 'left', columnIndex: tableSelectedOn.index });
+                        setTableSelectedOn(undefined);
+                      }
                     },
                   };
 
                   const addColumnAtRightAction = {
                     icon: AddColumnAtRight,
                     onClick: () => {
-                      /** @TODO add column at right */
+                      if (typeof tableSelectedOn.index === 'number') {
+                        addColumn({ position: 'right', columnIndex: tableSelectedOn.index });
+                        setTableSelectedOn(undefined);
+                      }
                     },
                   };
-
-                  if (cellPosition.columnIndex === 0) {
-                    return [addColumnAtRightAction];
-                  }
-
-                  if (cellPosition.columnIndex === columnCount - 1) {
-                    return [addColumnAtLeftAction];
-                  }
 
                   return [addColumnAtLeftAction, addColumnAtRightAction];
                 }

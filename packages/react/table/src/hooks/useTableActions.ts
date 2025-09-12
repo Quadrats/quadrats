@@ -16,116 +16,196 @@ import { useQuadrats } from '@quadrats/react';
 export function useTableActions(element: RenderTableElementProps['element']) {
   const editor = useQuadrats();
 
-  const addColumn: TableContextType['addColumn'] = useCallback(() => {
-    try {
-      const tableMainElement = element.children.find(
-        (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-      );
+  const addColumn: TableContextType['addColumn'] = useCallback(
+    (options = {}) => {
+      const { position = 'right', columnIndex } = options;
 
-      if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+      try {
+        const tableMainElement = element.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
+        );
 
-      const tableBodyElement = tableMainElement.children.find(
-        (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
-      );
+        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
 
-      const tableHeaderElement = tableMainElement.children.find(
-        (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-      );
+        const tableBodyElement = tableMainElement.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
+        );
 
-      if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
+        const tableHeaderElement = tableMainElement.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
+        );
 
-      // Check column limit
-      const firstRow = tableBodyElement.children[0];
+        if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
 
-      if (Element.isElement(firstRow) && firstRow.children.length >= TABLE_MAX_COLUMNS) {
-        console.warn(`Maximum columns limit (${TABLE_MAX_COLUMNS}) reached`);
+        // Check column limit
+        const firstRow = tableBodyElement.children[0];
 
-        return;
-      }
+        if (Element.isElement(firstRow) && firstRow.children.length >= TABLE_MAX_COLUMNS) {
+          console.warn(`Maximum columns limit (${TABLE_MAX_COLUMNS}) reached`);
 
-      // Add cell to each row in header
-      if (Element.isElement(tableHeaderElement) && tableHeaderElement.children.length > 0) {
-        const tableHeaderPath = ReactEditor.findPath(editor, tableHeaderElement);
+          return;
+        }
 
-        tableHeaderElement.children.forEach((row, rowIndex) => {
+        // Calculate insertion index
+        let insertIndex: number;
+
+        if (typeof columnIndex === 'number' && Element.isElement(firstRow)) {
+          // Use provided index
+          if (position === 'left') {
+            insertIndex = Math.max(0, columnIndex);
+          } else {
+            insertIndex = Math.min(firstRow.children.length, columnIndex + 1);
+          }
+        } else if (Element.isElement(firstRow)) {
+          // Default behavior: append at the end
+          insertIndex = firstRow.children.length;
+        } else {
+          console.warn('Failed to determine insertion index: no valid first row found');
+
+          return;
+        }
+
+        // Add cell to each row in header
+        if (Element.isElement(tableHeaderElement) && tableHeaderElement.children.length > 0) {
+          const tableHeaderPath = ReactEditor.findPath(editor, tableHeaderElement);
+
+          tableHeaderElement.children.forEach((row, rowIndex) => {
+            if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+              const newCell = {
+                type: TABLE_CELL_TYPE,
+                children: [{ text: '' }],
+              };
+
+              const rowPath = [...tableHeaderPath, rowIndex];
+              const cellPath = [...rowPath, insertIndex];
+
+              Transforms.insertNodes(editor, newCell, { at: cellPath });
+            }
+          });
+        }
+
+        // Add cell to each row in body
+        const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
+
+        tableBodyElement.children.forEach((row, rowIndex) => {
           if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
             const newCell = {
               type: TABLE_CELL_TYPE,
               children: [{ text: '' }],
             };
 
-            const rowPath = [...tableHeaderPath, rowIndex];
-            const cellPath = [...rowPath, row.children.length];
+            const rowPath = [...tableBodyPath, rowIndex];
+            const cellPath = [...rowPath, insertIndex];
 
             Transforms.insertNodes(editor, newCell, { at: cellPath });
           }
         });
+      } catch (error) {
+        console.warn('Failed to add column:', error);
       }
+    },
+    [editor, element],
+  );
 
-      // Add cell to each row in body
-      const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
+  const addRow: TableContextType['addRow'] = useCallback(
+    (options = {}) => {
+      const { position = 'bottom', rowIndex } = options;
 
-      tableBodyElement.children.forEach((row, rowIndex) => {
-        if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
-          const newCell = {
+      try {
+        const tableMainElement = element.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
+        );
+
+        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+
+        const tableBodyElement = tableMainElement.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
+        );
+
+        const tableHeaderElement = tableMainElement.children.find(
+          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
+        );
+
+        if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
+
+        // Check row limit
+        let totalRows = tableBodyElement.children.length;
+
+        if (tableHeaderElement && Element.isElement(tableHeaderElement)) {
+          totalRows += tableHeaderElement.children.length;
+        }
+
+        if (totalRows >= TABLE_MAX_ROWS) {
+          console.warn(`Maximum rows limit (${TABLE_MAX_ROWS}) reached`);
+
+          return;
+        }
+
+        const firstRow = tableBodyElement.children[0];
+
+        if (!Element.isElement(firstRow) || !firstRow.type.includes(TABLE_ROW_TYPE)) return;
+
+        const columnCount = firstRow.children.length;
+
+        const newRow = {
+          type: TABLE_ROW_TYPE,
+          children: Array.from({ length: columnCount }, () => ({
             type: TABLE_CELL_TYPE,
             children: [{ text: '' }],
-          };
+          })),
+        };
 
-          const rowPath = [...tableBodyPath, rowIndex];
-          const cellPath = [...rowPath, row.children.length];
+        // Determine where to insert the row
+        if (typeof rowIndex === 'number' && tableHeaderElement && Element.isElement(tableHeaderElement)) {
+          const totalHeaderRows = tableHeaderElement.children.filter(
+            (child) => Element.isElement(child) && child.type.includes(TABLE_ROW_TYPE),
+          ).length;
 
-          Transforms.insertNodes(editor, newCell, { at: cellPath });
+          // Check if we're inserting in header region
+          if (rowIndex < totalHeaderRows) {
+            const headerPath = ReactEditor.findPath(editor, tableHeaderElement);
+            let insertIndex: number;
+
+            if (position === 'top') {
+              insertIndex = Math.max(0, rowIndex);
+            } else {
+              insertIndex = Math.min(totalHeaderRows, rowIndex + 1);
+            }
+
+            const newRowPath = [...headerPath, insertIndex];
+
+            Transforms.insertNodes(editor, newRow, { at: newRowPath });
+
+            return;
+          }
+
+          // Inserting in body region - adjust rowIndex
+          const bodyRowIndex = rowIndex - totalHeaderRows;
+          const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
+          let insertIndex: number;
+
+          if (position === 'top') {
+            insertIndex = Math.max(0, bodyRowIndex);
+          } else {
+            insertIndex = Math.min(tableBodyElement.children.length, bodyRowIndex + 1);
+          }
+
+          const newRowPath = [...tableBodyPath, insertIndex];
+
+          Transforms.insertNodes(editor, newRow, { at: newRowPath });
+        } else {
+          // Default behavior: append at the end of body
+          const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
+          const newRowPath = [...tableBodyPath, tableBodyElement.children.length];
+
+          Transforms.insertNodes(editor, newRow, { at: newRowPath });
         }
-      });
-    } catch (error) {
-      console.warn('Failed to add column:', error);
-    }
-  }, [editor, element]);
-
-  const addRow: TableContextType['addRow'] = useCallback(() => {
-    try {
-      const tableMainElement = element.children.find(
-        (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-      );
-
-      if (!tableMainElement || !Element.isElement(tableMainElement)) return;
-
-      const tableBodyElement = tableMainElement.children.find(
-        (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
-      );
-
-      if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
-
-      // Check row limit
-      if (tableBodyElement.children.length >= TABLE_MAX_ROWS) {
-        console.warn(`Maximum rows limit (${TABLE_MAX_ROWS}) reached`);
-
-        return;
+      } catch (error) {
+        console.warn('Failed to add row:', error);
       }
-
-      const firstRow = tableBodyElement.children[0];
-
-      if (!Element.isElement(firstRow) || !firstRow.type.includes(TABLE_ROW_TYPE)) return;
-
-      const columnCount = firstRow.children.length;
-
-      const newRow = {
-        type: TABLE_ROW_TYPE,
-        children: Array.from({ length: columnCount }, () => ({
-          type: TABLE_CELL_TYPE,
-          children: [{ text: '' }],
-        })),
-      };
-
-      const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
-      const newRowPath = [...tableBodyPath, tableBodyElement.children.length];
-
-      Transforms.insertNodes(editor, newRow, { at: newRowPath });
-    } catch (error) {
-      console.warn('Failed to add row:', error);
-    }
-  }, [editor, element]);
+    },
+    [editor, element],
+  );
 
   const addColumnAndRow: TableContextType['addColumnAndRow'] = useCallback(() => {
     try {

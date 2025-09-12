@@ -22,8 +22,8 @@ export type TableContextType = {
   columnCount: number;
   rowCount: number;
   // Table structure manipulation
-  addColumn: VoidFunction;
-  addRow: VoidFunction;
+  addColumn: (options?: { position?: 'left' | 'right'; columnIndex?: number }) => void;
+  addRow: (options?: { position?: 'top' | 'bottom'; rowIndex?: number }) => void;
   addColumnAndRow: VoidFunction;
   deleteRow: (rowIndex: number) => void;
   deleteColumn: (columnIndex: number) => void;

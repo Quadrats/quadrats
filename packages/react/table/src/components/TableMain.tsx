@@ -61,12 +61,12 @@ function TableMain(props: {
         {children}
       </table>
       {isReachMaximumColumns ? null : (
-        <button type="button" onClick={addColumn} title="Add Column" className="qdr-table__add-column">
+        <button type="button" onClick={() => addColumn()} title="Add Column" className="qdr-table__add-column">
           <Icon icon={Plus} width={20} height={20} className="qdr-table__btn-icon" />
         </button>
       )}
       {isReachMaximumRows ? null : (
-        <button type="button" onClick={addRow} title="Add Row" className="qdr-table__add-row">
+        <button type="button" onClick={() => addRow()} title="Add Row" className="qdr-table__add-row">
           <Icon icon={Plus} width={20} height={20} className="qdr-table__btn-icon" />
         </button>
       )}
