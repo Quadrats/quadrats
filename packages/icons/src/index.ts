@@ -5,6 +5,10 @@ export { IconDefinition } from './typings';
  */
 export { Accordion } from './accordion';
 export { AccordionDown } from './accordion-down';
+export { AddColumnAtLeft } from './add-column-at-left';
+export { AddColumnAtRight } from './add-column-at-right';
+export { AddRowAtTop } from './add-row-at-top';
+export { AddRowAtBottom } from './add-row-at-bottom';
 export { AlignLeft } from './align-left';
 export { AlignCenter } from './align-center';
 export { AlignRight } from './align-right';
