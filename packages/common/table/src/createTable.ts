@@ -162,6 +162,169 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
     isSelectionInTableBody,
     moveToNextCell,
     with(editor) {
+      editor.normalizeNode = (entry) => {
+        const [node, path] = entry;
+
+        if (Element.isElement(node)) {
+          const type = node.type;
+
+          // 1. 防止巢狀 table
+          if (type === types.table) {
+            for (const [, childPath] of Editor.nodes(editor, {
+              at: path,
+              match: (n) => Element.isElement(n) && n.type === types.table,
+            })) {
+              if (childPath.length > path.length) {
+                Transforms.removeNodes(editor, { at: childPath });
+
+                return;
+              }
+            }
+
+            // 確保 table 有必要的結構：title + main
+            const children = node.children.filter((child) => Element.isElement(child));
+            const titleChild = children.find((child) => child.type === types.table_title);
+            const mainChild = children.find((child) => child.type === types.table_main);
+
+            if (!titleChild) {
+              Transforms.insertNodes(
+                editor,
+                { type: types.table_title, children: [{ text: '' }] },
+                { at: [...path, 0] },
+              );
+
+              return;
+            }
+
+            if (!mainChild) {
+              const mainIndex = titleChild ? 1 : 0;
+
+              Transforms.insertNodes(
+                editor,
+                {
+                  type: types.table_main,
+                  children: [
+                    {
+                      type: types.table_body,
+                      children: [
+                        {
+                          type: types.table_row,
+                          children: [{ type: types.table_cell, children: [{ text: '' }] }],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                { at: [...path, mainIndex] },
+              );
+
+              return;
+            }
+          }
+
+          // 2. table_main 必須至少有一個 table_body
+          if (type === types.table_main) {
+            const children = node.children.filter((child) => Element.isElement(child));
+            const bodyChild = children.find((child) => child.type === types.table_body);
+
+            if (!bodyChild) {
+              Transforms.insertNodes(
+                editor,
+                {
+                  type: types.table_body,
+                  children: [
+                    {
+                      type: types.table_row,
+                      children: [{ type: types.table_cell, children: [{ text: '' }] }],
+                    },
+                  ],
+                },
+                { at: [...path, children.length] },
+              );
+
+              return;
+            }
+          }
+
+          // 3. table_header 和 table_body 必須有合理的 row 結構
+          if (type === types.table_header) {
+            const children = node.children.filter((child) => Element.isElement(child));
+            const rowChildren = children.filter((child) => child.type === types.table_row);
+
+            // 如果 header 沒有任何 row，移除整個 header
+            if (rowChildren.length === 0) {
+              Transforms.removeNodes(editor, { at: path });
+
+              return;
+            }
+          }
+
+          if (type === types.table_body) {
+            const children = node.children.filter((child) => Element.isElement(child));
+            const rowChildren = children.filter((child) => child.type === types.table_row);
+
+            // body 必須至少有一個 row
+            if (rowChildren.length === 0) {
+              Transforms.insertNodes(
+                editor,
+                {
+                  type: types.table_row,
+                  children: [{ type: types.table_cell, children: [{ text: '' }] }],
+                },
+                { at: [...path, 0] },
+              );
+
+              return;
+            }
+          }
+        }
+      };
+
+      const { deleteBackward } = editor;
+
+      editor.deleteBackward = (unit) => {
+        const { selection } = editor;
+
+        if (selection) {
+          // 檢查是否在 table_title 中
+          const titleEntry = Editor.above(editor, {
+            match: (n) => Element.isElement(n) && n.type === types.table_title,
+          });
+
+          if (titleEntry) {
+            const [, titlePath] = titleEntry;
+
+            // 檢查 title 是否為空或只有空白
+            const titleText = Editor.string(editor, titlePath);
+
+            if (!titleText.trim() && Editor.isStart(editor, selection.anchor, titlePath)) {
+              // 在空的 table_title 開頭按 backspace，不執行任何操作
+              return;
+            }
+          }
+
+          // 檢查是否在 table_cell 中
+          const cellEntry = Editor.above(editor, {
+            match: (n) => Element.isElement(n) && n.type === types.table_cell,
+          });
+
+          if (cellEntry) {
+            const [, cellPath] = cellEntry;
+
+            // 檢查 cell 是否為空
+            const cellText = Editor.string(editor, cellPath);
+
+            if (!cellText.trim() && Editor.isStart(editor, selection.anchor, cellPath)) {
+              // 在空的 table_cell 開頭按 backspace，不執行任何操作
+              return;
+            }
+          }
+        }
+
+        // 執行預設的 deleteBackward 行為
+        deleteBackward(unit);
+      };
+
       return editor;
     },
   };
