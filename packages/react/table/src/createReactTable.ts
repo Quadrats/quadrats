@@ -66,20 +66,6 @@ export function createReactTable(options: CreateReactTableOptions = {}): ReactTa
 
             return;
           }
-
-          if (event.key === 'Backspace' || event.key === 'Delete') {
-            const currentCellHasContent = checkCurrentCellHasContent();
-
-            if (currentCellHasContent) {
-              // Allow default behavior (delete characters)
-              next();
-            } else {
-              // Prevent deletion when cell is empty
-              event.preventDefault();
-            }
-
-            return;
-          }
         }
 
         next();
