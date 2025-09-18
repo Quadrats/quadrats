@@ -154,9 +154,15 @@
     letter-spacing: var(--qdr-typography-article-body1-letter-spacing);
     font-weight: var(--qdr-typography-article-body1-font-weight);
     color: var(--qdr-text-primary);
+    text-align: left;
     border: 1px solid var(--qdr-border);
     vertical-align: top;
-    text-align: left;
+
+    p,
+    ul,
+    ol {
+      margin: 0;
+    }
 
     &--header {
       font-weight: var(--qdr-typography-article-h6-font-weight);

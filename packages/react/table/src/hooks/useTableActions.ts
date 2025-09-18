@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Element, Transforms } from '@quadrats/core';
+import { Element, PARAGRAPH_TYPE, Transforms, Editor } from '@quadrats/core';
 import { ReactEditor } from 'slate-react';
 import { RenderTableElementProps, TableContextType } from '../typings';
 import {
@@ -74,7 +74,12 @@ export function useTableActions(element: RenderTableElementProps['element']) {
               const newCell = {
                 type: TABLE_CELL_TYPE,
                 treatAsTitle,
-                children: [{ text: '' }],
+                children: [
+                  {
+                    type: PARAGRAPH_TYPE,
+                    children: [{ text: '' }],
+                  },
+                ],
               };
 
               const rowPath = [...tableHeaderPath, rowIndex];
@@ -93,7 +98,12 @@ export function useTableActions(element: RenderTableElementProps['element']) {
             const newCell = {
               type: TABLE_CELL_TYPE,
               treatAsTitle,
-              children: [{ text: '' }],
+              children: [
+                {
+                  type: PARAGRAPH_TYPE,
+                  children: [{ text: '' }],
+                },
+              ],
             };
 
             const rowPath = [...tableBodyPath, rowIndex];
@@ -178,7 +188,12 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           type: TABLE_ROW_TYPE,
           children: Array.from({ length: columnCount }, (_, index) => ({
             type: TABLE_CELL_TYPE,
-            children: [{ text: '' }],
+            children: [
+              {
+                type: PARAGRAPH_TYPE,
+                children: [{ text: '' }],
+              },
+            ],
             ...(columnTitleStatus[index] ? { treatAsTitle: true } : {}),
           })),
         };
@@ -278,7 +293,12 @@ export function useTableActions(element: RenderTableElementProps['element']) {
             if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
               const newHeaderCell = {
                 type: TABLE_CELL_TYPE,
-                children: [{ text: '' }],
+                children: [
+                  {
+                    type: PARAGRAPH_TYPE,
+                    children: [{ text: '' }],
+                  },
+                ],
               };
 
               const rowPath = [...headerPath, rowIndex];
@@ -296,7 +316,12 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
             const newCell = {
               type: TABLE_CELL_TYPE,
-              children: [{ text: '' }],
+              children: [
+                {
+                  type: PARAGRAPH_TYPE,
+                  children: [{ text: '' }],
+                },
+              ],
             };
 
             const rowPath = [...tableBodyPath, rowIndex];
@@ -341,7 +366,12 @@ export function useTableActions(element: RenderTableElementProps['element']) {
             type: TABLE_ROW_TYPE,
             children: Array.from({ length: newColumnCount }, (_, index) => ({
               type: TABLE_CELL_TYPE,
-              children: [{ text: '' }],
+              children: [
+                {
+                  type: PARAGRAPH_TYPE,
+                  children: [{ text: '' }],
+                },
+              ],
               ...(columnTitleStatus[index] ? { treatAsTitle: true } : {}),
             })),
           };
@@ -596,36 +626,22 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
         // If header doesn't exist, create it first
         if (!tableHeaderElement || !Element.isElement(tableHeaderElement)) {
+          // Create header with the row directly to avoid normalizeNode removing empty header
           const newHeader = {
             type: TABLE_HEADER_TYPE,
-            children: [],
+            children: [rowToMove], // 直接把 row 放進新 header 中
           };
 
           const tableMainPath = ReactEditor.findPath(editor, tableMainElement);
           const headerInsertPath = [...tableMainPath, 0];
 
-          Transforms.insertNodes(editor, newHeader, { at: headerInsertPath });
+          // Use withoutNormalizing to prevent interference during the operation
+          Editor.withoutNormalizing(editor, () => {
+            // Remove the row from body first
+            Transforms.removeNodes(editor, { at: rowPath });
 
-          // Get the newly created header element
-          const updatedTableMainElement = element.children.find(
-            (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-          );
-
-          if (!updatedTableMainElement || !Element.isElement(updatedTableMainElement)) return;
-
-          const updatedTableHeaderElement = updatedTableMainElement.children.find(
-            (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-          );
-
-          if (!updatedTableHeaderElement || !Element.isElement(updatedTableHeaderElement)) return;
-
-          const updatedTableHeaderPath = ReactEditor.findPath(editor, updatedTableHeaderElement);
-          const headerTargetPath = [...updatedTableHeaderPath, 0];
-
-          // Move the row to the newly created header
-          Transforms.moveNodes(editor, {
-            at: rowPath,
-            to: headerTargetPath,
+            // Insert new header with the row
+            Transforms.insertNodes(editor, newHeader, { at: headerInsertPath });
           });
         } else {
           // Move row to the end of existing header

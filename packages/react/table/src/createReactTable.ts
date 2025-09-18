@@ -42,6 +42,10 @@ export function createReactTable(options: CreateReactTableOptions = {}): ReactTa
           };
 
           if (event.key === 'Enter') {
+            if (core.isSelectionInTableList(editor)) {
+              return next();
+            }
+
             event.preventDefault();
 
             const currentCellHasContent = checkCurrentCellHasContent();
