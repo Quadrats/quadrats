@@ -192,6 +192,27 @@
         pointer-events: auto;
       }
     }
+
+    .qdr-table__cell__focus-toolbar {
+      top: -4px;
+      left: 0;
+      right: unset;
+      transform: translateY(-100%);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--qdr-border);
+      background: var(--qdr-bg);
+      box-shadow:
+        0 4px 8px -2px #0000001a,
+        0 2px 4px -2px #0000000a;
+    }
+
+    &--focused {
+      .qdr-table__cell__focus-toolbar {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
   }
 
   &__cell-row-action {

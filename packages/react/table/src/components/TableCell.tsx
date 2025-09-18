@@ -1,8 +1,6 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import clsx from 'clsx';
-import { RenderElementProps, useSlateStatic } from '@quadrats/react';
-import { Element, Node } from '@quadrats/core';
-import { ReactEditor } from 'slate-react';
+import { RenderElementProps } from '@quadrats/react';
 import { TableHeaderContext } from '../contexts/TableHeaderContext';
 import { Icon } from '@quadrats/react/components';
 import {
@@ -16,15 +14,10 @@ import {
   TableSetRowTitle,
   Trash,
 } from '@quadrats/icons';
-import {
-  TABLE_ROW_TYPE,
-  TABLE_HEADER_TYPE,
-  TABLE_MAIN_TYPE,
-  TABLE_BODY_TYPE,
-  TableElement,
-} from '@quadrats/common/table';
+import { TableElement } from '@quadrats/common/table';
 import { useTable } from '../hooks/useTable';
 import { InlineToolbar } from '@quadrats/react/toolbar';
+import { useTableCellFocused, useTableCellPosition } from '../hooks/useTableCell';
 
 function TableCell(props: RenderElementProps<TableElement>) {
   const { attributes, children, element } = props;
@@ -46,69 +39,8 @@ function TableCell(props: RenderElementProps<TableElement>) {
   } = useTable();
 
   const { isHeader } = useContext(TableHeaderContext);
-  const editor = useSlateStatic();
-  const cellPath = ReactEditor.findPath(editor, element);
-
-  const cellPosition = useMemo(() => {
-    try {
-      const rowPath = cellPath.slice(0, -1);
-      const rowNode = Node.get(editor, rowPath);
-
-      if (!Element.isElement(rowNode)) {
-        return { columnIndex: -1, rowIndex: -1 };
-      }
-
-      const columnIndex = cellPath[cellPath.length - 1];
-      let rowIndex = -1;
-
-      if (rowNode.type.includes(TABLE_ROW_TYPE)) {
-        const tableRowWrapperPath = rowPath.slice(0, -1);
-        const tableRowWrapperNode = Node.get(editor, tableRowWrapperPath);
-
-        if (
-          !Element.isElement(tableRowWrapperNode) ||
-          ![TABLE_BODY_TYPE, TABLE_HEADER_TYPE].includes(tableRowWrapperNode.type)
-        ) {
-          return { columnIndex, rowIndex: -1 };
-        }
-
-        const tableMainPath = tableRowWrapperPath.slice(0, -1);
-        const tableMainNode = Node.get(editor, tableMainPath);
-
-        if (!Element.isElement(tableMainNode) || !tableMainNode.type.includes(TABLE_MAIN_TYPE)) {
-          return { columnIndex, rowIndex: -1 };
-        }
-
-        const rowIndexInWrapper = rowPath[rowPath.length - 1];
-
-        if (tableRowWrapperNode.type.includes(TABLE_HEADER_TYPE)) {
-          // This is a header row, rowIndex is just its position within header
-          rowIndex = rowIndexInWrapper;
-        } else {
-          // This is a body row, rowIndex should account for total header rows
-          const headerElement = tableMainNode.children.find(
-            (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-          );
-
-          let totalHeaderRows = 0;
-
-          if (headerElement && Element.isElement(headerElement)) {
-            totalHeaderRows = headerElement.children.filter(
-              (child) => Element.isElement(child) && child.type.includes(TABLE_ROW_TYPE),
-            ).length;
-          }
-
-          rowIndex = rowIndexInWrapper + totalHeaderRows;
-        }
-      }
-
-      return { columnIndex, rowIndex };
-    } catch (error) {
-      console.warn('Error calculating cell position:', error);
-
-      return { columnIndex: -1, rowIndex: -1 };
-    }
-  }, [editor, cellPath]);
+  const focused = useTableCellFocused(element);
+  const cellPosition = useTableCellPosition(element);
 
   const TagName = isHeader ? 'th' : 'td';
 
@@ -138,9 +70,51 @@ function TableCell(props: RenderElementProps<TableElement>) {
         'qdr-table__cell--left-active':
           isSelectedInSameColumn || (isSelectedInSameRow && cellPosition.columnIndex === 0),
         'qdr-table__cell--is-selection-trigger-by-me': isSelectionTriggerByMe,
+        'qdr-table__cell--focused': focused,
       })}
     >
       {children}
+      <InlineToolbar
+        className={'qdr-table__cell__focus-toolbar'}
+        iconGroups={[
+          {
+            icons: [
+              {
+                icon: AddRowAtBottom,
+                onClick: () => {
+                  addRow({ position: 'bottom', rowIndex: cellPosition.rowIndex });
+                },
+              },
+              {
+                icon: AddRowAtTop,
+                onClick: () => {
+                  addRow({ position: 'top', rowIndex: cellPosition.rowIndex });
+                },
+              },
+              {
+                icon: AddColumnAtLeft,
+                onClick: () => {
+                  addColumn({
+                    position: 'left',
+                    columnIndex: cellPosition.columnIndex,
+                    treatAsTitle: element.treatAsTitle,
+                  });
+                },
+              },
+              {
+                icon: AddColumnAtRight,
+                onClick: () => {
+                  addColumn({
+                    position: 'right',
+                    columnIndex: cellPosition.columnIndex,
+                    treatAsTitle: element.treatAsTitle,
+                  });
+                },
+              },
+            ],
+          },
+        ]}
+      />
       {cellPosition.columnIndex === 0 && (
         <button
           type="button"

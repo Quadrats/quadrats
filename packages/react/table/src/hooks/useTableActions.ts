@@ -199,13 +199,16 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         };
 
         // Determine where to insert the row
-        if (typeof rowIndex === 'number' && tableHeaderElement && Element.isElement(tableHeaderElement)) {
-          const totalHeaderRows = tableHeaderElement.children.filter(
-            (child) => Element.isElement(child) && child.type.includes(TABLE_ROW_TYPE),
-          ).length;
+        if (typeof rowIndex === 'number') {
+          const totalHeaderRows =
+            tableHeaderElement && Element.isElement(tableHeaderElement)
+              ? tableHeaderElement.children.filter(
+                  (child) => Element.isElement(child) && child.type.includes(TABLE_ROW_TYPE),
+                ).length
+              : 0;
 
           // Check if we're inserting in header region
-          if (rowIndex < totalHeaderRows) {
+          if (Element.isElement(tableHeaderElement) && rowIndex < totalHeaderRows) {
             const headerPath = ReactEditor.findPath(editor, tableHeaderElement);
             let insertIndex: number;
 
@@ -239,7 +242,8 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         } else {
           // Default behavior: append at the end of body
           const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
-          const newRowPath = [...tableBodyPath, tableBodyElement.children.length];
+          const insertIndex = tableBodyElement.children.length;
+          const newRowPath = [...tableBodyPath, insertIndex];
 
           Transforms.insertNodes(editor, newRow, { at: newRowPath });
         }
