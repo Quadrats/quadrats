@@ -39,4 +39,5 @@ export interface Table<T extends Editor = Editor> extends Withable {
   isSelectionInTableRow(editor: T): boolean;
   isSelectionInTableHeader(editor: T): boolean;
   isSelectionInTableBody(editor: T): boolean;
+  isSelectionInTableList(editor: T): boolean;
 }

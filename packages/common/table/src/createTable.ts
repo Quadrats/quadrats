@@ -1,6 +1,7 @@
-import { Editor, Element, isNodesTypeIn, Transforms } from '@quadrats/core';
+import { Editor, Element, isNodesTypeIn, PARAGRAPH_TYPE, Transforms } from '@quadrats/core';
 import { Table, TableTypes } from './typings';
 import { TABLE_TYPES } from './constants';
+import { LIST_TYPES } from '@quadrats/common/list';
 
 export interface CreateTableOptions {
   types?: Partial<TableTypes>;
@@ -20,24 +21,17 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
           type: types.table_main,
           children: [
             {
-              type: types.table_header,
-              children: [
-                {
-                  type: types.table_row,
-                  children: Array.from({ length: cols }, () => ({
-                    type: types.table_cell,
-                    children: [{ text: '' }],
-                  })),
-                },
-              ],
-            },
-            {
               type: types.table_body,
-              children: Array.from({ length: rows - 1 }, () => ({
+              children: Array.from({ length: rows }, () => ({
                 type: types.table_row,
                 children: Array.from({ length: cols }, () => ({
                   type: types.table_cell,
-                  children: [{ text: '' }],
+                  children: [
+                    {
+                      type: PARAGRAPH_TYPE,
+                      children: [{ text: '' }],
+                    },
+                  ],
                 })),
               })),
             },
@@ -61,6 +55,9 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
 
   const isSelectionInTableBody: Table<Editor>['isSelectionInTableBody'] = (editor) =>
     isNodesTypeIn(editor, [types.table_body]);
+
+  const isSelectionInTableList: Table<Editor>['isSelectionInTableList'] = (editor) =>
+    isNodesTypeIn(editor, [LIST_TYPES.ol, LIST_TYPES.ul]);
 
   const insertTable: Table<Editor>['insertTable'] = (editor, rows, cols) => {
     Transforms.insertNodes(editor, createTableElement(rows, cols));
@@ -160,6 +157,7 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
     isSelectionInTableRow,
     isSelectionInTableHeader,
     isSelectionInTableBody,
+    isSelectionInTableList,
     moveToNextCell,
     with(editor) {
       editor.normalizeNode = (entry) => {
@@ -209,7 +207,17 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
                       children: [
                         {
                           type: types.table_row,
-                          children: [{ type: types.table_cell, children: [{ text: '' }] }],
+                          children: [
+                            {
+                              type: types.table_cell,
+                              children: [
+                                {
+                                  type: PARAGRAPH_TYPE,
+                                  children: [{ text: '' }],
+                                },
+                              ],
+                            },
+                          ],
                         },
                       ],
                     },
@@ -235,7 +243,17 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
                   children: [
                     {
                       type: types.table_row,
-                      children: [{ type: types.table_cell, children: [{ text: '' }] }],
+                      children: [
+                        {
+                          type: types.table_cell,
+                          children: [
+                            {
+                              type: PARAGRAPH_TYPE,
+                              children: [{ text: '' }],
+                            },
+                          ],
+                        },
+                      ],
                     },
                   ],
                 },
@@ -269,7 +287,17 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
                 editor,
                 {
                   type: types.table_row,
-                  children: [{ type: types.table_cell, children: [{ text: '' }] }],
+                  children: [
+                    {
+                      type: types.table_cell,
+                      children: [
+                        {
+                          type: PARAGRAPH_TYPE,
+                          children: [{ text: '' }],
+                        },
+                      ],
+                    },
+                  ],
                 },
                 { at: [...path, 0] },
               );
