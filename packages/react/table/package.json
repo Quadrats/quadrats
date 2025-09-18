@@ -6,7 +6,9 @@
   ],
   "quadratsConfig": {
     "deps": [
-      "__ROOT__"
+      "__ROOT__",
+      "paragraph",
+      "toolbar"
     ],
     "styles": {
       "table": "table"

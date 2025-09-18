@@ -7,13 +7,16 @@ export interface InlineToolbarProps {
   className?: string;
   iconGroups: {
     enabledBgColor?: boolean;
-    icons: {
-      icon: IconDefinition;
-      onClick: VoidFunction;
-      active?: boolean;
-      disabled?: boolean;
-      className?: string;
-    }[];
+    icons: (
+      | {
+          icon: IconDefinition;
+          onClick: VoidFunction;
+          active?: boolean;
+          disabled?: boolean;
+          className?: string;
+        }
+      | React.JSX.Element
+    )[];
   }[];
 }
 
@@ -29,24 +32,28 @@ function InlineToolbar({ className, iconGroups }: InlineToolbarProps) {
               'qdr-inline-toolbar__wrapper--enabledBgColor': group.enabledBgColor,
             })}
           >
-            {group.icons.map((icon) => (
-              <Icon
-                key={icon.icon.name}
-                className={clsx('qdr-inline-toolbar__icon', icon.className, {
-                  'qdr-inline-toolbar__icon--active': icon.active,
-                  'qdr-inline-toolbar__icon--disabled': icon.disabled,
-                })}
-                icon={icon.icon}
-                width={24}
-                height={24}
-                onClick={(e) => {
-                  if (!icon.disabled) {
-                    e.preventDefault();
-                    icon.onClick();
-                  }
-                }}
-              />
-            ))}
+            {group.icons.map((child) =>
+              'icon' in child ? (
+                <Icon
+                  key={child.icon.name}
+                  className={clsx('qdr-inline-toolbar__icon', child.className, {
+                    'qdr-inline-toolbar__icon--active': child.active,
+                    'qdr-inline-toolbar__icon--disabled': child.disabled,
+                  })}
+                  icon={child.icon}
+                  width={24}
+                  height={24}
+                  onClick={(e) => {
+                    if (!child.disabled) {
+                      e.preventDefault();
+                      child.onClick();
+                    }
+                  }}
+                />
+              ) : (
+                child
+              ),
+            )}
           </div>
           {index < validIconsGroup.length - 1 && <div className="qdr-inline-toolbar__divider" />}
         </Fragment>
