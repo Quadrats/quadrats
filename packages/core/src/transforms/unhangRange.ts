@@ -1,9 +1,4 @@
-import {
-  Editor,
-  Location,
-  Range,
-  EditorUnhangRangeOptions,
-} from 'slate';
+import { Editor, Location, Range, EditorUnhangRangeOptions } from 'slate';
 
 export interface UnhangRangeOptions extends EditorUnhangRangeOptions {
   at?: Location;
