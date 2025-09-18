@@ -156,6 +156,7 @@ import { createJsxSerializeHighlight } from '@quadrats/react/highlight/jsx-seria
 import { createJsxSerializeLineBreak } from '@quadrats/react/line-break/jsx-serializer';
 import { createJsxSerializeParagraph } from '@quadrats/react/paragraph/jsx-serializer';
 import { createJsxSerializeAccordion } from '@quadrats/react/accordion/jsx-serializer';
+import { createJsxSerializeTable } from '@quadrats/react/table/jsx-serializer';
 import { createJsxSerializeCarousel } from '@quadrats/react/carousel/jsx-serializer';
 import { createJsxSerializeCard } from '@quadrats/react/card/jsx-serializer';
 import { createJsxSerializeBlockquote } from '@quadrats/react/blockquote/jsx-serializer';
@@ -768,6 +769,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     if (withCarousel) elements.push(createJsxSerializeCarousel());
     if (withCard) elements.push(createJsxSerializeCard());
     if (withBlockquote) elements.push(createJsxSerializeBlockquote());
+    if (withTable) elements.push(createJsxSerializeTable());
     if (withTitles.length) elements.push(createJsxSerializeHeading());
     if (withLists.length) elements.push(createJsxSerializeList());
     if (withDivider) elements.push(createJsxSerializeDivider());
@@ -819,6 +821,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withLink,
     withImage,
     withReadMore,
+    withTable,
   ]);
 
   return (
