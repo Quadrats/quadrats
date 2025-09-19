@@ -11,7 +11,7 @@ import {
   TableBodyTypeKey,
 } from '@quadrats/common/table';
 import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps } from '@quadrats/react';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, RefObject } from 'react';
 
 export type TableHeaderContextType = {
   isHeader: boolean;
@@ -21,6 +21,8 @@ export type TableContextType = {
   tableElement: TableElement;
   columnCount: number;
   rowCount: number;
+  // Portal container for toolbar positioning
+  portalContainerRef: RefObject<HTMLDivElement | null>;
   // Table structure manipulation
   addColumn: (options?: { position?: 'left' | 'right'; columnIndex?: number; treatAsTitle?: boolean }) => void;
   addRow: (options?: { position?: 'top' | 'bottom'; rowIndex?: number }) => void;

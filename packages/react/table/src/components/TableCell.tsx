@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useState, useEffect, useMemo } from 'react';
 import clsx from 'clsx';
 import { RenderElementProps } from '@quadrats/react';
 import { PARAGRAPH_TYPE, Transforms } from '@quadrats/core';
 import { useSlateStatic } from 'slate-react';
 import { LIST_TYPES } from '@quadrats/common/list';
 import { TableHeaderContext } from '../contexts/TableHeaderContext';
-import { Icon } from '@quadrats/react/components';
+import { Icon, Portal } from '@quadrats/react/components';
 import {
   AddColumnAtLeft,
   AddColumnAtRight,
@@ -45,6 +45,7 @@ function TableCell(props: RenderElementProps<TableElement>) {
     moveRowToHeader,
     unsetColumnAsTitle,
     setColumnAsTitle,
+    portalContainerRef,
   } = useTable();
 
   const { isHeader } = useContext(TableHeaderContext);
@@ -53,8 +54,6 @@ function TableCell(props: RenderElementProps<TableElement>) {
   const cellPosition = useTableCellPosition(element, editor);
   const transformCellContent = useTableCellTransformContent(element, editor);
 
-  const TagName = isHeader ? 'th' : 'td';
-
   const isSelectedInSameRow = tableSelectedOn?.region === 'row' && tableSelectedOn?.index === cellPosition.rowIndex;
   const isSelectedInSameColumn =
     tableSelectedOn?.region === 'column' && tableSelectedOn?.index === cellPosition.columnIndex;
@@ -62,9 +61,74 @@ function TableCell(props: RenderElementProps<TableElement>) {
   const isSelectionTriggerByMe =
     (isSelectedInSameRow && cellPosition.columnIndex === 0) || (isSelectedInSameColumn && cellPosition.rowIndex === 0);
 
+  const showRowActionButton = useMemo(
+    () =>
+      cellPosition.rowIndex === 0 &&
+      (isSelectedInSameColumn || (tableHoveredOn?.columnIndex === cellPosition.columnIndex && !tableSelectedOn)),
+    [cellPosition, isSelectedInSameColumn, tableHoveredOn, tableSelectedOn],
+  );
+
+  const showColumnActionButton = useMemo(
+    () =>
+      cellPosition.columnIndex === 0 &&
+      (isSelectedInSameRow || (tableHoveredOn?.rowIndex === cellPosition.rowIndex && !tableSelectedOn)),
+    [cellPosition, isSelectedInSameRow, tableHoveredOn, tableSelectedOn],
+  );
+
+  // 用於定位 InlineToolbar 的 ref
+  const cellRef = useRef<HTMLTableCellElement>(null);
+  const [toolbarPosition, setToolbarPosition] = useState<{ top: number; left: number } | null>(null);
+  const [rowButtonPosition, setRowButtonPosition] = useState<{ top: number; left: number } | null>(null);
+  const [columnButtonPosition, setColumnButtonPosition] = useState<{ top: number; left: number } | null>(null);
+
+  // 計算位置相對於 Table 的位置
+  useEffect(() => {
+    if (cellRef.current && portalContainerRef.current) {
+      const cellRect = cellRef.current.getBoundingClientRect();
+      const containerRect = portalContainerRef.current.getBoundingClientRect();
+
+      // 工具列位置 (針對 focused 狀態)
+      if (focused || isSelectionTriggerByMe) {
+        setToolbarPosition({
+          top: cellRect.top - containerRect.top - 4, // -4px offset
+          left: cellRect.left - containerRect.left,
+        });
+      } else {
+        setToolbarPosition(null);
+      }
+
+      // 行按鈕位置 (顯示在第一列)
+      if (cellPosition.columnIndex === 0) {
+        setRowButtonPosition({
+          top: cellRect.top - containerRect.top + cellRect.height / 2 - 10, // 置中，按鈕高度約 20px
+          left: cellRect.left - containerRect.left - 10, // 向左偏移 10px
+        });
+      } else {
+        setRowButtonPosition(null);
+      }
+
+      // 列按鈕位置 (顯示在第一行)
+      if (cellPosition.rowIndex === 0) {
+        setColumnButtonPosition({
+          top: cellRect.top - containerRect.top - 10, // 向上偏移 10px
+          left: cellRect.left - containerRect.left + cellRect.width / 2 - 10, // 置中，按鈕寬度約 20px
+        });
+      } else {
+        setColumnButtonPosition(null);
+      }
+    } else {
+      setToolbarPosition(null);
+      setRowButtonPosition(null);
+      setColumnButtonPosition(null);
+    }
+  }, [focused, isSelectionTriggerByMe, cellPosition.columnIndex, cellPosition.rowIndex, portalContainerRef]);
+
+  const TagName = isHeader ? 'th' : 'td';
+
   return (
     <TagName
       {...attributes}
+      ref={cellRef}
       onMouseEnter={() => {
         setTableHoveredOn({ columnIndex: cellPosition.columnIndex, rowIndex: cellPosition.rowIndex });
       }}
@@ -81,273 +145,298 @@ function TableCell(props: RenderElementProps<TableElement>) {
         'qdr-table__cell--left-active':
           isSelectedInSameColumn || (isSelectedInSameRow && cellPosition.columnIndex === 0),
         'qdr-table__cell--is-selection-trigger-by-me': isSelectionTriggerByMe,
-        'qdr-table__cell--focused': focused,
       })}
     >
       {children}
-      <InlineToolbar
-        className={'qdr-table__cell__focus-toolbar'}
-        iconGroups={[
-          {
-            icons: [
-              <ToolbarGroupIcon key="typography-change" icon={Paragraph}>
-                <ToolbarIcon
-                  icon={Paragraph}
-                  onClick={() => {
-                    transformCellContent(PARAGRAPH_TYPE);
-                  }}
-                />
-                <ToolbarIcon
-                  icon={UnorderedList}
-                  onClick={() => {
-                    transformCellContent(LIST_TYPES.ul);
-                  }}
-                />
-                <ToolbarIcon
-                  icon={OrderedList}
-                  onClick={() => {
-                    transformCellContent(LIST_TYPES.ol);
-                  }}
-                />
-              </ToolbarGroupIcon>,
-            ],
-          },
-          {
-            icons: [
+      {focused && (
+        <Portal getContainer={() => portalContainerRef.current || document.body}>
+          <InlineToolbar
+            className={'qdr-table__cell__focus-toolbar'}
+            style={{
+              top: toolbarPosition?.top,
+              left: toolbarPosition?.left,
+            }}
+            iconGroups={[
               {
-                icon: AddRowAtBottom,
-                onClick: () => {
-                  addRow({ position: 'bottom', rowIndex: cellPosition.rowIndex });
-                },
+                icons: [
+                  <ToolbarGroupIcon key="typography-change" icon={Paragraph}>
+                    <ToolbarIcon
+                      icon={Paragraph}
+                      onClick={() => {
+                        transformCellContent(PARAGRAPH_TYPE);
+                      }}
+                    />
+                    <ToolbarIcon
+                      icon={UnorderedList}
+                      onClick={() => {
+                        transformCellContent(LIST_TYPES.ul);
+                      }}
+                    />
+                    <ToolbarIcon
+                      icon={OrderedList}
+                      onClick={() => {
+                        transformCellContent(LIST_TYPES.ol);
+                      }}
+                    />
+                  </ToolbarGroupIcon>,
+                ],
               },
               {
-                icon: AddRowAtTop,
-                onClick: () => {
-                  addRow({ position: 'top', rowIndex: cellPosition.rowIndex });
-                },
-              },
-              {
-                icon: AddColumnAtLeft,
-                disabled: isReachMaximumColumns,
-                onClick: () => {
-                  addColumn({
-                    position: 'left',
-                    columnIndex: cellPosition.columnIndex,
-                    treatAsTitle: element.treatAsTitle,
-                  });
-                },
-              },
-              {
-                icon: AddColumnAtRight,
-                disabled: isReachMaximumColumns,
-                onClick: () => {
-                  addColumn({
-                    position: 'right',
-                    columnIndex: cellPosition.columnIndex,
-                    treatAsTitle: element.treatAsTitle,
-                  });
-                },
-              },
-            ],
-          },
-        ]}
-      />
-      {cellPosition.columnIndex === 0 && (
-        <button
-          type="button"
-          contentEditable={false}
-          onClick={() => {
-            // Clear focus by removing selection
-            Transforms.deselect(editor);
-
-            setTableSelectedOn((prev) => {
-              if (prev?.region === 'row' && prev.index === cellPosition.rowIndex) {
-                return undefined;
-              }
-
-              return { region: 'row', index: cellPosition.rowIndex };
-            });
-          }}
-          className={clsx('qdr-table__cell-row-action', {
-            'qdr-table__cell-row-action--active':
-              isSelectedInSameRow || (tableHoveredOn?.rowIndex === cellPosition.rowIndex && !tableSelectedOn),
-          })}
-        >
-          <Icon icon={Drag} width={20} height={20} />
-        </button>
-      )}
-      {cellPosition.rowIndex === 0 && (
-        <button
-          type="button"
-          contentEditable={false}
-          onClick={() => {
-            // Clear focus by removing selection
-            Transforms.deselect(editor);
-
-            setTableSelectedOn((prev) => {
-              if (prev?.region === 'column' && prev.index === cellPosition.columnIndex) {
-                return undefined;
-              }
-
-              return { region: 'column', index: cellPosition.columnIndex };
-            });
-          }}
-          className={clsx('qdr-table__cell-column-action', {
-            'qdr-table__cell-column-action--active':
-              isSelectedInSameColumn || (tableHoveredOn?.columnIndex === cellPosition.columnIndex && !tableSelectedOn),
-          })}
-        >
-          <Icon icon={Drag} width={20} height={20} />
-        </button>
-      )}
-      {cellPosition.columnIndex === 0 || cellPosition.rowIndex === 0 ? (
-        <InlineToolbar
-          className="qdr-table__cell__inline-table-toolbar"
-          iconGroups={[
-            {
-              icons: (() => {
-                if (tableSelectedOn?.region === 'row') {
-                  return isHeader
-                    ? [
-                        {
-                          icon: TableRemoveTitle,
-                          onClick: () => {
-                            if (typeof tableSelectedOn.index === 'number') {
-                              moveRowToBody(tableSelectedOn.index);
-                              setTableSelectedOn(undefined);
-                            }
-                          },
-                        },
-                      ]
-                    : [
-                        {
-                          icon: TableSetColumnTitle,
-                          disabled: isReachMinimumBodyRows,
-                          onClick: () => {
-                            if (typeof tableSelectedOn.index === 'number') {
-                              moveRowToHeader(tableSelectedOn.index);
-                              setTableSelectedOn(undefined);
-                            }
-                          },
-                        },
-                      ];
-                }
-
-                if (tableSelectedOn?.region === 'column') {
-                  return element.treatAsTitle
-                    ? [
-                        {
-                          icon: TableRemoveTitle,
-                          onClick: () => {
-                            if (typeof tableSelectedOn.index === 'number') {
-                              unsetColumnAsTitle(tableSelectedOn.index);
-                              setTableSelectedOn(undefined);
-                            }
-                          },
-                        },
-                      ]
-                    : [
-                        {
-                          icon: TableSetRowTitle,
-                          disabled: isReachMinimumNormalColumns,
-                          onClick: () => {
-                            if (typeof tableSelectedOn.index === 'number') {
-                              setColumnAsTitle(tableSelectedOn.index);
-                              setTableSelectedOn(undefined);
-                            }
-                          },
-                        },
-                      ];
-                }
-
-                return [];
-              })(),
-            },
-            {
-              icons: (() => {
-                if (tableSelectedOn?.region === 'row') {
-                  const addRowAtBottomAction = {
+                icons: [
+                  {
                     icon: AddRowAtBottom,
                     onClick: () => {
-                      if (typeof tableSelectedOn.index === 'number') {
-                        addRow({ position: 'bottom', rowIndex: tableSelectedOn.index });
-                        setTableSelectedOn(undefined);
-                      }
+                      addRow({ position: 'bottom', rowIndex: cellPosition.rowIndex });
                     },
-                  };
-
-                  const addRowAtTopAction = {
+                  },
+                  {
                     icon: AddRowAtTop,
                     onClick: () => {
-                      if (typeof tableSelectedOn.index === 'number') {
-                        addRow({ position: 'top', rowIndex: tableSelectedOn.index });
-                        setTableSelectedOn(undefined);
-                      }
+                      addRow({ position: 'top', rowIndex: cellPosition.rowIndex });
                     },
-                  };
-
-                  return [addRowAtBottomAction, addRowAtTopAction];
-                }
-
-                if (tableSelectedOn?.region === 'column') {
-                  const addColumnAtLeftAction = {
+                  },
+                  {
                     icon: AddColumnAtLeft,
                     disabled: isReachMaximumColumns,
                     onClick: () => {
-                      if (typeof tableSelectedOn.index === 'number') {
-                        addColumn({
-                          position: 'left',
-                          columnIndex: tableSelectedOn.index,
-                          treatAsTitle: element.treatAsTitle,
-                        });
-
-                        setTableSelectedOn(undefined);
-                      }
+                      addColumn({
+                        position: 'left',
+                        columnIndex: cellPosition.columnIndex,
+                        treatAsTitle: element.treatAsTitle,
+                      });
                     },
-                  };
-
-                  const addColumnAtRightAction = {
+                  },
+                  {
                     icon: AddColumnAtRight,
                     disabled: isReachMaximumColumns,
                     onClick: () => {
-                      if (typeof tableSelectedOn.index === 'number') {
-                        addColumn({
-                          position: 'right',
-                          columnIndex: tableSelectedOn.index,
-                          treatAsTitle: element.treatAsTitle,
-                        });
-
-                        setTableSelectedOn(undefined);
-                      }
+                      addColumn({
+                        position: 'right',
+                        columnIndex: cellPosition.columnIndex,
+                        treatAsTitle: element.treatAsTitle,
+                      });
                     },
-                  };
+                  },
+                ],
+              },
+            ]}
+          />
+        </Portal>
+      )}
+      {showColumnActionButton && (
+        <Portal getContainer={() => portalContainerRef.current || document.body}>
+          <button
+            type="button"
+            contentEditable={false}
+            style={{
+              top: rowButtonPosition?.top,
+              left: rowButtonPosition?.left,
+            }}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
 
-                  return [addColumnAtLeftAction, addColumnAtRightAction];
+              // Clear focus by removing selection
+              Transforms.deselect(editor);
+
+              setTableSelectedOn((prev) => {
+                if (prev?.region === 'row' && prev.index === cellPosition.rowIndex) {
+                  return undefined;
                 }
 
-                return [];
-              })(),
-            },
-            {
-              icons: [
-                {
-                  icon: Trash,
-                  className: 'qdr-table__delete',
-                  onClick: () => {
-                    // Determine whether to delete row or column based on current selection
-                    if (tableSelectedOn?.region === 'row' && typeof tableSelectedOn.index === 'number') {
-                      deleteRow(tableSelectedOn.index);
-                      setTableSelectedOn(undefined); // Clear selection after deletion
-                    } else if (tableSelectedOn?.region === 'column' && typeof tableSelectedOn.index === 'number') {
-                      deleteColumn(tableSelectedOn.index);
-                      setTableSelectedOn(undefined); // Clear selection after deletion
-                    }
+                return { region: 'row', index: cellPosition.rowIndex };
+              });
+            }}
+            className="qdr-table__cell-row-action"
+          >
+            <Icon icon={Drag} width={20} height={20} />
+          </button>
+        </Portal>
+      )}
+      {showRowActionButton && (
+        <Portal getContainer={() => portalContainerRef.current || document.body}>
+          <button
+            type="button"
+            contentEditable={false}
+            style={{
+              top: columnButtonPosition?.top,
+              left: columnButtonPosition?.left,
+            }}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+
+              // Clear focus by removing selection
+              Transforms.deselect(editor);
+
+              setTableSelectedOn((prev) => {
+                if (prev?.region === 'column' && prev.index === cellPosition.columnIndex) {
+                  return undefined;
+                }
+
+                return { region: 'column', index: cellPosition.columnIndex };
+              });
+            }}
+            className="qdr-table__cell-column-action"
+          >
+            <Icon icon={Drag} width={20} height={20} />
+          </button>
+        </Portal>
+      )}
+      {isSelectionTriggerByMe && (cellPosition.columnIndex === 0 || cellPosition.rowIndex === 0) ? (
+        <Portal getContainer={() => portalContainerRef.current || document.body}>
+          <InlineToolbar
+            className="qdr-table__cell__inline-table-toolbar"
+            style={{
+              top: toolbarPosition?.top,
+              left: toolbarPosition?.left,
+            }}
+            iconGroups={[
+              {
+                icons: (() => {
+                  if (tableSelectedOn?.region === 'row') {
+                    return isHeader
+                      ? [
+                          {
+                            icon: TableRemoveTitle,
+                            onClick: () => {
+                              if (typeof tableSelectedOn.index === 'number') {
+                                moveRowToBody(tableSelectedOn.index);
+                                setTableSelectedOn(undefined);
+                              }
+                            },
+                          },
+                        ]
+                      : [
+                          {
+                            icon: TableSetColumnTitle,
+                            disabled: isReachMinimumBodyRows,
+                            onClick: () => {
+                              if (typeof tableSelectedOn.index === 'number') {
+                                moveRowToHeader(tableSelectedOn.index);
+                                setTableSelectedOn(undefined);
+                              }
+                            },
+                          },
+                        ];
+                  }
+
+                  if (tableSelectedOn?.region === 'column') {
+                    return element.treatAsTitle
+                      ? [
+                          {
+                            icon: TableRemoveTitle,
+                            onClick: () => {
+                              if (typeof tableSelectedOn.index === 'number') {
+                                unsetColumnAsTitle(tableSelectedOn.index);
+                                setTableSelectedOn(undefined);
+                              }
+                            },
+                          },
+                        ]
+                      : [
+                          {
+                            icon: TableSetRowTitle,
+                            disabled: isReachMinimumNormalColumns,
+                            onClick: () => {
+                              if (typeof tableSelectedOn.index === 'number') {
+                                setColumnAsTitle(tableSelectedOn.index);
+                                setTableSelectedOn(undefined);
+                              }
+                            },
+                          },
+                        ];
+                  }
+
+                  return [];
+                })(),
+              },
+              {
+                icons: (() => {
+                  if (tableSelectedOn?.region === 'row') {
+                    const addRowAtBottomAction = {
+                      icon: AddRowAtBottom,
+                      onClick: () => {
+                        if (typeof tableSelectedOn.index === 'number') {
+                          addRow({ position: 'bottom', rowIndex: tableSelectedOn.index });
+                          setTableSelectedOn(undefined);
+                        }
+                      },
+                    };
+
+                    const addRowAtTopAction = {
+                      icon: AddRowAtTop,
+                      onClick: () => {
+                        if (typeof tableSelectedOn.index === 'number') {
+                          addRow({ position: 'top', rowIndex: tableSelectedOn.index });
+                          setTableSelectedOn(undefined);
+                        }
+                      },
+                    };
+
+                    return [addRowAtBottomAction, addRowAtTopAction];
+                  }
+
+                  if (tableSelectedOn?.region === 'column') {
+                    const addColumnAtLeftAction = {
+                      icon: AddColumnAtLeft,
+                      disabled: isReachMaximumColumns,
+                      onClick: () => {
+                        if (typeof tableSelectedOn.index === 'number') {
+                          addColumn({
+                            position: 'left',
+                            columnIndex: tableSelectedOn.index,
+                            treatAsTitle: element.treatAsTitle,
+                          });
+
+                          setTableSelectedOn(undefined);
+                        }
+                      },
+                    };
+
+                    const addColumnAtRightAction = {
+                      icon: AddColumnAtRight,
+                      disabled: isReachMaximumColumns,
+                      onClick: () => {
+                        if (typeof tableSelectedOn.index === 'number') {
+                          addColumn({
+                            position: 'right',
+                            columnIndex: tableSelectedOn.index,
+                            treatAsTitle: element.treatAsTitle,
+                          });
+
+                          setTableSelectedOn(undefined);
+                        }
+                      },
+                    };
+
+                    return [addColumnAtLeftAction, addColumnAtRightAction];
+                  }
+
+                  return [];
+                })(),
+              },
+              {
+                icons: [
+                  {
+                    icon: Trash,
+                    className: 'qdr-table__delete',
+                    onClick: () => {
+                      // Determine whether to delete row or column based on current selection
+                      if (tableSelectedOn?.region === 'row' && typeof tableSelectedOn.index === 'number') {
+                        deleteRow(tableSelectedOn.index);
+                        setTableSelectedOn(undefined); // Clear selection after deletion
+                      } else if (tableSelectedOn?.region === 'column' && typeof tableSelectedOn.index === 'number') {
+                        deleteColumn(tableSelectedOn.index);
+                        setTableSelectedOn(undefined); // Clear selection after deletion
+                      }
+                    },
                   },
-                },
-              ],
-            },
-          ]}
-        />
+                ],
+              },
+            ]}
+          />
+        </Portal>
       ) : null}
     </TagName>
   );

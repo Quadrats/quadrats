@@ -1,3 +1,6 @@
+$cell-action-z-index: 9;
+$toolbar-z-index: 10;
+
 @mixin add-btn {
   position: absolute;
   z-index: 0;
@@ -30,7 +33,7 @@
 
 @mixin cell-action {
   position: absolute;
-  z-index: 0;
+  z-index: $cell-action-z-index;
   width: 20px;
   height: 24px;
   padding: 0;
@@ -40,12 +43,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-
-  &:hover,
-  &--active {
-    opacity: 1;
-  }
+  pointer-events: auto;
+  cursor: pointer;
+  opacity: 1;
 }
 
 @mixin cell-selected($border-position) {
@@ -87,6 +87,11 @@
     }
   }
 
+  &__portal-container {
+    position: relative;
+    pointer-events: none;
+  }
+
   &__title {
     position: relative;
     margin: 0;
@@ -108,6 +113,13 @@
 
   &__header {
     @include title-bg();
+  }
+
+  &__scrollContainer {
+    width: 100%;
+    max-height: 420px;
+    overflow: auto;
+    position: relative;
   }
 
   &__main {
@@ -133,11 +145,6 @@
     &--selected {
       .qdr-table__main {
         outline: 2px solid var(--qdr-primary);
-      }
-
-      .qdr-table__inline-table-toolbar {
-        opacity: 1;
-        pointer-events: auto;
       }
     }
   }
@@ -185,50 +192,6 @@
     &--left-active {
       @include cell-selected('left');
     }
-
-    &--is-selection-trigger-by-me {
-      .qdr-table__cell__inline-table-toolbar {
-        opacity: 1;
-        pointer-events: auto;
-      }
-    }
-
-    .qdr-table__cell__focus-toolbar {
-      top: -4px;
-      left: 0;
-      right: unset;
-      transform: translateY(-100%);
-      padding: 4px;
-      border-radius: 10px;
-      border: 1px solid var(--qdr-border);
-      background: var(--qdr-bg);
-      box-shadow:
-        0 4px 8px -2px #0000001a,
-        0 2px 4px -2px #0000000a;
-    }
-
-    &--focused {
-      .qdr-table__cell__focus-toolbar {
-        opacity: 1;
-        pointer-events: auto;
-      }
-    }
-  }
-
-  &__cell-row-action {
-    @include cell-action();
-
-    left: -10px;
-    top: calc(50% - 12px);
-  }
-
-  &__cell-column-action {
-    @include cell-action();
-
-    left: calc(50% - 10px);
-    top: -12px;
-    transform: rotate(90deg);
-    transform-origin: center;
   }
 
   &__btn-icon {
@@ -266,4 +229,32 @@
   &__delete {
     color: var(--qdr-error);
   }
+}
+
+.qdr-table__cell__focus-toolbar,
+.qdr-table__cell__inline-table-toolbar {
+  position: absolute;
+  right: unset;
+  transform: translateY(-100%);
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--qdr-border);
+  background: var(--qdr-bg);
+  box-shadow:
+    0 4px 8px -2px #0000001a,
+    0 2px 4px -2px #0000000a;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: $toolbar-z-index;
+}
+
+.qdr-table__cell-row-action {
+  @include cell-action();
+}
+
+.qdr-table__cell-column-action {
+  @include cell-action();
+
+  transform: rotate(90deg);
+  transform-origin: center;
 }

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { RenderElementProps } from '@quadrats/react';
 import { Element } from '@quadrats/core';
 import { TableContext } from '../contexts/TableContext';
@@ -38,6 +38,7 @@ function Table({
   } = useTableActions(element);
 
   const { tableSelectedOn, setTableSelectedOn, tableHoveredOn, setTableHoveredOn } = useTableStates();
+  const portalContainerRef = useRef<HTMLDivElement>(null);
 
   const { columnCount, rowCount, normalCols, bodyCount } = useMemo(() => {
     const childElements = element.children.filter((child) => Element.isElement(child));
@@ -100,6 +101,7 @@ function Table({
       tableElement: element,
       columnCount,
       rowCount,
+      portalContainerRef,
       addColumn,
       addRow,
       addColumnAndRow,
@@ -122,6 +124,7 @@ function Table({
       element,
       columnCount,
       rowCount,
+      portalContainerRef,
       addColumn,
       addRow,
       addColumnAndRow,
@@ -154,6 +157,13 @@ function Table({
         >
           <Icon icon={Drag} width={20} height={20} />
         </button>
+        {/* Portal container for table cell toolbars */}
+        <div
+          ref={portalContainerRef}
+          className="qdr-table__portal-container"
+          data-slate-editor={false}
+          contentEditable={false}
+        />
       </div>
     </TableContext.Provider>
   );

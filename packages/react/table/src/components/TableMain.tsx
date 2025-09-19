@@ -54,9 +54,11 @@ function TableMain(props: RenderElementProps<TableElement>) {
           },
         ]}
       />
-      <table {...attributes} className="qdr-table__main">
-        {children}
-      </table>
+      <div className="qdr-table__scrollContainer">
+        <table {...attributes} className="qdr-table__main">
+          {children}
+        </table>
+      </div>
       {isReachMaximumColumns ? null : (
         <button type="button" onClick={() => addColumn()} title="Add Column" className="qdr-table__add-column">
           <Icon icon={Plus} width={20} height={20} className="qdr-table__btn-icon" />
