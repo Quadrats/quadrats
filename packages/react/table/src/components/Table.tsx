@@ -39,13 +39,13 @@ function Table({
 
   const { tableSelectedOn, setTableSelectedOn, tableHoveredOn, setTableHoveredOn } = useTableStates();
 
-  const { columnCount, rowCount } = useMemo(() => {
+  const { columnCount, rowCount, normalCols, bodyCount } = useMemo(() => {
     const childElements = element.children.filter((child) => Element.isElement(child));
 
     const tableMainElement = childElements.find((child) => child.type.includes(TABLE_MAIN_TYPE));
 
     if (!tableMainElement) {
-      return { columnCount: 0, rowCount: 0 };
+      return { columnCount: 0, rowCount: 0, treatAsTitleCols: 0, normalCols: 0, bodyCount: 0, headerCount: 0 };
     }
 
     const tableMainChildren = tableMainElement.children.filter((child) => Element.isElement(child));
@@ -62,11 +62,20 @@ function Table({
     const cols =
       bodyRowElements.length > 0 && Element.isElement(bodyRowElements[0]) ? bodyRowElements[0].children.length : 0;
 
+    const treatAsTitleCols =
+      bodyRowElements.length > 0 && Element.isElement(bodyRowElements[0])
+        ? bodyRowElements[0].children.filter((row) => (Element.isElement(row) ? row.treatAsTitle : false)).length
+        : 0;
+
     const rows = headerRowElements.length + bodyRowElements.length;
 
     return {
       columnCount: cols,
       rowCount: rows,
+      headerCount: headerRowElements.length,
+      bodyCount: bodyRowElements.length,
+      treatAsTitleCols,
+      normalCols: cols - treatAsTitleCols,
     };
   }, [element]);
 
@@ -77,6 +86,14 @@ function Table({
   const isReachMaximumRows: TableContextType['isReachMaximumRows'] = useMemo(() => {
     return TABLE_DEFAULT_MAX_ROWS > 0 ? rowCount >= TABLE_DEFAULT_MAX_ROWS : false;
   }, [rowCount]);
+
+  const isReachMinimumNormalColumns: TableContextType['isReachMinimumNormalColumns'] = useMemo(() => {
+    return normalCols <= 1;
+  }, [normalCols]);
+
+  const isReachMinimumBodyRows: TableContextType['isReachMinimumBodyRows'] = useMemo(() => {
+    return bodyCount <= 1;
+  }, [bodyCount]);
 
   const contextValue: TableContextType = useMemo(
     () => ({
@@ -94,6 +111,8 @@ function Table({
       setColumnAsTitle,
       isReachMaximumColumns,
       isReachMaximumRows,
+      isReachMinimumNormalColumns,
+      isReachMinimumBodyRows,
       tableSelectedOn,
       setTableSelectedOn,
       tableHoveredOn,
@@ -114,6 +133,8 @@ function Table({
       setColumnAsTitle,
       isReachMaximumColumns,
       isReachMaximumRows,
+      isReachMinimumNormalColumns,
+      isReachMinimumBodyRows,
       tableSelectedOn,
       setTableSelectedOn,
       tableHoveredOn,

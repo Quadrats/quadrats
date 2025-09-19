@@ -34,6 +34,8 @@ export type TableContextType = {
   // Maximum limits status
   isReachMaximumColumns: boolean;
   isReachMaximumRows: boolean;
+  isReachMinimumNormalColumns: boolean;
+  isReachMinimumBodyRows: boolean;
   // Selection state
   tableSelectedOn:
     | {

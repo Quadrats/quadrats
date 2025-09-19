@@ -1,7 +1,7 @@
 import { usePreviousValue } from '@quadrats/react/utils';
 import { Editor, Element, Node, PARAGRAPH_TYPE, Transforms } from '@quadrats/core';
 import { useCallback, useEffect, useMemo } from 'react';
-import { ReactEditor, useFocused, useSlateStatic } from 'slate-react';
+import { ReactEditor, useFocused } from 'slate-react';
 import { useTable } from './useTable';
 import {
   TABLE_BODY_TYPE,
@@ -11,11 +11,11 @@ import {
   TableElement,
 } from '@quadrats/common/table';
 import { createList, LIST_TYPES, ListRootTypeKey } from '@quadrats/common/list';
+import { QuadratsReactEditor } from '@quadrats/react';
 
 /** 檢查 table cell 是否在 focused 狀態 */
-export function useTableCellFocused(element: TableElement): boolean {
+export function useTableCellFocused(element: TableElement, editor: QuadratsReactEditor): boolean {
   const { setTableHoveredOn, setTableSelectedOn } = useTable();
-  const editor = useSlateStatic();
   const cellPath = ReactEditor.findPath(editor, element);
   const focused = useFocused();
 
@@ -50,8 +50,7 @@ export function useTableCellFocused(element: TableElement): boolean {
 }
 
 /** 取得 table cell 在 table 裡的 columnIndex 及 rowIndex */
-export function useTableCellPosition(element: TableElement) {
-  const editor = useSlateStatic();
+export function useTableCellPosition(element: TableElement, editor: QuadratsReactEditor) {
   const cellPath = ReactEditor.findPath(editor, element);
   const cellPosition = useMemo(() => {
     try {
@@ -118,9 +117,7 @@ export function useTableCellPosition(element: TableElement) {
 }
 
 /** 轉換 paragraph, order list, un-order list */
-export function useTableCellTransformContent(element: TableElement) {
-  const editor = useSlateStatic();
-
+export function useTableCellTransformContent(element: TableElement, editor: QuadratsReactEditor) {
   const splitContentByNewlines = useCallback(
     (cellPath: number[]) => {
       try {

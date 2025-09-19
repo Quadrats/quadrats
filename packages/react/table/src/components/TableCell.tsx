@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import clsx from 'clsx';
 import { RenderElementProps } from '@quadrats/react';
-import { PARAGRAPH_TYPE } from '@quadrats/core';
+import { PARAGRAPH_TYPE, Transforms } from '@quadrats/core';
+import { useSlateStatic } from 'slate-react';
 import { LIST_TYPES } from '@quadrats/common/list';
 import { TableHeaderContext } from '../contexts/TableHeaderContext';
 import { Icon } from '@quadrats/react/components';
@@ -34,6 +35,8 @@ function TableCell(props: RenderElementProps<TableElement>) {
     columnCount,
     rowCount,
     isReachMaximumColumns,
+    isReachMinimumNormalColumns,
+    isReachMinimumBodyRows,
     deleteRow,
     deleteColumn,
     addRow,
@@ -45,9 +48,10 @@ function TableCell(props: RenderElementProps<TableElement>) {
   } = useTable();
 
   const { isHeader } = useContext(TableHeaderContext);
-  const focused = useTableCellFocused(element);
-  const cellPosition = useTableCellPosition(element);
-  const transformCellContent = useTableCellTransformContent(element);
+  const editor = useSlateStatic();
+  const focused = useTableCellFocused(element, editor);
+  const cellPosition = useTableCellPosition(element, editor);
+  const transformCellContent = useTableCellTransformContent(element, editor);
 
   const TagName = isHeader ? 'th' : 'td';
 
@@ -152,15 +156,18 @@ function TableCell(props: RenderElementProps<TableElement>) {
         <button
           type="button"
           contentEditable={false}
-          onClick={() =>
+          onClick={() => {
+            // Clear focus by removing selection
+            Transforms.deselect(editor);
+
             setTableSelectedOn((prev) => {
               if (prev?.region === 'row' && prev.index === cellPosition.rowIndex) {
                 return undefined;
               }
 
               return { region: 'row', index: cellPosition.rowIndex };
-            })
-          }
+            });
+          }}
           className={clsx('qdr-table__cell-row-action', {
             'qdr-table__cell-row-action--active':
               isSelectedInSameRow || (tableHoveredOn?.rowIndex === cellPosition.rowIndex && !tableSelectedOn),
@@ -173,15 +180,18 @@ function TableCell(props: RenderElementProps<TableElement>) {
         <button
           type="button"
           contentEditable={false}
-          onClick={() =>
+          onClick={() => {
+            // Clear focus by removing selection
+            Transforms.deselect(editor);
+
             setTableSelectedOn((prev) => {
               if (prev?.region === 'column' && prev.index === cellPosition.columnIndex) {
                 return undefined;
               }
 
               return { region: 'column', index: cellPosition.columnIndex };
-            })
-          }
+            });
+          }}
           className={clsx('qdr-table__cell-column-action', {
             'qdr-table__cell-column-action--active':
               isSelectedInSameColumn || (tableHoveredOn?.columnIndex === cellPosition.columnIndex && !tableSelectedOn),
@@ -212,6 +222,7 @@ function TableCell(props: RenderElementProps<TableElement>) {
                     : [
                         {
                           icon: TableSetColumnTitle,
+                          disabled: isReachMinimumBodyRows,
                           onClick: () => {
                             if (typeof tableSelectedOn.index === 'number') {
                               moveRowToHeader(tableSelectedOn.index);
@@ -238,6 +249,7 @@ function TableCell(props: RenderElementProps<TableElement>) {
                     : [
                         {
                           icon: TableSetRowTitle,
+                          disabled: isReachMinimumNormalColumns,
                           onClick: () => {
                             if (typeof tableSelectedOn.index === 'number') {
                               setColumnAsTitle(tableSelectedOn.index);
