@@ -18,13 +18,14 @@ export interface InlineToolbarProps {
       | React.JSX.Element
     )[];
   }[];
+  style?: React.CSSProperties;
 }
 
-function InlineToolbar({ className, iconGroups }: InlineToolbarProps) {
+function InlineToolbar({ className, iconGroups, style }: InlineToolbarProps) {
   const validIconsGroup = iconGroups.filter((group) => group.icons.length);
 
   return (
-    <div contentEditable={false} className={clsx('qdr-inline-toolbar', className)}>
+    <div contentEditable={false} className={clsx('qdr-inline-toolbar', className)} style={style}>
       {validIconsGroup.map((group, index) => (
         <Fragment key={index}>
           <div
