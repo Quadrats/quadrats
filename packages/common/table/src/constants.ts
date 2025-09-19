@@ -19,5 +19,5 @@ export const TABLE_TYPES: TableTypes = {
 };
 
 // Table limits
-export const TABLE_MAX_COLUMNS = 6;
-export const TABLE_MAX_ROWS = 9;
+export const TABLE_DEFAULT_MAX_COLUMNS = 6;
+export const TABLE_DEFAULT_MAX_ROWS = -1;

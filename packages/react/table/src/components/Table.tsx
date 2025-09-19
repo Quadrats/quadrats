@@ -7,8 +7,8 @@ import {
   TABLE_BODY_TYPE,
   TABLE_HEADER_TYPE,
   TABLE_MAIN_TYPE,
-  TABLE_MAX_COLUMNS,
-  TABLE_MAX_ROWS,
+  TABLE_DEFAULT_MAX_COLUMNS,
+  TABLE_DEFAULT_MAX_ROWS,
   TABLE_ROW_TYPE,
 } from '@quadrats/common/table';
 import { useTableActions } from '../hooks/useTableActions';
@@ -71,11 +71,11 @@ function Table({
   }, [element]);
 
   const isReachMaximumColumns: TableContextType['isReachMaximumColumns'] = useMemo(() => {
-    return columnCount >= TABLE_MAX_COLUMNS;
+    return columnCount >= TABLE_DEFAULT_MAX_COLUMNS;
   }, [columnCount]);
 
   const isReachMaximumRows: TableContextType['isReachMaximumRows'] = useMemo(() => {
-    return rowCount >= TABLE_MAX_ROWS;
+    return TABLE_DEFAULT_MAX_ROWS > 0 ? rowCount >= TABLE_DEFAULT_MAX_ROWS : false;
   }, [rowCount]);
 
   const contextValue: TableContextType = useMemo(

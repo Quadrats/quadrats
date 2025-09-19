@@ -7,8 +7,7 @@ import {
   TABLE_CELL_TYPE,
   TABLE_HEADER_TYPE,
   TABLE_MAIN_TYPE,
-  TABLE_MAX_COLUMNS,
-  TABLE_MAX_ROWS,
+  TABLE_DEFAULT_MAX_COLUMNS,
   TABLE_ROW_TYPE,
 } from '@quadrats/common/table';
 import { useQuadrats } from '@quadrats/react';
@@ -40,8 +39,8 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         // Check column limit
         const firstRow = tableBodyElement.children[0];
 
-        if (Element.isElement(firstRow) && firstRow.children.length >= TABLE_MAX_COLUMNS) {
-          console.warn(`Maximum columns limit (${TABLE_MAX_COLUMNS}) reached`);
+        if (Element.isElement(firstRow) && firstRow.children.length >= TABLE_DEFAULT_MAX_COLUMNS) {
+          console.warn(`Maximum columns limit (${TABLE_DEFAULT_MAX_COLUMNS}) reached`);
 
           return;
         }
@@ -139,19 +138,6 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         );
 
         if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
-
-        // Check row limit
-        let totalRows = tableBodyElement.children.length;
-
-        if (tableHeaderElement && Element.isElement(tableHeaderElement)) {
-          totalRows += tableHeaderElement.children.length;
-        }
-
-        if (totalRows >= TABLE_MAX_ROWS) {
-          console.warn(`Maximum rows limit (${TABLE_MAX_ROWS}) reached`);
-
-          return;
-        }
 
         const firstRow = tableBodyElement.children[0];
 
@@ -275,14 +261,8 @@ export function useTableActions(element: RenderTableElementProps['element']) {
       // Check both column and row limits
       const firstRow = tableBodyElement.children[0];
 
-      if (Element.isElement(firstRow) && firstRow.children.length >= TABLE_MAX_COLUMNS) {
-        console.warn(`Maximum columns limit (${TABLE_MAX_COLUMNS}) reached`);
-
-        return;
-      }
-
-      if (tableBodyElement.children.length >= TABLE_MAX_ROWS) {
-        console.warn(`Maximum rows limit (${TABLE_MAX_ROWS}) reached`);
+      if (Element.isElement(firstRow) && firstRow.children.length >= TABLE_DEFAULT_MAX_COLUMNS) {
+        console.warn(`Maximum columns limit (${TABLE_DEFAULT_MAX_COLUMNS}) reached`);
 
         return;
       }
