@@ -14,11 +14,13 @@ import {
   Drag,
   OrderedList,
   Paragraph,
+  Pinned,
   TableRemoveTitle,
   TableSetColumnTitle,
   TableSetRowTitle,
   Trash,
   UnorderedList,
+  Unpinned,
 } from '@quadrats/icons';
 import { TableElement } from '@quadrats/common/table';
 import { useTable } from '../hooks/useTable';
@@ -302,57 +304,121 @@ function TableCell(props: RenderElementProps<TableElement>) {
               {
                 icons: (() => {
                   if (tableSelectedOn?.region === 'row') {
-                    return isHeader
-                      ? [
-                          {
-                            icon: TableRemoveTitle,
-                            onClick: () => {
-                              if (typeof tableSelectedOn.index === 'number') {
-                                moveRowToBody(tableSelectedOn.index);
-                                setTableSelectedOn(undefined);
-                              }
-                            },
-                          },
-                        ]
-                      : [
-                          {
-                            icon: TableSetColumnTitle,
-                            disabled: isReachMinimumBodyRows,
-                            onClick: () => {
-                              if (typeof tableSelectedOn.index === 'number') {
-                                moveRowToHeader(tableSelectedOn.index);
-                                setTableSelectedOn(undefined);
-                              }
-                            },
-                          },
-                        ];
+                    const removeTitleAction = {
+                      icon: TableRemoveTitle,
+                      onClick: () => {
+                        if (typeof tableSelectedOn.index === 'number') {
+                          moveRowToBody(tableSelectedOn.index);
+                          setTableSelectedOn(undefined);
+                        }
+                      },
+                    };
+
+                    const setColumnTitleAction = {
+                      icon: TableSetColumnTitle,
+                      disabled: isReachMinimumBodyRows,
+                      onClick: () => {
+                        if (typeof tableSelectedOn.index === 'number') {
+                          moveRowToHeader(tableSelectedOn.index);
+                          setTableSelectedOn(undefined);
+                        }
+                      },
+                    };
+
+                    const unpinnedAction = {
+                      icon: Unpinned,
+                      onClick: () => {
+                        if (typeof tableSelectedOn.index === 'number') {
+                          /** @TODO unpinned feature */
+                          console.log('click unpinned');
+                        }
+                      },
+                    };
+
+                    const pinnedAction = {
+                      icon: Pinned,
+                      onClick: () => {
+                        if (typeof tableSelectedOn.index === 'number') {
+                          /** @TODO pinned feature */
+                          console.log('click pinned');
+                        }
+                      },
+                    };
+
+                    const actions = [];
+
+                    if (element.pinned) {
+                      actions.push(unpinnedAction);
+                    } else {
+                      actions.push(pinnedAction);
+                    }
+
+                    if (isHeader) {
+                      actions.push(removeTitleAction);
+                    } else {
+                      actions.push(setColumnTitleAction);
+                    }
+
+                    return actions;
                   }
 
                   if (tableSelectedOn?.region === 'column') {
-                    return element.treatAsTitle
-                      ? [
-                          {
-                            icon: TableRemoveTitle,
-                            onClick: () => {
-                              if (typeof tableSelectedOn.index === 'number') {
-                                unsetColumnAsTitle(tableSelectedOn.index);
-                                setTableSelectedOn(undefined);
-                              }
-                            },
-                          },
-                        ]
-                      : [
-                          {
-                            icon: TableSetRowTitle,
-                            disabled: isReachMinimumNormalColumns,
-                            onClick: () => {
-                              if (typeof tableSelectedOn.index === 'number') {
-                                setColumnAsTitle(tableSelectedOn.index);
-                                setTableSelectedOn(undefined);
-                              }
-                            },
-                          },
-                        ];
+                    const removeTitleAction = {
+                      icon: TableRemoveTitle,
+                      onClick: () => {
+                        if (typeof tableSelectedOn.index === 'number') {
+                          unsetColumnAsTitle(tableSelectedOn.index);
+                          setTableSelectedOn(undefined);
+                        }
+                      },
+                    };
+
+                    const setRowTitleAction = {
+                      icon: TableSetRowTitle,
+                      disabled: isReachMinimumNormalColumns,
+                      onClick: () => {
+                        if (typeof tableSelectedOn.index === 'number') {
+                          setColumnAsTitle(tableSelectedOn.index);
+                          setTableSelectedOn(undefined);
+                        }
+                      },
+                    };
+
+                    const unpinnedAction = {
+                      icon: Unpinned,
+                      onClick: () => {
+                        if (typeof tableSelectedOn.index === 'number') {
+                          /** @TODO unpinned feature */
+                          console.log('click unpinned');
+                        }
+                      },
+                    };
+
+                    const pinnedAction = {
+                      icon: Pinned,
+                      onClick: () => {
+                        if (typeof tableSelectedOn.index === 'number') {
+                          /** @TODO pinned feature */
+                          console.log('click pinned');
+                        }
+                      },
+                    };
+
+                    const actions = [];
+
+                    if (element.pinned) {
+                      actions.push(unpinnedAction);
+                    } else {
+                      actions.push(pinnedAction);
+                    }
+
+                    if (element.treatAsTitle) {
+                      actions.push(removeTitleAction);
+                    } else {
+                      actions.push(setRowTitleAction);
+                    }
+
+                    return actions;
                   }
 
                   return [];

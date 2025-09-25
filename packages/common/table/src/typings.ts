@@ -21,9 +21,11 @@ export type TableTypes = Record<
 
 export interface TableElement extends QuadratsElement, WithElementType {
   treatAsTitle?: boolean;
+  pinned?: boolean;
   children: {
     type: string;
     treatAsTitle?: boolean;
+    pinned?: boolean;
     children: TableElement['children'] | Text[];
   }[];
 }
