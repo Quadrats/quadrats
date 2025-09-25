@@ -24,6 +24,7 @@ import { TableElement } from '@quadrats/common/table';
 import { useTable } from '../hooks/useTable';
 import { InlineToolbar, ToolbarGroupIcon, ToolbarIcon } from '@quadrats/react/toolbar';
 import { useTableCellFocused, useTableCellPosition, useTableCellTransformContent } from '../hooks/useTableCell';
+import { TableScrollContext } from '../contexts/TableScrollContext';
 
 function TableCell(props: RenderElementProps<TableElement>) {
   const { attributes, children, element } = props;
@@ -49,6 +50,7 @@ function TableCell(props: RenderElementProps<TableElement>) {
   } = useTable();
 
   const { isHeader } = useContext(TableHeaderContext);
+  const { scrollTop } = useContext(TableScrollContext);
   const editor = useSlateStatic();
   const focused = useTableCellFocused(element, editor);
   const cellPosition = useTableCellPosition(element, editor);
@@ -83,45 +85,50 @@ function TableCell(props: RenderElementProps<TableElement>) {
 
   // 計算位置相對於 Table 的位置
   useEffect(() => {
-    if (cellRef.current && portalContainerRef.current) {
-      const cellRect = cellRef.current.getBoundingClientRect();
-      const containerRect = portalContainerRef.current.getBoundingClientRect();
+    const { current: cell } = cellRef;
+    const { current: portalContainer } = portalContainerRef;
 
-      // 工具列位置 (針對 focused 狀態)
-      if (focused || isSelectionTriggerByMe) {
-        setToolbarPosition({
-          top: cellRect.top - containerRect.top - 4, // -4px offset
-          left: cellRect.left - containerRect.left,
-        });
-      } else {
-        setToolbarPosition(null);
-      }
-
-      // 行按鈕位置 (顯示在第一列)
-      if (cellPosition.columnIndex === 0) {
-        setRowButtonPosition({
-          top: cellRect.top - containerRect.top + cellRect.height / 2 - 10, // 置中，按鈕高度約 20px
-          left: cellRect.left - containerRect.left - 10, // 向左偏移 10px
-        });
-      } else {
-        setRowButtonPosition(null);
-      }
-
-      // 列按鈕位置 (顯示在第一行)
-      if (cellPosition.rowIndex === 0) {
-        setColumnButtonPosition({
-          top: cellRect.top - containerRect.top - 10, // 向上偏移 10px
-          left: cellRect.left - containerRect.left + cellRect.width / 2 - 10, // 置中，按鈕寬度約 20px
-        });
-      } else {
-        setColumnButtonPosition(null);
-      }
-    } else {
+    if (!cell || !portalContainer) {
       setToolbarPosition(null);
       setRowButtonPosition(null);
       setColumnButtonPosition(null);
+
+      return;
     }
-  }, [focused, isSelectionTriggerByMe, cellPosition.columnIndex, cellPosition.rowIndex, portalContainerRef]);
+
+    const cellRect = cell.getBoundingClientRect();
+    const containerRect = portalContainer.getBoundingClientRect();
+
+    // 工具列位置 (針對 focused 狀態)
+    if (focused || isSelectionTriggerByMe) {
+      setToolbarPosition({
+        top: cellRect.top - containerRect.top - 4, // -4px offset
+        left: cellRect.left - containerRect.left,
+      });
+    } else {
+      setToolbarPosition(null);
+    }
+
+    // 行按鈕位置 (顯示在第一列)
+    if (cellPosition.columnIndex === 0) {
+      setRowButtonPosition({
+        top: Math.min(cellRect.top - containerRect.top + cellRect.height / 2 - 10, 0), // 置中，按鈕高度約 20px
+        left: cellRect.left - containerRect.left - 10, // 向左偏移 10px
+      });
+    } else {
+      setRowButtonPosition(null);
+    }
+
+    // 列按鈕位置 (顯示在第一行)
+    if (cellPosition.rowIndex === 0) {
+      setColumnButtonPosition({
+        top: cellRect.top - containerRect.top - 10 + scrollTop, // 向上偏移 10px
+        left: cellRect.left - containerRect.left + cellRect.width / 2 - 10, // 置中，按鈕寬度約 20px
+      });
+    } else {
+      setColumnButtonPosition(null);
+    }
+  }, [focused, isSelectionTriggerByMe, cellPosition.columnIndex, cellPosition.rowIndex, portalContainerRef, scrollTop]);
 
   const TagName = isHeader ? 'th' : 'td';
 

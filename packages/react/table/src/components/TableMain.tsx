@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { ReactEditor, RenderElementProps, useModal, useSlateStatic } from '@quadrats/react';
 import { Icon } from '@quadrats/react/components';
@@ -7,6 +7,7 @@ import { useTable } from '../hooks/useTable';
 import { InlineToolbar } from '@quadrats/react/toolbar';
 import { Transforms } from 'slate';
 import { TableElement } from '@quadrats/common/table';
+import { TableScrollContext } from '../contexts/TableScrollContext';
 
 function TableMain(props: RenderElementProps<TableElement>) {
   const { attributes, children } = props;
@@ -24,6 +25,26 @@ function TableMain(props: RenderElementProps<TableElement>) {
   } = useTable();
 
   const tablePath = ReactEditor.findPath(editor, tableElement);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrollTop, setScrollTop] = useState<number>(0);
+
+  useEffect(() => {
+    const { current: scrollContainer } = scrollRef;
+
+    if (!scrollContainer) return;
+
+    const handleScroll = () => {
+      setScrollTop(scrollContainer.scrollTop);
+    };
+
+    scrollContainer.addEventListener('scroll', handleScroll, false);
+
+    return () => {
+      scrollContainer.removeEventListener('scroll', handleScroll, false);
+    };
+  }, []);
+
+  const scrollContextValue = useMemo(() => ({ scrollTop }), [scrollTop]);
 
   return (
     <div
@@ -54,10 +75,12 @@ function TableMain(props: RenderElementProps<TableElement>) {
           },
         ]}
       />
-      <div className="qdr-table__scrollContainer">
-        <table {...attributes} className="qdr-table__main">
-          {children}
-        </table>
+      <div ref={scrollRef} className="qdr-table__scrollContainer">
+        <TableScrollContext.Provider value={scrollContextValue}>
+          <table {...attributes} className="qdr-table__main">
+            {children}
+          </table>
+        </TableScrollContext.Provider>
       </div>
       {isReachMaximumColumns ? null : (
         <button type="button" onClick={() => addColumn()} title="Add Column" className="qdr-table__add-column">

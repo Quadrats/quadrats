@@ -56,6 +56,10 @@ export type TableContextType = {
   setTableHoveredOn: Dispatch<SetStateAction<TableContextType['tableHoveredOn']>>;
 };
 
+export type TableScrollContextType = {
+  scrollTop: number;
+};
+
 export type RenderTableElementProps = RenderElementProps<TableElement>;
 
 export type TableRenderElements = Record<
