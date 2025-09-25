@@ -30,9 +30,16 @@ export type TableContextType = {
   deleteRow: (rowIndex: number) => void;
   deleteColumn: (columnIndex: number) => void;
   moveRowToBody: (rowIndex: number) => void;
-  moveRowToHeader: (rowIndex: number) => void;
+  moveRowToHeader: (rowIndex: number, customProps?: Pick<TableElement, 'pinned'>) => void;
   unsetColumnAsTitle: (columnIndex: number) => void;
-  setColumnAsTitle: (columnIndex: number) => void;
+  setColumnAsTitle: (columnIndex: number, customProps?: Pick<TableElement, 'pinned'>) => void;
+  pinColumn: (columnIndex: number) => void;
+  unpinColumn: (columnIndex: number) => void;
+  pinRow: (rowIndex: number) => void;
+  unpinRow: (rowIndex: number) => void;
+  // Helper functions to check pin status
+  isColumnPinned: (columnIndex: number) => boolean;
+  isRowPinned: (rowIndex: number) => boolean;
   // Maximum limits status
   isReachMaximumColumns: boolean;
   isReachMaximumRows: boolean;

@@ -48,6 +48,12 @@ function TableCell(props: RenderElementProps<TableElement>) {
     moveRowToHeader,
     unsetColumnAsTitle,
     setColumnAsTitle,
+    pinColumn,
+    unpinColumn,
+    pinRow,
+    unpinRow,
+    isColumnPinned,
+    isRowPinned,
     portalContainerRef,
   } = useTable();
 
@@ -329,25 +335,26 @@ function TableCell(props: RenderElementProps<TableElement>) {
                       icon: Unpinned,
                       onClick: () => {
                         if (typeof tableSelectedOn.index === 'number') {
-                          /** @TODO unpinned feature */
-                          console.log('click unpinned');
+                          unpinRow(tableSelectedOn.index);
+                          setTableSelectedOn(undefined);
                         }
                       },
                     };
 
                     const pinnedAction = {
                       icon: Pinned,
+                      disabled: isReachMinimumBodyRows,
                       onClick: () => {
                         if (typeof tableSelectedOn.index === 'number') {
-                          /** @TODO pinned feature */
-                          console.log('click pinned');
+                          pinRow(tableSelectedOn.index);
+                          setTableSelectedOn(undefined);
                         }
                       },
                     };
 
                     const actions = [];
 
-                    if (element.pinned) {
+                    if (typeof tableSelectedOn.index === 'number' && isRowPinned(tableSelectedOn.index)) {
                       actions.push(unpinnedAction);
                     } else {
                       actions.push(pinnedAction);
@@ -388,25 +395,26 @@ function TableCell(props: RenderElementProps<TableElement>) {
                       icon: Unpinned,
                       onClick: () => {
                         if (typeof tableSelectedOn.index === 'number') {
-                          /** @TODO unpinned feature */
-                          console.log('click unpinned');
+                          unpinColumn(tableSelectedOn.index);
+                          setTableSelectedOn(undefined);
                         }
                       },
                     };
 
                     const pinnedAction = {
                       icon: Pinned,
+                      disabled: isReachMinimumNormalColumns,
                       onClick: () => {
                         if (typeof tableSelectedOn.index === 'number') {
-                          /** @TODO pinned feature */
-                          console.log('click pinned');
+                          pinColumn(tableSelectedOn.index);
+                          setTableSelectedOn(undefined);
                         }
                       },
                     };
 
                     const actions = [];
 
-                    if (element.pinned) {
+                    if (typeof tableSelectedOn.index === 'number' && isColumnPinned(tableSelectedOn.index)) {
                       actions.push(unpinnedAction);
                     } else {
                       actions.push(pinnedAction);
