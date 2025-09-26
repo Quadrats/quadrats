@@ -18,7 +18,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
   const addColumn: TableContextType['addColumn'] = useCallback(
     (options = {}) => {
-      const { position = 'right', columnIndex, treatAsTitle } = options;
+      const { position = 'right', columnIndex } = options;
 
       try {
         const tableMainElement = element.children.find(
@@ -37,7 +37,6 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
         if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
 
-        // Check column limit
         const firstRow = tableBodyElement.children[0];
 
         if (Element.isElement(firstRow) && firstRow.children.length >= TABLE_DEFAULT_MAX_COLUMNS) {
@@ -46,18 +45,17 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           return;
         }
 
-        // Calculate insertion index
         let insertIndex: number;
 
         if (typeof columnIndex === 'number' && Element.isElement(firstRow)) {
-          // Use provided index
+          // 從 column 中選取方向插入欄
           if (position === 'left') {
             insertIndex = Math.max(0, columnIndex);
           } else {
             insertIndex = Math.min(firstRow.children.length, columnIndex + 1);
           }
         } else if (Element.isElement(firstRow)) {
-          // Default behavior: append at the end
+          // 預設行為：在最右側加入欄
           insertIndex = firstRow.children.length;
         } else {
           console.warn('Failed to determine insertion index: no valid first row found');
@@ -65,15 +63,18 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           return;
         }
 
-        // Add cell to each row in header
+        // 在 Header 中加入 cell
         if (Element.isElement(tableHeaderElement) && tableHeaderElement.children.length > 0) {
           const tableHeaderPath = ReactEditor.findPath(editor, tableHeaderElement);
 
           tableHeaderElement.children.forEach((row, rowIndex) => {
             if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+              const referenceCell = row.children[insertIndex - (position === 'left' ? 0 : 1)] as TableElement;
+
               const newCell = {
                 type: TABLE_CELL_TYPE,
-                treatAsTitle,
+                ...(referenceCell.treatAsTitle ? { treatAsTitle: true } : {}),
+                ...(referenceCell.pinned ? { pinned: true } : {}),
                 children: [
                   {
                     type: PARAGRAPH_TYPE,
@@ -90,14 +91,17 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           });
         }
 
-        // Add cell to each row in body
+        // 在 Body 中加入 cell
         const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
 
         tableBodyElement.children.forEach((row, rowIndex) => {
           if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+            const referenceCell = row.children[insertIndex - (position === 'left' ? 0 : 1)] as TableElement;
+
             const newCell = {
               type: TABLE_CELL_TYPE,
-              treatAsTitle,
+              ...(referenceCell.treatAsTitle ? { treatAsTitle: true } : {}),
+              ...(referenceCell.pinned ? { pinned: true } : {}),
               children: [
                 {
                   type: PARAGRAPH_TYPE,
@@ -146,46 +150,15 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
         const columnCount = firstRow.children.length;
 
-        // Check which columns are title columns by examining existing rows
-        const columnTitleStatus: boolean[] = Array.from({ length: columnCount }, () => false);
+        let insertIndex: number;
+        let referenceRowElement: Element | undefined;
 
-        // Check all existing rows to determine title column status
-        const allRows = [
-          ...(tableHeaderElement && Element.isElement(tableHeaderElement) ? tableHeaderElement.children : []),
-          ...tableBodyElement.children,
-        ];
+        const getReferenceCell = (container: Element, index: number) => {
+          const row = container.children[index];
 
-        allRows.forEach((row) => {
-          if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
-            row.children.forEach((cell, cellIndex) => {
-              if (
-                Element.isElement(cell) &&
-                cell.type.includes(TABLE_CELL_TYPE) &&
-                cell.treatAsTitle &&
-                cellIndex < columnCount
-              ) {
-                columnTitleStatus[cellIndex] = true;
-              }
-            });
-          }
-        });
-
-        // Create new row with appropriate treatAsTitle properties
-        const newRow = {
-          type: TABLE_ROW_TYPE,
-          children: Array.from({ length: columnCount }, (_, index) => ({
-            type: TABLE_CELL_TYPE,
-            children: [
-              {
-                type: PARAGRAPH_TYPE,
-                children: [{ text: '' }],
-              },
-            ],
-            ...(columnTitleStatus[index] ? { treatAsTitle: true } : {}),
-          })),
+          return Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE) ? row : undefined;
         };
 
-        // Determine where to insert the row
         if (typeof rowIndex === 'number') {
           const totalHeaderRows =
             tableHeaderElement && Element.isElement(tableHeaderElement)
@@ -194,42 +167,90 @@ export function useTableActions(element: RenderTableElementProps['element']) {
                 ).length
               : 0;
 
-          // Check if we're inserting in header region
+          // 檢查是在 Header / Body 之中
           if (Element.isElement(tableHeaderElement) && rowIndex < totalHeaderRows) {
-            const headerPath = ReactEditor.findPath(editor, tableHeaderElement);
-            let insertIndex: number;
-
             if (position === 'top') {
               insertIndex = Math.max(0, rowIndex);
+              referenceRowElement = getReferenceCell(tableHeaderElement, insertIndex);
             } else {
               insertIndex = Math.min(totalHeaderRows, rowIndex + 1);
+              referenceRowElement = getReferenceCell(tableHeaderElement, rowIndex);
+            }
+          } else {
+            const bodyRowIndex = rowIndex - totalHeaderRows;
+
+            if (position === 'top') {
+              insertIndex = Math.max(0, bodyRowIndex);
+              referenceRowElement = getReferenceCell(tableBodyElement, insertIndex);
+            } else {
+              insertIndex = Math.min(tableBodyElement.children.length, bodyRowIndex + 1);
+              referenceRowElement = getReferenceCell(tableBodyElement, bodyRowIndex);
+            }
+          }
+        } else {
+          // 預設：在 Body 尾端加入列
+          insertIndex = tableBodyElement.children.length;
+          referenceRowElement = getReferenceCell(tableBodyElement, insertIndex - 1);
+        }
+
+        const newRow: TableElement = {
+          type: TABLE_ROW_TYPE,
+          children: Array.from({ length: columnCount }, (_, cellIndex) => {
+            let referenceCell: TableElement | undefined;
+
+            if (referenceRowElement && referenceRowElement.children[cellIndex]) {
+              const cell = referenceRowElement.children[cellIndex];
+
+              if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
+                referenceCell = cell as TableElement;
+              }
             }
 
+            const cellProps: TableElement = {
+              type: TABLE_CELL_TYPE,
+              children: [
+                {
+                  type: PARAGRAPH_TYPE,
+                  children: [{ text: '' }],
+                },
+              ],
+            };
+
+            if (referenceCell) {
+              if (referenceCell.treatAsTitle) {
+                cellProps.treatAsTitle = true;
+              }
+
+              if (referenceCell.pinned) {
+                cellProps.pinned = true;
+              }
+            }
+
+            return cellProps;
+          }),
+        };
+
+        if (typeof rowIndex === 'number') {
+          const totalHeaderRows =
+            tableHeaderElement && Element.isElement(tableHeaderElement)
+              ? tableHeaderElement.children.filter(
+                  (child) => Element.isElement(child) && child.type.includes(TABLE_ROW_TYPE),
+                ).length
+              : 0;
+
+          if (Element.isElement(tableHeaderElement) && rowIndex < totalHeaderRows) {
+            const headerPath = ReactEditor.findPath(editor, tableHeaderElement);
             const newRowPath = [...headerPath, insertIndex];
 
             Transforms.insertNodes(editor, newRow, { at: newRowPath });
-
-            return;
-          }
-
-          // Inserting in body region - adjust rowIndex
-          const bodyRowIndex = rowIndex - totalHeaderRows;
-          const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
-          let insertIndex: number;
-
-          if (position === 'top') {
-            insertIndex = Math.max(0, bodyRowIndex);
           } else {
-            insertIndex = Math.min(tableBodyElement.children.length, bodyRowIndex + 1);
+            const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
+            const newRowPath = [...tableBodyPath, insertIndex];
+
+            Transforms.insertNodes(editor, newRow, { at: newRowPath });
           }
-
-          const newRowPath = [...tableBodyPath, insertIndex];
-
-          Transforms.insertNodes(editor, newRow, { at: newRowPath });
         } else {
-          // Default behavior: append at the end of body
           const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
-          const insertIndex = tableBodyElement.children.length;
           const newRowPath = [...tableBodyPath, insertIndex];
 
           Transforms.insertNodes(editor, newRow, { at: newRowPath });
@@ -259,7 +280,6 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
       if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
 
-      // Check both column and row limits
       const firstRow = tableBodyElement.children[0];
 
       if (Element.isElement(firstRow) && firstRow.children.length >= TABLE_DEFAULT_MAX_COLUMNS) {
@@ -268,16 +288,18 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         return;
       }
 
-      // Use Editor.withoutNormalizing to batch all operations
       editor.withoutNormalizing(() => {
-        // First, add column to header if it exists
         if (tableHeaderElement && Element.isElement(tableHeaderElement)) {
           const headerPath = ReactEditor.findPath(editor, tableHeaderElement);
 
           tableHeaderElement.children.forEach((row, rowIndex) => {
             if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+              const lastCell = row.children[row.children.length - 1] as TableElement;
+
               const newHeaderCell = {
                 type: TABLE_CELL_TYPE,
+                ...(lastCell.treatAsTitle ? { treatAsTitle: true } : {}),
+                ...(lastCell.pinned ? { pinned: true } : {}),
                 children: [
                   {
                     type: PARAGRAPH_TYPE,
@@ -294,13 +316,16 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           });
         }
 
-        // Then, add column to each existing row in body
         const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
 
         tableBodyElement.children.forEach((row, rowIndex) => {
           if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+            const lastCell = row.children[row.children.length - 1] as TableElement;
+
             const newCell = {
               type: TABLE_CELL_TYPE,
+              ...(lastCell.treatAsTitle ? { treatAsTitle: true } : {}),
+              ...(lastCell.pinned ? { pinned: true } : {}),
               children: [
                 {
                   type: PARAGRAPH_TYPE,
@@ -316,49 +341,57 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           }
         });
 
-        // Finally, add a new row with the updated column count
         if (Element.isElement(firstRow)) {
-          const newColumnCount = firstRow.children.length + 1; // +1 because we just added a column
-
-          // Check which columns are title columns by examining existing rows
-          const columnTitleStatus: boolean[] = Array.from({ length: newColumnCount }, () => false);
-
-          // Check all existing rows to determine title column status
-          const allRows = [
-            ...(tableHeaderElement && Element.isElement(tableHeaderElement) ? tableHeaderElement.children : []),
-            ...tableBodyElement.children,
-          ];
-
-          allRows.forEach((row) => {
-            if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
-              row.children.forEach((cell, cellIndex) => {
-                if (
-                  Element.isElement(cell) &&
-                  cell.type.includes(TABLE_CELL_TYPE) &&
-                  cell.treatAsTitle &&
-                  cellIndex < newColumnCount - 1 // Exclude the newly added column
-                ) {
-                  columnTitleStatus[cellIndex] = true;
-                }
-              });
-            }
-          });
-
-          // The newly added column (last one) is not a title column by default
-          columnTitleStatus[newColumnCount - 1] = false;
+          const newColumnCount = firstRow.children.length + 1;
+          const lastRow = tableBodyElement.children[tableBodyElement.children.length - 1];
 
           const newRow = {
             type: TABLE_ROW_TYPE,
-            children: Array.from({ length: newColumnCount }, (_, index) => ({
-              type: TABLE_CELL_TYPE,
-              children: [
-                {
-                  type: PARAGRAPH_TYPE,
-                  children: [{ text: '' }],
-                },
-              ],
-              ...(columnTitleStatus[index] ? { treatAsTitle: true } : {}),
-            })),
+            children: Array.from({ length: newColumnCount }, (_, cellIndex) => {
+              let referenceCell: TableElement | undefined;
+
+              if (
+                cellIndex < newColumnCount - 1 &&
+                Element.isElement(lastRow) &&
+                lastRow.type.includes(TABLE_ROW_TYPE)
+              ) {
+                const cell = lastRow.children[cellIndex];
+
+                if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
+                  referenceCell = cell as TableElement;
+                }
+              } else {
+                if (Element.isElement(lastRow) && lastRow.type.includes(TABLE_ROW_TYPE)) {
+                  const cell = lastRow.children[lastRow.children.length - 1];
+
+                  if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
+                    referenceCell = cell as TableElement;
+                  }
+                }
+              }
+
+              const cellProps: TableElement = {
+                type: TABLE_CELL_TYPE,
+                children: [
+                  {
+                    type: PARAGRAPH_TYPE,
+                    children: [{ text: '' }],
+                  },
+                ],
+              };
+
+              if (referenceCell) {
+                if (referenceCell.treatAsTitle) {
+                  cellProps.treatAsTitle = true;
+                }
+
+                if (referenceCell.pinned) {
+                  cellProps.pinned = true;
+                }
+              }
+
+              return cellProps;
+            }),
           };
 
           const newRowPath = [...tableBodyPath, tableBodyElement.children.length];
@@ -388,7 +421,6 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
         );
 
-        // Calculate the total number of header rows
         let totalHeaderRows = 0;
 
         if (tableHeaderElement && Element.isElement(tableHeaderElement)) {
@@ -397,15 +429,12 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           ).length;
         }
 
-        // Check if we're trying to delete a header row
         if (rowIndex < totalHeaderRows) {
-          // Delete a specific header row
           const headerPath = ReactEditor.findPath(editor, tableHeaderElement!);
           const headerRowPath = [...headerPath, rowIndex];
 
           Transforms.removeNodes(editor, { at: headerRowPath });
 
-          // If this was the last header row, remove the entire header element
           if (totalHeaderRows <= 1) {
             Transforms.removeNodes(editor, { at: headerPath });
           }
@@ -415,17 +444,14 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
         if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
 
-        // Calculate the body row index (subtract total header rows)
         const bodyRowIndex = rowIndex - totalHeaderRows;
 
-        // Check if the body row index is valid
         if (bodyRowIndex < 0 || bodyRowIndex >= tableBodyElement.children.length) {
           console.warn('Invalid row index for deletion');
 
           return;
         }
 
-        // Don't allow deleting the last remaining row
         if (tableBodyElement.children.length <= 1) {
           console.warn('Cannot delete the last row');
 
@@ -615,15 +641,36 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
         if (!Element.isElement(rowToMove) || !rowToMove.type.includes(TABLE_ROW_TYPE)) return;
 
-        // Apply customProps to cells if provided
-        const processedRow = customProps
+        // Check if there are existing pinned rows in header (consistency rule check)
+        const hasExistingPinnedRows = (() => {
+          if (!tableHeaderElement || !Element.isElement(tableHeaderElement)) return false;
+
+          for (const row of tableHeaderElement.children) {
+            if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+              for (const cell of row.children) {
+                if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE) && (cell as TableElement).pinned) {
+                  return true;
+                }
+              }
+            }
+          }
+
+          return false;
+        })();
+
+        // If there are existing pinned rows and no custom props provided,
+        // automatically set pinned to maintain consistency
+        const finalProps = customProps || (hasExistingPinnedRows ? { pinned: true } : undefined);
+
+        // Apply finalProps to cells if provided
+        const processedRow = finalProps
           ? {
               ...rowToMove,
               children: rowToMove.children.map((cell) => {
                 if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
                   return {
                     ...cell,
-                    ...customProps,
+                    ...finalProps,
                   } as TableElement;
                 }
 
@@ -655,7 +702,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           // If this is a pinned row, find the correct insertion position (pinned rows go to the top)
           let headerTargetPath: number[];
 
-          if (customProps?.pinned) {
+          if (finalProps?.pinned) {
             let insertIndex = 0;
 
             for (const [index, headerRow] of tableHeaderElement.children.entries()) {
@@ -815,6 +862,31 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
         if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
 
+        // Check if there are existing pinned columns (consistency rule check)
+        const hasExistingPinnedColumns = (() => {
+          const containers = [tableBodyElement, tableHeaderElement].filter(Boolean);
+
+          for (const container of containers) {
+            if (!Element.isElement(container)) continue;
+
+            for (const row of container.children) {
+              if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+                for (const cell of row.children) {
+                  if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE) && (cell as TableElement).pinned) {
+                    return true;
+                  }
+                }
+              }
+            }
+          }
+
+          return false;
+        })();
+
+        // If there are existing pinned columns and no custom props provided,
+        // automatically set pinned to maintain consistency
+        const finalProps = customProps || (hasExistingPinnedColumns ? { pinned: true } : undefined);
+
         // Function to process a container (header or body)
         const processContainer = (containerElement: Element) => {
           if (!Element.isElement(containerElement)) return;
@@ -853,7 +925,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
                 if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
                   const cellPath = [...containerPath, rowIndex, columnIndex];
-                  const nodeProps = customProps ? { treatAsTitle: true, ...customProps } : { treatAsTitle: true };
+                  const nodeProps = finalProps ? { treatAsTitle: true, ...finalProps } : { treatAsTitle: true };
 
                   Transforms.setNodes(editor, nodeProps as Partial<Element>, { at: cellPath });
                 }
@@ -870,7 +942,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
               if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
                 const cellPath = [...containerPath, rowIndex, columnIndex];
-                const nodeProps = customProps ? { treatAsTitle: true, ...customProps } : { treatAsTitle: true };
+                const nodeProps = finalProps ? { treatAsTitle: true, ...finalProps } : { treatAsTitle: true };
 
                 Transforms.setNodes(editor, nodeProps as Partial<Element>, { at: cellPath });
               }

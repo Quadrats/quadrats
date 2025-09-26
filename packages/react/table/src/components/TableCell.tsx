@@ -217,7 +217,6 @@ function TableCell(props: RenderElementProps<TableElement>) {
                       addColumn({
                         position: 'left',
                         columnIndex: cellPosition.columnIndex,
-                        treatAsTitle: element.treatAsTitle,
                       });
                     },
                   },
@@ -228,7 +227,6 @@ function TableCell(props: RenderElementProps<TableElement>) {
                       addColumn({
                         position: 'right',
                         columnIndex: cellPosition.columnIndex,
-                        treatAsTitle: element.treatAsTitle,
                       });
                     },
                   },
@@ -467,7 +465,6 @@ function TableCell(props: RenderElementProps<TableElement>) {
                           addColumn({
                             position: 'left',
                             columnIndex: tableSelectedOn.index,
-                            treatAsTitle: element.treatAsTitle,
                           });
 
                           setTableSelectedOn(undefined);
@@ -483,7 +480,6 @@ function TableCell(props: RenderElementProps<TableElement>) {
                           addColumn({
                             position: 'right',
                             columnIndex: tableSelectedOn.index,
-                            treatAsTitle: element.treatAsTitle,
                           });
 
                           setTableSelectedOn(undefined);

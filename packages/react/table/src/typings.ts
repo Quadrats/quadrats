@@ -24,7 +24,7 @@ export type TableContextType = {
   // Portal container for toolbar positioning
   portalContainerRef: RefObject<HTMLDivElement | null>;
   // Table structure manipulation
-  addColumn: (options?: { position?: 'left' | 'right'; columnIndex?: number; treatAsTitle?: boolean }) => void;
+  addColumn: (options?: { position?: 'left' | 'right'; columnIndex?: number }) => void;
   addRow: (options?: { position?: 'top' | 'bottom'; rowIndex?: number }) => void;
   addColumnAndRow: VoidFunction;
   deleteRow: (rowIndex: number) => void;
