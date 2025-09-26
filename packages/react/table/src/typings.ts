@@ -34,9 +34,9 @@ export type TableContextType = {
   unsetColumnAsTitle: (columnIndex: number) => void;
   setColumnAsTitle: (columnIndex: number, customProps?: Pick<TableElement, 'pinned'>) => void;
   pinColumn: (columnIndex: number) => void;
-  unpinColumn: (columnIndex: number) => void;
+  unpinColumn: () => void;
   pinRow: (rowIndex: number) => void;
-  unpinRow: (rowIndex: number) => void;
+  unpinRow: () => void;
   // Helper functions to check pin status
   isColumnPinned: (columnIndex: number) => boolean;
   isRowPinned: (rowIndex: number) => boolean;
@@ -64,6 +64,7 @@ export type TableContextType = {
 };
 
 export type TableScrollContextType = {
+  scrollRef: RefObject<HTMLDivElement | null>;
   scrollTop: number;
 };
 

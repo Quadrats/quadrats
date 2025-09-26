@@ -113,19 +113,29 @@ $toolbar-z-index: 10;
 
   &__header {
     @include title-bg();
+
+    &--pinned {
+      position: sticky;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      box-shadow: 0 2px 4px -2px #00000026;
+    }
   }
 
   &__scrollContainer {
     width: 100%;
     max-height: 420px;
     overflow: auto;
+    scrollbar-width: thin;
     position: relative;
   }
 
   &__main {
     width: 100%;
     margin: 0;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     table-layout: fixed;
   }
 
@@ -175,6 +185,14 @@ $toolbar-z-index: 10;
       font-weight: var(--qdr-typography-article-h6-font-weight);
       color: var(--qdr-text-primary);
       @include title-bg();
+    }
+
+    &--pinned {
+      position: sticky;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      box-shadow: 0 2px 4px -2px #00000026;
     }
 
     &--top-active {

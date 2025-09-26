@@ -44,7 +44,7 @@ function TableMain(props: RenderElementProps<TableElement>) {
     };
   }, []);
 
-  const scrollContextValue = useMemo(() => ({ scrollTop }), [scrollTop]);
+  const scrollContextValue = useMemo(() => ({ scrollTop, scrollRef }), [scrollTop, scrollRef]);
 
   return (
     <div

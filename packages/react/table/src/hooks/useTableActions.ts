@@ -1,17 +1,22 @@
 import { useCallback } from 'react';
-import { Element, PARAGRAPH_TYPE, Transforms, Editor } from '@quadrats/core';
+import { Element, Transforms, Editor } from '@quadrats/core';
 import { ReactEditor } from 'slate-react';
 import { RenderTableElementProps, TableContextType } from '../typings';
 import {
-  TABLE_BODY_TYPE,
   TABLE_CELL_TYPE,
   TABLE_HEADER_TYPE,
-  TABLE_MAIN_TYPE,
   TABLE_DEFAULT_MAX_COLUMNS,
   TABLE_ROW_TYPE,
   TableElement,
 } from '@quadrats/common/table';
 import { useQuadrats } from '@quadrats/react';
+import {
+  getTableStructure,
+  createTableCell,
+  getReferenceRowFromHeaderOrBody,
+  hasAnyPinnedRows,
+  hasAnyPinnedColumns,
+} from '../utils/helper';
 
 export function useTableActions(element: RenderTableElementProps['element']) {
   const editor = useQuadrats();
@@ -21,70 +26,34 @@ export function useTableActions(element: RenderTableElementProps['element']) {
       const { position = 'right', columnIndex } = options;
 
       try {
-        const tableMainElement = element.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-        );
+        const tableStructure = getTableStructure(editor, element);
 
-        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+        if (!tableStructure) return;
 
-        const tableBodyElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
-        );
+        const { tableHeaderElement, tableBodyElement, tableHeaderPath, tableBodyPath, columnCount } = tableStructure;
 
-        const tableHeaderElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-        );
-
-        if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
-
-        const firstRow = tableBodyElement.children[0];
-
-        if (Element.isElement(firstRow) && firstRow.children.length >= TABLE_DEFAULT_MAX_COLUMNS) {
+        if (columnCount >= TABLE_DEFAULT_MAX_COLUMNS) {
           console.warn(`Maximum columns limit (${TABLE_DEFAULT_MAX_COLUMNS}) reached`);
 
           return;
         }
 
+        // 計算插入位置
         let insertIndex: number;
 
-        if (typeof columnIndex === 'number' && Element.isElement(firstRow)) {
-          // 從 column 中選取方向插入欄
-          if (position === 'left') {
-            insertIndex = Math.max(0, columnIndex);
-          } else {
-            insertIndex = Math.min(firstRow.children.length, columnIndex + 1);
-          }
-        } else if (Element.isElement(firstRow)) {
-          // 預設行為：在最右側加入欄
-          insertIndex = firstRow.children.length;
+        if (typeof columnIndex === 'number') {
+          insertIndex = position === 'left' ? Math.max(0, columnIndex) : Math.min(columnCount, columnIndex + 1);
         } else {
-          console.warn('Failed to determine insertion index: no valid first row found');
-
-          return;
+          insertIndex = columnCount;
         }
 
         // 在 Header 中加入 cell
-        if (Element.isElement(tableHeaderElement) && tableHeaderElement.children.length > 0) {
-          const tableHeaderPath = ReactEditor.findPath(editor, tableHeaderElement);
-
+        if (tableHeaderElement && tableHeaderPath) {
           tableHeaderElement.children.forEach((row, rowIndex) => {
             if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
               const referenceCell = row.children[insertIndex - (position === 'left' ? 0 : 1)] as TableElement;
-
-              const newCell = {
-                type: TABLE_CELL_TYPE,
-                ...(referenceCell.treatAsTitle ? { treatAsTitle: true } : {}),
-                ...(referenceCell.pinned ? { pinned: true } : {}),
-                children: [
-                  {
-                    type: PARAGRAPH_TYPE,
-                    children: [{ text: '' }],
-                  },
-                ],
-              };
-
-              const rowPath = [...tableHeaderPath, rowIndex];
-              const cellPath = [...rowPath, insertIndex];
+              const newCell = createTableCell(referenceCell);
+              const cellPath = [...tableHeaderPath, rowIndex, insertIndex];
 
               Transforms.insertNodes(editor, newCell, { at: cellPath });
             }
@@ -92,26 +61,11 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         }
 
         // 在 Body 中加入 cell
-        const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
-
-        tableBodyElement.children.forEach((row, rowIndex) => {
+        tableBodyElement!.children.forEach((row, rowIndex) => {
           if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
             const referenceCell = row.children[insertIndex - (position === 'left' ? 0 : 1)] as TableElement;
-
-            const newCell = {
-              type: TABLE_CELL_TYPE,
-              ...(referenceCell.treatAsTitle ? { treatAsTitle: true } : {}),
-              ...(referenceCell.pinned ? { pinned: true } : {}),
-              children: [
-                {
-                  type: PARAGRAPH_TYPE,
-                  children: [{ text: '' }],
-                },
-              ],
-            };
-
-            const rowPath = [...tableBodyPath, rowIndex];
-            const cellPath = [...rowPath, insertIndex];
+            const newCell = createTableCell(referenceCell);
+            const cellPath = [...tableBodyPath, rowIndex, insertIndex];
 
             Transforms.insertNodes(editor, newCell, { at: cellPath });
           }
@@ -128,71 +82,50 @@ export function useTableActions(element: RenderTableElementProps['element']) {
       const { position = 'bottom', rowIndex } = options;
 
       try {
-        const tableMainElement = element.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-        );
+        const tableStructure = getTableStructure(editor, element);
 
-        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+        if (!tableStructure) return;
 
-        const tableBodyElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
-        );
+        const { tableHeaderElement, tableBodyElement, tableHeaderPath, tableBodyPath, headerRowCount, columnCount } =
+          tableStructure;
 
-        const tableHeaderElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-        );
-
-        if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
-
-        const firstRow = tableBodyElement.children[0];
-
-        if (!Element.isElement(firstRow) || !firstRow.type.includes(TABLE_ROW_TYPE)) return;
-
-        const columnCount = firstRow.children.length;
-
+        // 計算插入位置和參考行
         let insertIndex: number;
         let referenceRowElement: Element | undefined;
-
-        const getReferenceCell = (container: Element, index: number) => {
-          const row = container.children[index];
-
-          return Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE) ? row : undefined;
-        };
+        let targetPath: number[];
 
         if (typeof rowIndex === 'number') {
-          const totalHeaderRows =
-            tableHeaderElement && Element.isElement(tableHeaderElement)
-              ? tableHeaderElement.children.filter(
-                  (child) => Element.isElement(child) && child.type.includes(TABLE_ROW_TYPE),
-                ).length
-              : 0;
-
           // 檢查是在 Header / Body 之中
-          if (Element.isElement(tableHeaderElement) && rowIndex < totalHeaderRows) {
+          if (tableHeaderElement && rowIndex < headerRowCount) {
+            targetPath = tableHeaderPath!;
+
             if (position === 'top') {
               insertIndex = Math.max(0, rowIndex);
-              referenceRowElement = getReferenceCell(tableHeaderElement, insertIndex);
+              referenceRowElement = getReferenceRowFromHeaderOrBody(tableHeaderElement, insertIndex);
             } else {
-              insertIndex = Math.min(totalHeaderRows, rowIndex + 1);
-              referenceRowElement = getReferenceCell(tableHeaderElement, rowIndex);
+              insertIndex = Math.min(headerRowCount, rowIndex + 1);
+              referenceRowElement = getReferenceRowFromHeaderOrBody(tableHeaderElement, rowIndex);
             }
           } else {
-            const bodyRowIndex = rowIndex - totalHeaderRows;
+            targetPath = tableBodyPath;
+            const bodyRowIndex = rowIndex - headerRowCount;
 
             if (position === 'top') {
               insertIndex = Math.max(0, bodyRowIndex);
-              referenceRowElement = getReferenceCell(tableBodyElement, insertIndex);
+              referenceRowElement = getReferenceRowFromHeaderOrBody(tableBodyElement!, insertIndex);
             } else {
-              insertIndex = Math.min(tableBodyElement.children.length, bodyRowIndex + 1);
-              referenceRowElement = getReferenceCell(tableBodyElement, bodyRowIndex);
+              insertIndex = Math.min(tableBodyElement!.children.length, bodyRowIndex + 1);
+              referenceRowElement = getReferenceRowFromHeaderOrBody(tableBodyElement!, bodyRowIndex);
             }
           }
         } else {
           // 預設：在 Body 尾端加入列
-          insertIndex = tableBodyElement.children.length;
-          referenceRowElement = getReferenceCell(tableBodyElement, insertIndex - 1);
+          targetPath = tableBodyPath;
+          insertIndex = tableBodyElement!.children.length;
+          referenceRowElement = getReferenceRowFromHeaderOrBody(tableBodyElement!, insertIndex - 1);
         }
 
+        // 創建新行
         const newRow: TableElement = {
           type: TABLE_ROW_TYPE,
           children: Array.from({ length: columnCount }, (_, cellIndex) => {
@@ -206,55 +139,14 @@ export function useTableActions(element: RenderTableElementProps['element']) {
               }
             }
 
-            const cellProps: TableElement = {
-              type: TABLE_CELL_TYPE,
-              children: [
-                {
-                  type: PARAGRAPH_TYPE,
-                  children: [{ text: '' }],
-                },
-              ],
-            };
-
-            if (referenceCell) {
-              if (referenceCell.treatAsTitle) {
-                cellProps.treatAsTitle = true;
-              }
-
-              if (referenceCell.pinned) {
-                cellProps.pinned = true;
-              }
-            }
-
-            return cellProps;
+            return createTableCell(referenceCell);
           }),
         };
 
-        if (typeof rowIndex === 'number') {
-          const totalHeaderRows =
-            tableHeaderElement && Element.isElement(tableHeaderElement)
-              ? tableHeaderElement.children.filter(
-                  (child) => Element.isElement(child) && child.type.includes(TABLE_ROW_TYPE),
-                ).length
-              : 0;
+        // 插入新行
+        const newRowPath = [...targetPath, insertIndex];
 
-          if (Element.isElement(tableHeaderElement) && rowIndex < totalHeaderRows) {
-            const headerPath = ReactEditor.findPath(editor, tableHeaderElement);
-            const newRowPath = [...headerPath, insertIndex];
-
-            Transforms.insertNodes(editor, newRow, { at: newRowPath });
-          } else {
-            const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
-            const newRowPath = [...tableBodyPath, insertIndex];
-
-            Transforms.insertNodes(editor, newRow, { at: newRowPath });
-          }
-        } else {
-          const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
-          const newRowPath = [...tableBodyPath, insertIndex];
-
-          Transforms.insertNodes(editor, newRow, { at: newRowPath });
-        }
+        Transforms.insertNodes(editor, newRow, { at: newRowPath });
       } catch (error) {
         console.warn('Failed to add row:', error);
       }
@@ -264,140 +156,77 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
   const addColumnAndRow: TableContextType['addColumnAndRow'] = useCallback(() => {
     try {
-      const tableMainElement = element.children.find(
-        (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-      );
+      const tableStructure = getTableStructure(editor, element);
 
-      if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+      if (!tableStructure) return;
 
-      const tableBodyElement = tableMainElement.children.find(
-        (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
-      );
+      const { tableHeaderElement, tableBodyElement, tableHeaderPath, tableBodyPath, columnCount } = tableStructure;
 
-      const tableHeaderElement = tableMainElement.children.find(
-        (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-      );
-
-      if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
-
-      const firstRow = tableBodyElement.children[0];
-
-      if (Element.isElement(firstRow) && firstRow.children.length >= TABLE_DEFAULT_MAX_COLUMNS) {
+      if (columnCount >= TABLE_DEFAULT_MAX_COLUMNS) {
         console.warn(`Maximum columns limit (${TABLE_DEFAULT_MAX_COLUMNS}) reached`);
 
         return;
       }
 
       editor.withoutNormalizing(() => {
-        if (tableHeaderElement && Element.isElement(tableHeaderElement)) {
-          const headerPath = ReactEditor.findPath(editor, tableHeaderElement);
-
+        // 在 Header 中加入新列
+        if (tableHeaderElement && tableHeaderPath) {
           tableHeaderElement.children.forEach((row, rowIndex) => {
             if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
               const lastCell = row.children[row.children.length - 1] as TableElement;
+              const newHeaderCell = createTableCell(lastCell);
 
-              const newHeaderCell = {
-                type: TABLE_CELL_TYPE,
-                ...(lastCell.treatAsTitle ? { treatAsTitle: true } : {}),
-                ...(lastCell.pinned ? { pinned: true } : {}),
-                children: [
-                  {
-                    type: PARAGRAPH_TYPE,
-                    children: [{ text: '' }],
-                  },
-                ],
-              };
-
-              const rowPath = [...headerPath, rowIndex];
-              const cellPath = [...rowPath, row.children.length];
+              const cellPath = [...tableHeaderPath, rowIndex, row.children.length];
 
               Transforms.insertNodes(editor, newHeaderCell, { at: cellPath });
             }
           });
         }
 
-        const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
-
-        tableBodyElement.children.forEach((row, rowIndex) => {
+        // 在 Body 中加入新列
+        tableBodyElement!.children.forEach((row, rowIndex) => {
           if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
             const lastCell = row.children[row.children.length - 1] as TableElement;
+            const newCell = createTableCell(lastCell);
 
-            const newCell = {
-              type: TABLE_CELL_TYPE,
-              ...(lastCell.treatAsTitle ? { treatAsTitle: true } : {}),
-              ...(lastCell.pinned ? { pinned: true } : {}),
-              children: [
-                {
-                  type: PARAGRAPH_TYPE,
-                  children: [{ text: '' }],
-                },
-              ],
-            };
-
-            const rowPath = [...tableBodyPath, rowIndex];
-            const cellPath = [...rowPath, row.children.length];
+            const cellPath = [...tableBodyPath, rowIndex, row.children.length];
 
             Transforms.insertNodes(editor, newCell, { at: cellPath });
           }
         });
 
-        if (Element.isElement(firstRow)) {
-          const newColumnCount = firstRow.children.length + 1;
-          const lastRow = tableBodyElement.children[tableBodyElement.children.length - 1];
+        // 加入新行
+        const newColumnCount = columnCount + 1;
+        const lastRow = getReferenceRowFromHeaderOrBody(tableBodyElement!, tableBodyElement!.children.length - 1);
 
-          const newRow = {
-            type: TABLE_ROW_TYPE,
-            children: Array.from({ length: newColumnCount }, (_, cellIndex) => {
-              let referenceCell: TableElement | undefined;
+        const newRow: TableElement = {
+          type: TABLE_ROW_TYPE,
+          children: Array.from({ length: newColumnCount }, (_, cellIndex) => {
+            let referenceCell: TableElement | undefined;
 
-              if (
-                cellIndex < newColumnCount - 1 &&
-                Element.isElement(lastRow) &&
-                lastRow.type.includes(TABLE_ROW_TYPE)
-              ) {
-                const cell = lastRow.children[cellIndex];
+            if (cellIndex < newColumnCount - 1 && Element.isElement(lastRow) && lastRow.type.includes(TABLE_ROW_TYPE)) {
+              const cell = lastRow.children[cellIndex];
+
+              if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
+                referenceCell = cell as TableElement;
+              }
+            } else {
+              if (Element.isElement(lastRow) && lastRow.type.includes(TABLE_ROW_TYPE)) {
+                const cell = lastRow.children[lastRow.children.length - 1];
 
                 if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
                   referenceCell = cell as TableElement;
                 }
-              } else {
-                if (Element.isElement(lastRow) && lastRow.type.includes(TABLE_ROW_TYPE)) {
-                  const cell = lastRow.children[lastRow.children.length - 1];
-
-                  if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
-                    referenceCell = cell as TableElement;
-                  }
-                }
               }
+            }
 
-              const cellProps: TableElement = {
-                type: TABLE_CELL_TYPE,
-                children: [
-                  {
-                    type: PARAGRAPH_TYPE,
-                    children: [{ text: '' }],
-                  },
-                ],
-              };
+            return createTableCell(referenceCell);
+          }),
+        };
 
-              if (referenceCell) {
-                if (referenceCell.treatAsTitle) {
-                  cellProps.treatAsTitle = true;
-                }
+        const newRowPath = [...tableBodyPath, tableBodyElement!.children.length];
 
-                if (referenceCell.pinned) {
-                  cellProps.pinned = true;
-                }
-              }
-
-              return cellProps;
-            }),
-          };
-
-          const newRowPath = [...tableBodyPath, tableBodyElement.children.length];
-
-          Transforms.insertNodes(editor, newRow, { at: newRowPath });
-        }
+        Transforms.insertNodes(editor, newRow, { at: newRowPath });
       });
     } catch (error) {
       console.warn('Failed to add column and row:', error);
@@ -407,58 +236,43 @@ export function useTableActions(element: RenderTableElementProps['element']) {
   const deleteRow: TableContextType['deleteRow'] = useCallback(
     (rowIndex) => {
       try {
-        const tableMainElement = element.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-        );
+        const tableStructure = getTableStructure(editor, element);
 
-        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+        if (!tableStructure) return;
 
-        const tableBodyElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
-        );
+        const { tableHeaderElement, tableBodyElement, tableHeaderPath, tableBodyPath, headerRowCount } = tableStructure;
 
-        const tableHeaderElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-        );
+        // 檢查是否刪除 Header 行
+        if (rowIndex < headerRowCount) {
+          if (!tableHeaderElement || !tableHeaderPath) return;
 
-        let totalHeaderRows = 0;
-
-        if (tableHeaderElement && Element.isElement(tableHeaderElement)) {
-          totalHeaderRows = tableHeaderElement.children.filter(
-            (child) => Element.isElement(child) && child.type.includes(TABLE_ROW_TYPE),
-          ).length;
-        }
-
-        if (rowIndex < totalHeaderRows) {
-          const headerPath = ReactEditor.findPath(editor, tableHeaderElement!);
-          const headerRowPath = [...headerPath, rowIndex];
+          const headerRowPath = [...tableHeaderPath, rowIndex];
 
           Transforms.removeNodes(editor, { at: headerRowPath });
 
-          if (totalHeaderRows <= 1) {
-            Transforms.removeNodes(editor, { at: headerPath });
+          // 如果是最後一個 header 行，移除整個 header 元素
+          if (headerRowCount <= 1) {
+            Transforms.removeNodes(editor, { at: tableHeaderPath });
           }
 
           return;
         }
 
-        if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
+        // 刪除 Body 行
+        const bodyRowIndex = rowIndex - headerRowCount;
 
-        const bodyRowIndex = rowIndex - totalHeaderRows;
-
-        if (bodyRowIndex < 0 || bodyRowIndex >= tableBodyElement.children.length) {
+        if (bodyRowIndex < 0 || bodyRowIndex >= tableBodyElement!.children.length) {
           console.warn('Invalid row index for deletion');
 
           return;
         }
 
-        if (tableBodyElement.children.length <= 1) {
+        if (tableBodyElement!.children.length <= 1) {
           console.warn('Cannot delete the last row');
 
           return;
         }
 
-        const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
         const rowPath = [...tableBodyPath, bodyRowIndex];
 
         Transforms.removeNodes(editor, { at: rowPath });
@@ -472,60 +286,44 @@ export function useTableActions(element: RenderTableElementProps['element']) {
   const deleteColumn: TableContextType['deleteColumn'] = useCallback(
     (columnIndex) => {
       try {
-        const tableMainElement = element.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-        );
+        const tableStructure = getTableStructure(editor, element);
 
-        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+        if (!tableStructure) return;
 
-        const tableBodyElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
-        );
+        const { tableHeaderElement, tableBodyElement, tableHeaderPath, tableBodyPath, columnCount } = tableStructure;
 
-        const tableHeaderElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-        );
-
-        if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
-
-        // Check if we have enough columns (don't allow deleting the last column)
-        const firstRow = tableBodyElement.children[0];
-
-        if (!Element.isElement(firstRow) || firstRow.children.length <= 1) {
+        // 檢查是否有足夠的列（不允許刪除最後一列）
+        if (columnCount <= 1) {
           console.warn('Cannot delete the last column');
 
           return;
         }
 
-        // Check if columnIndex is valid
-        if (columnIndex < 0 || columnIndex >= firstRow.children.length) {
+        // 檢查 columnIndex 是否有效
+        if (columnIndex < 0 || columnIndex >= columnCount) {
           console.warn('Invalid column index for deletion');
 
           return;
         }
 
         editor.withoutNormalizing(() => {
-          // Delete column from header if it exists
-          if (tableHeaderElement && Element.isElement(tableHeaderElement)) {
-            const headerPath = ReactEditor.findPath(editor, tableHeaderElement);
-
-            // Delete column from each row in header (in reverse order to maintain indices)
+          // 從 Header 中刪除列
+          if (tableHeaderElement && tableHeaderPath) {
+            // 以反向順序刪除
             for (let rowIndex = tableHeaderElement.children.length - 1; rowIndex >= 0; rowIndex--) {
               const headerRow = tableHeaderElement.children[rowIndex];
 
               if (Element.isElement(headerRow) && headerRow.type.includes(TABLE_ROW_TYPE)) {
-                const headerCellPath = [...headerPath, rowIndex, columnIndex];
+                const headerCellPath = [...tableHeaderPath, rowIndex, columnIndex];
 
                 Transforms.removeNodes(editor, { at: headerCellPath });
               }
             }
           }
 
-          // Delete column from each row in body (in reverse order to maintain indices)
-          const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
-
-          for (let rowIndex = tableBodyElement.children.length - 1; rowIndex >= 0; rowIndex--) {
-            const row = tableBodyElement.children[rowIndex];
+          // 從 Body 中刪除列
+          for (let rowIndex = tableBodyElement!.children.length - 1; rowIndex >= 0; rowIndex--) {
+            const row = tableBodyElement!.children[rowIndex];
 
             if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
               const cellPath = [...tableBodyPath, rowIndex, columnIndex];
@@ -544,29 +342,15 @@ export function useTableActions(element: RenderTableElementProps['element']) {
   const moveRowToBody: TableContextType['moveRowToBody'] = useCallback(
     (rowIndex: number) => {
       try {
-        const tableMainElement = element.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-        );
+        const tableStructure = getTableStructure(editor, element);
 
-        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+        if (!tableStructure) return;
 
-        const tableBodyElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
-        );
+        const { tableHeaderElement, tableHeaderPath, tableBodyPath } = tableStructure;
 
-        const tableHeaderElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-        );
+        if (!tableHeaderElement || !tableHeaderPath) return;
 
-        if (
-          !tableBodyElement ||
-          !Element.isElement(tableBodyElement) ||
-          !tableHeaderElement ||
-          !Element.isElement(tableHeaderElement)
-        )
-          return;
-
-        // Check if the row exists in header (rowIndex should be within header range)
+        // 檢查行是否存在於 header 中
         if (rowIndex >= tableHeaderElement.children.length) {
           console.warn('Invalid header row index:', rowIndex);
 
@@ -577,11 +361,9 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
         if (!Element.isElement(rowToMove) || !rowToMove.type.includes(TABLE_ROW_TYPE)) return;
 
-        const tableHeaderPath = ReactEditor.findPath(editor, tableHeaderElement);
-        const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
         const rowPath = [...tableHeaderPath, rowIndex];
 
-        // Remove pinned property from all cells in the row before moving
+        // 移動前移除所有 cell 的 pinned 屬性
         rowToMove.children.forEach((cell, cellIndex) => {
           if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE) && (cell as TableElement).pinned) {
             const cellPath = [...rowPath, cellIndex];
@@ -590,7 +372,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           }
         });
 
-        // Move row to the start of body
+        // 移動行到 body 的開始位置
         const bodyTargetPath = [...tableBodyPath, 0];
 
         Transforms.moveNodes(editor, {
@@ -607,62 +389,35 @@ export function useTableActions(element: RenderTableElementProps['element']) {
   const moveRowToHeader: TableContextType['moveRowToHeader'] = useCallback(
     (rowIndex: number, customProps?: Pick<TableElement, 'pinned'>) => {
       try {
-        const tableMainElement = element.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-        );
+        const tableStructure = getTableStructure(editor, element);
 
-        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+        if (!tableStructure) return;
 
-        const tableBodyElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
-        );
+        const { tableHeaderElement, tableBodyElement, tableMainPath, tableHeaderPath, tableBodyPath, headerRowCount } =
+          tableStructure;
 
-        const tableHeaderElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-        );
-
-        if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
-
-        // Calculate the correct body row index
-        const headerRowCount =
-          tableHeaderElement && Element.isElement(tableHeaderElement) ? tableHeaderElement.children.length : 0;
-
+        // 計算正確的 body 行索引
         const bodyRowIndex = rowIndex - headerRowCount;
 
-        // Check if the body row index is valid
-        if (bodyRowIndex < 0 || bodyRowIndex >= tableBodyElement.children.length) {
+        // 檢查 body 行索引是否有效
+        if (bodyRowIndex < 0 || bodyRowIndex >= tableBodyElement!.children.length) {
           console.warn('Invalid body row index:', bodyRowIndex);
 
           return;
         }
 
-        // Check if the row exists
-        const rowToMove = tableBodyElement.children[bodyRowIndex];
+        // 檢查行是否存在
+        const rowToMove = tableBodyElement!.children[bodyRowIndex];
 
         if (!Element.isElement(rowToMove) || !rowToMove.type.includes(TABLE_ROW_TYPE)) return;
 
-        // Check if there are existing pinned rows in header (consistency rule check)
-        const hasExistingPinnedRows = (() => {
-          if (!tableHeaderElement || !Element.isElement(tableHeaderElement)) return false;
+        // 檢查 header 中是否已有 pinned rows（一致性規則檢查）
+        const hasExistingPinnedRows = tableStructure ? hasAnyPinnedRows(tableStructure) : false;
 
-          for (const row of tableHeaderElement.children) {
-            if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
-              for (const cell of row.children) {
-                if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE) && (cell as TableElement).pinned) {
-                  return true;
-                }
-              }
-            }
-          }
-
-          return false;
-        })();
-
-        // If there are existing pinned rows and no custom props provided,
-        // automatically set pinned to maintain consistency
+        // 如果有現有的 pinned rows 且沒有提供自定義屬性，自動設置 pinned 以保持一致性
         const finalProps = customProps || (hasExistingPinnedRows ? { pinned: true } : undefined);
 
-        // Apply finalProps to cells if provided
+        // 如果提供了 finalProps，則應用到 cells
         const processedRow = finalProps
           ? {
               ...rowToMove,
@@ -679,17 +434,15 @@ export function useTableActions(element: RenderTableElementProps['element']) {
             }
           : rowToMove;
 
-        const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
         const rowPath = [...tableBodyPath, bodyRowIndex];
 
-        // If header doesn't exist, create it first
-        if (!tableHeaderElement || !Element.isElement(tableHeaderElement)) {
+        // 如果 header 不存在，先創建它
+        if (!tableHeaderElement) {
           const newHeader = {
             type: TABLE_HEADER_TYPE,
             children: [processedRow],
           };
 
-          const tableMainPath = ReactEditor.findPath(editor, tableMainElement);
           const headerInsertPath = [...tableMainPath, 0];
 
           Editor.withoutNormalizing(editor, () => {
@@ -697,9 +450,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
             Transforms.insertNodes(editor, newHeader, { at: headerInsertPath });
           });
         } else {
-          const tableHeaderPath = ReactEditor.findPath(editor, tableHeaderElement);
-
-          // If this is a pinned row, find the correct insertion position (pinned rows go to the top)
+          // 如果這是 pinned row，找到正確的插入位置（pinned rows 在頂部）
           let headerTargetPath: number[];
 
           if (finalProps?.pinned) {
@@ -719,15 +470,15 @@ export function useTableActions(element: RenderTableElementProps['element']) {
               }
             }
 
-            headerTargetPath = [...tableHeaderPath, insertIndex];
+            headerTargetPath = [...tableHeaderPath!, insertIndex];
 
             Editor.withoutNormalizing(editor, () => {
               Transforms.removeNodes(editor, { at: rowPath });
               Transforms.insertNodes(editor, processedRow, { at: headerTargetPath });
             });
           } else {
-            // Move row to the end of existing header
-            headerTargetPath = [...tableHeaderPath, tableHeaderElement.children.length];
+            // 移動行到現有 header 的末尾
+            headerTargetPath = [...tableHeaderPath!, tableHeaderElement.children.length];
             Transforms.moveNodes(editor, {
               at: rowPath,
               to: headerTargetPath,
@@ -744,51 +495,36 @@ export function useTableActions(element: RenderTableElementProps['element']) {
   const unsetColumnAsTitle: TableContextType['unsetColumnAsTitle'] = useCallback(
     (columnIndex: number) => {
       try {
-        const tableMainElement = element.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-        );
+        const tableStructure = getTableStructure(editor, element);
 
-        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+        if (!tableStructure) return;
 
-        const tableBodyElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
-        );
+        const { tableHeaderElement, tableBodyElement } = tableStructure;
 
-        const tableHeaderElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-        );
-
-        if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
-
-        // Function to process a container (header or body)
-        const processContainer = (containerElement: Element) => {
+        const processContainer = (containerElement: TableElement) => {
           if (!Element.isElement(containerElement)) return;
 
           const containerPath = ReactEditor.findPath(editor, containerElement);
-
-          // Find the target insertion index (after all remaining title columns)
-          let targetColumnIndex = 0;
-
-          // Check first row to find where non-title columns should start
           const firstRow = containerElement.children[0];
 
+          // 找到 column 標題列的尾端
+          let targetColumnIndex = 0;
+
           if (Element.isElement(firstRow) && firstRow.type.includes(TABLE_ROW_TYPE)) {
-            // Count title columns (excluding the one we're unsetting)
             for (let i = 0; i < firstRow.children.length; i++) {
               const cell = firstRow.children[i];
 
               if (
                 Element.isElement(cell) &&
                 cell.type.includes(TABLE_CELL_TYPE) &&
-                (cell as any).treatAsTitle &&
-                i !== columnIndex // Exclude the column we're unsetting
+                cell.treatAsTitle &&
+                i !== columnIndex
               ) {
                 targetColumnIndex = i + 1;
               }
             }
           }
 
-          // Unset treatAsTitle for all cells in the column first
           containerElement.children.forEach((row, rowIndex) => {
             if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
               const cell = row.children[columnIndex];
@@ -796,23 +532,18 @@ export function useTableActions(element: RenderTableElementProps['element']) {
               if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
                 const cellPath = [...containerPath, rowIndex, columnIndex];
 
-                // Remove both treatAsTitle and pinned properties
                 Transforms.unsetNodes(editor, 'treatAsTitle', { at: cellPath });
-                if ((cell as TableElement).pinned) {
+
+                if (cell.pinned) {
                   Transforms.unsetNodes(editor, 'pinned', { at: cellPath });
                 }
               }
             }
           });
 
-          // Move the column to the end of title columns if needed
           if (columnIndex < targetColumnIndex) {
-            // We need to move the column to position targetColumnIndex
-            // Since we're moving from left to right, we need to adjust for the removed column
             const actualTargetIndex = targetColumnIndex - 1;
 
-            // Move each cell in the column to the new position
-            // Note: We need to move from bottom to top to avoid path conflicts
             for (let rowIndex = containerElement.children.length - 1; rowIndex >= 0; rowIndex--) {
               const row = containerElement.children[rowIndex];
 
@@ -829,13 +560,13 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           }
         };
 
-        // Process header if it exists
-        if (tableHeaderElement && Element.isElement(tableHeaderElement)) {
+        if (tableHeaderElement) {
           processContainer(tableHeaderElement);
         }
 
-        // Process body
-        processContainer(tableBodyElement);
+        if (tableBodyElement) {
+          processContainer(tableBodyElement);
+        }
       } catch (error) {
         console.warn('Failed to unset column as title:', error);
       }
@@ -846,113 +577,62 @@ export function useTableActions(element: RenderTableElementProps['element']) {
   const setColumnAsTitle: TableContextType['setColumnAsTitle'] = useCallback(
     (columnIndex: number, customProps?: Pick<TableElement, 'pinned'>) => {
       try {
-        const tableMainElement = element.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-        );
+        const tableStructure = getTableStructure(editor, element);
 
-        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+        if (!tableStructure) return;
 
-        const tableBodyElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
-        );
+        const { tableHeaderElement, tableBodyElement } = tableStructure;
 
-        const tableHeaderElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-        );
+        // 檢查是否已有 pinned columns（一致性規則檢查）
+        const hasExistingPinnedColumns = hasAnyPinnedColumns(tableStructure);
 
-        if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
-
-        // Check if there are existing pinned columns (consistency rule check)
-        const hasExistingPinnedColumns = (() => {
-          const containers = [tableBodyElement, tableHeaderElement].filter(Boolean);
-
-          for (const container of containers) {
-            if (!Element.isElement(container)) continue;
-
-            for (const row of container.children) {
-              if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
-                for (const cell of row.children) {
-                  if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE) && (cell as TableElement).pinned) {
-                    return true;
-                  }
-                }
-              }
-            }
-          }
-
-          return false;
-        })();
-
-        // If there are existing pinned columns and no custom props provided,
-        // automatically set pinned to maintain consistency
+        // 如果有現有的 pinned columns 且沒有提供自定義屬性，自動設置 pinned 以保持一致性
         const finalProps = customProps || (hasExistingPinnedColumns ? { pinned: true } : undefined);
 
-        // Function to process a container (header or body)
-        const processContainer = (containerElement: Element) => {
+        const processContainer = (containerElement: TableElement) => {
           if (!Element.isElement(containerElement)) return;
 
           const containerPath = ReactEditor.findPath(editor, containerElement);
-
-          // Find the target insertion index for title columns
-          let targetColumnIndex = 0;
-
-          // Check first row to find existing title columns
           const firstRow = containerElement.children[0];
 
+          // 先找到 column 標題列的尾端
+          let targetColumnIndex = 0;
+
           if (Element.isElement(firstRow) && firstRow.type.includes(TABLE_ROW_TYPE)) {
-            // Count existing title columns to determine insertion position
             for (let i = 0; i < firstRow.children.length; i++) {
               const cell = firstRow.children[i];
 
-              if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE) && (cell as any).treatAsTitle) {
+              if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE) && cell.treatAsTitle) {
                 targetColumnIndex = i + 1;
               } else {
-                break; // Stop at first non-title column
+                break;
               }
             }
           }
 
-          // If the column is already a title column and at the correct position, just set the property
-          if (
-            Element.isElement(firstRow) &&
-            firstRow.type.includes(TABLE_ROW_TYPE) &&
-            columnIndex < targetColumnIndex
-          ) {
-            // Just ensure all cells in this column have treatAsTitle: true
-            containerElement.children.forEach((row, rowIndex) => {
-              if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
-                const cell = row.children[columnIndex];
-
-                if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
-                  const cellPath = [...containerPath, rowIndex, columnIndex];
-                  const nodeProps = finalProps ? { treatAsTitle: true, ...finalProps } : { treatAsTitle: true };
-
-                  Transforms.setNodes(editor, nodeProps as Partial<Element>, { at: cellPath });
-                }
-              }
-            });
-
-            return;
-          }
-
-          // Set treatAsTitle for all cells in the column first
           containerElement.children.forEach((row, rowIndex) => {
             if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
-              const cell = row.children[columnIndex];
+              row.children.forEach((cell, childColIndex) => {
+                const cellPath = [...containerPath, rowIndex, childColIndex];
 
-              if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
-                const cellPath = [...containerPath, rowIndex, columnIndex];
-                const nodeProps = finalProps ? { treatAsTitle: true, ...finalProps } : { treatAsTitle: true };
+                if (childColIndex === columnIndex) {
+                  const nodeProps = finalProps ? { treatAsTitle: true, ...finalProps } : { treatAsTitle: true };
 
-                Transforms.setNodes(editor, nodeProps as Partial<Element>, { at: cellPath });
-              }
+                  Transforms.setNodes(editor, nodeProps as Partial<TableElement>, { at: cellPath });
+                } else if (finalProps?.pinned) {
+                  // 確保其他 title column 也有 pinned 屬性以保持一致性
+                  if (Element.isElement(cell) && cell.treatAsTitle) {
+                    Transforms.setNodes(editor, { pinned: true } as Partial<TableElement>, { at: cellPath });
+                  }
+                }
+              });
             }
           });
 
-          // Move the column to the correct position if needed
+          // 如果目標位置並不需要移動，則直接返回
+          if (columnIndex < targetColumnIndex) return;
+
           if (columnIndex !== targetColumnIndex) {
-            // Move each cell in the column to the new position
-            // Note: We need to move from bottom to top to avoid path conflicts
             for (let rowIndex = containerElement.children.length - 1; rowIndex >= 0; rowIndex--) {
               const row = containerElement.children[rowIndex];
 
@@ -969,13 +649,13 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           }
         };
 
-        // Process header if it exists
-        if (tableHeaderElement && Element.isElement(tableHeaderElement)) {
+        if (tableHeaderElement) {
           processContainer(tableHeaderElement);
         }
 
-        // Process body
-        processContainer(tableBodyElement);
+        if (tableBodyElement) {
+          processContainer(tableBodyElement);
+        }
       } catch (error) {
         console.warn('Failed to set column as title:', error);
       }
@@ -994,114 +674,81 @@ export function useTableActions(element: RenderTableElementProps['element']) {
     [setColumnAsTitle],
   );
 
-  const unpinColumn: TableContextType['unpinColumn'] = useCallback(
-    (_columnIndex: number) => {
-      try {
-        const tableMainElement = element.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-        );
+  const unpinColumn: TableContextType['unpinColumn'] = useCallback(() => {
+    try {
+      const tableStructure = getTableStructure(editor, element);
 
-        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+      if (!tableStructure) return;
 
-        const tableBodyElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
-        );
+      const { tableHeaderElement, tableBodyElement } = tableStructure;
 
-        const tableHeaderElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-        );
+      // 檢查 column 與 row 之間是否有交叉 pinned 狀態的關係
+      const shouldRowRemainPinned = (rowElement: TableElement, excludeColumns: Set<number>): boolean => {
+        let hasNonExcludedCells = false;
 
-        // Helper function to check if a row should remain pinned after column unpin
-        const shouldRowRemainPinned = (rowElement: Element, excludeColumns: Set<number>): boolean => {
-          if (!Element.isElement(rowElement) || !rowElement.type.includes(TABLE_ROW_TYPE)) return false;
+        for (let colIndex = 0; colIndex < rowElement.children.length; colIndex++) {
+          const cell = rowElement.children[colIndex];
 
-          // Check if ALL cells in the row (excluding unpinned columns) are still pinned
-          // If any non-excluded cell is not pinned, the row is not fully pinned
-          let hasNonExcludedCells = false;
+          if (!Element.isElement(cell) || !cell.type.includes(TABLE_CELL_TYPE)) continue;
+          if (excludeColumns.has(colIndex)) continue;
 
-          for (let colIndex = 0; colIndex < rowElement.children.length; colIndex++) {
-            const cell = rowElement.children[colIndex];
+          hasNonExcludedCells = true;
 
-            if (!Element.isElement(cell) || !cell.type.includes(TABLE_CELL_TYPE)) continue;
-            if (excludeColumns.has(colIndex)) continue; // Skip columns we're unpinning
-
-            hasNonExcludedCells = true;
-
-            if (!(cell as TableElement).pinned) {
-              return false; // Found a non-excluded cell that's not pinned
-            }
+          if (!cell.pinned) {
+            return false;
           }
-
-          // If there are no non-excluded cells, the row is not pinned
-          return hasNonExcludedCells;
-        };
-
-        // Function to process a container with smart unpinning logic
-        const processContainer = (containerElement: Element) => {
-          if (!Element.isElement(containerElement)) return;
-
-          const containerPath = ReactEditor.findPath(editor, containerElement);
-
-          // Find all treatAsTitle columns that will be unpinned
-          const treatAsTitleColumns = new Set<number>();
-
-          containerElement.children.forEach((row) => {
-            if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
-              row.children.forEach((cell, colIndex) => {
-                if (
-                  Element.isElement(cell) &&
-                  cell.type.includes(TABLE_CELL_TYPE) &&
-                  (cell as TableElement).treatAsTitle
-                ) {
-                  treatAsTitleColumns.add(colIndex);
-                }
-              });
-            }
-          });
-
-          // Smart unpin: consider row pin status
-          containerElement.children.forEach((row, rowIndex) => {
-            if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
-              const rowShouldRemainPinned = shouldRowRemainPinned(row, treatAsTitleColumns);
-
-              row.children.forEach((cell, colIndex) => {
-                if (
-                  treatAsTitleColumns.has(colIndex) &&
-                  Element.isElement(cell) &&
-                  cell.type.includes(TABLE_CELL_TYPE)
-                ) {
-                  const cellPath = [...containerPath, rowIndex, colIndex];
-
-                  // Always remove treatAsTitle
-                  Transforms.unsetNodes(editor, 'treatAsTitle', { at: cellPath });
-
-                  // Only remove pinned if the row doesn't need to keep it pinned
-                  if (!rowShouldRemainPinned) {
-                    Transforms.unsetNodes(editor, 'pinned', { at: cellPath });
-                  }
-                }
-              });
-            }
-          });
-        };
-
-        // Process both header and body
-        if (tableHeaderElement && Element.isElement(tableHeaderElement)) {
-          processContainer(tableHeaderElement);
         }
 
-        if (tableBodyElement && Element.isElement(tableBodyElement)) {
-          processContainer(tableBodyElement);
-        }
-      } catch (error) {
-        console.warn('Failed to unpin column:', error);
+        return hasNonExcludedCells;
+      };
+
+      const processContainer = (containerElement: TableElement) => {
+        const containerPath = ReactEditor.findPath(editor, containerElement);
+        const treatAsTitleColumns = new Set<number>();
+
+        containerElement.children.forEach((row) => {
+          if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+            row.children.forEach((cell, colIndex) => {
+              if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE) && cell.treatAsTitle) {
+                treatAsTitleColumns.add(colIndex);
+              }
+            });
+          }
+        });
+
+        containerElement.children.forEach((row, rowIndex) => {
+          if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+            const rowShouldRemainPinned = shouldRowRemainPinned(row as TableElement, treatAsTitleColumns);
+
+            row.children.forEach((cell, colIndex) => {
+              if (treatAsTitleColumns.has(colIndex) && Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
+                const cellPath = [...containerPath, rowIndex, colIndex];
+
+                Transforms.unsetNodes(editor, 'treatAsTitle', { at: cellPath });
+
+                if (!rowShouldRemainPinned) {
+                  Transforms.unsetNodes(editor, 'pinned', { at: cellPath });
+                }
+              }
+            });
+          }
+        });
+      };
+
+      if (tableHeaderElement) {
+        processContainer(tableHeaderElement);
       }
-    },
-    [editor, element],
-  );
+
+      if (tableBodyElement) {
+        processContainer(tableBodyElement);
+      }
+    } catch (error) {
+      console.warn('Failed to unpin column:', error);
+    }
+  }, [editor, element]);
 
   const setPinnedOnRowCells = useCallback(
-    (row: Element, pinned: boolean) => {
+    (row: TableElement, pinned: boolean) => {
       try {
         for (const [, cell] of row.children.entries()) {
           if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
@@ -1122,11 +769,11 @@ export function useTableActions(element: RenderTableElementProps['element']) {
   );
 
   const setPinnedOnAllHeaderRows = useCallback(
-    (headerElement: Element, pinned: boolean) => {
+    (headerElement: TableElement, pinned: boolean) => {
       try {
         for (const headerRow of headerElement.children) {
           if (Element.isElement(headerRow) && headerRow.type.includes(TABLE_ROW_TYPE)) {
-            setPinnedOnRowCells(headerRow, pinned);
+            setPinnedOnRowCells(headerRow as TableElement, pinned);
           }
         }
       } catch (error) {
@@ -1139,160 +786,42 @@ export function useTableActions(element: RenderTableElementProps['element']) {
   const pinRow: TableContextType['pinRow'] = useCallback(
     (rowIndex: number) => {
       try {
-        const tableMainElement = element.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-        );
+        const tableStructure = getTableStructure(editor, element);
 
-        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+        if (!tableStructure) return;
 
-        const tableHeaderElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-        );
+        const { tableHeaderElement, headerRowCount } = tableStructure;
 
-        const tableBodyElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
-        );
+        // 先將目前所有的 header rows 都設為 pinned
+        if (tableHeaderElement) {
+          setPinnedOnAllHeaderRows(tableHeaderElement, true);
+        }
 
-        if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
-
-        const headerRowCount =
-          tableHeaderElement && Element.isElement(tableHeaderElement) ? tableHeaderElement.children.length : 0;
-
-        if (rowIndex < headerRowCount) {
-          if (tableHeaderElement && Element.isElement(tableHeaderElement)) {
-            setPinnedOnAllHeaderRows(tableHeaderElement, true);
-          }
-        } else {
-          if (tableHeaderElement && Element.isElement(tableHeaderElement)) {
-            setPinnedOnAllHeaderRows(tableHeaderElement, true);
-          }
-
+        // 然後將目標 row 移動到 header 中並設為 pinned
+        if (rowIndex >= headerRowCount) {
           moveRowToHeader(rowIndex, { pinned: true });
         }
       } catch (error) {
         console.warn('Failed to pin row:', error);
       }
     },
-    [moveRowToHeader, setPinnedOnAllHeaderRows, element],
+    [editor, element, moveRowToHeader, setPinnedOnAllHeaderRows],
   );
 
-  const unpinRow: TableContextType['unpinRow'] = useCallback(
-    (rowIndex: number) => {
-      try {
-        const tableMainElement = element.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-        );
+  const unpinRow: TableContextType['unpinRow'] = useCallback(() => {
+    try {
+      const tableStructure = getTableStructure(editor, element);
 
-        if (!tableMainElement || !Element.isElement(tableMainElement)) return;
+      if (!tableStructure) return;
 
-        const tableHeaderElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-        );
+      const { tableHeaderElement, tableBodyElement, tableHeaderPath } = tableStructure;
 
-        const tableBodyElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
-        );
+      if (!tableHeaderElement || !tableBodyElement) return;
 
-        if (!tableHeaderElement || !Element.isElement(tableHeaderElement)) return;
+      // 檢查 column 與 row 之間是否有交叉 pinned 狀態的關係
+      const shouldColumnRemainPinned = (columnIndex: number): boolean => {
+        const containers = [tableHeaderElement, tableBodyElement];
 
-        if (!tableBodyElement || !Element.isElement(tableBodyElement)) return;
-
-        // Check if the target row exists and is pinned
-        const targetRow = tableHeaderElement.children[rowIndex];
-
-        if (!Element.isElement(targetRow) || !targetRow.type.includes(TABLE_ROW_TYPE)) return;
-
-        const isPinnedRow = targetRow.children.some((cell) => Element.isElement(cell) && (cell as TableElement).pinned);
-
-        if (!isPinnedRow) return;
-
-        // Helper function to check if a column should remain pinned after row unpin
-        const shouldColumnRemainPinned = (columnIndex: number): boolean => {
-          // Check all containers for this column
-          const containers = [tableBodyElement, tableHeaderElement];
-
-          for (const container of containers) {
-            if (!Element.isElement(container)) continue;
-
-            for (const row of container.children) {
-              if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
-                const cell = row.children[columnIndex];
-
-                if (
-                  Element.isElement(cell) &&
-                  cell.type.includes(TABLE_CELL_TYPE) &&
-                  (cell as TableElement).treatAsTitle
-                ) {
-                  // This column is treatAsTitle, so it should remain pinned
-                  return true;
-                }
-              }
-            }
-          }
-
-          return false;
-        };
-
-        // Step 1: Smart unpin header rows (preserve pinned if column is treatAsTitle)
-        const tableHeaderPath = ReactEditor.findPath(editor, tableHeaderElement);
-
-        tableHeaderElement.children.forEach((row, headerRowIndex) => {
-          if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
-            row.children.forEach((cell, colIndex) => {
-              if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
-                const cellPath = [...tableHeaderPath, headerRowIndex, colIndex];
-
-                // Only remove pinned if the column doesn't need to stay pinned
-                if (!shouldColumnRemainPinned(colIndex)) {
-                  Transforms.unsetNodes(editor, 'pinned', { at: cellPath });
-                }
-              }
-            });
-          }
-        });
-
-        // Step 2: Move all header rows to the beginning of body
-        const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
-
-        // We need to move from the last row to the first to avoid path conflicts
-        // Also, we insert at index 0 each time, so the order will be preserved
-        for (let i = tableHeaderElement.children.length - 1; i >= 0; i--) {
-          const row = tableHeaderElement.children[i];
-
-          if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
-            const fromPath = [...tableHeaderPath, i];
-            const toPath = [...tableBodyPath, 0]; // Always insert at the beginning of body
-
-            Transforms.moveNodes(editor, {
-              at: fromPath,
-              to: toPath,
-            });
-          }
-        }
-      } catch (error) {
-        console.warn('Failed to unpin row:', error);
-      }
-    },
-    [editor, element],
-  );
-
-  // Helper function to check if an entire column is pinned
-  const isColumnPinned = useCallback(
-    (columnIndex: number): boolean => {
-      try {
-        const tableMainElement = element.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-        );
-
-        if (!tableMainElement || !Element.isElement(tableMainElement)) return false;
-
-        const containers = [
-          tableMainElement.children.find((child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE)),
-          tableMainElement.children.find((child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE)),
-        ].filter(Boolean);
-
-        // Check if ALL cells in this column are pinned
-        // If any container has this column and any cell in that column is not pinned, return false
         for (const container of containers) {
           if (!Element.isElement(container)) continue;
 
@@ -1301,8 +830,73 @@ export function useTableActions(element: RenderTableElementProps['element']) {
               const cell = row.children[columnIndex];
 
               if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
-                // If we find a cell that's not pinned, the entire column is not pinned
-                if (!(cell as TableElement).pinned) {
+                // 如果這個 cell 在 body 中且有 pinned 屬性，則 column 應該保持 pinned
+                if (container.type === tableBodyElement.type && cell.pinned) {
+                  return true;
+                }
+              }
+            }
+          }
+        }
+
+        return false;
+      };
+
+      tableHeaderElement.children.forEach((row, headerRowIndex) => {
+        if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+          row.children.forEach((cell, colIndex) => {
+            if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
+              const cellPath = [...tableHeaderPath!, headerRowIndex, colIndex];
+
+              if (!shouldColumnRemainPinned(colIndex)) {
+                Transforms.unsetNodes(editor, 'pinned', { at: cellPath });
+              }
+            }
+          });
+        }
+      });
+
+      const tableBodyPath = ReactEditor.findPath(editor, tableBodyElement);
+
+      for (let i = tableHeaderElement.children.length - 1; i >= 0; i--) {
+        const row = tableHeaderElement.children[i];
+
+        if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+          const fromPath = [...tableHeaderPath!, i];
+          const toPath = [...tableBodyPath, 0];
+
+          Transforms.moveNodes(editor, {
+            at: fromPath,
+            to: toPath,
+          });
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to unpin row:', error);
+    }
+  }, [editor, element]);
+
+  const isColumnPinned = useCallback(
+    (columnIndex: number): boolean => {
+      try {
+        const tableStructure = getTableStructure(editor, element);
+
+        if (!tableStructure) return false;
+
+        const { tableMainElement } = tableStructure;
+
+        if (!tableMainElement) return false;
+
+        for (const container of tableMainElement.children) {
+          if (!Element.isElement(container)) continue;
+
+          for (const row of container.children) {
+            if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+              const cell = row.children[columnIndex];
+
+              if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
+                // 如果有任何一個 cell 沒有 pinned 屬性，則整個 column 不算 pinned
+                if (!cell.pinned) {
                   return false;
                 }
               }
@@ -1310,53 +904,42 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           }
         }
 
-        // If we reach here, all cells in the column are pinned (or column doesn't exist)
         return true;
       } catch (error) {
         return false;
       }
     },
-    [element],
+    [element, editor],
   );
 
-  // Helper function to check if an entire row is pinned
   const isRowPinned = useCallback(
     (rowIndex: number): boolean => {
       try {
-        const tableMainElement = element.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_MAIN_TYPE),
-        );
+        const tableStructure = getTableStructure(editor, element);
 
-        if (!tableMainElement || !Element.isElement(tableMainElement)) return false;
+        if (!tableStructure) return false;
 
-        const tableHeaderElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-        );
+        const { tableHeaderElement, tableBodyElement } = tableStructure;
 
-        const tableBodyElement = tableMainElement.children.find(
-          (child) => Element.isElement(child) && child.type.includes(TABLE_BODY_TYPE),
-        );
-
-        // Calculate which container the row belongs to
         const headerRowCount =
           tableHeaderElement && Element.isElement(tableHeaderElement) ? tableHeaderElement.children.length : 0;
 
-        let targetRow: Element | undefined;
+        let targetRow: TableElement | undefined;
 
         if (rowIndex < headerRowCount && tableHeaderElement && Element.isElement(tableHeaderElement)) {
-          // Row is in header
+          // 在 Header 中
           const rowElement = tableHeaderElement.children[rowIndex];
 
           if (Element.isElement(rowElement)) {
-            targetRow = rowElement;
+            targetRow = rowElement as TableElement;
           }
         } else if (tableBodyElement && Element.isElement(tableBodyElement)) {
-          // Row is in body
+          // 在 Body 中
           const bodyRowIndex = rowIndex - headerRowCount;
           const rowElement = tableBodyElement.children[bodyRowIndex];
 
           if (Element.isElement(rowElement)) {
-            targetRow = rowElement;
+            targetRow = rowElement as TableElement;
           }
         }
 
@@ -1364,7 +947,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           return false;
         }
 
-        // Check if ALL cells in this row are pinned
+        // 檢查所有 cell 是否都有 pinned 屬性
         for (const cell of targetRow.children) {
           if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
             if (!(cell as TableElement).pinned) {
@@ -1378,7 +961,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         return false;
       }
     },
-    [element],
+    [element, editor],
   );
 
   return {
