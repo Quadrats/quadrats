@@ -176,7 +176,7 @@ function TableCell(props: RenderElementProps<TableElement>) {
         'qdr-table__cell--is-selection-trigger-by-me': isSelectionTriggerByMe,
       })}
       style={
-        element.pinned
+        element.pinned && isHeader
           ? {
               top: cellStuckAtTop,
             }

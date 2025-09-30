@@ -137,6 +137,16 @@ $toolbar-z-index: 10;
     border-collapse: separate;
     border-spacing: 0;
     table-layout: fixed;
+
+    th:not(:last-child),
+    td:not(:last-child) {
+      border-right: none;
+    }
+
+    thead tr:not(:last-child) th,
+    tbody tr:not(:last-child) td {
+      border-bottom: none;
+    }
   }
 
   &__inline-table-toolbar,
@@ -172,7 +182,10 @@ $toolbar-z-index: 10;
     font-weight: var(--qdr-typography-article-body1-font-weight);
     color: var(--qdr-text-primary);
     text-align: left;
-    border: 1px solid var(--qdr-border);
+    border-top: 1px solid var(--qdr-border);
+    border-right: 1px solid var(--qdr-border);
+    border-bottom: 1px solid var(--qdr-border);
+    border-left: 1px solid var(--qdr-border);
     vertical-align: top;
 
     p,
@@ -191,7 +204,6 @@ $toolbar-z-index: 10;
       position: sticky;
       z-index: 1;
       left: 0;
-      top: 0;
       box-shadow: 0 2px 4px -2px #00000026;
     }
 
