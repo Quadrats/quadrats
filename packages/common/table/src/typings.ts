@@ -32,7 +32,7 @@ export interface TableElement extends QuadratsElement, WithElementType {
 
 export interface Table<T extends Editor = Editor> extends Withable {
   types: TableTypes;
-  createTableElement(rows: number, cols: number): TableElement;
+  createTableElement(rows: number, cols: number): QuadratsElement[];
   insertTable(editor: T, rows: number, cols: number): void;
   moveToNextCell(editor: Editor, types: TableTypes): void;
   // 檢查選取範圍

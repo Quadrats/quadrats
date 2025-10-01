@@ -13,32 +13,38 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
   const types: TableTypes = { ...TABLE_TYPES, ...typesOptions };
 
   const createTableElement: Table<Editor>['createTableElement'] = (rows, cols) => {
-    return {
-      type: types.table,
-      children: [
-        { type: types.table_title, children: [{ text: '' }] },
-        {
-          type: types.table_main,
-          children: [
-            {
-              type: types.table_body,
-              children: Array.from({ length: rows }, () => ({
-                type: types.table_row,
-                children: Array.from({ length: cols }, () => ({
-                  type: types.table_cell,
-                  children: [
-                    {
-                      type: PARAGRAPH_TYPE,
-                      children: [{ text: '' }],
-                    },
-                  ],
+    return [
+      {
+        type: types.table,
+        children: [
+          { type: types.table_title, children: [{ text: '' }] },
+          {
+            type: types.table_main,
+            children: [
+              {
+                type: types.table_body,
+                children: Array.from({ length: rows }, () => ({
+                  type: types.table_row,
+                  children: Array.from({ length: cols }, () => ({
+                    type: types.table_cell,
+                    children: [
+                      {
+                        type: PARAGRAPH_TYPE,
+                        children: [{ text: '' }],
+                      },
+                    ],
+                  })),
                 })),
-              })),
-            },
-          ],
-        },
-      ],
-    };
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: PARAGRAPH_TYPE,
+        children: [{ text: '' }],
+      },
+    ];
   };
 
   const isSelectionInTableMain: Table<Editor>['isSelectionInTableMain'] = (editor) =>
