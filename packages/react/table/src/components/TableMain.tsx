@@ -3,7 +3,9 @@ import clsx from 'clsx';
 import { ReactEditor, RenderElementProps, useModal, useSlateStatic } from '@quadrats/react';
 import { Icon } from '@quadrats/react/components';
 import { Plus, Trash } from '@quadrats/icons';
-import { useTable } from '../hooks/useTable';
+import { useTableActionsContext } from '../hooks/useTableActionsContext';
+import { useTableMetadata } from '../hooks/useTableMetadata';
+import { useTableState } from '../hooks/useTableState';
 import { InlineToolbar } from '@quadrats/react/toolbar';
 import { Transforms } from 'slate';
 import { TableElement } from '@quadrats/common/table';
@@ -14,15 +16,10 @@ function TableMain(props: RenderElementProps<TableElement>) {
 
   const { setConfirmModalConfig } = useModal();
   const editor = useSlateStatic();
-  const {
-    addColumn,
-    addRow,
-    addColumnAndRow,
-    isReachMaximumColumns,
-    isReachMaximumRows,
-    tableSelectedOn,
-    tableElement,
-  } = useTable();
+
+  const { addColumn, addRow, addColumnAndRow } = useTableActionsContext();
+  const { isReachMaximumColumns, isReachMaximumRows, tableElement } = useTableMetadata();
+  const { tableSelectedOn } = useTableState();
 
   const tablePath = ReactEditor.findPath(editor, tableElement);
   const scrollRef = useRef<HTMLDivElement>(null);

@@ -23,6 +23,11 @@ export type TableContextType = {
   rowCount: number;
   // Portal container for toolbar positioning
   portalContainerRef: RefObject<HTMLDivElement | null>;
+  // Precomputed pinned columns/rows
+  pinnedColumns: Set<number>;
+  pinnedRows: Set<number>;
+  // Precomputed cell positions
+  cellPositions: Map<TableElement, { columnIndex: number; rowIndex: number }>;
   // Table structure manipulation
   addColumn: (options?: { position?: 'left' | 'right'; columnIndex?: number }) => void;
   addRow: (options?: { position?: 'top' | 'bottom'; rowIndex?: number }) => void;

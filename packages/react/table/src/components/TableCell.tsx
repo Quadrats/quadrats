@@ -1,68 +1,41 @@
 import React, { useContext, useRef, useState, useEffect, useMemo } from 'react';
 import clsx from 'clsx';
 import { RenderElementProps } from '@quadrats/react';
-import { PARAGRAPH_TYPE, Transforms } from '@quadrats/core';
+import { Transforms } from '@quadrats/core';
 import { useSlateStatic } from 'slate-react';
-import { LIST_TYPES } from '@quadrats/common/list';
 import { TableHeaderContext } from '../contexts/TableHeaderContext';
 import { Icon, Portal } from '@quadrats/react/components';
-import {
-  AddColumnAtLeft,
-  AddColumnAtRight,
-  AddRowAtBottom,
-  AddRowAtTop,
-  Drag,
-  OrderedList,
-  Paragraph,
-  Pinned,
-  TableRemoveTitle,
-  TableSetColumnTitle,
-  TableSetRowTitle,
-  Trash,
-  UnorderedList,
-  Unpinned,
-} from '@quadrats/icons';
+import { Drag } from '@quadrats/icons';
 import { TableElement } from '@quadrats/common/table';
-import { useTable } from '../hooks/useTable';
-import { InlineToolbar, ToolbarGroupIcon, ToolbarIcon } from '@quadrats/react/toolbar';
+import { useTableMetadata } from '../hooks/useTableMetadata';
+import { useTableState } from '../hooks/useTableState';
+import { InlineToolbar } from '@quadrats/react/toolbar';
 import { useTableCellFocused, useTableCellPosition, useTableCellTransformContent } from '../hooks/useTableCell';
+import { useTableCellToolbarActions } from '../hooks/useTableCellToolbarActions';
 import { TableScrollContext } from '../contexts/TableScrollContext';
 
 function TableCell(props: RenderElementProps<TableElement>) {
   const { attributes, children, element } = props;
-  const {
-    tableSelectedOn,
-    setTableSelectedOn,
-    tableHoveredOn,
-    setTableHoveredOn,
-    columnCount,
-    rowCount,
-    isReachMaximumColumns,
-    isReachMinimumNormalColumns,
-    isReachMinimumBodyRows,
-    deleteRow,
-    deleteColumn,
-    addRow,
-    addColumn,
-    moveRowToBody,
-    moveRowToHeader,
-    unsetColumnAsTitle,
-    setColumnAsTitle,
-    pinColumn,
-    unpinColumn,
-    pinRow,
-    unpinRow,
-    isColumnPinned,
-    isRowPinned,
-    portalContainerRef,
-  } = useTable();
+  const { tableSelectedOn, setTableSelectedOn, tableHoveredOn, setTableHoveredOn } = useTableState();
+  const { columnCount, rowCount, portalContainerRef, isColumnPinned } = useTableMetadata();
 
+  // Component context
   const { isHeader } = useContext(TableHeaderContext);
   const { scrollTop, scrollRef } = useContext(TableScrollContext);
   const editor = useSlateStatic();
+
+  // Cell-specific hooks
   const focused = useTableCellFocused(element, editor);
   const cellPosition = useTableCellPosition(element, editor);
   const transformCellContent = useTableCellTransformContent(element, editor);
+
+  // Toolbar actions - 所有 icon actions 邏輯都在這個 hook 中
+  const { focusToolbarIconGroups, inlineToolbarIconGroups } = useTableCellToolbarActions({
+    element,
+    cellPosition,
+    isHeader,
+    transformCellContent,
+  });
 
   const isSelectedInSameRow = tableSelectedOn?.region === 'row' && tableSelectedOn?.index === cellPosition.rowIndex;
   const isSelectedInSameColumn =
@@ -92,7 +65,6 @@ function TableCell(props: RenderElementProps<TableElement>) {
   const [columnButtonPosition, setColumnButtonPosition] = useState<{ top: number; left: number } | null>(null);
   const [cellStuckAtLeft, setCellStuckAtLeft] = useState<number | undefined>(undefined);
 
-  // 計算位置相對於 Table 的位置
   useEffect(() => {
     const { current: cell } = cellRef;
     const { current: portalContainer } = portalContainerRef;
@@ -105,38 +77,44 @@ function TableCell(props: RenderElementProps<TableElement>) {
       return;
     }
 
-    const cellRect = cell.getBoundingClientRect();
-    const portalContainerRect = portalContainer.getBoundingClientRect();
+    const rafId = requestAnimationFrame(() => {
+      const cellRect = cell.getBoundingClientRect();
+      const portalContainerRect = portalContainer.getBoundingClientRect();
 
-    // 工具列位置 (針對 focused 狀態)
-    if (focused || isSelectionTriggerByMe) {
-      setToolbarPosition({
-        top: cellRect.top - portalContainerRect.top - 4, // -4px offset
-        left: cellRect.left - portalContainerRect.left,
-      });
-    } else {
-      setToolbarPosition(null);
-    }
+      // 工具列位置 (針對 focused 狀態)
+      if (focused || isSelectionTriggerByMe) {
+        setToolbarPosition({
+          top: cellRect.top - portalContainerRect.top - 4, // -4px offset
+          left: cellRect.left - portalContainerRect.left,
+        });
+      } else {
+        setToolbarPosition(null);
+      }
 
-    // 行按鈕位置 (顯示在第一列)
-    if (cellPosition.columnIndex === 0) {
-      setRowButtonPosition({
-        top: Math.min(cellRect.top - portalContainerRect.top + cellRect.height / 2 - 10, 0), // 置中，按鈕高度約 20px
-        left: cellRect.left - portalContainerRect.left - 10, // 向左偏移 10px
-      });
-    } else {
-      setRowButtonPosition(null);
-    }
+      // 行按鈕位置 (顯示在第一列)
+      if (cellPosition.columnIndex === 0) {
+        setRowButtonPosition({
+          top: Math.min(cellRect.top - portalContainerRect.top + cellRect.height / 2 - 10, 0), // 置中，按鈕高度約 20px
+          left: cellRect.left - portalContainerRect.left - 10, // 向左偏移 10px
+        });
+      } else {
+        setRowButtonPosition(null);
+      }
 
-    // 列按鈕位置 (顯示在第一行)
-    if (cellPosition.rowIndex === 0) {
-      setColumnButtonPosition({
-        top: cellRect.top - portalContainerRect.top - 10 + scrollTop, // 向上偏移 10px
-        left: cellRect.left - portalContainerRect.left + cellRect.width / 2 - 10, // 置中，按鈕寬度約 20px
-      });
-    } else {
-      setColumnButtonPosition(null);
-    }
+      // 列按鈕位置 (顯示在第一行)
+      if (cellPosition.rowIndex === 0) {
+        setColumnButtonPosition({
+          top: cellRect.top - portalContainerRect.top - 10 + scrollTop, // 向上偏移 10px
+          left: cellRect.left - portalContainerRect.left + cellRect.width / 2 - 10, // 置中，按鈕寬度約 20px
+        });
+      } else {
+        setColumnButtonPosition(null);
+      }
+    });
+
+    return () => {
+      cancelAnimationFrame(rafId);
+    };
   }, [focused, isSelectionTriggerByMe, cellPosition.columnIndex, cellPosition.rowIndex, portalContainerRef, scrollTop]);
 
   useEffect(() => {
@@ -193,68 +171,7 @@ function TableCell(props: RenderElementProps<TableElement>) {
               top: toolbarPosition?.top,
               left: toolbarPosition?.left,
             }}
-            iconGroups={[
-              {
-                icons: [
-                  <ToolbarGroupIcon key="typography-change" icon={Paragraph}>
-                    <ToolbarIcon
-                      icon={Paragraph}
-                      onClick={() => {
-                        transformCellContent(PARAGRAPH_TYPE);
-                      }}
-                    />
-                    <ToolbarIcon
-                      icon={UnorderedList}
-                      onClick={() => {
-                        transformCellContent(LIST_TYPES.ul);
-                      }}
-                    />
-                    <ToolbarIcon
-                      icon={OrderedList}
-                      onClick={() => {
-                        transformCellContent(LIST_TYPES.ol);
-                      }}
-                    />
-                  </ToolbarGroupIcon>,
-                ],
-              },
-              {
-                icons: [
-                  {
-                    icon: AddRowAtBottom,
-                    onClick: () => {
-                      addRow({ position: 'bottom', rowIndex: cellPosition.rowIndex });
-                    },
-                  },
-                  {
-                    icon: AddRowAtTop,
-                    onClick: () => {
-                      addRow({ position: 'top', rowIndex: cellPosition.rowIndex });
-                    },
-                  },
-                  {
-                    icon: AddColumnAtLeft,
-                    disabled: isReachMaximumColumns,
-                    onClick: () => {
-                      addColumn({
-                        position: 'left',
-                        columnIndex: cellPosition.columnIndex,
-                      });
-                    },
-                  },
-                  {
-                    icon: AddColumnAtRight,
-                    disabled: isReachMaximumColumns,
-                    onClick: () => {
-                      addColumn({
-                        position: 'right',
-                        columnIndex: cellPosition.columnIndex,
-                      });
-                    },
-                  },
-                ],
-              },
-            ]}
+            iconGroups={focusToolbarIconGroups}
           />
         </Portal>
       )}
@@ -327,214 +244,7 @@ function TableCell(props: RenderElementProps<TableElement>) {
               top: toolbarPosition?.top,
               left: toolbarPosition?.left,
             }}
-            iconGroups={[
-              {
-                icons: (() => {
-                  if (tableSelectedOn?.region === 'row') {
-                    const removeTitleAction = {
-                      icon: TableRemoveTitle,
-                      onClick: () => {
-                        if (typeof tableSelectedOn.index === 'number') {
-                          moveRowToBody(tableSelectedOn.index);
-                          setTableSelectedOn(undefined);
-                        }
-                      },
-                    };
-
-                    const setColumnTitleAction = {
-                      icon: TableSetColumnTitle,
-                      disabled: isReachMinimumBodyRows,
-                      onClick: () => {
-                        if (typeof tableSelectedOn.index === 'number') {
-                          moveRowToHeader(tableSelectedOn.index);
-                          setTableSelectedOn(undefined);
-                        }
-                      },
-                    };
-
-                    const unpinnedAction = {
-                      icon: Unpinned,
-                      onClick: () => {
-                        if (typeof tableSelectedOn.index === 'number') {
-                          unpinRow();
-                          setTableSelectedOn(undefined);
-                        }
-                      },
-                    };
-
-                    const pinnedAction = {
-                      icon: Pinned,
-                      disabled: isReachMinimumBodyRows && !isHeader,
-                      onClick: () => {
-                        if (typeof tableSelectedOn.index === 'number') {
-                          pinRow(tableSelectedOn.index);
-                          setTableSelectedOn(undefined);
-                        }
-                      },
-                    };
-
-                    const actions = [];
-
-                    if (typeof tableSelectedOn.index === 'number' && isRowPinned(tableSelectedOn.index)) {
-                      actions.push(unpinnedAction);
-                    } else {
-                      actions.push(pinnedAction);
-                    }
-
-                    if (isHeader) {
-                      actions.push(removeTitleAction);
-                    } else {
-                      actions.push(setColumnTitleAction);
-                    }
-
-                    return actions;
-                  }
-
-                  if (tableSelectedOn?.region === 'column') {
-                    const removeTitleAction = {
-                      icon: TableRemoveTitle,
-                      onClick: () => {
-                        if (typeof tableSelectedOn.index === 'number') {
-                          unsetColumnAsTitle(tableSelectedOn.index);
-                          setTableSelectedOn(undefined);
-                        }
-                      },
-                    };
-
-                    const setRowTitleAction = {
-                      icon: TableSetRowTitle,
-                      disabled: isReachMinimumNormalColumns,
-                      onClick: () => {
-                        if (typeof tableSelectedOn.index === 'number') {
-                          setColumnAsTitle(tableSelectedOn.index);
-                          setTableSelectedOn(undefined);
-                        }
-                      },
-                    };
-
-                    const unpinnedAction = {
-                      icon: Unpinned,
-                      onClick: () => {
-                        if (typeof tableSelectedOn.index === 'number') {
-                          unpinColumn();
-                          setTableSelectedOn(undefined);
-                        }
-                      },
-                    };
-
-                    const pinnedAction = {
-                      icon: Pinned,
-                      disabled: isReachMinimumNormalColumns && !element.treatAsTitle,
-                      onClick: () => {
-                        if (typeof tableSelectedOn.index === 'number') {
-                          pinColumn(tableSelectedOn.index);
-                          setTableSelectedOn(undefined);
-                        }
-                      },
-                    };
-
-                    const actions = [];
-
-                    if (typeof tableSelectedOn.index === 'number' && isColumnPinned(tableSelectedOn.index)) {
-                      actions.push(unpinnedAction);
-                    } else {
-                      actions.push(pinnedAction);
-                    }
-
-                    if (element.treatAsTitle) {
-                      actions.push(removeTitleAction);
-                    } else {
-                      actions.push(setRowTitleAction);
-                    }
-
-                    return actions;
-                  }
-
-                  return [];
-                })(),
-              },
-              {
-                icons: (() => {
-                  if (tableSelectedOn?.region === 'row') {
-                    const addRowAtBottomAction = {
-                      icon: AddRowAtBottom,
-                      onClick: () => {
-                        if (typeof tableSelectedOn.index === 'number') {
-                          addRow({ position: 'bottom', rowIndex: tableSelectedOn.index });
-                          setTableSelectedOn(undefined);
-                        }
-                      },
-                    };
-
-                    const addRowAtTopAction = {
-                      icon: AddRowAtTop,
-                      onClick: () => {
-                        if (typeof tableSelectedOn.index === 'number') {
-                          addRow({ position: 'top', rowIndex: tableSelectedOn.index });
-                          setTableSelectedOn(undefined);
-                        }
-                      },
-                    };
-
-                    return [addRowAtBottomAction, addRowAtTopAction];
-                  }
-
-                  if (tableSelectedOn?.region === 'column') {
-                    const addColumnAtLeftAction = {
-                      icon: AddColumnAtLeft,
-                      disabled: isReachMaximumColumns,
-                      onClick: () => {
-                        if (typeof tableSelectedOn.index === 'number') {
-                          addColumn({
-                            position: 'left',
-                            columnIndex: tableSelectedOn.index,
-                          });
-
-                          setTableSelectedOn(undefined);
-                        }
-                      },
-                    };
-
-                    const addColumnAtRightAction = {
-                      icon: AddColumnAtRight,
-                      disabled: isReachMaximumColumns,
-                      onClick: () => {
-                        if (typeof tableSelectedOn.index === 'number') {
-                          addColumn({
-                            position: 'right',
-                            columnIndex: tableSelectedOn.index,
-                          });
-
-                          setTableSelectedOn(undefined);
-                        }
-                      },
-                    };
-
-                    return [addColumnAtLeftAction, addColumnAtRightAction];
-                  }
-
-                  return [];
-                })(),
-              },
-              {
-                icons: [
-                  {
-                    icon: Trash,
-                    className: 'qdr-table__delete',
-                    onClick: () => {
-                      // Determine whether to delete row or column based on current selection
-                      if (tableSelectedOn?.region === 'row' && typeof tableSelectedOn.index === 'number') {
-                        deleteRow(tableSelectedOn.index);
-                        setTableSelectedOn(undefined); // Clear selection after deletion
-                      } else if (tableSelectedOn?.region === 'column' && typeof tableSelectedOn.index === 'number') {
-                        deleteColumn(tableSelectedOn.index);
-                        setTableSelectedOn(undefined); // Clear selection after deletion
-                      }
-                    },
-                  },
-                ],
-              },
-            ]}
+            iconGroups={inlineToolbarIconGroups}
           />
         </Portal>
       ) : null}

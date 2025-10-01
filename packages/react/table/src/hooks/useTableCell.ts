@@ -2,20 +2,15 @@ import { usePreviousValue } from '@quadrats/react/utils';
 import { Editor, Element, Node, PARAGRAPH_TYPE, Transforms } from '@quadrats/core';
 import { useCallback, useEffect, useMemo } from 'react';
 import { ReactEditor, useFocused } from 'slate-react';
-import { useTable } from './useTable';
-import {
-  TABLE_BODY_TYPE,
-  TABLE_HEADER_TYPE,
-  TABLE_MAIN_TYPE,
-  TABLE_ROW_TYPE,
-  TableElement,
-} from '@quadrats/common/table';
+import { useTableState } from './useTableState';
+import { useTableMetadata } from './useTableMetadata';
+import { TableElement } from '@quadrats/common/table';
 import { createList, LIST_TYPES, ListRootTypeKey } from '@quadrats/common/list';
 import { QuadratsReactEditor } from '@quadrats/react';
 
 /** 檢查 table cell 是否在 focused 狀態 */
 export function useTableCellFocused(element: TableElement, editor: QuadratsReactEditor): boolean {
-  const { tableSelectedOn, setTableHoveredOn, setTableSelectedOn } = useTable();
+  const { tableSelectedOn, setTableHoveredOn, setTableSelectedOn } = useTableState();
   const cellPath = ReactEditor.findPath(editor, element);
   const focused = useFocused();
 
@@ -50,68 +45,18 @@ export function useTableCellFocused(element: TableElement, editor: QuadratsReact
 }
 
 /** 取得 table cell 在 table 裡的 columnIndex 及 rowIndex */
-export function useTableCellPosition(element: TableElement, editor: QuadratsReactEditor) {
-  const cellPath = ReactEditor.findPath(editor, element);
+export function useTableCellPosition(element: TableElement, _editor: QuadratsReactEditor) {
+  const { cellPositions } = useTableMetadata();
+
   const cellPosition = useMemo(() => {
-    try {
-      const rowPath = cellPath.slice(0, -1);
-      const rowNode = Node.get(editor, rowPath);
+    const position = cellPositions.get(element);
 
-      if (!Element.isElement(rowNode)) {
-        return { columnIndex: -1, rowIndex: -1 };
-      }
-
-      const columnIndex = cellPath[cellPath.length - 1];
-      let rowIndex = -1;
-
-      if (rowNode.type.includes(TABLE_ROW_TYPE)) {
-        const tableRowWrapperPath = rowPath.slice(0, -1);
-        const tableRowWrapperNode = Node.get(editor, tableRowWrapperPath);
-
-        if (
-          !Element.isElement(tableRowWrapperNode) ||
-          ![TABLE_BODY_TYPE, TABLE_HEADER_TYPE].includes(tableRowWrapperNode.type)
-        ) {
-          return { columnIndex, rowIndex: -1 };
-        }
-
-        const tableMainPath = tableRowWrapperPath.slice(0, -1);
-        const tableMainNode = Node.get(editor, tableMainPath);
-
-        if (!Element.isElement(tableMainNode) || !tableMainNode.type.includes(TABLE_MAIN_TYPE)) {
-          return { columnIndex, rowIndex: -1 };
-        }
-
-        const rowIndexInWrapper = rowPath[rowPath.length - 1];
-
-        if (tableRowWrapperNode.type.includes(TABLE_HEADER_TYPE)) {
-          // This is a header row, rowIndex is just its position within header
-          rowIndex = rowIndexInWrapper;
-        } else {
-          // This is a body row, rowIndex should account for total header rows
-          const headerElement = tableMainNode.children.find(
-            (child) => Element.isElement(child) && child.type.includes(TABLE_HEADER_TYPE),
-          );
-
-          let totalHeaderRows = 0;
-
-          if (headerElement && Element.isElement(headerElement)) {
-            totalHeaderRows = headerElement.children.filter(
-              (child) => Element.isElement(child) && child.type.includes(TABLE_ROW_TYPE),
-            ).length;
-          }
-
-          rowIndex = rowIndexInWrapper + totalHeaderRows;
-        }
-      }
-
-      return { columnIndex, rowIndex };
-    } catch (error) {
-      console.warn('Error calculating cell position:', error);
-
-      return { columnIndex: -1, rowIndex: -1 };
+    if (position) {
+      return position;
     }
-  }, [editor, cellPath]);
+
+    return { columnIndex: -1, rowIndex: -1 };
+  }, [cellPositions, element]);
 
   return cellPosition;
 }
@@ -126,7 +71,7 @@ export function useTableCellTransformContent(element: TableElement, editor: Quad
         if (!Element.isElement(cellNode)) return false;
 
         let hasChanges = false;
-        const nodesToProcess = [...cellNode.children]; // Create a snapshot
+        const nodesToProcess = [...cellNode.children];
 
         // Process each content node in reverse order to maintain indices
         for (let contentIndex = nodesToProcess.length - 1; contentIndex >= 0; contentIndex--) {
@@ -155,10 +100,8 @@ export function useTableCellTransformContent(element: TableElement, editor: Quad
 
                 // Use Editor.withoutNormalizing to batch operations
                 Editor.withoutNormalizing(editor, () => {
-                  // Remove the original content node
                   Transforms.removeNodes(editor, { at: contentPath });
 
-                  // Insert new paragraph nodes for each line
                   lines.forEach((line, lineIndex) => {
                     const newParagraph = {
                       type: PARAGRAPH_TYPE,
@@ -222,6 +165,7 @@ export function useTableCellTransformContent(element: TableElement, editor: Quad
           }
         }
 
+        // 因為底層結構改變了，取消選取以避免錯誤
         Transforms.deselect(editor);
       } catch (error) {
         console.warn('Failed to transform cell content:', error);
