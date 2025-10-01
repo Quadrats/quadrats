@@ -9,6 +9,7 @@ import {
   TableCellTypeKey,
 } from '@quadrats/common/table';
 import { JsxSerializeElementProps } from '@quadrats/react/jsx-serializer';
+import { RefObject } from 'react';
 
 export type JsxSerializeTableElementProps = JsxSerializeElementProps<TableElement>;
 
@@ -21,4 +22,11 @@ export type TableJsxSerializeElements = Record<
   Record<TableHeaderTypeKey, (props: JsxSerializeTableElementProps) => JSX.Element | null | undefined> &
   Record<TableBodyTypeKey, (props: JsxSerializeTableElementProps) => JSX.Element | null | undefined> &
   Record<TableRowTypeKey, (props: JsxSerializeTableElementProps) => JSX.Element | null | undefined> &
-  Record<TableCellTypeKey, (props: JsxSerializeTableElementProps) => JSX.Element | null | undefined>;
+  Record<
+    TableCellTypeKey,
+    (props: JsxSerializeTableElementProps & { isColumnPinned?: boolean }) => JSX.Element | null | undefined
+  >;
+
+export type TableScrollContextType = {
+  scrollRef: RefObject<HTMLDivElement | null>;
+};

@@ -4,13 +4,13 @@ import { TableHeaderContext } from '../contexts/TableHeaderContext';
 import { QuadratsElement } from '@quadrats/core';
 
 export const TableHeaderJsxSerializeElement = ({ children, element }: JsxSerializeElementProps) => {
-  const hasAnyCellPinned = element.children.some((child) =>
-    (child as QuadratsElement).children.some((cell) => (cell as QuadratsElement & { pinned: boolean }).pinned),
+  const hasAnyRowPinned = element.children.some((child) =>
+    (child as QuadratsElement).children.every((cell) => (cell as QuadratsElement & { pinned: boolean }).pinned),
   );
 
   return (
     <TableHeaderContext.Provider value={true}>
-      <thead className={`qdr-table__header ${hasAnyCellPinned ? 'qdr-table__header--pinned' : ''}`}>{children}</thead>
+      <thead className={`qdr-table__header ${hasAnyRowPinned ? 'qdr-table__header--pinned' : ''}`}>{children}</thead>
     </TableHeaderContext.Provider>
   );
 };

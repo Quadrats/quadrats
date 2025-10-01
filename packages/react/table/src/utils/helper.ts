@@ -117,18 +117,17 @@ export function hasColumnPinnedCells(tableStructure: TableStructure, columnIndex
  * 檢查是否有任何 pinned columns
  */
 export function hasAnyPinnedColumns(tableStructure: TableStructure): boolean {
-  const containers = [tableStructure.tableHeaderElement, tableStructure.tableBodyElement].filter(Boolean);
+  if (Element.isElement(tableStructure.tableBodyElement)) {
+    const lastRow = tableStructure.tableBodyElement.children[tableStructure.tableBodyElement.children.length - 1];
 
-  for (const container of containers) {
-    if (!Element.isElement(container)) continue;
-
-    for (const row of container.children) {
-      if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
-        for (const cell of row.children) {
-          if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE) && cell.pinned) {
-            return true;
-          }
-        }
+    if (Element.isElement(lastRow) && lastRow.type.includes(TABLE_ROW_TYPE)) {
+      if (
+        lastRow.children[0] &&
+        Element.isElement(lastRow.children[0]) &&
+        lastRow.children[0].type.includes(TABLE_CELL_TYPE)
+      ) {
+        // 如果最後一行 body row 的第一個 cell 是 pinned，代表有任何 pinned columns
+        return lastRow.children[0].pinned === true;
       }
     }
   }
@@ -142,13 +141,14 @@ export function hasAnyPinnedColumns(tableStructure: TableStructure): boolean {
 export function hasAnyPinnedRows(tableStructure: TableStructure): boolean {
   if (!tableStructure.tableHeaderElement) return false;
 
-  for (const row of tableStructure.tableHeaderElement.children) {
-    if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
-      for (const cell of row.children) {
-        if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE) && cell.pinned) {
-          return true;
-        }
-      }
+  if (tableStructure.tableHeaderElement.children[0]) {
+    const firstRow = tableStructure.tableHeaderElement.children[0];
+
+    if (Element.isElement(firstRow) && firstRow.type.includes(TABLE_ROW_TYPE)) {
+      // 如果第一個 header row 的所有 cell 都是 pinned，代表有任何 pinned rows
+      return firstRow.children.every(
+        (cell) => Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE) && (cell as TableElement).pinned,
+      );
     }
   }
 

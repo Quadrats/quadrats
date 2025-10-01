@@ -21,6 +21,94 @@ import {
 export function useTableActions(element: RenderTableElementProps['element']) {
   const editor = useQuadrats();
 
+  const isColumnPinned: TableContextType['isColumnPinned'] = useCallback(
+    (columnIndex) => {
+      try {
+        const tableStructure = getTableStructure(editor, element);
+
+        if (!tableStructure) return false;
+
+        const { tableMainElement } = tableStructure;
+
+        if (!tableMainElement) return false;
+
+        for (const container of tableMainElement.children) {
+          if (!Element.isElement(container)) continue;
+
+          for (const row of container.children) {
+            if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+              const cell = row.children[columnIndex];
+
+              if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
+                // 如果有任何一個 cell 沒有 pinned 屬性，則整個 column 不算 pinned
+                if (!cell.pinned) {
+                  return false;
+                }
+              }
+            }
+          }
+        }
+
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
+    [element, editor],
+  );
+
+  const isRowPinned: TableContextType['isRowPinned'] = useCallback(
+    (rowIndex) => {
+      try {
+        const tableStructure = getTableStructure(editor, element);
+
+        if (!tableStructure) return false;
+
+        const { tableHeaderElement, tableBodyElement } = tableStructure;
+
+        const headerRowCount =
+          tableHeaderElement && Element.isElement(tableHeaderElement) ? tableHeaderElement.children.length : 0;
+
+        let targetRow: TableElement | undefined;
+
+        if (rowIndex < headerRowCount && tableHeaderElement && Element.isElement(tableHeaderElement)) {
+          // 在 Header 中
+          const rowElement = tableHeaderElement.children[rowIndex];
+
+          if (Element.isElement(rowElement)) {
+            targetRow = rowElement as TableElement;
+          }
+        } else if (tableBodyElement && Element.isElement(tableBodyElement)) {
+          // 在 Body 中
+          const bodyRowIndex = rowIndex - headerRowCount;
+          const rowElement = tableBodyElement.children[bodyRowIndex];
+
+          if (Element.isElement(rowElement)) {
+            targetRow = rowElement as TableElement;
+          }
+        }
+
+        if (!Element.isElement(targetRow) || !targetRow.type.includes(TABLE_ROW_TYPE)) {
+          return false;
+        }
+
+        // 檢查所有 cell 是否都有 pinned 屬性
+        for (const cell of targetRow.children) {
+          if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
+            if (!(cell as TableElement).pinned) {
+              return false;
+            }
+          }
+        }
+
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
+    [element, editor],
+  );
+
   const addColumn: TableContextType['addColumn'] = useCallback(
     (options = {}) => {
       const { position = 'right', columnIndex } = options;
@@ -364,11 +452,13 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         const rowPath = [...tableHeaderPath, rowIndex];
 
         // 移動前移除所有 cell 的 pinned 屬性
-        rowToMove.children.forEach((cell, cellIndex) => {
+        rowToMove.children.forEach((cell, columnIndex) => {
           if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE) && (cell as TableElement).pinned) {
-            const cellPath = [...rowPath, cellIndex];
+            if (cell.pinned && isColumnPinned(columnIndex)) {
+              const cellPath = [...rowPath, columnIndex];
 
-            Transforms.unsetNodes(editor, 'pinned', { at: cellPath });
+              Transforms.unsetNodes(editor, 'pinned', { at: cellPath });
+            }
           }
         });
 
@@ -383,7 +473,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         console.warn('Failed to move row to body:', error);
       }
     },
-    [editor, element],
+    [editor, element, isColumnPinned],
   );
 
   const moveRowToHeader: TableContextType['moveRowToHeader'] = useCallback(
@@ -534,7 +624,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
                 Transforms.unsetNodes(editor, 'treatAsTitle', { at: cellPath });
 
-                if (cell.pinned) {
+                if (cell.pinned && !isRowPinned(rowIndex)) {
                   Transforms.unsetNodes(editor, 'pinned', { at: cellPath });
                 }
               }
@@ -571,7 +661,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         console.warn('Failed to unset column as title:', error);
       }
     },
-    [editor, element],
+    [editor, element, isRowPinned],
   );
 
   const setColumnAsTitle: TableContextType['setColumnAsTitle'] = useCallback(
@@ -875,94 +965,6 @@ export function useTableActions(element: RenderTableElementProps['element']) {
       console.warn('Failed to unpin row:', error);
     }
   }, [editor, element]);
-
-  const isColumnPinned = useCallback(
-    (columnIndex: number): boolean => {
-      try {
-        const tableStructure = getTableStructure(editor, element);
-
-        if (!tableStructure) return false;
-
-        const { tableMainElement } = tableStructure;
-
-        if (!tableMainElement) return false;
-
-        for (const container of tableMainElement.children) {
-          if (!Element.isElement(container)) continue;
-
-          for (const row of container.children) {
-            if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
-              const cell = row.children[columnIndex];
-
-              if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
-                // 如果有任何一個 cell 沒有 pinned 屬性，則整個 column 不算 pinned
-                if (!cell.pinned) {
-                  return false;
-                }
-              }
-            }
-          }
-        }
-
-        return true;
-      } catch (error) {
-        return false;
-      }
-    },
-    [element, editor],
-  );
-
-  const isRowPinned = useCallback(
-    (rowIndex: number): boolean => {
-      try {
-        const tableStructure = getTableStructure(editor, element);
-
-        if (!tableStructure) return false;
-
-        const { tableHeaderElement, tableBodyElement } = tableStructure;
-
-        const headerRowCount =
-          tableHeaderElement && Element.isElement(tableHeaderElement) ? tableHeaderElement.children.length : 0;
-
-        let targetRow: TableElement | undefined;
-
-        if (rowIndex < headerRowCount && tableHeaderElement && Element.isElement(tableHeaderElement)) {
-          // 在 Header 中
-          const rowElement = tableHeaderElement.children[rowIndex];
-
-          if (Element.isElement(rowElement)) {
-            targetRow = rowElement as TableElement;
-          }
-        } else if (tableBodyElement && Element.isElement(tableBodyElement)) {
-          // 在 Body 中
-          const bodyRowIndex = rowIndex - headerRowCount;
-          const rowElement = tableBodyElement.children[bodyRowIndex];
-
-          if (Element.isElement(rowElement)) {
-            targetRow = rowElement as TableElement;
-          }
-        }
-
-        if (!Element.isElement(targetRow) || !targetRow.type.includes(TABLE_ROW_TYPE)) {
-          return false;
-        }
-
-        // 檢查所有 cell 是否都有 pinned 屬性
-        for (const cell of targetRow.children) {
-          if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
-            if (!(cell as TableElement).pinned) {
-              return false;
-            }
-          }
-        }
-
-        return true;
-      } catch (error) {
-        return false;
-      }
-    },
-    [element, editor],
-  );
 
   return {
     addColumn,

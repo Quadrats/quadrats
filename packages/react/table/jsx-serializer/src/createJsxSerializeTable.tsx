@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { WithElementParent } from '@quadrats/core/serializers';
+import { getFirstAncestor, WithElementParent } from '@quadrats/core/serializers';
 import {
   TableElement,
   TableTypeKey,
@@ -18,6 +18,7 @@ import {
 } from '@quadrats/react/jsx-serializer';
 import { defaultRenderTableElements } from './defaultRenderTableElements';
 import { JsxSerializeTableElementProps } from './typings';
+import { Element, QuadratsElement } from '@quadrats/core';
 
 export type CreateJsxSerializeTableOptions = Partial<
   Record<TableTypeKey, Partial<CreateJsxSerializeElementOptions<JsxSerializeTableElementProps>>> &
@@ -134,10 +135,19 @@ export function createJsxSerializeTable(options: CreateJsxSerializeTableOptions 
       render: (props) => {
         const { children } = props;
         const element = props.element as TableElement & WithElementParent;
+        const firstAncestor = getFirstAncestor<TableElement>(
+          element,
+          (node) => (node as QuadratsElement).type === tableMainType,
+        );
+
+        const body = firstAncestor?.children.find((child) => child.type === tableBodyType);
+        const firstRow = body?.children[0];
+        const firstCell = Element.isElement(firstRow) ? firstRow.children[0] : null;
 
         return renderTableCell({
           children,
           element,
+          isColumnPinned: Element.isElement(firstCell) ? firstCell.pinned : false,
         });
       },
     },

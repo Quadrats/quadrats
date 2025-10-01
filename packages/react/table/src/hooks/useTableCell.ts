@@ -15,12 +15,12 @@ import { QuadratsReactEditor } from '@quadrats/react';
 
 /** 檢查 table cell 是否在 focused 狀態 */
 export function useTableCellFocused(element: TableElement, editor: QuadratsReactEditor): boolean {
-  const { setTableHoveredOn, setTableSelectedOn } = useTable();
+  const { tableSelectedOn, setTableHoveredOn, setTableSelectedOn } = useTable();
   const cellPath = ReactEditor.findPath(editor, element);
   const focused = useFocused();
 
   const isCellFocused = useMemo(() => {
-    if (!focused || !editor.selection) return false;
+    if (!focused || !editor.selection || tableSelectedOn?.region) return false;
 
     try {
       const selectionPath = editor.selection.anchor.path;
@@ -32,7 +32,7 @@ export function useTableCellFocused(element: TableElement, editor: QuadratsReact
     } catch (error) {
       return false;
     }
-  }, [focused, editor.selection, cellPath]);
+  }, [focused, editor.selection, cellPath, tableSelectedOn]);
 
   const isPreviousCellFocused = usePreviousValue(isCellFocused);
 

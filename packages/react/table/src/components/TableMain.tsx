@@ -53,7 +53,7 @@ function TableMain(props: RenderElementProps<TableElement>) {
       })}
     >
       <InlineToolbar
-        className="qdr-table__inline-table-toolbar"
+        className="qdr-table__table-toolbar"
         iconGroups={[
           {
             icons: [

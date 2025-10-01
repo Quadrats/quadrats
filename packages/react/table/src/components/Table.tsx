@@ -169,7 +169,16 @@ function Table({
         {children}
         <button
           type="button"
-          onClick={() => setTableSelectedOn((prev) => (prev?.region === 'table' ? undefined : { region: 'table' }))}
+          onClick={(evt) => {
+            evt.preventDefault();
+            evt.stopPropagation();
+
+            setTableSelectedOn((prev) => (prev?.region === 'table' ? undefined : { region: 'table' }));
+          }}
+          onMouseDown={(evt) => {
+            evt.preventDefault();
+            evt.stopPropagation();
+          }}
           className="qdr-table__selection"
           title={tableSelectedOn?.region === 'table' ? 'Deselect Table' : 'Select Table'}
         >

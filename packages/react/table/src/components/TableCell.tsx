@@ -90,7 +90,7 @@ function TableCell(props: RenderElementProps<TableElement>) {
   const [toolbarPosition, setToolbarPosition] = useState<{ top: number; left: number } | null>(null);
   const [rowButtonPosition, setRowButtonPosition] = useState<{ top: number; left: number } | null>(null);
   const [columnButtonPosition, setColumnButtonPosition] = useState<{ top: number; left: number } | null>(null);
-  const [cellStuckAtTop, setCellStuckAtTop] = useState<number | undefined>(undefined);
+  const [cellStuckAtLeft, setCellStuckAtLeft] = useState<number | undefined>(undefined);
 
   // 計算位置相對於 Table 的位置
   useEffect(() => {
@@ -147,11 +147,12 @@ function TableCell(props: RenderElementProps<TableElement>) {
       const cellRect = cell.getBoundingClientRect();
       const containerRect = scrollContainer.getBoundingClientRect();
 
-      setCellStuckAtTop(Math.max(Math.round(cellRect.top - containerRect.top), 0));
+      setCellStuckAtLeft(Math.max(Math.round(cellRect.left - containerRect.left), 0));
     }
   }, [scrollRef]);
 
   const TagName = isHeader ? 'th' : 'td';
+  const myColumnIsPinned = isColumnPinned(cellPosition.columnIndex) && element.treatAsTitle;
 
   return (
     <TagName
@@ -165,7 +166,7 @@ function TableCell(props: RenderElementProps<TableElement>) {
       }}
       className={clsx('qdr-table__cell', {
         'qdr-table__cell--header': isHeader || element.treatAsTitle,
-        'qdr-table__cell--pinned': element.pinned,
+        'qdr-table__cell--pinned': myColumnIsPinned,
         'qdr-table__cell--top-active': isSelectedInSameRow || (isSelectedInSameColumn && cellPosition.rowIndex === 0),
         'qdr-table__cell--right-active':
           isSelectedInSameColumn || (isSelectedInSameRow && cellPosition.columnIndex === columnCount - 1),
@@ -176,9 +177,9 @@ function TableCell(props: RenderElementProps<TableElement>) {
         'qdr-table__cell--is-selection-trigger-by-me': isSelectionTriggerByMe,
       })}
       style={
-        element.pinned && isHeader
+        myColumnIsPinned
           ? {
-              top: cellStuckAtTop,
+              left: cellStuckAtLeft,
             }
           : undefined
       }

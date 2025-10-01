@@ -49,11 +49,18 @@ $toolbar-z-index: 10;
 }
 
 @mixin cell-selected($border-position) {
-  border-#{$border-position}: 2px solid var(--qdr-primary-light);
+  border-#{$border-position}: 2px solid var(--qdr-primary-light) !important;
 }
 
 @mixin title-bg {
   background-color: var(--qdr-bg);
+}
+
+.qdr-table__table-toolbar {
+  right: unset;
+  left: 50%;
+  top: -4px;
+  transform: translate(-50%, -100%);
 }
 
 .qdr-table {
@@ -116,8 +123,7 @@ $toolbar-z-index: 10;
 
     &--pinned {
       position: sticky;
-      z-index: 1;
-      left: 0;
+      z-index: 2;
       top: 0;
       box-shadow: 0 2px 4px -2px #00000026;
     }
@@ -138,9 +144,9 @@ $toolbar-z-index: 10;
     border-spacing: 0;
     table-layout: fixed;
 
-    th:not(:last-child),
-    td:not(:last-child) {
-      border-right: none;
+    th:not(:first-child),
+    td:not(:first-child) {
+      border-left: none;
     }
 
     thead tr:not(:last-child) th,
@@ -164,7 +170,12 @@ $toolbar-z-index: 10;
 
     &--selected {
       .qdr-table__main {
-        outline: 2px solid var(--qdr-primary);
+        border: 2px solid var(--qdr-primary);
+      }
+
+      .qdr-table__table-toolbar {
+        opacity: 1;
+        pointer-events: auto;
       }
     }
   }
@@ -204,7 +215,7 @@ $toolbar-z-index: 10;
       position: sticky;
       z-index: 1;
       left: 0;
-      box-shadow: 0 2px 4px -2px #00000026;
+      box-shadow: 2px 0 4px -2px #00000026;
     }
 
     &--top-active {
