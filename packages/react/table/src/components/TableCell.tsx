@@ -294,7 +294,8 @@ function TableCell(props: RenderElementProps<TableElement>) {
             type="button"
             contentEditable={false}
             style={{
-              top: columnButtonPosition?.top,
+              // pinned 時因為 sticky 所以要扣掉 scrollTop
+              top: (columnButtonPosition?.top ?? 0) - (element.pinned ? scrollTop : 0),
               left: columnButtonPosition?.left,
             }}
             onClick={(e) => {
