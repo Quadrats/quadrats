@@ -11,6 +11,7 @@ import { Transforms } from 'slate';
 import { TableElement } from '@quadrats/common/table';
 import { TableScrollContext } from '../contexts/TableScrollContext';
 import { useTableCellAlign, useTableCellAlignStatus } from '../hooks/useTableCell';
+import { getTableElements, getColumnWidths, columnWidthToCSS, getColumnWidthDisplay } from '../utils/helper';
 
 function TableMain(props: RenderElementProps<TableElement>) {
   const { attributes, children } = props;
@@ -21,6 +22,13 @@ function TableMain(props: RenderElementProps<TableElement>) {
   const { addColumn, addRow, addColumnAndRow } = useTableActionsContext();
   const { isReachMaximumColumns, isReachMaximumRows, tableElement } = useTableMetadata();
   const { tableSelectedOn } = useTableState();
+
+  // sizing
+  const { tableBodyElement } = getTableElements(tableElement);
+  const firstRowCells = tableBodyElement?.children[0].children;
+
+  // 獲取欄位寬度
+  const columnWidths = useMemo(() => getColumnWidths(tableElement), [tableElement]);
 
   // Table align functions
   const setAlign = useTableCellAlign(tableElement, editor);
@@ -121,9 +129,21 @@ function TableMain(props: RenderElementProps<TableElement>) {
       <div ref={scrollRef} className="qdr-table__scrollContainer">
         <TableScrollContext.Provider value={scrollContextValue}>
           <table {...attributes} className="qdr-table__main">
+            <colgroup>
+              {columnWidths.map((width, index) => (
+                <col key={index} style={{ width: columnWidthToCSS(width) }} />
+              ))}
+            </colgroup>
             {children}
           </table>
         </TableScrollContext.Provider>
+      </div>
+      <div className="qdr-table__size-indicators">
+        {firstRowCells?.map((_, colIndex) => (
+          <div key={colIndex} className="qdr-table__size-indicator">
+            <div className="qdr-table__size">{getColumnWidthDisplay(columnWidths[colIndex])}</div>
+          </div>
+        ))}
       </div>
       {isReachMaximumColumns ? null : (
         <button type="button" onClick={() => addColumn()} title="Add Column" className="qdr-table__add-column">

@@ -16,6 +16,10 @@ import {
   getReferenceRowFromHeaderOrBody,
   hasAnyPinnedRows,
   hasAnyPinnedColumns,
+  getColumnWidths,
+  calculateColumnWidthsAfterAdd,
+  calculateColumnWidthsAfterDelete,
+  setColumnWidths,
 } from '../utils/helper';
 
 export function useTableActions(element: RenderTableElementProps['element']) {
@@ -135,27 +139,39 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           insertIndex = columnCount;
         }
 
-        // 在 Header 中加入 cell
-        if (tableHeaderElement && tableHeaderPath) {
-          tableHeaderElement.children.forEach((row, rowIndex) => {
+        // 使用 Editor.withoutNormalizing 來批次執行所有操作
+        Editor.withoutNormalizing(editor, () => {
+          // 在 Header 中加入 cell
+          if (tableHeaderElement && tableHeaderPath) {
+            tableHeaderElement.children.forEach((row, rowIndex) => {
+              if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+                const referenceCell = row.children[insertIndex - (position === 'left' ? 0 : 1)] as TableElement;
+                const newCell = createTableCell(referenceCell);
+                const cellPath = [...tableHeaderPath, rowIndex, insertIndex];
+
+                Transforms.insertNodes(editor, newCell, { at: cellPath });
+              }
+            });
+          }
+
+          // 在 Body 中加入 cell
+          tableBodyElement!.children.forEach((row, rowIndex) => {
             if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
               const referenceCell = row.children[insertIndex - (position === 'left' ? 0 : 1)] as TableElement;
               const newCell = createTableCell(referenceCell);
-              const cellPath = [...tableHeaderPath, rowIndex, insertIndex];
+              const cellPath = [...tableBodyPath, rowIndex, insertIndex];
 
               Transforms.insertNodes(editor, newCell, { at: cellPath });
             }
           });
-        }
 
-        // 在 Body 中加入 cell
-        tableBodyElement!.children.forEach((row, rowIndex) => {
-          if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
-            const referenceCell = row.children[insertIndex - (position === 'left' ? 0 : 1)] as TableElement;
-            const newCell = createTableCell(referenceCell);
-            const cellPath = [...tableBodyPath, rowIndex, insertIndex];
+          // 調整欄位寬度
+          const currentWidths = getColumnWidths(element);
 
-            Transforms.insertNodes(editor, newCell, { at: cellPath });
+          if (currentWidths.length > 0) {
+            const newWidths = calculateColumnWidthsAfterAdd(currentWidths, insertIndex);
+
+            setColumnWidths(editor, element, newWidths);
           }
         });
       } catch (error) {
@@ -418,6 +434,15 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
               Transforms.removeNodes(editor, { at: cellPath });
             }
+          }
+
+          // 調整欄位寬度
+          const currentWidths = getColumnWidths(element);
+
+          if (currentWidths.length > 0) {
+            const newWidths = calculateColumnWidthsAfterDelete(currentWidths, columnIndex);
+
+            setColumnWidths(editor, element, newWidths);
           }
         });
       } catch (error) {

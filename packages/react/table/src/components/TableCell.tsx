@@ -13,11 +13,12 @@ import { InlineToolbar } from '@quadrats/react/toolbar';
 import { useTableCellFocused, useTableCellPosition, useTableCellTransformContent } from '../hooks/useTableCell';
 import { useTableCellToolbarActions } from '../hooks/useTableCellToolbarActions';
 import { TableScrollContext } from '../contexts/TableScrollContext';
+import { useColumnResize } from '../hooks/useColumnResize';
 
 function TableCell(props: RenderElementProps<TableElement>) {
   const { attributes, children, element } = props;
   const { tableSelectedOn, setTableSelectedOn, tableHoveredOn, setTableHoveredOn } = useTableState();
-  const { columnCount, rowCount, portalContainerRef, isColumnPinned } = useTableMetadata();
+  const { columnCount, rowCount, portalContainerRef, isColumnPinned, tableElement } = useTableMetadata();
 
   // Component context
   const { isHeader } = useContext(TableHeaderContext);
@@ -64,6 +65,14 @@ function TableCell(props: RenderElementProps<TableElement>) {
   const [rowButtonPosition, setRowButtonPosition] = useState<{ top: number; left: number } | null>(null);
   const [columnButtonPosition, setColumnButtonPosition] = useState<{ top: number; left: number } | null>(null);
   const [cellStuckAtLeft, setCellStuckAtLeft] = useState<number | undefined>(undefined);
+
+  // Column resize hook - 最後一欄不需要 resize handle
+  const isLastColumn = cellPosition.columnIndex === columnCount - 1;
+  const { isResizing, handleResizeStart } = useColumnResize({
+    tableElement,
+    columnIndex: cellPosition.columnIndex,
+    cellRef,
+  });
 
   useEffect(() => {
     const { current: cell } = cellRef;
@@ -143,6 +152,7 @@ function TableCell(props: RenderElementProps<TableElement>) {
         setTableHoveredOn(undefined);
       }}
       className={clsx('qdr-table__cell', {
+        'qdr-table__cell--resizing': true,
         'qdr-table__cell--header': isHeader || element.treatAsTitle,
         'qdr-table__cell--pinned': myColumnIsPinned,
         'qdr-table__cell--top-active': isSelectedInSameRow || (isSelectedInSameColumn && cellPosition.rowIndex === 0),
@@ -163,6 +173,16 @@ function TableCell(props: RenderElementProps<TableElement>) {
       }
     >
       {children}
+      {!isLastColumn && (
+        <div
+          contentEditable={false}
+          data-slate-editor={false}
+          className={clsx('qdr-table__cell__resize-handle', {
+            'qdr-table__cell__resize-handle--active': isResizing,
+          })}
+          onMouseDown={handleResizeStart}
+        />
+      )}
       {focused && (
         <Portal getContainer={() => portalContainerRef.current || document.body}>
           <InlineToolbar

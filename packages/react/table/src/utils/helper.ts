@@ -7,6 +7,7 @@ import {
   TABLE_ROW_TYPE,
   TABLE_CELL_TYPE,
   TableElement,
+  ColumnWidth,
 } from '@quadrats/common/table';
 import { QuadratsReactEditor } from '@quadrats/react';
 import { ALIGN_TYPE, ALIGNABLE_TYPES, AlignValue } from '@quadrats/common/align';
@@ -321,4 +322,282 @@ export function getAlignFromCells(cells: Element[]): AlignValue {
   }
 
   return 'left';
+}
+
+/**
+ * 獲取表格的欄位寬度陣列
+ * @param tableElement - 表格最外層元素
+ * @returns 欄位寬度陣列，如果沒有設定則返回平均分配的 percentage
+ */
+export function getColumnWidths(tableElement: TableElement): ColumnWidth[] {
+  const tableStructure = getTableElements(tableElement);
+  const { tableBodyElement } = tableStructure;
+
+  if (!tableBodyElement || !Element.isElement(tableBodyElement)) {
+    return [];
+  }
+
+  const firstRow = tableBodyElement.children[0];
+
+  if (!Element.isElement(firstRow)) {
+    return [];
+  }
+
+  const columnCount = firstRow.children.length;
+
+  // 如果 tableElement 有 columnWidths，使用它
+  if (tableElement.columnWidths && tableElement.columnWidths.length === columnCount) {
+    return [...tableElement.columnWidths];
+  }
+
+  // 否則返回平均分配的 percentage（精確到小數點後一位）
+  const equalPercentage = Math.round((100 / columnCount) * 10) / 10;
+
+  return Array(columnCount)
+    .fill(null)
+    .map(() => ({ type: 'percentage' as const, value: equalPercentage }));
+}
+
+/**
+ * 設定表格的欄位寬度
+ * @param editor - Slate editor
+ * @param tableElement - 表格最外層元素
+ * @param columnWidths - 欄位寬度陣列
+ */
+export function setColumnWidths(
+  editor: QuadratsReactEditor,
+  tableElement: TableElement,
+  columnWidths: ColumnWidth[],
+): void {
+  const tablePath = ReactEditor.findPath(editor, tableElement);
+
+  Transforms.setNodes(editor, { columnWidths: [...columnWidths] } as Partial<TableElement>, { at: tablePath });
+}
+
+/**
+ * 計算新增欄位後的欄位寬度
+ * 此函數會智慧處理欄位寬度的重新分配：
+ * - 如果所有欄位都是 percentage：按比例縮減現有欄位，新欄位佔平均寬度
+ * - 如果有 pixel 欄位：保持 pixel 欄位不變，只調整 percentage 欄位
+ *
+ * 範例：[20%, 20%, 40%, 20%] 新增一欄 → [16%, 16%, 32%, 16%, 20%]
+ *
+ * @param currentWidths - 當前的欄位寬度陣列
+ * @param insertIndex - 新欄位插入的位置（0-based）
+ * @returns 新的欄位寬度陣列
+ */
+export function calculateColumnWidthsAfterAdd(currentWidths: ColumnWidth[], insertIndex: number): ColumnWidth[] {
+  const newColumnCount = currentWidths.length + 1;
+  const averagePercentage = Math.round((100 / newColumnCount) * 10) / 10;
+
+  // 分離 percentage 和 pixel 欄位
+  const percentageColumns: { index: number; value: number }[] = [];
+
+  currentWidths.forEach((width, index) => {
+    if (width.type === 'percentage') {
+      percentageColumns.push({ index, value: width.value });
+    }
+  });
+
+  // 如果所有欄位都是 percentage
+  if (percentageColumns.length === currentWidths.length) {
+    const currentTotal = percentageColumns.reduce((sum, col) => sum + col.value, 0);
+    const targetTotal = 100 - averagePercentage;
+    const scaleFactor = targetTotal / currentTotal;
+
+    const newWidths: ColumnWidth[] = [];
+
+    currentWidths.forEach((width, index) => {
+      if (index === insertIndex) {
+        // 插入新欄位
+        newWidths.push({ type: 'percentage', value: averagePercentage });
+      }
+
+      // 按比例縮減現有欄位
+      const scaledValue = Math.round((width as { value: number }).value * scaleFactor * 10) / 10;
+
+      newWidths.push({ type: 'percentage', value: scaledValue });
+    });
+
+    // 如果插入位置在最後
+    if (insertIndex >= currentWidths.length) {
+      newWidths.push({ type: 'percentage', value: averagePercentage });
+    }
+
+    return newWidths;
+  }
+
+  // 如果有混合的 pixel 和 percentage 欄位
+  // 保持 pixel 欄位不變，只調整 percentage 欄位
+  const newWidths: ColumnWidth[] = [];
+  const remainingPercentage = 100; // 這裡簡化處理，實際應該根據 pixel 佔比計算
+
+  currentWidths.forEach((width, index) => {
+    if (index === insertIndex) {
+      // 插入新欄位（使用平均百分比）
+      newWidths.push({ type: 'percentage', value: averagePercentage });
+    }
+
+    if (width.type === 'pixel') {
+      // pixel 欄位保持不變
+      newWidths.push({ ...width });
+    } else {
+      // percentage 欄位按比例縮減
+      const currentPercentageTotal = percentageColumns.reduce((sum, col) => sum + col.value, 0);
+      const targetPercentageTotal = remainingPercentage - averagePercentage;
+      const scaleFactor = targetPercentageTotal / currentPercentageTotal;
+      const scaledValue = Math.round(width.value * scaleFactor * 10) / 10;
+
+      newWidths.push({ type: 'percentage', value: scaledValue });
+    }
+  });
+
+  // 如果插入位置在最後
+  if (insertIndex >= currentWidths.length) {
+    newWidths.push({ type: 'percentage', value: averagePercentage });
+  }
+
+  return newWidths;
+}
+
+/**
+ * 計算刪除欄位後的欄位寬度
+ * 此函數會智慧處理欄位寬度的重新分配：
+ * - 如果所有欄位都是 percentage：按比例放大剩餘欄位
+ * - 如果有 pixel 欄位：保持 pixel 欄位不變，只調整 percentage 欄位
+ *
+ * @param currentWidths - 當前的欄位寬度陣列
+ * @param deleteIndex - 要刪除的欄位索引（0-based）
+ * @returns 新的欄位寬度陣列
+ */
+export function calculateColumnWidthsAfterDelete(currentWidths: ColumnWidth[], deleteIndex: number): ColumnWidth[] {
+  if (currentWidths.length <= 1) {
+    return currentWidths;
+  }
+
+  const deletedWidth = currentWidths[deleteIndex];
+  const newWidths = currentWidths.filter((_, index) => index !== deleteIndex);
+
+  // 如果刪除的是 pixel 欄位，其他欄位保持不變
+  if (deletedWidth.type === 'pixel') {
+    return newWidths;
+  }
+
+  // 刪除的是 percentage 欄位
+  const deletedPercentage = deletedWidth.value;
+
+  // 分離 percentage 和 pixel 欄位
+  const percentageIndices: number[] = [];
+
+  newWidths.forEach((width, index) => {
+    if (width.type === 'percentage') {
+      percentageIndices.push(index);
+    }
+  });
+
+  // 如果沒有 percentage 欄位，直接返回
+  if (percentageIndices.length === 0) {
+    return newWidths;
+  }
+
+  // 將刪除欄位的百分比按比例分配給其他 percentage 欄位
+  const currentPercentageTotal = percentageIndices.reduce((sum, index) => sum + newWidths[index].value, 0);
+
+  return newWidths.map((width) => {
+    if (width.type === 'percentage') {
+      const proportion = width.value / currentPercentageTotal;
+      const additionalPercentage = deletedPercentage * proportion;
+      const newValue = Math.round((width.value + additionalPercentage) * 10) / 10;
+
+      return { type: 'percentage', value: newValue };
+    }
+
+    return width;
+  });
+}
+
+/**
+ * 計算拖曳後的欄位寬度
+ * 此函數會智慧處理混合的固定欄位和彈性欄位：
+ * - 如果當前欄位或下一欄位是固定寬度（pixel），則不進行調整
+ * - 只有兩個都是彈性欄位（percentage）時才進行寬度調整
+ *
+ * @param currentWidths - 當前的欄位寬度陣列
+ * @param columnIndex - 被調整的欄位索引
+ * @param deltaPercentage - 寬度變化量（百分比）
+ * @returns 新的欄位寬度陣列
+ */
+export function calculateResizedColumnWidths(
+  currentWidths: ColumnWidth[],
+  columnIndex: number,
+  deltaPercentage: number,
+): ColumnWidth[] {
+  const newWidths = [...currentWidths];
+  const nextColumnIndex = columnIndex + 1;
+
+  // 確保索引有效
+  if (nextColumnIndex >= newWidths.length) {
+    return newWidths;
+  }
+
+  const currentCol = newWidths[columnIndex];
+  const nextCol = newWidths[nextColumnIndex];
+
+  // 如果任一欄位是固定寬度，則不進行調整
+  // 未來可以擴展為：調整彈性欄位的寬度來適應固定欄位
+  if (currentCol.type === 'pixel' || nextCol.type === 'pixel') {
+    return newWidths;
+  }
+
+  // 兩個都是 percentage，進行調整
+  const currentWidth = currentCol.value;
+  const nextWidth = nextCol.value;
+
+  // 計算新寬度（保留小數點後一位）
+  let newCurrentWidth = Math.round((currentWidth + deltaPercentage) * 10) / 10;
+  let newNextWidth = Math.round((nextWidth - deltaPercentage) * 10) / 10;
+
+  // 確保寬度不小於最小值（5%）
+  const minWidth = 5;
+
+  if (newCurrentWidth < minWidth) {
+    newCurrentWidth = minWidth;
+    newNextWidth = Math.round((currentWidth + nextWidth - minWidth) * 10) / 10;
+  } else if (newNextWidth < minWidth) {
+    newNextWidth = minWidth;
+    newCurrentWidth = Math.round((currentWidth + nextWidth - minWidth) * 10) / 10;
+  }
+
+  newWidths[columnIndex] = { type: 'percentage', value: newCurrentWidth };
+  newWidths[nextColumnIndex] = { type: 'percentage', value: newNextWidth };
+
+  return newWidths;
+}
+
+/**
+ * 將 ColumnWidth 轉換為 CSS 可用的字串
+ * @param width - 欄位寬度定義
+ * @returns CSS 寬度字串（例如 "30%" 或 "200px"）
+ */
+export function columnWidthToCSS(width: ColumnWidth): string {
+  if (width.type === 'percentage') {
+    // 保留小數點後一位
+    return `${width.value.toFixed(1)}%`;
+  }
+
+  return `${width.value}px`;
+}
+
+/**
+ * 計算欄位寬度的顯示值（用於 size indicator）
+ * @param width - 欄位寬度定義
+ * @returns 顯示字串（例如 "30%" 或 "200px"）
+ */
+export function getColumnWidthDisplay(width: ColumnWidth): string {
+  if (width.type === 'percentage') {
+    // 顯示小數點後一位
+    return `${width.value.toFixed(1)}%`;
+  }
+
+  return `${width.value}px`;
 }
