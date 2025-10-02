@@ -19,10 +19,16 @@ export type TableTypes = Record<
   string
 >;
 
+// Column width can be either percentage (flexible) or pixel (fixed)
+export type ColumnWidth =
+  | { type: 'percentage'; value: number } // e.g., { type: 'percentage', value: 30 } means 30%
+  | { type: 'pixel'; value: number }; // e.g., { type: 'pixel', value: 200 } means 200px
+
 export interface TableElement extends QuadratsElement, WithElementType {
   treatAsTitle?: boolean;
   pinned?: boolean;
   align?: 'left' | 'center' | 'right';
+  columnWidths?: ColumnWidth[]; // Array of column width definitions (percentage or pixel)
   children: {
     type: string;
     treatAsTitle?: boolean;
