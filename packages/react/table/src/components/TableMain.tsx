@@ -2,14 +2,15 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { ReactEditor, RenderElementProps, useModal, useSlateStatic } from '@quadrats/react';
 import { Icon } from '@quadrats/react/components';
-import { Plus, Trash } from '@quadrats/icons';
+import { AlignCenter, AlignLeft, AlignRight, Plus, Trash } from '@quadrats/icons';
 import { useTableActionsContext } from '../hooks/useTableActionsContext';
 import { useTableMetadata } from '../hooks/useTableMetadata';
 import { useTableState } from '../hooks/useTableState';
-import { InlineToolbar } from '@quadrats/react/toolbar';
+import { InlineToolbar, ToolbarGroupIcon, ToolbarIcon } from '@quadrats/react/toolbar';
 import { Transforms } from 'slate';
 import { TableElement } from '@quadrats/common/table';
 import { TableScrollContext } from '../contexts/TableScrollContext';
+import { useTableCellAlign, useTableCellAlignStatus } from '../hooks/useTableCell';
 
 function TableMain(props: RenderElementProps<TableElement>) {
   const { attributes, children } = props;
@@ -20,6 +21,10 @@ function TableMain(props: RenderElementProps<TableElement>) {
   const { addColumn, addRow, addColumnAndRow } = useTableActionsContext();
   const { isReachMaximumColumns, isReachMaximumRows, tableElement } = useTableMetadata();
   const { tableSelectedOn } = useTableState();
+
+  // Table align functions
+  const setAlign = useTableCellAlign(tableElement, editor);
+  const getAlign = useTableCellAlignStatus(tableElement, editor);
 
   const tablePath = ReactEditor.findPath(editor, tableElement);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -43,6 +48,23 @@ function TableMain(props: RenderElementProps<TableElement>) {
 
   const scrollContextValue = useMemo(() => ({ scrollTop, scrollRef }), [scrollTop, scrollRef]);
 
+  // 獲取當前 table 的 align 狀態
+  const currentTableAlign = getAlign('table');
+
+  // 根據當前 table align 狀態選擇對應的 icon
+  const getCurrentTableAlignIcon = () => {
+    switch (currentTableAlign) {
+      case 'left':
+        return AlignLeft;
+      case 'center':
+        return AlignCenter;
+      case 'right':
+        return AlignRight;
+      default:
+        return AlignLeft;
+    }
+  };
+
   return (
     <div
       className={clsx('qdr-table__mainWrapper', {
@@ -52,6 +74,30 @@ function TableMain(props: RenderElementProps<TableElement>) {
       <InlineToolbar
         className="qdr-table__table-toolbar"
         iconGroups={[
+          {
+            icons: [
+              <ToolbarGroupIcon key="table-align-change" icon={getCurrentTableAlignIcon()}>
+                <ToolbarIcon
+                  icon={AlignLeft}
+                  onClick={() => {
+                    setAlign('left', 'table');
+                  }}
+                />
+                <ToolbarIcon
+                  icon={AlignCenter}
+                  onClick={() => {
+                    setAlign('center', 'table');
+                  }}
+                />
+                <ToolbarIcon
+                  icon={AlignRight}
+                  onClick={() => {
+                    setAlign('right', 'table');
+                  }}
+                />
+              </ToolbarGroupIcon>,
+            ],
+          },
           {
             icons: [
               {

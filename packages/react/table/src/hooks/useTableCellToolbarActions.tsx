@@ -4,6 +4,9 @@ import {
   AddColumnAtRight,
   AddRowAtBottom,
   AddRowAtTop,
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
   OrderedList,
   Paragraph,
   Pinned,
@@ -21,6 +24,8 @@ import { useTableActionsContext } from './useTableActionsContext';
 import { useTableMetadata } from './useTableMetadata';
 import { useTableState } from './useTableState';
 import { ToolbarGroupIcon, ToolbarIcon } from '@quadrats/react/toolbar';
+import { useTableCellAlign, useTableCellAlignStatus } from './useTableCell';
+import { useSlateStatic } from 'slate-react';
 
 interface Position {
   columnIndex: number;
@@ -43,9 +48,19 @@ export function useTableCellToolbarActions({
   isHeader,
   transformCellContent,
 }: UseTableCellToolbarActionsParams) {
+  const editor = useSlateStatic();
   const { tableSelectedOn, setTableSelectedOn } = useTableState();
-  const { isReachMaximumColumns, isReachMinimumNormalColumns, isReachMinimumBodyRows, isColumnPinned, isRowPinned } =
-    useTableMetadata();
+  const {
+    tableElement,
+    isReachMaximumColumns,
+    isReachMinimumNormalColumns,
+    isReachMinimumBodyRows,
+    isColumnPinned,
+    isRowPinned,
+  } = useTableMetadata();
+
+  const setAlign = useTableCellAlign(tableElement, editor);
+  const getAlign = useTableCellAlignStatus(tableElement, editor);
 
   const {
     deleteRow,
@@ -170,7 +185,7 @@ export function useTableCellToolbarActions({
     ];
   }, [transformCellContent, addRow, addColumn, cellPosition, isReachMaximumColumns, getCurrentIcon]);
 
-  // Row actions - 當選中某一行時顯示的操作
+  // Row actions
   const rowActions = useMemo(() => {
     if (tableSelectedOn?.region !== 'row' || typeof tableSelectedOn.index !== 'number') {
       return null;
@@ -246,7 +261,7 @@ export function useTableCellToolbarActions({
     isRowPinned,
   ]);
 
-  // Column actions - 當選中某一列時顯示的操作
+  // Column actions
   const columnActions = useMemo(() => {
     if (tableSelectedOn?.region !== 'column' || typeof tableSelectedOn.index !== 'number') {
       return null;
@@ -322,7 +337,63 @@ export function useTableCellToolbarActions({
     isColumnPinned,
   ]);
 
-  // Row add actions - 添加行的操作
+  // Column align actions
+  const columnAlignActions = useMemo(() => {
+    if (tableSelectedOn?.region !== 'column' || typeof tableSelectedOn.index !== 'number') {
+      return null;
+    }
+
+    // 獲取當前 column 的 align 狀態
+    const currentAlign = getAlign('column', tableSelectedOn.index);
+
+    // 根據當前 align 狀態選擇對應的 icon
+    const getCurrentAlignIcon = () => {
+      switch (currentAlign) {
+        case 'left':
+          return AlignLeft;
+        case 'center':
+          return AlignCenter;
+        case 'right':
+          return AlignRight;
+        default:
+          return AlignLeft;
+      }
+    };
+
+    return [
+      <ToolbarGroupIcon key="align-change" icon={getCurrentAlignIcon()}>
+        <ToolbarIcon
+          icon={AlignLeft}
+          onClick={() => {
+            if (typeof tableSelectedOn.index === 'number') {
+              setAlign('left', 'column', tableSelectedOn.index);
+              setTableSelectedOn(undefined);
+            }
+          }}
+        />
+        <ToolbarIcon
+          icon={AlignCenter}
+          onClick={() => {
+            if (typeof tableSelectedOn.index === 'number') {
+              setAlign('center', 'column', tableSelectedOn.index);
+              setTableSelectedOn(undefined);
+            }
+          }}
+        />
+        <ToolbarIcon
+          icon={AlignRight}
+          onClick={() => {
+            if (typeof tableSelectedOn.index === 'number') {
+              setAlign('right', 'column', tableSelectedOn.index);
+              setTableSelectedOn(undefined);
+            }
+          }}
+        />
+      </ToolbarGroupIcon>,
+    ];
+  }, [tableSelectedOn, setAlign, setTableSelectedOn, getAlign]);
+
+  // Row add actions
   const rowAddActions = useMemo(() => {
     if (tableSelectedOn?.region !== 'row' || typeof tableSelectedOn.index !== 'number') {
       return null;
@@ -350,7 +421,7 @@ export function useTableCellToolbarActions({
     ];
   }, [tableSelectedOn, addRow, setTableSelectedOn]);
 
-  // Column add actions - 添加列的操作
+  // Column add actions
   const columnAddActions = useMemo(() => {
     if (tableSelectedOn?.region !== 'column' || typeof tableSelectedOn.index !== 'number') {
       return null;
@@ -388,7 +459,7 @@ export function useTableCellToolbarActions({
     ];
   }, [tableSelectedOn, addColumn, setTableSelectedOn, isReachMaximumColumns]);
 
-  // Delete actions - 刪除行/列的操作
+  // Delete actions
   const deleteActions = useMemo(() => {
     return [
       {
@@ -414,13 +485,16 @@ export function useTableCellToolbarActions({
         icons: rowActions || columnActions || [],
       },
       {
+        icons: columnAlignActions || [],
+      },
+      {
         icons: rowAddActions || columnAddActions || [],
       },
       {
         icons: deleteActions,
       },
     ];
-  }, [rowActions, columnActions, rowAddActions, columnAddActions, deleteActions]);
+  }, [rowActions, columnActions, columnAlignActions, rowAddActions, columnAddActions, deleteActions]);
 
   return {
     focusToolbarIconGroups,

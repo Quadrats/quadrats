@@ -1,4 +1,4 @@
-import { Element, PARAGRAPH_TYPE } from '@quadrats/core';
+import { Element, PARAGRAPH_TYPE, Transforms, QuadratsElement } from '@quadrats/core';
 import { ReactEditor } from 'slate-react';
 import {
   TABLE_MAIN_TYPE,
@@ -9,6 +9,9 @@ import {
   TableElement,
 } from '@quadrats/common/table';
 import { QuadratsReactEditor } from '@quadrats/react';
+import { ALIGN_TYPE, ALIGNABLE_TYPES, AlignValue } from '@quadrats/common/align';
+import { ParagraphElement } from '@quadrats/common/paragraph';
+import { HeadingElement } from '@quadrats/common/heading';
 
 export interface TableElements {
   tableMainElement: TableElement | null;
@@ -177,6 +180,10 @@ export function createTableCell(referenceCell?: TableElement, overrideProps?: Pa
     if (referenceCell.pinned) {
       baseCell.pinned = true;
     }
+
+    if (referenceCell.children[0]?.align) {
+      baseCell.children[0].align = referenceCell.children[0].align;
+    }
   }
 
   return { ...baseCell, ...overrideProps };
@@ -196,4 +203,122 @@ export function getReferenceRowFromHeaderOrBody(
   }
 
   return row as TableElement;
+}
+
+/**
+ * 收集指定範圍的 cells
+ * @param tableStructure - 表格結構
+ * @param scope - 'table' | 'column'
+ * @param columnIndex - 當 scope 為 'column' 時需要指定
+ * @returns cells 陣列
+ */
+export function collectCells(
+  tableStructure: TableStructure,
+  scope: 'table' | 'column',
+  columnIndex?: number,
+): Element[] {
+  const containers = [tableStructure.tableBodyElement, tableStructure.tableHeaderElement].filter(
+    Boolean,
+  ) as TableElement[];
+
+  const cells: Element[] = [];
+
+  for (const container of containers) {
+    if (!Element.isElement(container)) continue;
+
+    for (const row of container.children) {
+      if (!Element.isElement(row)) continue;
+
+      if (scope === 'column' && typeof columnIndex === 'number') {
+        // 收集指定 column 的 cells
+        const cell = row.children[columnIndex];
+
+        if (Element.isElement(cell)) {
+          cells.push(cell);
+        }
+      } else if (scope === 'table') {
+        // 收集所有 cells
+        for (const cell of row.children) {
+          if (Element.isElement(cell)) {
+            cells.push(cell);
+          }
+        }
+      }
+    }
+  }
+
+  return cells;
+}
+
+/**
+ * 設定指定 cells 的 align
+ * @param editor - Slate editor
+ * @param cells - 要設定 align 的 cell 元素陣列
+ * @param alignValue - align 值
+ */
+export function setAlignForCells(editor: QuadratsReactEditor, cells: Element[], alignValue: AlignValue) {
+  for (const cell of cells) {
+    if (!Element.isElement(cell)) continue;
+
+    const cellPath = ReactEditor.findPath(editor, cell as TableElement);
+
+    // 對 cell 內的所有可 align 的元素設定 align
+    for (let contentIndex = 0; contentIndex < cell.children.length; contentIndex++) {
+      const content = cell.children[contentIndex];
+
+      if (
+        Element.isElement(content) &&
+        (content as QuadratsElement).type &&
+        ALIGNABLE_TYPES.includes((content as QuadratsElement).type)
+      ) {
+        const contentPath = [...cellPath, contentIndex];
+
+        Transforms.setNodes(editor, { [ALIGN_TYPE]: alignValue } as Partial<ParagraphElement | HeadingElement>, {
+          at: contentPath,
+        });
+      }
+    }
+  }
+}
+
+/**
+ * 獲取指定 cells 的 align 狀態
+ * @param cells - 要檢查的 cell 元素陣列
+ * @returns 如果所有 cell 的 align 都相同則返回該值，否則返回 'left'
+ */
+export function getAlignFromCells(cells: Element[]): AlignValue {
+  const alignValues: AlignValue[] = [];
+
+  for (const cell of cells) {
+    if (!Element.isElement(cell)) continue;
+
+    // 檢查 cell 內的第一個可 align 元素
+    for (const content of cell.children) {
+      if (
+        Element.isElement(content) &&
+        (content as QuadratsElement).type &&
+        ALIGNABLE_TYPES.includes((content as QuadratsElement).type)
+      ) {
+        const alignValue = (content as ParagraphElement | HeadingElement)[ALIGN_TYPE];
+
+        if (alignValue) {
+          alignValues.push(alignValue as AlignValue);
+        }
+
+        break; // 只檢查第一個可 align 元素
+      }
+    }
+  }
+
+  // 如果所有 align 值都相同，返回該值；否則返回預設的 'left'
+  if (alignValues.length > 0) {
+    const firstAlign = alignValues[0];
+    const allSame = alignValues.every((align) => align === firstAlign);
+
+    if (allSame) {
+      return firstAlign;
+    }
+  }
+
+  return 'left';
 }

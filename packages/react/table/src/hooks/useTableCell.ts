@@ -7,6 +7,8 @@ import { useTableMetadata } from './useTableMetadata';
 import { TableElement } from '@quadrats/common/table';
 import { createList, LIST_TYPES, ListRootTypeKey } from '@quadrats/common/list';
 import { QuadratsReactEditor } from '@quadrats/react';
+import { AlignValue } from '@quadrats/common/align';
+import { getTableStructure, collectCells, setAlignForCells, getAlignFromCells } from '../utils/helper';
 
 /** 檢查 table cell 是否在 focused 狀態 */
 export function useTableCellFocused(element: TableElement, editor: QuadratsReactEditor): boolean {
@@ -175,4 +177,50 @@ export function useTableCellTransformContent(element: TableElement, editor: Quad
   );
 
   return transformCellContent;
+}
+
+/** 設定 column 或 table 的 align */
+export function useTableCellAlign(tableElement: TableElement, editor: QuadratsReactEditor) {
+  const setAlign = useCallback(
+    (alignValue: AlignValue, scope: 'table' | 'column', columnIndex?: number) => {
+      const tableStructure = getTableStructure(editor, tableElement);
+
+      if (!tableStructure) {
+        console.warn('Failed to get table structure');
+
+        return;
+      }
+
+      // 使用 helper 函數收集 cells
+      const cells = collectCells(tableStructure, scope, columnIndex);
+
+      // 使用 helper 函數設定 align
+      Editor.withoutNormalizing(editor, () => {
+        setAlignForCells(editor, cells, alignValue);
+      });
+    },
+    [editor, tableElement],
+  );
+
+  return setAlign;
+}
+
+/** 獲取 column 或 table 的 align 狀態 */
+export function useTableCellAlignStatus(tableElement: TableElement, editor: QuadratsReactEditor) {
+  const getAlign = useCallback(
+    (scope: 'table' | 'column', columnIndex?: number): AlignValue => {
+      const tableStructure = getTableStructure(editor, tableElement);
+
+      if (!tableStructure) {
+        return 'left';
+      }
+
+      const cells = collectCells(tableStructure, scope, columnIndex);
+
+      return getAlignFromCells(cells);
+    },
+    [editor, tableElement],
+  );
+
+  return getAlign;
 }

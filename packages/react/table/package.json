@@ -8,6 +8,8 @@
     "deps": [
       "__ROOT__",
       "paragraph",
+      "heading",
+      "align",
       "toolbar"
     ],
     "styles": {
