@@ -22,10 +22,12 @@ export type TableTypes = Record<
 export interface TableElement extends QuadratsElement, WithElementType {
   treatAsTitle?: boolean;
   pinned?: boolean;
+  align?: 'left' | 'center' | 'right';
   children: {
     type: string;
     treatAsTitle?: boolean;
     pinned?: boolean;
+    align?: 'left' | 'center' | 'right';
     children: TableElement['children'] | Text[];
   }[];
 }
