@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { ReactEditor, RenderElementProps, useModal, useSlateStatic } from '@quadrats/react';
 import { Icon } from '@quadrats/react/components';
@@ -11,7 +11,13 @@ import { Transforms } from 'slate';
 import { TableElement } from '@quadrats/common/table';
 import { TableScrollContext } from '../contexts/TableScrollContext';
 import { useTableCellAlign, useTableCellAlignStatus } from '../hooks/useTableCell';
-import { getTableElements, getColumnWidths, columnWidthToCSS, getColumnWidthDisplay } from '../utils/helper';
+import {
+  getTableElements,
+  getColumnWidths,
+  columnWidthToCSS,
+  getColumnWidthDisplay,
+  calculateTableMinWidth,
+} from '../utils/helper';
 
 function TableMain(props: RenderElementProps<TableElement>) {
   const { attributes, children } = props;
@@ -23,20 +29,47 @@ function TableMain(props: RenderElementProps<TableElement>) {
   const { isReachMaximumColumns, isReachMaximumRows, tableElement } = useTableMetadata();
   const { tableSelectedOn } = useTableState();
 
-  // sizing
-  const { tableBodyElement } = getTableElements(tableElement);
-  const firstRowCells = tableBodyElement?.children[0].children;
-
-  // 獲取欄位寬度
-  const columnWidths = useMemo(() => getColumnWidths(tableElement), [tableElement]);
-
   // Table align functions
   const setAlign = useTableCellAlign(tableElement, editor);
   const getAlign = useTableCellAlignStatus(tableElement, editor);
 
   const tablePath = ReactEditor.findPath(editor, tableElement);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const tableRef = useRef<HTMLTableElement>(null);
   const [scrollTop, setScrollTop] = useState<number>(0);
+  const [tableWidth, setTableWidth] = useState<number>(0);
+
+  // sizing
+  const { tableBodyElement } = getTableElements(tableElement);
+  const firstRowCells = tableBodyElement?.children[0].children;
+
+  // 獲取欄位寬度（傳入 tableWidth 以支援混合模式）
+  const columnWidths = useMemo(() => getColumnWidths(tableElement, tableWidth), [tableElement, tableWidth]);
+
+  // 計算 table 的最小寬度（支援混合模式的 overflow）
+  const tableMinWidth = useMemo(() => calculateTableMinWidth(columnWidths), [columnWidths]);
+
+  // 監聽 table 寬度變化
+  useEffect(() => {
+    const { current: table } = tableRef;
+
+    if (!table) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setTableWidth(entry.contentRect.width);
+      }
+    });
+
+    resizeObserver.observe(table);
+
+    // 初始化寬度
+    setTableWidth(table.getBoundingClientRect().width);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const { current: scrollContainer } = scrollRef;
@@ -128,10 +161,26 @@ function TableMain(props: RenderElementProps<TableElement>) {
       />
       <div ref={scrollRef} className="qdr-table__scrollContainer">
         <TableScrollContext.Provider value={scrollContextValue}>
-          <table {...attributes} className="qdr-table__main">
+          <table
+            {...attributes}
+            ref={(node) => {
+              // 合併兩個 refs
+              tableRef.current = node;
+
+              if (typeof attributes.ref === 'function') {
+                attributes.ref(node);
+              } else if (attributes.ref) {
+                (attributes.ref as RefObject<HTMLTableElement | null>).current = node;
+              }
+            }}
+            className="qdr-table__main"
+            style={{
+              minWidth: tableMinWidth,
+            }}
+          >
             <colgroup>
               {columnWidths.map((width, index) => (
-                <col key={index} style={{ width: columnWidthToCSS(width) }} />
+                <col key={index} style={{ width: columnWidthToCSS(width), minWidth: columnWidthToCSS(width) }} />
               ))}
             </colgroup>
             {children}
@@ -140,7 +189,14 @@ function TableMain(props: RenderElementProps<TableElement>) {
       </div>
       <div className="qdr-table__size-indicators">
         {firstRowCells?.map((_, colIndex) => (
-          <div key={colIndex} className="qdr-table__size-indicator">
+          <div
+            key={colIndex}
+            className="qdr-table__size-indicator"
+            style={{
+              width: columnWidthToCSS(columnWidths[colIndex]),
+              minWidth: columnWidthToCSS(columnWidths[colIndex]),
+            }}
+          >
             <div className="qdr-table__size">{getColumnWidthDisplay(columnWidths[colIndex])}</div>
           </div>
         ))}

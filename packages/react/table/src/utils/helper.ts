@@ -325,11 +325,109 @@ export function getAlignFromCells(cells: Element[]): AlignValue {
 }
 
 /**
- * 獲取表格的欄位寬度陣列
- * @param tableElement - 表格最外層元素
- * @returns 欄位寬度陣列，如果沒有設定則返回平均分配的 percentage
+ * 常數：釘選欄位的最大總寬度百分比
  */
-export function getColumnWidths(tableElement: TableElement): ColumnWidth[] {
+export const MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE = 40;
+
+/**
+ * 獲取釘選欄位的資訊
+ * @param tableElement - 表格最外層元素
+ * @returns 釘選欄位的索引陣列和總寬度百分比
+ */
+export function getPinnedColumnsInfo(tableElement: TableElement): {
+  pinnedColumnIndices: number[];
+  totalPinnedPercentage: number;
+} {
+  const { tableBodyElement } = getTableElements(tableElement);
+
+  if (!tableBodyElement || !Element.isElement(tableBodyElement)) {
+    return { pinnedColumnIndices: [], totalPinnedPercentage: 0 };
+  }
+
+  const firstRow = tableBodyElement.children[0];
+
+  if (!Element.isElement(firstRow)) {
+    return { pinnedColumnIndices: [], totalPinnedPercentage: 0 };
+  }
+
+  const pinnedColumnIndices: number[] = [];
+  let totalPinnedPercentage = 0;
+
+  firstRow.children.forEach((cell, index) => {
+    if (Element.isElement(cell) && cell.treatAsTitle && cell.pinned) {
+      pinnedColumnIndices.push(index);
+
+      // 如果有設定 columnWidths，使用設定的寬度
+      if (tableElement.columnWidths && tableElement.columnWidths[index]) {
+        const width = tableElement.columnWidths[index];
+
+        if (width.type === 'percentage') {
+          totalPinnedPercentage += width.value;
+        }
+      }
+    }
+  });
+
+  return { pinnedColumnIndices, totalPinnedPercentage };
+}
+
+/**
+ * 強制調整釘選欄位寬度以符合最大限制
+ * @param columnWidths - 當前欄位寬度陣列
+ * @param pinnedColumnIndices - 釘選欄位索引陣列
+ * @returns 調整後的欄位寬度陣列
+ */
+export function enforcePinnedColumnsMaxWidth(
+  columnWidths: ColumnWidth[],
+  pinnedColumnIndices: number[],
+): ColumnWidth[] {
+  if (pinnedColumnIndices.length === 0) {
+    return columnWidths;
+  }
+
+  // 計算釘選欄位的總寬度
+  let totalPinnedPercentage = 0;
+
+  pinnedColumnIndices.forEach((index) => {
+    const width = columnWidths[index];
+
+    if (width && width.type === 'percentage') {
+      totalPinnedPercentage += width.value;
+    }
+  });
+
+  // 如果超過最大限制，按比例縮減
+  if (totalPinnedPercentage > MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE) {
+    const scaleFactor = MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE / totalPinnedPercentage;
+    const newWidths = [...columnWidths];
+
+    pinnedColumnIndices.forEach((index) => {
+      const width = newWidths[index];
+
+      if (width && width.type === 'percentage') {
+        newWidths[index] = {
+          type: 'percentage',
+          value: Math.round(width.value * scaleFactor * 10) / 10,
+        };
+      }
+    });
+
+    return newWidths;
+  }
+
+  return columnWidths;
+}
+
+/**
+ * 獲取表格的欄位寬度陣列
+ * 當有釘選欄位時：
+ * - 釘選欄位使用 percentage（總和不超過 40%）
+ * - 未釘選欄位使用 pixel（基於剩餘空間平均分配）
+ * @param tableElement - 表格最外層元素
+ * @param tableWidth - 表格容器的實際寬度（pixel），用於計算 pixel 寬度
+ * @returns 欄位寬度陣列
+ */
+export function getColumnWidths(tableElement: TableElement, tableWidth?: number): ColumnWidth[] {
   const tableStructure = getTableElements(tableElement);
   const { tableBodyElement } = tableStructure;
 
@@ -345,9 +443,55 @@ export function getColumnWidths(tableElement: TableElement): ColumnWidth[] {
 
   const columnCount = firstRow.children.length;
 
-  // 如果 tableElement 有 columnWidths，使用它
+  // 獲取釘選欄位資訊
+  const { pinnedColumnIndices } = getPinnedColumnsInfo(tableElement);
+  const hasPinnedColumns = pinnedColumnIndices.length > 0;
+
+  // 如果 tableElement 有 columnWidths
   if (tableElement.columnWidths && tableElement.columnWidths.length === columnCount) {
-    return [...tableElement.columnWidths];
+    let widths = [...tableElement.columnWidths];
+
+    // 強制檢查釘選欄位是否超過 40%，如果超過則調整
+    if (hasPinnedColumns) {
+      widths = enforcePinnedColumnsMaxWidth(widths, pinnedColumnIndices);
+    }
+
+    return widths;
+  }
+
+  // 如果沒有設定 columnWidths，需要初始化
+  // 如果有釘選欄位，使用混合模式
+  if (hasPinnedColumns && tableWidth) {
+    const widths: ColumnWidth[] = [];
+
+    // 先計算釘選欄位的總寬度（平均分配，但不超過 40%）
+    const pinnedPercentagePerColumn = Math.min(
+      Math.round((MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE / pinnedColumnIndices.length) * 10) / 10,
+      MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE,
+    );
+
+    // 計算實際釘選欄位總百分比
+    const actualPinnedPercentage = Math.min(
+      pinnedPercentagePerColumn * pinnedColumnIndices.length,
+      MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE,
+    );
+
+    // 計算剩餘空間（pixel）
+    const remainingPercentage = 100 - actualPinnedPercentage;
+    const remainingPixelWidth = (tableWidth * remainingPercentage) / 100;
+    const unpinnedColumnCount = columnCount - pinnedColumnIndices.length;
+    const pixelWidthPerColumn = unpinnedColumnCount > 0 ? Math.floor(remainingPixelWidth / unpinnedColumnCount) : 0;
+
+    // 建立寬度陣列
+    for (let i = 0; i < columnCount; i++) {
+      if (pinnedColumnIndices.includes(i)) {
+        widths.push({ type: 'percentage', value: pinnedPercentagePerColumn });
+      } else {
+        widths.push({ type: 'pixel', value: pixelWidthPerColumn });
+      }
+    }
+
+    return widths;
   }
 
   // 否則返回平均分配的 percentage（精確到小數點後一位）
@@ -518,19 +662,33 @@ export function calculateColumnWidthsAfterDelete(currentWidths: ColumnWidth[], d
 
 /**
  * 計算拖曳後的欄位寬度
- * 此函數會智慧處理混合的固定欄位和彈性欄位：
- * - 如果當前欄位或下一欄位是固定寬度（pixel），則不進行調整
- * - 只有兩個都是彈性欄位（percentage）時才進行寬度調整
+ * 處理釘選欄位的特殊邏輯：
+ * - 情況 1：未釘選欄位（pixel）與未釘選欄位（pixel）之間：直接改變 pixel 值，允許超出容器
+ * - 情況 2：釘選欄位（percentage）與釘選欄位（percentage）之間：互相調整，且總和不超過 40%
+ * - 情況 3：釘選欄位（percentage）與未釘選欄位（pixel）之間：
+ *   * 只調整釘選欄位的百分比（不超過 40% 總限制）
+ *   * 當 table 未溢出（寬度 < container）時，重新計算所有未釘選欄位的 pixel 值以維持 100%
+ *   * 當 table 已溢出時，只調整下一個欄位的 pixel 值
+ *   * 當達到 40% 上限時，停止調整
+ * - 預設情況：兩個都是 percentage 但都不是釘選欄位（正常模式）
  *
  * @param currentWidths - 當前的欄位寬度陣列
  * @param columnIndex - 被調整的欄位索引
  * @param deltaPercentage - 寬度變化量（百分比）
+ * @param deltaPixel - 寬度變化量（pixel）
+ * @param pinnedColumnIndices - 釘選欄位的索引陣列
+ * @param tableWidth - 表格的實際寬度（pixel），用於計算混合模式下的 pixel 值
+ * @param containerWidth - 容器的寬度（pixel），用於判斷是否溢出
  * @returns 新的欄位寬度陣列
  */
 export function calculateResizedColumnWidths(
   currentWidths: ColumnWidth[],
   columnIndex: number,
   deltaPercentage: number,
+  deltaPixel: number,
+  tableWidth: number,
+  containerWidth: number,
+  pinnedColumnIndices: number[] = [],
 ): ColumnWidth[] {
   const newWidths = [...currentWidths];
   const nextColumnIndex = columnIndex + 1;
@@ -542,34 +700,241 @@ export function calculateResizedColumnWidths(
 
   const currentCol = newWidths[columnIndex];
   const nextCol = newWidths[nextColumnIndex];
+  const isCurrentPinned = pinnedColumnIndices.includes(columnIndex);
+  const isNextPinned = pinnedColumnIndices.includes(nextColumnIndex);
 
-  // 如果任一欄位是固定寬度，則不進行調整
-  // 未來可以擴展為：調整彈性欄位的寬度來適應固定欄位
-  if (currentCol.type === 'pixel' || nextCol.type === 'pixel') {
+  // 情況 1：當前欄位是 pixel（未釘選），下一欄位也是 pixel
+  if (currentCol.type === 'pixel' && nextCol.type === 'pixel') {
+    // 調整當前欄位的 pixel 值，但需要確保總寬度至少 100%
+    const currentPixel = currentCol.value;
+    const nextPixel = nextCol.value;
+
+    // 計算新的當前欄位寬度
+    let newCurrentPixel = Math.max(50, currentPixel + deltaPixel); // 最小 50px
+
+    // 計算新的下一欄位寬度
+    let newNextPixel = Math.max(50, nextPixel - deltaPixel); // 最小 50px
+
+    // 計算所有未釘選欄位的索引
+    const unpinnedIndices = newWidths.map((_, idx) => idx).filter((idx) => !pinnedColumnIndices.includes(idx));
+
+    // 計算釘選欄位佔據的百分比對應的 pixel 值
+    const pinnedPercentageTotal = pinnedColumnIndices.reduce((sum, idx) => {
+      return sum + (newWidths[idx].type === 'percentage' ? newWidths[idx].value : 0);
+    }, 0);
+
+    // 計算未釘選欄位需要佔據的最小空間（確保總和至少 100%）
+    const remainingPercentage = 100 - pinnedPercentageTotal;
+    const minRemainingPixelWidth = (containerWidth * remainingPercentage) / 100;
+
+    // 計算調整後所有未釘選欄位的總 pixel 值
+    let totalUnpinnedPixels = 0;
+
+    unpinnedIndices.forEach((idx) => {
+      if (idx === columnIndex) {
+        totalUnpinnedPixels += newCurrentPixel;
+      } else if (idx === nextColumnIndex) {
+        totalUnpinnedPixels += newNextPixel;
+      } else if (newWidths[idx].type === 'pixel') {
+        totalUnpinnedPixels += newWidths[idx].value;
+      }
+    });
+
+    // 如果調整後總和會小於最小要求（100%），則需要調整以維持 100%
+    if (totalUnpinnedPixels < minRemainingPixelWidth) {
+      const deficit = minRemainingPixelWidth - totalUnpinnedPixels;
+
+      // 將差額平均分配給當前和下一個欄位
+      const halfDeficit = Math.ceil(deficit / 2);
+
+      newCurrentPixel += halfDeficit;
+      newNextPixel += deficit - halfDeficit;
+    }
+
+    newWidths[columnIndex] = { type: 'pixel', value: Math.floor(newCurrentPixel) };
+    newWidths[nextColumnIndex] = { type: 'pixel', value: Math.floor(newNextPixel) };
+
     return newWidths;
   }
 
-  // 兩個都是 percentage，進行調整
-  const currentWidth = currentCol.value;
-  const nextWidth = nextCol.value;
+  // 情況 2：當前欄位是 percentage（釘選），下一欄位也是 percentage（釘選）
+  if (currentCol.type === 'percentage' && nextCol.type === 'percentage' && isCurrentPinned && isNextPinned) {
+    const currentWidth = currentCol.value;
+    const nextWidth = nextCol.value;
 
-  // 計算新寬度（保留小數點後一位）
-  let newCurrentWidth = Math.round((currentWidth + deltaPercentage) * 10) / 10;
-  let newNextWidth = Math.round((nextWidth - deltaPercentage) * 10) / 10;
+    // 計算新寬度
+    let newCurrentWidth = Math.round((currentWidth + deltaPercentage) * 10) / 10;
+    let newNextWidth = Math.round((nextWidth - deltaPercentage) * 10) / 10;
 
-  // 確保寬度不小於最小值（5%）
-  const minWidth = 5;
+    // 確保寬度不小於最小值（5%）
+    const minWidth = 5;
 
-  if (newCurrentWidth < minWidth) {
-    newCurrentWidth = minWidth;
-    newNextWidth = Math.round((currentWidth + nextWidth - minWidth) * 10) / 10;
-  } else if (newNextWidth < minWidth) {
-    newNextWidth = minWidth;
-    newCurrentWidth = Math.round((currentWidth + nextWidth - minWidth) * 10) / 10;
+    if (newCurrentWidth < minWidth) {
+      newCurrentWidth = minWidth;
+      newNextWidth = Math.round((currentWidth + nextWidth - minWidth) * 10) / 10;
+    } else if (newNextWidth < minWidth) {
+      newNextWidth = minWidth;
+      newCurrentWidth = Math.round((currentWidth + nextWidth - minWidth) * 10) / 10;
+    }
+
+    // 確保釘選欄位總和不超過 40%
+    const otherPinnedTotal = pinnedColumnIndices
+      .filter((idx) => idx !== columnIndex && idx !== nextColumnIndex)
+      .reduce((sum, idx) => sum + (newWidths[idx].type === 'percentage' ? newWidths[idx].value : 0), 0);
+
+    const twoColumnsTotal = newCurrentWidth + newNextWidth;
+
+    if (otherPinnedTotal + twoColumnsTotal > MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE) {
+      // 按比例縮減這兩個欄位
+      const allowedTotal = MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE - otherPinnedTotal;
+      const scale = allowedTotal / twoColumnsTotal;
+
+      newCurrentWidth = Math.round(newCurrentWidth * scale * 10) / 10;
+      newNextWidth = Math.round(newNextWidth * scale * 10) / 10;
+    }
+
+    newWidths[columnIndex] = { type: 'percentage', value: newCurrentWidth };
+    newWidths[nextColumnIndex] = { type: 'percentage', value: newNextWidth };
+
+    return newWidths;
   }
 
-  newWidths[columnIndex] = { type: 'percentage', value: newCurrentWidth };
-  newWidths[nextColumnIndex] = { type: 'percentage', value: newNextWidth };
+  // 情況 3：當前欄位是 percentage（釘選），下一欄位是 pixel（未釘選）
+  // 調整釘選欄位的百分比，並根據是否溢出決定如何處理未釘選欄位
+  if (currentCol.type === 'percentage' && nextCol.type === 'pixel' && isCurrentPinned && !isNextPinned) {
+    const currentWidth = currentCol.value;
+
+    // 計算新的釘選欄位寬度
+    let newCurrentWidth = Math.round((currentWidth + deltaPercentage) * 10) / 10;
+
+    // 確保釘選欄位不小於最小值（5%）
+    const minPercentage = 5;
+
+    newCurrentWidth = Math.max(minPercentage, newCurrentWidth);
+
+    // 確保所有釘選欄位總和不超過 40%
+    const otherPinnedTotal = pinnedColumnIndices
+      .filter((idx) => idx !== columnIndex)
+      .reduce((sum, idx) => sum + (newWidths[idx].type === 'percentage' ? newWidths[idx].value : 0), 0);
+
+    const maxAllowedWidth = MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE - otherPinnedTotal;
+
+    // 計算調整前後的實際寬度
+    const beforeAdjustWidth = Math.min(currentWidth, maxAllowedWidth);
+    const afterAdjustWidth = Math.min(newCurrentWidth, maxAllowedWidth);
+
+    // 如果調整前後的寬度相同（表示已經被限制在上限），則不調整任何欄位
+    if (Math.abs(afterAdjustWidth - beforeAdjustWidth) < 0.1) {
+      return newWidths;
+    }
+
+    // 應用上限限制
+    newCurrentWidth = afterAdjustWidth;
+
+    // 更新當前釘選欄位的寬度
+    newWidths[columnIndex] = { type: 'percentage', value: newCurrentWidth };
+
+    // 判斷是否需要重新分配所有未釘選欄位
+    // 只有當 table 未溢出（tableWidth < containerWidth）時才需要重新分配以維持 100%
+    const shouldRedistribute =
+      tableWidth && containerWidth && tableWidth > 0 && containerWidth > 0 && tableWidth <= containerWidth;
+
+    if (shouldRedistribute) {
+      // Table 未溢出：重新計算所有未釘選欄位的 pixel 值以維持 100%
+      // 計算所有釘選欄位的總百分比
+      const totalPinnedPercentage = pinnedColumnIndices.reduce((sum, idx) => {
+        const width = idx === columnIndex ? newCurrentWidth : newWidths[idx].value;
+
+        return sum + (newWidths[idx].type === 'percentage' ? width : 0);
+      }, 0);
+
+      // 計算剩餘空間（給未釘選欄位）
+      const remainingPercentage = 100 - totalPinnedPercentage;
+      const remainingPixelWidth = (tableWidth * remainingPercentage) / 100;
+
+      // 計算未釘選欄位的數量
+      const unpinnedIndices = newWidths.map((_, idx) => idx).filter((idx) => !pinnedColumnIndices.includes(idx));
+
+      const unpinnedCount = unpinnedIndices.length;
+
+      if (unpinnedCount > 0) {
+        // 平均分配剩餘空間給所有未釘選欄位
+        const pixelPerColumn = Math.floor(remainingPixelWidth / unpinnedCount);
+        const minPixel = 50; // 最小 50px
+
+        unpinnedIndices.forEach((idx) => {
+          newWidths[idx] = { type: 'pixel', value: Math.max(minPixel, pixelPerColumn) };
+        });
+      }
+    } else {
+      // Table 已溢出
+      // 調整中可能會有兩種情況：
+      // * 情況 1: table 寬度 >= container 寬度 -> 只調整釘選欄位，不調整未釘選欄位
+      // * 情況 2: table 寬度 < container 寬度 -> 調整釘選欄位後，調整下一個未釘選欄位的 pixel 值，以符合 100%
+
+      // 計算所有釘選欄位的總百分比
+      const totalPinnedPercentage = pinnedColumnIndices.reduce((sum, idx) => {
+        const width = idx === columnIndex ? newCurrentWidth : newWidths[idx].value;
+
+        return sum + (newWidths[idx].type === 'percentage' ? width : 0);
+      }, 0);
+
+      // 計算未釘選欄位需要佔據的最小空間（確保總和至少 100%）
+      const remainingPercentage = 100 - totalPinnedPercentage;
+      const minRemainingPixelWidth = (containerWidth * remainingPercentage) / 100;
+
+      // 計算所有未釘選欄位的索引
+      const unpinnedIndices = newWidths.map((_, idx) => idx).filter((idx) => !pinnedColumnIndices.includes(idx));
+
+      // 計算調整 nextCol 後的值
+      let newNextWidth = nextCol.value;
+
+      // 計算如果調整 nextCol，所有未釘選欄位的總 pixel 值
+      const totalUnpinnedPixels = unpinnedIndices.reduce(
+        (acc, idx) => acc + (newWidths[idx].type === 'pixel' ? newWidths[idx].value : 0),
+        0,
+      );
+
+      // 如果調整後總和會小於最小要求（100%），則需要確保 nextCol 不會太小
+      if (totalUnpinnedPixels < minRemainingPixelWidth) {
+        // 計算其他未釘選欄位的總和
+        const otherUnpinnedPixels = unpinnedIndices
+          .filter((idx) => idx !== nextColumnIndex)
+          .reduce((sum, idx) => sum + (newWidths[idx].type === 'pixel' ? newWidths[idx].value : 0), 0);
+
+        // nextCol 需要補足差額
+        newNextWidth = Math.ceil(minRemainingPixelWidth - otherUnpinnedPixels);
+      }
+
+      newWidths[nextColumnIndex] = { type: 'pixel', value: Math.floor(newNextWidth) };
+    }
+
+    return newWidths;
+  }
+
+  // 預設情況：兩個都是 percentage 但都不是釘選欄位（正常模式）
+  if (currentCol.type === 'percentage' && nextCol.type === 'percentage') {
+    const currentWidth = currentCol.value;
+    const nextWidth = nextCol.value;
+
+    let newCurrentWidth = Math.round((currentWidth + deltaPercentage) * 10) / 10;
+    let newNextWidth = Math.round((nextWidth - deltaPercentage) * 10) / 10;
+
+    const minWidth = 5;
+
+    if (newCurrentWidth < minWidth) {
+      newCurrentWidth = minWidth;
+      newNextWidth = Math.round((currentWidth + nextWidth - minWidth) * 10) / 10;
+    } else if (newNextWidth < minWidth) {
+      newNextWidth = minWidth;
+      newCurrentWidth = Math.round((currentWidth + nextWidth - minWidth) * 10) / 10;
+    }
+
+    newWidths[columnIndex] = { type: 'percentage', value: newCurrentWidth };
+    newWidths[nextColumnIndex] = { type: 'percentage', value: newNextWidth };
+
+    return newWidths;
+  }
 
   return newWidths;
 }
@@ -600,4 +965,154 @@ export function getColumnWidthDisplay(width: ColumnWidth): string {
   }
 
   return `${width.value}px`;
+}
+
+/**
+ * 移動 columnWidths 陣列中的元素位置
+ * @param currentWidths - 當前的欄位寬度陣列
+ * @param fromIndex - 來源索引
+ * @param toIndex - 目標索引
+ * @returns 新的欄位寬度陣列
+ */
+export function moveColumnWidth(currentWidths: ColumnWidth[], fromIndex: number, toIndex: number): ColumnWidth[] {
+  if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= currentWidths.length) {
+    return currentWidths;
+  }
+
+  const newWidths = [...currentWidths];
+  const [movedWidth] = newWidths.splice(fromIndex, 1);
+
+  newWidths.splice(toIndex, 0, movedWidth);
+
+  return newWidths;
+}
+
+/**
+ * 將 columnWidths 轉換為混合模式（釘選欄位用 percentage，未釘選欄位用 pixel）
+ * @param currentWidths - 當前的欄位寬度陣列
+ * @param pinnedColumnIndices - 釘選欄位的索引陣列
+ * @param tableWidth - 表格的實際寬度（pixel）
+ * @returns 轉換後的欄位寬度陣列
+ */
+export function convertToMixedWidthMode(
+  currentWidths: ColumnWidth[],
+  pinnedColumnIndices: number[],
+  tableWidth: number,
+): ColumnWidth[] {
+  if (pinnedColumnIndices.length === 0 || tableWidth === 0) {
+    return currentWidths;
+  }
+
+  const newWidths: ColumnWidth[] = [];
+
+  // 計算釘選欄位的總百分比
+  let totalPinnedPercentage = 0;
+
+  pinnedColumnIndices.forEach((index) => {
+    const width = currentWidths[index];
+
+    if (width) {
+      if (width.type === 'percentage') {
+        totalPinnedPercentage += width.value;
+      } else {
+        // 如果是 pixel，轉換為百分比
+        const percentage = (width.value / tableWidth) * 100;
+
+        totalPinnedPercentage += percentage;
+      }
+    }
+  });
+
+  // 確保釘選欄位總和不超過 40%
+  if (totalPinnedPercentage > MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE) {
+    const scaleFactor = MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE / totalPinnedPercentage;
+
+    totalPinnedPercentage = MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE;
+
+    // 調整釘選欄位的百分比
+    currentWidths.forEach((width, index) => {
+      if (pinnedColumnIndices.includes(index)) {
+        if (width.type === 'percentage') {
+          currentWidths[index] = {
+            type: 'percentage',
+            value: Math.round(width.value * scaleFactor * 10) / 10,
+          };
+        } else {
+          const percentage = (width.value / tableWidth) * 100;
+
+          currentWidths[index] = {
+            type: 'percentage',
+            value: Math.round(percentage * scaleFactor * 10) / 10,
+          };
+        }
+      }
+    });
+  }
+
+  // 計算剩餘空間（用於未釘選欄位）
+  const remainingPercentage = 100 - totalPinnedPercentage;
+  const remainingPixelWidth = (tableWidth * remainingPercentage) / 100;
+  const unpinnedColumnCount = currentWidths.length - pinnedColumnIndices.length;
+  const pixelWidthPerColumn = unpinnedColumnCount > 0 ? Math.floor(remainingPixelWidth / unpinnedColumnCount) : 0;
+
+  // 建立新的寬度陣列
+  currentWidths.forEach((width, index) => {
+    if (pinnedColumnIndices.includes(index)) {
+      // 釘選欄位：使用 percentage
+      if (width.type === 'percentage') {
+        newWidths.push(width);
+      } else {
+        // 將 pixel 轉換為 percentage（已經在上面調整過了）
+        const percentage = (width.value / tableWidth) * 100;
+        const adjustedPercentage = Math.round(percentage * 10) / 10;
+
+        newWidths.push({ type: 'percentage', value: adjustedPercentage });
+      }
+    } else {
+      // 未釘選欄位：使用 pixel
+      newWidths.push({ type: 'pixel', value: pixelWidthPerColumn });
+    }
+  });
+
+  return newWidths;
+}
+
+/**
+ * 計算 table 的總寬度（用於設定 min-width 以支援 overflow）
+ * 此函數會將所有 columnWidths 的百分比和 pixel 值加總：
+ * - percentage: 保留為百分比
+ * - pixel: 直接累加
+ *
+ * @param columnWidths - 欄位寬度陣列
+ * @returns 總寬度的 CSS 字串（例如 "calc(50% + 400px)" 或 "100%" 或 "800px"）
+ */
+export function calculateTableMinWidth(columnWidths: ColumnWidth[]): string {
+  if (columnWidths.length === 0) {
+    return '100%';
+  }
+
+  let totalPercentage = 0;
+  let totalPixels = 0;
+
+  columnWidths.forEach((width) => {
+    if (width.type === 'percentage') {
+      totalPercentage += width.value;
+    } else {
+      totalPixels += width.value;
+    }
+  });
+
+  // 只有 percentage，沒有 pixel
+  if (totalPixels === 0) {
+    return `${totalPercentage.toFixed(1)}%`;
+  }
+
+  // 只有 pixel，沒有 percentage
+  if (totalPercentage === 0) {
+    return `${totalPixels}px`;
+  }
+
+  // 混合模式：有 percentage 也有 pixel
+  // 使用 calc() 來結合兩者
+  return `calc(${totalPercentage.toFixed(1)}% + ${totalPixels}px)`;
 }

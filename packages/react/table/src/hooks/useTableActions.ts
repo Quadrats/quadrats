@@ -20,6 +20,9 @@ import {
   calculateColumnWidthsAfterAdd,
   calculateColumnWidthsAfterDelete,
   setColumnWidths,
+  moveColumnWidth,
+  convertToMixedWidthMode,
+  getPinnedColumnsInfo,
 } from '../utils/helper';
 
 export function useTableActions(element: RenderTableElementProps['element']) {
@@ -614,7 +617,22 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
         if (!tableStructure) return;
 
-        const { tableHeaderElement, tableBodyElement } = tableStructure;
+        const { tableHeaderElement, tableBodyElement, tableMainElement } = tableStructure;
+
+        // 獲取 table 的實際寬度（用於轉換為混合模式）
+        let tableWidth = 0;
+
+        try {
+          if (tableMainElement) {
+            const tableDOMElement = ReactEditor.toDOMNode(editor, tableMainElement);
+
+            if (tableDOMElement instanceof HTMLElement) {
+              tableWidth = tableDOMElement.getBoundingClientRect().width;
+            }
+          }
+        } catch (error) {
+          console.warn('Failed to get table width:', error);
+        }
 
         const processContainer = (containerElement: TableElement) => {
           if (!Element.isElement(containerElement)) return;
@@ -672,6 +690,56 @@ export function useTableActions(element: RenderTableElementProps['element']) {
                 });
               }
             }
+
+            // 調整 columnWidths：將 columnIndex 的寬度移動到 actualTargetIndex
+            const currentWidths = getColumnWidths(element);
+
+            if (currentWidths.length > 0) {
+              const movedWidths = moveColumnWidth(currentWidths, columnIndex, actualTargetIndex);
+
+              // 檢查移動後是否還有 pinned columns
+              const { pinnedColumnIndices } = getPinnedColumnsInfo(element);
+
+              // 更新釘選欄位索引（移除當前欄位，並調整其他欄位的索引）
+              const updatedPinnedIndices = pinnedColumnIndices
+                .filter((idx) => idx !== columnIndex)
+                .map((idx) => {
+                  if (idx > columnIndex && idx <= actualTargetIndex) return idx - 1;
+
+                  return idx;
+                })
+                .sort((a, b) => a - b);
+
+              // 如果還有 pinned columns，轉換為混合模式；否則可能轉回全 percentage 模式
+              if (updatedPinnedIndices.length > 0 && tableWidth > 0) {
+                const mixedWidths = convertToMixedWidthMode(movedWidths, updatedPinnedIndices, tableWidth);
+
+                setColumnWidths(editor, element, mixedWidths);
+              } else {
+                // 沒有 pinned columns 了，使用原本的寬度
+                setColumnWidths(editor, element, movedWidths);
+              }
+            }
+          } else {
+            // 即使沒有移動位置，也需要檢查是否需要更新寬度模式
+            const currentWidths = getColumnWidths(element);
+
+            if (currentWidths.length > 0) {
+              const { pinnedColumnIndices } = getPinnedColumnsInfo(element);
+
+              // 移除當前欄位
+              const updatedPinnedIndices = pinnedColumnIndices
+                .filter((idx) => idx !== columnIndex)
+                .sort((a, b) => a - b);
+
+              // 如果還有 pinned columns，轉換為混合模式；否則可能轉回全 percentage 模式
+              if (updatedPinnedIndices.length > 0 && tableWidth > 0) {
+                const mixedWidths = convertToMixedWidthMode(currentWidths, updatedPinnedIndices, tableWidth);
+
+                setColumnWidths(editor, element, mixedWidths);
+              }
+              // 如果沒有 pinned columns，保持原樣（可能已經是全 percentage 了）
+            }
           }
         };
 
@@ -696,13 +764,28 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
         if (!tableStructure) return;
 
-        const { tableHeaderElement, tableBodyElement } = tableStructure;
+        const { tableHeaderElement, tableBodyElement, tableMainElement } = tableStructure;
 
         // 檢查是否已有 pinned columns（一致性規則檢查）
         const hasExistingPinnedColumns = hasAnyPinnedColumns(tableStructure);
 
         // 如果有現有的 pinned columns 且沒有提供自定義屬性，自動設置 pinned 以保持一致性
         const finalProps = customProps || (hasExistingPinnedColumns ? { pinned: true } : undefined);
+
+        // 獲取 table 的實際寬度（用於轉換為混合模式）
+        let tableWidth = 0;
+
+        try {
+          if (tableMainElement) {
+            const tableDOMElement = ReactEditor.toDOMNode(editor, tableMainElement);
+
+            if (tableDOMElement instanceof HTMLElement) {
+              tableWidth = tableDOMElement.getBoundingClientRect().width;
+            }
+          }
+        } catch (error) {
+          console.warn('Failed to get table width:', error);
+        }
 
         const processContainer = (containerElement: TableElement) => {
           if (!Element.isElement(containerElement)) return;
@@ -760,6 +843,48 @@ export function useTableActions(element: RenderTableElementProps['element']) {
                   to: toPath,
                 });
               }
+            }
+
+            // 調整 columnWidths：將 columnIndex 的寬度移動到 targetColumnIndex
+            const currentWidths = getColumnWidths(element);
+
+            if (currentWidths.length > 0) {
+              const movedWidths = moveColumnWidth(currentWidths, columnIndex, targetColumnIndex);
+
+              // 如果設定了 pinned，需要轉換為混合模式
+              if (finalProps?.pinned && tableWidth > 0) {
+                const { pinnedColumnIndices } = getPinnedColumnsInfo(element);
+
+                // 更新釘選欄位索引（因為欄位已經移動了）
+                const updatedPinnedIndices = pinnedColumnIndices
+                  .map((idx) => {
+                    if (idx === columnIndex) return targetColumnIndex;
+                    if (idx >= targetColumnIndex && idx < columnIndex) return idx + 1;
+
+                    return idx;
+                  })
+                  .concat(targetColumnIndex) // 加入新的釘選欄位
+                  .filter((idx, i, arr) => arr.indexOf(idx) === i) // 去重
+                  .sort((a, b) => a - b);
+
+                const mixedWidths = convertToMixedWidthMode(movedWidths, updatedPinnedIndices, tableWidth);
+
+                setColumnWidths(editor, element, mixedWidths);
+              } else {
+                setColumnWidths(editor, element, movedWidths);
+              }
+            }
+          } else if (finalProps?.pinned && tableWidth > 0) {
+            // 即使沒有移動位置，如果設定了 pinned，也需要轉換為混合模式
+            const currentWidths = getColumnWidths(element);
+
+            if (currentWidths.length > 0) {
+              const { pinnedColumnIndices } = getPinnedColumnsInfo(element);
+
+              const updatedPinnedIndices = [...new Set([...pinnedColumnIndices, columnIndex])].sort((a, b) => a - b);
+              const mixedWidths = convertToMixedWidthMode(currentWidths, updatedPinnedIndices, tableWidth);
+
+              setColumnWidths(editor, element, mixedWidths);
             }
           }
         };
