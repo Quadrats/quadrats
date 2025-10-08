@@ -151,7 +151,6 @@ function TableCell(props: RenderElementProps<TableElement>) {
         setTableHoveredOn(undefined);
       }}
       className={clsx('qdr-table__cell', {
-        'qdr-table__cell--resizing': true,
         'qdr-table__cell--header': isHeader || element.treatAsTitle,
         'qdr-table__cell--pinned': myColumnIsPinned,
         'qdr-table__cell--top-active': isSelectedInSameRow || (isSelectedInSameColumn && cellPosition.rowIndex === 0),

@@ -8,16 +8,10 @@ import { useTableMetadata } from '../hooks/useTableMetadata';
 import { useTableState } from '../hooks/useTableState';
 import { InlineToolbar, ToolbarGroupIcon, ToolbarIcon } from '@quadrats/react/toolbar';
 import { Transforms } from 'slate';
-import { TableElement } from '@quadrats/common/table';
+import { calculateTableMinWidth, columnWidthToCSS, TableElement } from '@quadrats/common/table';
 import { TableScrollContext } from '../contexts/TableScrollContext';
 import { useTableCellAlign, useTableCellAlignStatus } from '../hooks/useTableCell';
-import {
-  getTableElements,
-  getColumnWidths,
-  columnWidthToCSS,
-  getColumnWidthDisplay,
-  calculateTableMinWidth,
-} from '../utils/helper';
+import { getTableElements, getColumnWidths } from '../utils/helper';
 
 function TableMain(props: RenderElementProps<TableElement>) {
   const { attributes, children } = props;
@@ -108,7 +102,7 @@ function TableMain(props: RenderElementProps<TableElement>) {
           } as Partial<TableElement>,
           { at: tablePath },
         );
-      }, 150); // 150ms debounce
+      }, 300); // 300ms debounce
     };
 
     scrollContainer.addEventListener('scroll', handleScroll, false);
@@ -262,7 +256,7 @@ function TableMain(props: RenderElementProps<TableElement>) {
               zIndex: cell.pinned ? 2 : 1,
             }}
           >
-            <div className="qdr-table__size">{getColumnWidthDisplay(columnWidths[colIndex])}</div>
+            <div className="qdr-table__size">{columnWidthToCSS(columnWidths[colIndex])}</div>
           </div>
         ))}
       </div>

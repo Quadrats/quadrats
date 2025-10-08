@@ -10,6 +10,7 @@ import {
   TableRowTypeKey,
   TableCellTypeKey,
   TABLE_TYPES,
+  ColumnWidth,
 } from '@quadrats/common/table';
 import {
   CreateJsxSerializeElementOptions,
@@ -87,10 +88,17 @@ export function createJsxSerializeTable(options: CreateJsxSerializeTableOptions 
       render: (props) => {
         const { children } = props;
         const element = props.element as TableElement & WithElementParent;
+        const firstAncestor = getFirstAncestor<TableElement>(
+          element,
+          (node) => (node as QuadratsElement).type === tableType,
+        );
+
+        const columnWidths = firstAncestor?.columnWidths || ([] as ColumnWidth[]);
 
         return renderTableMain({
           children,
           element,
+          columnWidths,
         });
       },
     },

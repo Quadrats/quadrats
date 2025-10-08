@@ -346,6 +346,7 @@ $toolbar-z-index: 10;
 }
 
 .qdr-table__size-indicators {
+  display: none;
   overflow: hidden;
   position: absolute;
   z-index: 1;
@@ -356,7 +357,6 @@ $toolbar-z-index: 10;
   padding: 8px 0;
   pointer-events: none;
   transform: translateY(-100%);
-  display: flex;
   flex-flow: row nowrap;
   align-items: center;
 }

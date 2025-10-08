@@ -69,6 +69,26 @@ export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColum
 
       setIsResizing(true);
 
+      // **顯示 size indicators 容器**
+      const mainWrapper = tableDOMElement.closest('.qdr-table__mainWrapper');
+      const sizeIndicatorsContainer = mainWrapper?.querySelector('.qdr-table__size-indicators') as HTMLElement | null;
+
+      if (sizeIndicatorsContainer) {
+        sizeIndicatorsContainer.style.display = 'flex';
+      }
+
+      // **為當前 column 的所有 cell 添加 resizing class**
+      const allRows = tableDOMElement.querySelectorAll('tr');
+
+      allRows.forEach((row) => {
+        const cells = row.querySelectorAll('td, th');
+        const targetCell = cells[columnIndex];
+
+        if (targetCell) {
+          targetCell.classList.add('qdr-table__cell--resizing');
+        }
+      });
+
       const handleMouseMove = (moveEvent: MouseEvent) => {
         if (!resizeDataRef.current) return;
 
@@ -142,6 +162,26 @@ export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColum
       };
 
       const handleMouseUp = () => {
+        // **移除所有 resizing class**
+        const allRows = tableDOMElement.querySelectorAll('tr');
+
+        allRows.forEach((row) => {
+          const cells = row.querySelectorAll('td, th');
+          const targetCell = cells[columnIndex];
+
+          if (targetCell) {
+            targetCell.classList.remove('qdr-table__cell--resizing');
+          }
+        });
+
+        // **隱藏 size indicators 容器**
+        const mainWrapper = tableDOMElement.closest('.qdr-table__mainWrapper');
+        const sizeIndicatorsContainer = mainWrapper?.querySelector('.qdr-table__size-indicators') as HTMLElement | null;
+
+        if (sizeIndicatorsContainer) {
+          sizeIndicatorsContainer.style.display = 'none';
+        }
+
         // **在 mouseup 時才將最終寬度寫入 Slate**
         if (currentWidthsRef.current) {
           Editor.withoutNormalizing(editor, () => {
