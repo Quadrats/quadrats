@@ -1,4 +1,12 @@
-import { Editor, Element, isNodesTypeIn, PARAGRAPH_TYPE, Transforms } from '@quadrats/core';
+import {
+  Editor,
+  Element,
+  isNodesTypeIn,
+  PARAGRAPH_TYPE,
+  QuadratsElement,
+  QuadratsText,
+  Transforms,
+} from '@quadrats/core';
 import { Table, TableTypes } from './typings';
 import { TABLE_TYPES } from './constants';
 import { LIST_TYPES } from '@quadrats/common/list';
@@ -354,6 +362,43 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
 
         // 執行預設的 deleteBackward 行為
         deleteBackward(unit);
+      };
+
+      const { insertFragment } = editor;
+
+      editor.insertFragment = (fragment) => {
+        const cellEntry = Editor.above(editor, {
+          match: (n) => Element.isElement(n) && n.type === types.table_cell,
+        });
+
+        if (cellEntry) {
+          // 在 table cell 中貼上時，只保留文字內容，不保留結構
+          const textNodes: (QuadratsElement | QuadratsText)[] = [];
+
+          const extractText = (nodes: (QuadratsElement | QuadratsText)[]) => {
+            for (const node of nodes) {
+              if (Element.isElement(node)) {
+                extractText(node.children as QuadratsElement[]);
+              } else if (node.text !== undefined) {
+                textNodes.push(node);
+              }
+            }
+          };
+
+          extractText(fragment as QuadratsElement[]);
+
+          // 如果有文字節點，將它們包裝成一個 paragraph 插入
+          if (textNodes.length) {
+            const textContent = textNodes.map((node) => (node as QuadratsText).text).join('');
+
+            Transforms.insertText(editor, textContent);
+
+            return;
+          }
+        }
+
+        // 預設行為
+        insertFragment(fragment);
       };
 
       return editor;
