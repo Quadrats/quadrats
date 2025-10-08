@@ -328,11 +328,8 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
           if (titleEntry) {
             const [, titlePath] = titleEntry;
 
-            // 檢查 title 是否為空或只有空白
-            const titleText = Editor.string(editor, titlePath);
-
-            if (!titleText.trim() && Editor.isStart(editor, selection.anchor, titlePath)) {
-              // 在空的 table_title 開頭按 backspace，不執行任何操作
+            if (Editor.isStart(editor, selection.anchor, titlePath)) {
+              // 在 table_title 開頭按 backspace，不執行任何操作
               return;
             }
           }

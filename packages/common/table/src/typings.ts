@@ -29,6 +29,7 @@ export interface TableElement extends QuadratsElement, WithElementType {
   pinned?: boolean;
   align?: 'left' | 'center' | 'right';
   columnWidths?: ColumnWidth[]; // Array of column width definitions (percentage or pixel)
+  scrollPosition?: { scrollLeft: number; scrollTop: number }; // Scroll position for the table
   children: {
     type: string;
     treatAsTitle?: boolean;
