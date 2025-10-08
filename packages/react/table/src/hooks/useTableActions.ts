@@ -172,7 +172,20 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           const currentWidths = getColumnWidths(element);
 
           if (currentWidths.length > 0) {
-            const newWidths = calculateColumnWidthsAfterAdd(currentWidths, insertIndex);
+            // 獲取 table 的實際寬度
+            let tableWidth = 0;
+
+            const { tableMainElement } = tableStructure;
+
+            if (tableMainElement) {
+              const tableDOMElement = ReactEditor.toDOMNode(editor, tableMainElement);
+
+              if (tableDOMElement instanceof HTMLElement) {
+                tableWidth = tableDOMElement.getBoundingClientRect().width;
+              }
+            }
+
+            const newWidths = calculateColumnWidthsAfterAdd(currentWidths, insertIndex, tableWidth || undefined);
 
             setColumnWidths(editor, element, newWidths);
           }

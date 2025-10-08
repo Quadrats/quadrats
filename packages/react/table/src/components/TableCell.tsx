@@ -66,8 +66,7 @@ function TableCell(props: RenderElementProps<TableElement>) {
   const [columnButtonPosition, setColumnButtonPosition] = useState<{ top: number; left: number } | null>(null);
   const [cellStuckAtLeft, setCellStuckAtLeft] = useState<number | undefined>(undefined);
 
-  // Column resize hook - 最後一欄不需要 resize handle
-  const isLastColumn = cellPosition.columnIndex === columnCount - 1;
+  // Column resize
   const { isResizing, handleResizeStart } = useColumnResize({
     tableElement,
     columnIndex: cellPosition.columnIndex,
@@ -173,16 +172,14 @@ function TableCell(props: RenderElementProps<TableElement>) {
       }
     >
       {children}
-      {!isLastColumn && (
-        <div
-          contentEditable={false}
-          data-slate-editor={false}
-          className={clsx('qdr-table__cell__resize-handle', {
-            'qdr-table__cell__resize-handle--active': isResizing,
-          })}
-          onMouseDown={handleResizeStart}
-        />
-      )}
+      <div
+        contentEditable={false}
+        data-slate-editor={false}
+        className={clsx('qdr-table__cell__resize-handle', {
+          'qdr-table__cell__resize-handle--active': isResizing,
+        })}
+        onMouseDown={handleResizeStart}
+      />
       {focused && (
         <Portal getContainer={() => portalContainerRef.current || document.body}>
           <InlineToolbar

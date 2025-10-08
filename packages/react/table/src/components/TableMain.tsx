@@ -37,11 +37,15 @@ function TableMain(props: RenderElementProps<TableElement>) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLTableElement>(null);
   const [scrollTop, setScrollTop] = useState<number>(0);
+  const [scrollLeft, setScrollLeft] = useState<number>(0);
   const [tableWidth, setTableWidth] = useState<number>(0);
+  const scrollUpdateTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const isUpdatingScrollRef = useRef<boolean>(false); // 標記是否正在更新滾動位置
+  const previousColumnWidthsRef = useRef<string>(''); // 追蹤 columnWidths 的變化
 
   // sizing
   const { tableBodyElement } = getTableElements(tableElement);
-  const firstRowCells = tableBodyElement?.children[0].children;
+  const firstRowCells = tableBodyElement?.children[0].children as TableElement[] | undefined;
 
   // 獲取欄位寬度（傳入 tableWidth 以支援混合模式）
   const columnWidths = useMemo(() => getColumnWidths(tableElement, tableWidth), [tableElement, tableWidth]);
@@ -78,14 +82,73 @@ function TableMain(props: RenderElementProps<TableElement>) {
 
     const handleScroll = () => {
       setScrollTop(scrollContainer.scrollTop);
+      setScrollLeft(scrollContainer.scrollLeft);
+
+      // 如果正在程式化更新滾動位置，不要觸發 Slate 更新
+      if (isUpdatingScrollRef.current) {
+        return;
+      }
+
+      // 使用 debounce 來減少 Slate 更新頻率
+      if (scrollUpdateTimerRef.current) {
+        clearTimeout(scrollUpdateTimerRef.current);
+      }
+
+      scrollUpdateTimerRef.current = setTimeout(() => {
+        // 更新 tableElement 的 scrollPosition
+        const tablePath = ReactEditor.findPath(editor, tableElement);
+
+        Transforms.setNodes(
+          editor,
+          {
+            scrollPosition: {
+              scrollLeft: scrollContainer.scrollLeft,
+              scrollTop: scrollContainer.scrollTop,
+            },
+          } as Partial<TableElement>,
+          { at: tablePath },
+        );
+      }, 150); // 150ms debounce
     };
 
     scrollContainer.addEventListener('scroll', handleScroll, false);
 
     return () => {
       scrollContainer.removeEventListener('scroll', handleScroll, false);
+
+      if (scrollUpdateTimerRef.current) {
+        clearTimeout(scrollUpdateTimerRef.current);
+      }
     };
-  }, []);
+  }, [editor, tableElement]);
+
+  // 只在 columnWidths 改變時恢復滾動位置
+  useEffect(() => {
+    const { current: scrollContainer } = scrollRef;
+
+    if (!scrollContainer || !tableElement.scrollPosition) return;
+
+    // 檢查 columnWidths 是否真的改變了
+    const currentColumnWidthsStr = JSON.stringify(columnWidths);
+
+    if (previousColumnWidthsRef.current !== currentColumnWidthsStr) {
+      previousColumnWidthsRef.current = currentColumnWidthsStr;
+
+      // 標記正在更新，避免觸發 handleScroll
+      isUpdatingScrollRef.current = true;
+
+      // 使用 requestAnimationFrame 確保 DOM 已更新
+      requestAnimationFrame(() => {
+        scrollContainer.scrollLeft = tableElement.scrollPosition?.scrollLeft ?? 0;
+        scrollContainer.scrollTop = tableElement.scrollPosition?.scrollTop ?? 0;
+
+        // 重置標記
+        setTimeout(() => {
+          isUpdatingScrollRef.current = false;
+        }, 100);
+      });
+    }
+  }, [columnWidths, tableElement.scrollPosition]);
 
   const scrollContextValue = useMemo(() => ({ scrollTop, scrollRef }), [scrollTop, scrollRef]);
 
@@ -188,13 +251,15 @@ function TableMain(props: RenderElementProps<TableElement>) {
         </TableScrollContext.Provider>
       </div>
       <div className="qdr-table__size-indicators">
-        {firstRowCells?.map((_, colIndex) => (
+        {firstRowCells?.map((cell, colIndex) => (
           <div
             key={colIndex}
             className="qdr-table__size-indicator"
             style={{
               width: columnWidthToCSS(columnWidths[colIndex]),
               minWidth: columnWidthToCSS(columnWidths[colIndex]),
+              transform: cell.pinned ? 'none' : `translateX(-${scrollLeft}px)`,
+              zIndex: cell.pinned ? 2 : 1,
             }}
           >
             <div className="qdr-table__size">{getColumnWidthDisplay(columnWidths[colIndex])}</div>

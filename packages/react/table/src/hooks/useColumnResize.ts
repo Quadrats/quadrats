@@ -31,7 +31,10 @@ export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColum
     tableWidth: number;
     containerWidth: number;
     pinnedColumnIndices: number[];
+    tableDOMElement: HTMLTableElement;
   } | null>(null);
+
+  const currentWidthsRef = useRef<ColumnWidth[] | null>(null);
 
   const handleResizeStart = useCallback(
     (e: React.MouseEvent) => {
@@ -61,6 +64,7 @@ export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColum
         tableWidth: tableRect.width,
         containerWidth: containerRect.width,
         pinnedColumnIndices,
+        tableDOMElement,
       };
 
       setIsResizing(true);
@@ -68,7 +72,9 @@ export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColum
       const handleMouseMove = (moveEvent: MouseEvent) => {
         if (!resizeDataRef.current) return;
 
-        const { startX, startWidths, tableWidth, containerWidth, pinnedColumnIndices } = resizeDataRef.current;
+        const { startX, startWidths, tableWidth, containerWidth, pinnedColumnIndices, tableDOMElement } =
+          resizeDataRef.current;
+
         const deltaX = moveEvent.clientX - startX;
 
         // 將位移轉換為百分比
@@ -85,15 +91,67 @@ export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColum
           pinnedColumnIndices,
         );
 
-        // 使用 Editor.withoutNormalizing 來批次更新
-        Editor.withoutNormalizing(editor, () => {
-          setColumnWidths(editor, tableElement, newWidths);
-        });
+        // **儲存計算結果，但不更新 Slate**
+        currentWidthsRef.current = newWidths;
+
+        // **直接更新 DOM 的 <col> 元素**
+        const colgroup = tableDOMElement.querySelector('colgroup');
+
+        if (colgroup) {
+          const cols = colgroup.querySelectorAll('col');
+
+          newWidths.forEach((width, index) => {
+            const col = cols[index];
+
+            if (col) {
+              const cssWidth = width.type === 'percentage' ? `${width.value.toFixed(1)}%` : `${width.value}px`;
+
+              col.style.width = cssWidth;
+              col.style.minWidth = cssWidth;
+            }
+          });
+        }
+
+        // **同時更新 size indicators**
+        const sizeIndicatorsContainer = tableDOMElement
+          .closest('.qdr-table__mainWrapper')
+          ?.querySelector('.qdr-table__size-indicators');
+
+        if (sizeIndicatorsContainer) {
+          const indicators = sizeIndicatorsContainer.querySelectorAll('.qdr-table__size-indicator');
+
+          newWidths.forEach((width, index) => {
+            const indicator = indicators[index] as HTMLDivElement;
+
+            if (indicator) {
+              const cssWidth = width.type === 'percentage' ? `${width.value.toFixed(1)}%` : `${width.value}px`;
+              const displayWidth = width.type === 'percentage' ? `${width.value.toFixed(1)}%` : `${width.value}px`;
+
+              indicator.style.width = cssWidth;
+              indicator.style.minWidth = cssWidth;
+
+              // 更新顯示文字
+              const sizeText = indicator.querySelector('.qdr-table__size');
+
+              if (sizeText) {
+                sizeText.textContent = displayWidth;
+              }
+            }
+          });
+        }
       };
 
       const handleMouseUp = () => {
+        // **在 mouseup 時才將最終寬度寫入 Slate**
+        if (currentWidthsRef.current) {
+          Editor.withoutNormalizing(editor, () => {
+            setColumnWidths(editor, tableElement, currentWidthsRef.current!);
+          });
+        }
+
         setIsResizing(false);
         resizeDataRef.current = null;
+        currentWidthsRef.current = null;
 
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
