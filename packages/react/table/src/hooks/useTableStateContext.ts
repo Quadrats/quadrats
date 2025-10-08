@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { TableStateContext } from '../contexts/TableStateContext';
 
-export function useTableState() {
+export function useTableStateContext() {
   const context = useContext(TableStateContext);
 
   if (!context) {

@@ -21,3 +21,5 @@ export const TABLE_TYPES: TableTypes = {
 // Table limits
 export const TABLE_DEFAULT_MAX_COLUMNS = 6;
 export const TABLE_DEFAULT_MAX_ROWS = -1;
+// 釘選欄位的最大總寬度百分比
+export const MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE = 40;

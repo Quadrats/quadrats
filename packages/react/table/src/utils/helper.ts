@@ -8,6 +8,7 @@ import {
   TABLE_CELL_TYPE,
   TableElement,
   ColumnWidth,
+  MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE,
 } from '@quadrats/common/table';
 import { QuadratsReactEditor } from '@quadrats/react';
 import { ALIGN_TYPE, ALIGNABLE_TYPES, AlignValue } from '@quadrats/common/align';
@@ -325,11 +326,6 @@ export function getAlignFromCells(cells: Element[]): AlignValue {
 }
 
 /**
- * 常數：釘選欄位的最大總寬度百分比
- */
-export const MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE = 40;
-
-/**
  * 獲取釘選欄位的資訊
  * @param tableElement - 表格最外層元素
  * @returns 釘選欄位的索引陣列和總寬度百分比
@@ -421,7 +417,7 @@ export function enforcePinnedColumnsMaxWidth(
 /**
  * 獲取表格的欄位寬度陣列
  * 當有釘選欄位時：
- * - 釘選欄位使用 percentage（總和不超過 40%）
+ * - 釘選欄位使用 percentage
  * - 未釘選欄位使用 pixel（基於剩餘空間平均分配）
  * @param tableElement - 表格最外層元素
  * @param tableWidth - 表格容器的實際寬度（pixel），用於計算 pixel 寬度
@@ -464,7 +460,7 @@ export function getColumnWidths(tableElement: TableElement, tableWidth?: number)
   if (hasPinnedColumns && tableWidth) {
     const widths: ColumnWidth[] = [];
 
-    // 先計算釘選欄位的總寬度（平均分配，但不超過 40%）
+    // 先計算釘選欄位的總寬度
     const pinnedPercentagePerColumn = Math.min(
       Math.round((MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE / pinnedColumnIndices.length) * 10) / 10,
       MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE,

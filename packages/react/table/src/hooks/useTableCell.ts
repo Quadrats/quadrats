@@ -1,8 +1,8 @@
 import { usePreviousValue } from '@quadrats/react/utils';
-import { Editor, Element, Node, PARAGRAPH_TYPE, Transforms } from '@quadrats/core';
+import { Editor, Element, Node, PARAGRAPH_TYPE, Range, Transforms } from '@quadrats/core';
 import { useCallback, useEffect, useMemo } from 'react';
 import { ReactEditor, useFocused } from 'slate-react';
-import { useTableState } from './useTableState';
+import { useTableStateContext } from './useTableStateContext';
 import { useTableMetadata } from './useTableMetadata';
 import { TableElement } from '@quadrats/common/table';
 import { createList, LIST_TYPES, ListRootTypeKey } from '@quadrats/common/list';
@@ -12,23 +12,20 @@ import { getTableStructure, collectCells, setAlignForCells, getAlignFromCells } 
 
 /** 檢查 table cell 是否在 focused 狀態 */
 export function useTableCellFocused(element: TableElement, editor: QuadratsReactEditor): boolean {
-  const { tableSelectedOn, setTableHoveredOn, setTableSelectedOn } = useTableState();
+  const { tableSelectedOn, setTableHoveredOn, setTableSelectedOn } = useTableStateContext();
   const cellPath = ReactEditor.findPath(editor, element);
   const focused = useFocused();
 
   const isCellFocused = useMemo(() => {
     if (!focused || !editor.selection || tableSelectedOn?.region) return false;
 
-    try {
-      const selectionPath = editor.selection.anchor.path;
+    const isSelectionCollapsed = Range.isCollapsed(editor.selection);
 
-      return (
-        selectionPath.length > cellPath.length &&
-        selectionPath.slice(0, cellPath.length).every((segment, index) => segment === cellPath[index])
-      );
-    } catch (error) {
-      return false;
-    }
+    if (!isSelectionCollapsed) return false;
+
+    const selectionPath = editor.selection.anchor.path;
+
+    return selectionPath.slice(0, cellPath.length).every((segment, index) => segment === cellPath[index]);
   }, [focused, editor.selection, cellPath, tableSelectedOn]);
 
   const isPreviousCellFocused = usePreviousValue(isCellFocused);

@@ -8,7 +8,7 @@ import { Icon, Portal } from '@quadrats/react/components';
 import { Drag } from '@quadrats/icons';
 import { TableElement } from '@quadrats/common/table';
 import { useTableMetadata } from '../hooks/useTableMetadata';
-import { useTableState } from '../hooks/useTableState';
+import { useTableStateContext } from '../hooks/useTableStateContext';
 import { InlineToolbar } from '@quadrats/react/toolbar';
 import { useTableCellFocused, useTableCellPosition, useTableCellTransformContent } from '../hooks/useTableCell';
 import { useTableCellToolbarActions } from '../hooks/useTableCellToolbarActions';
@@ -17,7 +17,7 @@ import { useColumnResize } from '../hooks/useColumnResize';
 
 function TableCell(props: RenderElementProps<TableElement>) {
   const { attributes, children, element } = props;
-  const { tableSelectedOn, setTableSelectedOn, tableHoveredOn, setTableHoveredOn } = useTableState();
+  const { tableSelectedOn, setTableSelectedOn, tableHoveredOn, setTableHoveredOn } = useTableStateContext();
   const { columnCount, rowCount, portalContainerRef, isColumnPinned, tableElement } = useTableMetadata();
 
   // Component context
@@ -30,7 +30,7 @@ function TableCell(props: RenderElementProps<TableElement>) {
   const cellPosition = useTableCellPosition(element, editor);
   const transformCellContent = useTableCellTransformContent(element, editor);
 
-  // Toolbar actions - 所有 icon actions 邏輯都在這個 hook 中
+  // Toolbar actions
   const { focusToolbarIconGroups, inlineToolbarIconGroups } = useTableCellToolbarActions({
     element,
     cellPosition,

@@ -5,7 +5,7 @@ import { Icon } from '@quadrats/react/components';
 import { AlignCenter, AlignLeft, AlignRight, Plus, Trash } from '@quadrats/icons';
 import { useTableActionsContext } from '../hooks/useTableActionsContext';
 import { useTableMetadata } from '../hooks/useTableMetadata';
-import { useTableState } from '../hooks/useTableState';
+import { useTableStateContext } from '../hooks/useTableStateContext';
 import { InlineToolbar, ToolbarGroupIcon, ToolbarIcon } from '@quadrats/react/toolbar';
 import { Transforms } from 'slate';
 import { calculateTableMinWidth, columnWidthToCSS, TableElement } from '@quadrats/common/table';
@@ -21,7 +21,7 @@ function TableMain(props: RenderElementProps<TableElement>) {
 
   const { addColumn, addRow, addColumnAndRow } = useTableActionsContext();
   const { isReachMaximumColumns, isReachMaximumRows, tableElement } = useTableMetadata();
-  const { tableSelectedOn } = useTableState();
+  const { tableSelectedOn } = useTableStateContext();
 
   // Table align functions
   const setAlign = useTableCellAlign(tableElement, editor);

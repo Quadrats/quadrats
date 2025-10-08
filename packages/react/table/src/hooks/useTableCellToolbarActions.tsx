@@ -22,7 +22,7 @@ import { LIST_TYPES } from '@quadrats/common/list';
 import { TableElement } from '@quadrats/common/table';
 import { useTableActionsContext } from './useTableActionsContext';
 import { useTableMetadata } from './useTableMetadata';
-import { useTableState } from './useTableState';
+import { useTableStateContext } from './useTableStateContext';
 import { ToolbarGroupIcon, ToolbarIcon } from '@quadrats/react/toolbar';
 import { useTableCellAlign, useTableCellAlignStatus } from './useTableCell';
 import { useSlateStatic } from 'slate-react';
@@ -49,7 +49,7 @@ export function useTableCellToolbarActions({
   transformCellContent,
 }: UseTableCellToolbarActionsParams) {
   const editor = useSlateStatic();
-  const { tableSelectedOn, setTableSelectedOn } = useTableState();
+  const { tableSelectedOn, setTableSelectedOn } = useTableStateContext();
   const {
     tableElement,
     isReachMaximumColumns,

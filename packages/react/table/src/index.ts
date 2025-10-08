@@ -3,7 +3,7 @@ export * from './contexts/TableMetadataContext';
 export * from './contexts/TableStateContext';
 export * from './hooks/useTableActionsContext';
 export * from './hooks/useTableMetadata';
-export * from './hooks/useTableState';
+export * from './hooks/useTableStateContext';
 export * from './hooks/useTableCellToolbarActions';
 export * from './typings';
 export * from './components/Table';
