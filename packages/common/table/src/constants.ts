@@ -23,3 +23,5 @@ export const TABLE_DEFAULT_MAX_COLUMNS = 6;
 export const TABLE_DEFAULT_MAX_ROWS = -1;
 // 釘選欄位的最大總寬度百分比
 export const MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE = 40;
+export const MIN_COLUMN_WIDTH_PIXEL = 60;
+export const MIN_COLUMN_WIDTH_PERCENTAGE = 5;
