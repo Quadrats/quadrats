@@ -8,8 +8,8 @@ export const TableMainJsxSerializeElement = ({
   columnWidths,
 }: JsxSerializeElementProps & { columnWidths?: ColumnWidth[] }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
-
   const scrollContextValue = useMemo(() => ({ scrollRef }), [scrollRef]);
+
   const tableMinWidth = useMemo(() => (columnWidths ? calculateTableMinWidth(columnWidths) : '100%'), [columnWidths]);
 
   return (

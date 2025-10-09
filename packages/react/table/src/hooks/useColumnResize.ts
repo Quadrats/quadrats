@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { useSlateStatic } from 'slate-react';
 import { Editor } from '@quadrats/core';
-import { TableElement, ColumnWidth } from '@quadrats/common/table';
+import { TableElement, ColumnWidth, calculateTableMinWidth } from '@quadrats/common/table';
 import { calculateResizedColumnWidths, getColumnWidths, setColumnWidths, getPinnedColumnsInfo } from '../utils/helper';
 
 interface UseColumnResizeParams {
@@ -15,13 +15,6 @@ interface UseColumnResizeReturn {
   handleResizeStart: (e: React.MouseEvent) => void;
 }
 
-/**
- * Hook for handling column resize functionality
- * Supports both flexible (percentage) and fixed (pixel) columns
- * Special handling for pinned columns:
- * - Pinned columns use percentage (max 40% total)
- * - Unpinned columns use pixel when pinned columns exist
- */
 export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColumnResizeParams): UseColumnResizeReturn {
   const editor = useSlateStatic();
   const [isResizing, setIsResizing] = useState(false);
@@ -69,7 +62,7 @@ export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColum
 
       setIsResizing(true);
 
-      // **顯示 size indicators 容器**
+      // 顯示 size indicators 容器
       const mainWrapper = tableDOMElement.closest('.qdr-table__mainWrapper');
       const sizeIndicatorsContainer = mainWrapper?.querySelector('.qdr-table__size-indicators') as HTMLElement | null;
 
@@ -77,7 +70,7 @@ export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColum
         sizeIndicatorsContainer.style.display = 'flex';
       }
 
-      // **為當前 column 的所有 cell 添加 resizing class**
+      // 為當前 column 的所有 cell 添加 resizing class
       const allRows = tableDOMElement.querySelectorAll('tr');
 
       allRows.forEach((row) => {
@@ -92,29 +85,29 @@ export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColum
       const handleMouseMove = (moveEvent: MouseEvent) => {
         if (!resizeDataRef.current) return;
 
-        const { startX, startWidths, tableWidth, containerWidth, pinnedColumnIndices, tableDOMElement } =
-          resizeDataRef.current;
+        const { startX, startWidths, tableWidth, pinnedColumnIndices, tableDOMElement } = resizeDataRef.current;
 
         const deltaX = moveEvent.clientX - startX;
 
         // 將位移轉換為百分比
         const deltaPercentage = (deltaX / tableWidth) * 100;
 
-        // 計算新的欄位寬度（會自動處理 pixel 和 percentage 的混合情況）
+        // 計算新的欄位寬度
         const newWidths = calculateResizedColumnWidths(
           startWidths,
           columnIndex,
           deltaPercentage,
           deltaX,
-          tableWidth,
-          containerWidth,
           pinnedColumnIndices,
         );
 
-        // **儲存計算結果，但不更新 Slate**
+        // 儲存計算結果，但不更新 Slate
         currentWidthsRef.current = newWidths;
 
-        // **直接更新 DOM 的 <col> 元素**
+        // 更新 table 的最小寬度
+        tableDOMElement.style.minWidth = calculateTableMinWidth(newWidths);
+
+        // 直接更新 DOM 的 <col> 元素
         const colgroup = tableDOMElement.querySelector('colgroup');
 
         if (colgroup) {
@@ -132,10 +125,8 @@ export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColum
           });
         }
 
-        // **同時更新 size indicators**
-        const sizeIndicatorsContainer = tableDOMElement
-          .closest('.qdr-table__mainWrapper')
-          ?.querySelector('.qdr-table__size-indicators');
+        // 更新 size indicators
+        const sizeIndicatorsContainer = mainWrapper?.querySelector('.qdr-table__size-indicators');
 
         if (sizeIndicatorsContainer) {
           const indicators = sizeIndicatorsContainer.querySelectorAll('.qdr-table__size-indicator');
@@ -162,7 +153,6 @@ export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColum
       };
 
       const handleMouseUp = () => {
-        // **移除所有 resizing class**
         const allRows = tableDOMElement.querySelectorAll('tr');
 
         allRows.forEach((row) => {
@@ -174,7 +164,7 @@ export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColum
           }
         });
 
-        // **隱藏 size indicators 容器**
+        // 隱藏 size indicators 容器
         const mainWrapper = tableDOMElement.closest('.qdr-table__mainWrapper');
         const sizeIndicatorsContainer = mainWrapper?.querySelector('.qdr-table__size-indicators') as HTMLElement | null;
 
@@ -182,7 +172,7 @@ export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColum
           sizeIndicatorsContainer.style.display = 'none';
         }
 
-        // **在 mouseup 時才將最終寬度寫入 Slate**
+        // 將最終寬度寫入 Slate
         if (currentWidthsRef.current) {
           Editor.withoutNormalizing(editor, () => {
             setColumnWidths(editor, tableElement, currentWidthsRef.current!);

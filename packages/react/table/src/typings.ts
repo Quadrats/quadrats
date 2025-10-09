@@ -71,6 +71,7 @@ export type TableContextType = {
 export type TableScrollContextType = {
   scrollRef: RefObject<HTMLDivElement | null>;
   scrollTop: number;
+  scrollLeft: number;
 };
 
 export type RenderTableElementProps = RenderElementProps<TableElement>;

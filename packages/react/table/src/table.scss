@@ -141,7 +141,6 @@ $toolbar-z-index: 10;
   }
 
   &__main {
-    width: 100%;
     margin: 0;
     border-collapse: separate;
     border-spacing: 0;
@@ -168,6 +167,7 @@ $toolbar-z-index: 10;
 
   &__mainWrapper {
     width: 100%;
+    max-width: 100%;
     height: 100%;
     position: relative;
 
@@ -201,6 +201,7 @@ $toolbar-z-index: 10;
     border-bottom: 1px solid var(--qdr-border);
     border-left: 1px solid var(--qdr-border);
     vertical-align: top;
+    word-break: break-all;
 
     p,
     ul,

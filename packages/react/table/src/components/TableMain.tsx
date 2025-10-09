@@ -44,7 +44,7 @@ function TableMain(props: RenderElementProps<TableElement>) {
   // 獲取欄位寬度（傳入 tableWidth 以支援混合模式）
   const columnWidths = useMemo(() => getColumnWidths(tableElement, tableWidth), [tableElement, tableWidth]);
 
-  // 計算 table 的最小寬度（支援混合模式的 overflow）
+  // 計算 table 的最小寬度
   const tableMinWidth = useMemo(() => calculateTableMinWidth(columnWidths), [columnWidths]);
 
   // 監聽 table 寬度變化
@@ -144,7 +144,7 @@ function TableMain(props: RenderElementProps<TableElement>) {
     }
   }, [columnWidths, tableElement.scrollPosition]);
 
-  const scrollContextValue = useMemo(() => ({ scrollTop, scrollRef }), [scrollTop, scrollRef]);
+  const scrollContextValue = useMemo(() => ({ scrollTop, scrollLeft, scrollRef }), [scrollTop, scrollLeft, scrollRef]);
 
   // 獲取當前 table 的 align 狀態
   const currentTableAlign = getAlign('table');
@@ -237,7 +237,13 @@ function TableMain(props: RenderElementProps<TableElement>) {
           >
             <colgroup>
               {columnWidths.map((width, index) => (
-                <col key={index} style={{ width: columnWidthToCSS(width), minWidth: columnWidthToCSS(width) }} />
+                <col
+                  key={index}
+                  style={{
+                    width: columnWidthToCSS(width),
+                    minWidth: columnWidthToCSS(width),
+                  }}
+                />
               ))}
             </colgroup>
             {children}

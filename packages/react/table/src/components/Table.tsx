@@ -213,7 +213,6 @@ function Table({
     return bodyCount <= 1;
   }, [bodyCount]);
 
-  // 優化 isColumnPinned 和 isRowPinned - 直接從 Set 查詢，O(1) 複雜度
   const isColumnPinned = useCallback(
     (columnIndex: number): boolean => {
       return pinnedColumns.has(columnIndex);

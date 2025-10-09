@@ -280,7 +280,8 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
       if (!tableStructure) return;
 
-      const { tableHeaderElement, tableBodyElement, tableHeaderPath, tableBodyPath, columnCount } = tableStructure;
+      const { tableHeaderElement, tableBodyElement, tableHeaderPath, tableBodyPath, columnCount, tableMainElement } =
+        tableStructure;
 
       if (columnCount >= TABLE_DEFAULT_MAX_COLUMNS) {
         console.warn(`Maximum columns limit (${TABLE_DEFAULT_MAX_COLUMNS}) reached`);
@@ -288,7 +289,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         return;
       }
 
-      editor.withoutNormalizing(() => {
+      Editor.withoutNormalizing(editor, () => {
         // 在 Header 中加入新列
         if (tableHeaderElement && tableHeaderPath) {
           tableHeaderElement.children.forEach((row, rowIndex) => {
@@ -347,6 +348,28 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         const newRowPath = [...tableBodyPath, tableBodyElement!.children.length];
 
         Transforms.insertNodes(editor, newRow, { at: newRowPath });
+
+        // 調整欄位寬度（新增欄位在最後）
+        const currentWidths = getColumnWidths(element);
+
+        if (currentWidths.length > 0) {
+          // 獲取 table 的實際寬度
+          let tableWidth = 0;
+
+          if (tableMainElement) {
+            const tableDOMElement = ReactEditor.toDOMNode(editor, tableMainElement);
+
+            if (tableDOMElement instanceof HTMLElement) {
+              tableWidth = tableDOMElement.getBoundingClientRect().width;
+            }
+          }
+
+          // 新欄位插入在最後（columnCount 位置）
+          const insertIndex = columnCount;
+          const newWidths = calculateColumnWidthsAfterAdd(currentWidths, insertIndex, tableWidth || undefined);
+
+          setColumnWidths(editor, element, newWidths);
+        }
       });
     } catch (error) {
       console.warn('Failed to add column and row:', error);
@@ -635,16 +658,12 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         // 獲取 table 的實際寬度（用於轉換為混合模式）
         let tableWidth = 0;
 
-        try {
-          if (tableMainElement) {
-            const tableDOMElement = ReactEditor.toDOMNode(editor, tableMainElement);
+        if (tableMainElement) {
+          const tableDOMElement = ReactEditor.toDOMNode(editor, tableMainElement);
 
-            if (tableDOMElement instanceof HTMLElement) {
-              tableWidth = tableDOMElement.getBoundingClientRect().width;
-            }
+          if (tableDOMElement instanceof HTMLElement) {
+            tableWidth = tableDOMElement.getBoundingClientRect().width;
           }
-        } catch (error) {
-          console.warn('Failed to get table width:', error);
         }
 
         const processContainer = (containerElement: TableElement) => {
@@ -788,16 +807,12 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         // 獲取 table 的實際寬度（用於轉換為混合模式）
         let tableWidth = 0;
 
-        try {
-          if (tableMainElement) {
-            const tableDOMElement = ReactEditor.toDOMNode(editor, tableMainElement);
+        if (tableMainElement) {
+          const tableDOMElement = ReactEditor.toDOMNode(editor, tableMainElement);
 
-            if (tableDOMElement instanceof HTMLElement) {
-              tableWidth = tableDOMElement.getBoundingClientRect().width;
-            }
+          if (tableDOMElement instanceof HTMLElement) {
+            tableWidth = tableDOMElement.getBoundingClientRect().width;
           }
-        } catch (error) {
-          console.warn('Failed to get table width:', error);
         }
 
         const processContainer = (containerElement: TableElement) => {
@@ -868,7 +883,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
               if (finalProps?.pinned && tableWidth > 0) {
                 const { pinnedColumnIndices } = getPinnedColumnsInfo(element);
 
-                // 更新釘選欄位索引（因為欄位已經移動了）
+                // 更新釘選欄位索引
                 const updatedPinnedIndices = pinnedColumnIndices
                   .map((idx) => {
                     if (idx === columnIndex) return targetColumnIndex;
@@ -876,8 +891,8 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
                     return idx;
                   })
-                  .concat(targetColumnIndex) // 加入新的釘選欄位
-                  .filter((idx, i, arr) => arr.indexOf(idx) === i) // 去重
+                  .concat(targetColumnIndex)
+                  .filter((idx, i, arr) => arr.indexOf(idx) === i)
                   .sort((a, b) => a - b);
 
                 const mixedWidths = convertToMixedWidthMode(movedWidths, updatedPinnedIndices, tableWidth);

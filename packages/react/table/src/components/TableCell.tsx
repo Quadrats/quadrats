@@ -22,7 +22,7 @@ function TableCell(props: RenderElementProps<TableElement>) {
 
   // Component context
   const { isHeader } = useContext(TableHeaderContext);
-  const { scrollTop, scrollRef } = useContext(TableScrollContext);
+  const { scrollTop, scrollLeft, scrollRef } = useContext(TableScrollContext);
   const editor = useSlateStatic();
 
   // Cell-specific hooks
@@ -123,7 +123,15 @@ function TableCell(props: RenderElementProps<TableElement>) {
     return () => {
       cancelAnimationFrame(rafId);
     };
-  }, [focused, isSelectionTriggerByMe, cellPosition.columnIndex, cellPosition.rowIndex, portalContainerRef, scrollTop]);
+  }, [
+    focused,
+    isSelectionTriggerByMe,
+    cellPosition.columnIndex,
+    cellPosition.rowIndex,
+    portalContainerRef,
+    scrollTop,
+    scrollLeft,
+  ]);
 
   useEffect(() => {
     const { current: cell } = cellRef;
