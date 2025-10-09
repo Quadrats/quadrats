@@ -160,27 +160,29 @@ export function useTableCellToolbarActions({
               addRow({ position: 'top', rowIndex: cellPosition.rowIndex });
             },
           },
-          {
-            icon: AddColumnAtLeft,
-            disabled: isReachMaximumColumns,
-            onClick: () => {
-              addColumn({
-                position: 'left',
-                columnIndex: cellPosition.columnIndex,
-              });
-            },
-          },
-          {
-            icon: AddColumnAtRight,
-            disabled: isReachMaximumColumns,
-            onClick: () => {
-              addColumn({
-                position: 'right',
-                columnIndex: cellPosition.columnIndex,
-              });
-            },
-          },
-        ],
+          isReachMaximumColumns
+            ? undefined
+            : {
+                icon: AddColumnAtLeft,
+                onClick: () => {
+                  addColumn({
+                    position: 'left',
+                    columnIndex: cellPosition.columnIndex,
+                  });
+                },
+              },
+          isReachMaximumColumns
+            ? undefined
+            : {
+                icon: AddColumnAtRight,
+                onClick: () => {
+                  addColumn({
+                    position: 'right',
+                    columnIndex: cellPosition.columnIndex,
+                  });
+                },
+              },
+        ].filter((i) => i !== undefined),
       },
     ];
   }, [transformCellContent, addRow, addColumn, cellPosition, isReachMaximumColumns, getCurrentIcon]);
@@ -201,16 +203,17 @@ export function useTableCellToolbarActions({
       },
     };
 
-    const setColumnTitleAction = {
-      icon: TableSetColumnTitle,
-      disabled: isReachMinimumBodyRows,
-      onClick: () => {
-        if (typeof tableSelectedOn.index === 'number') {
-          moveRowToHeader(tableSelectedOn.index);
-          setTableSelectedOn(undefined);
-        }
-      },
-    };
+    const setColumnTitleAction = isReachMinimumBodyRows
+      ? undefined
+      : {
+          icon: TableSetColumnTitle,
+          onClick: () => {
+            if (typeof tableSelectedOn.index === 'number') {
+              moveRowToHeader(tableSelectedOn.index);
+              setTableSelectedOn(undefined);
+            }
+          },
+        };
 
     const unpinnedAction = {
       icon: Unpinned,
@@ -222,16 +225,18 @@ export function useTableCellToolbarActions({
       },
     };
 
-    const pinnedAction = {
-      icon: Pinned,
-      disabled: isReachMinimumBodyRows && !isHeader,
-      onClick: () => {
-        if (typeof tableSelectedOn.index === 'number') {
-          pinRow(tableSelectedOn.index);
-          setTableSelectedOn(undefined);
-        }
-      },
-    };
+    const pinnedAction =
+      isReachMinimumBodyRows && !isHeader
+        ? undefined
+        : {
+            icon: Pinned,
+            onClick: () => {
+              if (typeof tableSelectedOn.index === 'number') {
+                pinRow(tableSelectedOn.index);
+                setTableSelectedOn(undefined);
+              }
+            },
+          };
 
     const actions = [];
     const rowIsPinned = isRowPinned(tableSelectedOn.index);
@@ -239,13 +244,13 @@ export function useTableCellToolbarActions({
     if (rowIsPinned) {
       actions.push(unpinnedAction);
     } else {
-      actions.push(pinnedAction);
+      if (pinnedAction) actions.push(pinnedAction);
     }
 
     if (isHeader) {
       actions.push(removeTitleAction);
     } else {
-      actions.push(setColumnTitleAction);
+      if (setColumnTitleAction) actions.push(setColumnTitleAction);
     }
 
     return actions;
@@ -277,16 +282,17 @@ export function useTableCellToolbarActions({
       },
     };
 
-    const setRowTitleAction = {
-      icon: TableSetRowTitle,
-      disabled: isReachMinimumNormalColumns,
-      onClick: () => {
-        if (typeof tableSelectedOn.index === 'number') {
-          setColumnAsTitle(tableSelectedOn.index);
-          setTableSelectedOn(undefined);
-        }
-      },
-    };
+    const setRowTitleAction = isReachMinimumNormalColumns
+      ? undefined
+      : {
+          icon: TableSetRowTitle,
+          onClick: () => {
+            if (typeof tableSelectedOn.index === 'number') {
+              setColumnAsTitle(tableSelectedOn.index);
+              setTableSelectedOn(undefined);
+            }
+          },
+        };
 
     const unpinnedAction = {
       icon: Unpinned,
@@ -298,16 +304,18 @@ export function useTableCellToolbarActions({
       },
     };
 
-    const pinnedAction = {
-      icon: Pinned,
-      disabled: isReachMinimumNormalColumns && !element.treatAsTitle,
-      onClick: () => {
-        if (typeof tableSelectedOn.index === 'number') {
-          pinColumn(tableSelectedOn.index);
-          setTableSelectedOn(undefined);
-        }
-      },
-    };
+    const pinnedAction =
+      isReachMinimumNormalColumns && !element.treatAsTitle
+        ? undefined
+        : {
+            icon: Pinned,
+            onClick: () => {
+              if (typeof tableSelectedOn.index === 'number') {
+                pinColumn(tableSelectedOn.index);
+                setTableSelectedOn(undefined);
+              }
+            },
+          };
 
     const actions = [];
     const columnIsPinned = isColumnPinned(tableSelectedOn.index);
@@ -315,13 +323,13 @@ export function useTableCellToolbarActions({
     if (columnIsPinned) {
       actions.push(unpinnedAction);
     } else {
-      actions.push(pinnedAction);
+      if (pinnedAction) actions.push(pinnedAction);
     }
 
     if (element.treatAsTitle) {
       actions.push(removeTitleAction);
     } else {
-      actions.push(setRowTitleAction);
+      if (setRowTitleAction) actions.push(setRowTitleAction);
     }
 
     return actions;
@@ -428,35 +436,37 @@ export function useTableCellToolbarActions({
     }
 
     return [
-      {
-        icon: AddColumnAtLeft,
-        disabled: isReachMaximumColumns,
-        onClick: () => {
-          if (typeof tableSelectedOn.index === 'number') {
-            addColumn({
-              position: 'left',
-              columnIndex: tableSelectedOn.index,
-            });
+      isReachMaximumColumns
+        ? undefined
+        : {
+            icon: AddColumnAtLeft,
+            onClick: () => {
+              if (typeof tableSelectedOn.index === 'number') {
+                addColumn({
+                  position: 'left',
+                  columnIndex: tableSelectedOn.index,
+                });
 
-            setTableSelectedOn(undefined);
-          }
-        },
-      },
-      {
-        icon: AddColumnAtRight,
-        disabled: isReachMaximumColumns,
-        onClick: () => {
-          if (typeof tableSelectedOn.index === 'number') {
-            addColumn({
-              position: 'right',
-              columnIndex: tableSelectedOn.index,
-            });
+                setTableSelectedOn(undefined);
+              }
+            },
+          },
+      isReachMaximumColumns
+        ? undefined
+        : {
+            icon: AddColumnAtRight,
+            onClick: () => {
+              if (typeof tableSelectedOn.index === 'number') {
+                addColumn({
+                  position: 'right',
+                  columnIndex: tableSelectedOn.index,
+                });
 
-            setTableSelectedOn(undefined);
-          }
-        },
-      },
-    ];
+                setTableSelectedOn(undefined);
+              }
+            },
+          },
+    ].filter((i) => i !== undefined);
   }, [tableSelectedOn, addColumn, setTableSelectedOn, isReachMaximumColumns]);
 
   // Delete actions

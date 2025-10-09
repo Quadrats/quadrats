@@ -172,20 +172,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           const currentWidths = getColumnWidths(element);
 
           if (currentWidths.length > 0) {
-            // 獲取 table 的實際寬度
-            let tableWidth = 0;
-
-            const { tableMainElement } = tableStructure;
-
-            if (tableMainElement) {
-              const tableDOMElement = ReactEditor.toDOMNode(editor, tableMainElement);
-
-              if (tableDOMElement instanceof HTMLElement) {
-                tableWidth = tableDOMElement.getBoundingClientRect().width;
-              }
-            }
-
-            const newWidths = calculateColumnWidthsAfterAdd(currentWidths, insertIndex, tableWidth || undefined);
+            const newWidths = calculateColumnWidthsAfterAdd(currentWidths, insertIndex);
 
             setColumnWidths(editor, element, newWidths);
           }
@@ -280,8 +267,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
       if (!tableStructure) return;
 
-      const { tableHeaderElement, tableBodyElement, tableHeaderPath, tableBodyPath, columnCount, tableMainElement } =
-        tableStructure;
+      const { tableHeaderElement, tableBodyElement, tableHeaderPath, tableBodyPath, columnCount } = tableStructure;
 
       if (columnCount >= TABLE_DEFAULT_MAX_COLUMNS) {
         console.warn(`Maximum columns limit (${TABLE_DEFAULT_MAX_COLUMNS}) reached`);
@@ -353,20 +339,9 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         const currentWidths = getColumnWidths(element);
 
         if (currentWidths.length > 0) {
-          // 獲取 table 的實際寬度
-          let tableWidth = 0;
-
-          if (tableMainElement) {
-            const tableDOMElement = ReactEditor.toDOMNode(editor, tableMainElement);
-
-            if (tableDOMElement instanceof HTMLElement) {
-              tableWidth = tableDOMElement.getBoundingClientRect().width;
-            }
-          }
-
           // 新欄位插入在最後（columnCount 位置）
           const insertIndex = columnCount;
-          const newWidths = calculateColumnWidthsAfterAdd(currentWidths, insertIndex, tableWidth || undefined);
+          const newWidths = calculateColumnWidthsAfterAdd(currentWidths, insertIndex);
 
           setColumnWidths(editor, element, newWidths);
         }

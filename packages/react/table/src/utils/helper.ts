@@ -518,7 +518,6 @@ export function setColumnWidths(
 
 /**
  * 計算新增欄位後的欄位寬度
- * 此函數會智慧處理欄位寬度的重新分配：
  * - 如果所有欄位都是 percentage：按比例縮減現有欄位，新欄位佔平均寬度
  * - 如果有混合模式（percentage + pixel）：
  *   * percentage 欄位（pinned）保持不變
@@ -526,14 +525,9 @@ export function setColumnWidths(
  *
  * @param currentWidths - 當前的欄位寬度陣列
  * @param insertIndex - 新欄位插入的位置（0-based）
- * @param tableWidth - 表格的實際寬度（pixel），用於計算混合模式下的 pixel 值
  * @returns 新的欄位寬度陣列
  */
-export function calculateColumnWidthsAfterAdd(
-  currentWidths: ColumnWidth[],
-  insertIndex: number,
-  tableWidth?: number,
-): ColumnWidth[] {
+export function calculateColumnWidthsAfterAdd(currentWidths: ColumnWidth[], insertIndex: number): ColumnWidth[] {
   const newColumnCount = currentWidths.length + 1;
   const averagePercentage = Math.round((100 / newColumnCount) * 10) / 10;
 
@@ -578,7 +572,7 @@ export function calculateColumnWidthsAfterAdd(
   // 如果有混合的 pixel 和 percentage 欄位（有 pinned columns）
   // percentage 欄位（pinned）保持不變
   // 新欄位應維持 pixel（此時一般欄位必定是 pixel）
-  if (percentageColumns.length && pixelColumns.length && tableWidth) {
+  if (percentageColumns.length && pixelColumns.length) {
     const newWidths: ColumnWidth[] = [];
 
     // 找到最後一個 pixel 欄位的寬度，新欄位將複製這個寬度
