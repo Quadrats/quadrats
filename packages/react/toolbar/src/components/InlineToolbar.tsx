@@ -36,7 +36,7 @@ function InlineToolbar({ className, iconGroups, style, onClickAway }: InlineTool
         : undefined;
     },
     ref,
-    [],
+    [onClickAway],
   );
 
   return (

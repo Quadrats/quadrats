@@ -1,8 +1,8 @@
-import React, { RefObject, useEffect, useMemo, useRef, useState } from 'react';
+import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { ReactEditor, RenderElementProps, useModal, useSlateStatic } from '@quadrats/react';
 import { Icon } from '@quadrats/react/components';
-import { AlignCenter, AlignLeft, AlignRight, Plus, Trash } from '@quadrats/icons';
+import { AlignCenter, AlignLeft, AlignRight, Copy, Plus, Trash } from '@quadrats/icons';
 import { useTableActionsContext } from '../hooks/useTableActionsContext';
 import { useTableMetadata } from '../hooks/useTableMetadata';
 import { useTableStateContext } from '../hooks/useTableStateContext';
@@ -21,7 +21,7 @@ function TableMain(props: RenderElementProps<TableElement>) {
 
   const { addColumn, addRow, addColumnAndRow } = useTableActionsContext();
   const { isReachMaximumColumns, isReachMaximumRows, tableElement } = useTableMetadata();
-  const { tableSelectedOn } = useTableStateContext();
+  const { tableSelectedOn, setTableSelectedOn } = useTableStateContext();
 
   // Table align functions
   const setAlign = useTableCellAlign(tableElement, editor);
@@ -146,6 +146,24 @@ function TableMain(props: RenderElementProps<TableElement>) {
 
   const scrollContextValue = useMemo(() => ({ scrollTop, scrollLeft, scrollRef }), [scrollTop, scrollLeft, scrollRef]);
 
+  // 複製 Table 功能
+  const copyTable = useCallback(() => {
+    try {
+      const clonedTable = JSON.parse(JSON.stringify(tableElement)) as TableElement;
+
+      // 找到當前 table 的父節點路徑
+      const tableParentPath = tablePath.slice(0, -1);
+      const tableIndex = tablePath[tablePath.length - 1];
+
+      // 在當前 table 之後插入複製的 table
+      Transforms.insertNodes(editor, clonedTable, {
+        at: [...tableParentPath, tableIndex + 1],
+      });
+    } catch (error) {
+      console.error('Failed to copy table:', error);
+    }
+  }, [editor, tableElement, tablePath]);
+
   // 獲取當前 table 的 align 狀態
   const currentTableAlign = getAlign('table');
 
@@ -171,9 +189,16 @@ function TableMain(props: RenderElementProps<TableElement>) {
     >
       <InlineToolbar
         className="qdr-table__table-toolbar"
+        onClickAway={tableSelectedOn?.region === 'table' ? () => setTableSelectedOn(undefined) : undefined}
         iconGroups={[
           {
             icons: [
+              {
+                icon: Copy,
+                onClick: () => {
+                  copyTable();
+                },
+              },
               <ToolbarGroupIcon key="table-align-change" icon={getCurrentTableAlignIcon()}>
                 <ToolbarIcon
                   icon={AlignLeft}
