@@ -269,6 +269,9 @@ function TableCell(props: RenderElementProps<TableElement>) {
               left: toolbarPosition?.left,
             }}
             iconGroups={inlineToolbarIconGroups}
+            onClickAway={() => {
+              setTableSelectedOn(undefined);
+            }}
           />
         </Portal>
       ) : null}
