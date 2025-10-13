@@ -44,6 +44,8 @@ export interface Table<T extends Editor = Editor> extends Withable {
   createTableElement(rows: number, cols: number): QuadratsElement[];
   insertTable(editor: T, rows: number, cols: number): void;
   moveToNextCell(editor: Editor, types: TableTypes): void;
+  moveToRowAbove(editor: Editor, types: TableTypes): void;
+  moveToRowBelow(editor: Editor, types: TableTypes): void;
   // 檢查選取範圍
   isSelectionInTableMain(editor: T): boolean;
   isSelectionInTableCell(editor: T): boolean;
