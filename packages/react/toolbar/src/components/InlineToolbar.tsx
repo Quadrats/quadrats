@@ -1,7 +1,8 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useRef } from 'react';
 import clsx from 'clsx';
 import { Icon } from '@quadrats/react/components';
 import { IconDefinition } from '@quadrats/icons';
+import { useClickAway } from '@quadrats/react/utils';
 
 export interface InlineToolbarProps {
   className?: string;
@@ -19,13 +20,27 @@ export interface InlineToolbarProps {
     )[];
   }[];
   style?: React.CSSProperties;
+  onClickAway?: VoidFunction;
 }
 
-function InlineToolbar({ className, iconGroups, style }: InlineToolbarProps) {
+function InlineToolbar({ className, iconGroups, style, onClickAway }: InlineToolbarProps) {
   const validIconsGroup = iconGroups.filter((group) => group.icons.length);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useClickAway(
+    () => {
+      return onClickAway
+        ? () => {
+            onClickAway();
+          }
+        : undefined;
+    },
+    ref,
+    [],
+  );
 
   return (
-    <div contentEditable={false} className={clsx('qdr-inline-toolbar', className)} style={style}>
+    <div ref={ref} contentEditable={false} className={clsx('qdr-inline-toolbar', className)} style={style}>
       {validIconsGroup.map((group, index) => (
         <Fragment key={index}>
           <div
