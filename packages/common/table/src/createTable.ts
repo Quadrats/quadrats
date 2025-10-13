@@ -2,9 +2,11 @@ import {
   Editor,
   Element,
   isNodesTypeIn,
+  Node,
   PARAGRAPH_TYPE,
   QuadratsElement,
   QuadratsText,
+  Text,
   Transforms,
 } from '@quadrats/core';
 import { Table, TableTypes } from './typings';
@@ -317,6 +319,29 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
               );
 
               return;
+            }
+          }
+
+          // 4. table_cell 只允許 paragraph、list
+          if (type === types.table_cell) {
+            const allowedTypes = [PARAGRAPH_TYPE, LIST_TYPES.ul, LIST_TYPES.ol];
+
+            for (const [child, childPath] of Node.children(editor, path)) {
+              if (Element.isElement(child)) {
+                const childType = (child as QuadratsElement).type;
+
+                // 如果不在白名單中，直接移除
+                if (!allowedTypes.includes(childType)) {
+                  Transforms.removeNodes(editor, { at: childPath });
+
+                  return;
+                }
+              } else if (!Text.isText(child)) {
+                // 如果不是 Element 也不是 Text，移除
+                Transforms.removeNodes(editor, { at: childPath });
+
+                return;
+              }
             }
           }
         }
