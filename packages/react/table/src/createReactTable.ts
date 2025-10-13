@@ -70,6 +70,21 @@ export function createReactTable(options: CreateReactTableOptions = {}): ReactTa
 
             return;
           }
+
+          // 處理方向鍵上下移動
+          if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            core.moveToRowAbove(editor, types);
+
+            return;
+          }
+
+          if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            core.moveToRowBelow(editor, types);
+
+            return;
+          }
         }
 
         next();
