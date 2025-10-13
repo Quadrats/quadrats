@@ -153,7 +153,7 @@ export function createReactImage<Hosting extends string>(
             .reduce(async (prev, imageFile) => {
               await prev;
 
-              return readFileAsDataURL(imageFile).then(dataURL => core.insertImage(editor, dataURL));
+              return readFileAsDataURL(imageFile).then((dataURL) => core.insertImage(editor, dataURL));
             }, Promise.resolve());
 
           return;
