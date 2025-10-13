@@ -74,16 +74,50 @@ export function createReactTable(options: CreateReactTableOptions = {}): ReactTa
           // 處理方向鍵上下移動
           if (event.key === 'ArrowUp') {
             event.preventDefault();
-            core.moveToRowAbove(editor, types);
+
+            if (event.shiftKey) {
+              // Shift + 上：擴展選取範圍
+              core.extendSelectionUp(editor, types);
+            } else {
+              // 只按上：移動到上一行
+              core.moveToRowAbove(editor, types);
+            }
 
             return;
           }
 
           if (event.key === 'ArrowDown') {
             event.preventDefault();
-            core.moveToRowBelow(editor, types);
+
+            if (event.shiftKey) {
+              // Shift + 下：擴展選取範圍
+              core.extendSelectionDown(editor, types);
+            } else {
+              // 只按下：移動到下一行
+              core.moveToRowBelow(editor, types);
+            }
 
             return;
+          }
+
+          if (event.key === 'ArrowLeft') {
+            // Shift + 左：擴展選取範圍
+            if (event.shiftKey) {
+              event.preventDefault();
+              core.extendSelectionLeft(editor, types);
+
+              return;
+            }
+          }
+
+          if (event.key === 'ArrowRight') {
+            // Shift + 右：擴展選取範圍
+            if (event.shiftKey) {
+              event.preventDefault();
+              core.extendSelectionRight(editor, types);
+
+              return;
+            }
           }
         }
 
