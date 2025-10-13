@@ -22,6 +22,7 @@ export { Carousel } from './carousel';
 export { ChevronRight } from './chevron-right';
 export { Check } from './check';
 export { Cancel } from './cancel';
+export { Copy } from './copy';
 export { Divider } from './divider';
 export { Drag } from './drag';
 export { Erase } from './erase';
