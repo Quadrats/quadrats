@@ -1,8 +1,9 @@
 import { useCallback, useRef, useState } from 'react';
 import { useSlateStatic } from 'slate-react';
-import { Editor } from '@quadrats/core';
+import { Editor, Transforms } from '@quadrats/core';
 import { TableElement, ColumnWidth, calculateTableMinWidth } from '@quadrats/common/table';
 import { calculateResizedColumnWidths, getColumnWidths, setColumnWidths, getPinnedColumnsInfo } from '../utils/helper';
+import { useTableStateContext } from './useTableStateContext';
 
 interface UseColumnResizeParams {
   tableElement: TableElement;
@@ -17,6 +18,7 @@ interface UseColumnResizeReturn {
 
 export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColumnResizeParams): UseColumnResizeReturn {
   const editor = useSlateStatic();
+  const { setTableSelectedOn } = useTableStateContext();
   const [isResizing, setIsResizing] = useState(false);
   const resizeDataRef = useRef<{
     startX: number;
@@ -33,6 +35,10 @@ export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColum
     (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
+
+      // 清除當前的 focus 狀態和 table selection
+      Transforms.deselect(editor);
+      setTableSelectedOn(undefined);
 
       const cell = cellRef.current;
 
@@ -190,7 +196,7 @@ export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColum
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     },
-    [editor, columnIndex, cellRef, tableElement],
+    [editor, columnIndex, cellRef, tableElement, setTableSelectedOn],
   );
 
   return {
