@@ -331,6 +331,287 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
     }
   };
 
+  const extendSelectionLeft: Table<Editor>['extendSelectionLeft'] = (editor, types) => {
+    if (!editor.selection) return;
+
+    try {
+      const { anchor, focus } = editor.selection;
+
+      // 找到 focus 點所在的 cell
+      const cellEntry = Editor.above(editor, {
+        at: focus,
+        match: (n) => Element.isElement(n) && n.type === types.table_cell,
+      });
+
+      if (!cellEntry) return;
+
+      const [, cellPath] = cellEntry;
+      const currentColumnIndex = cellPath[cellPath.length - 1];
+
+      // 檢查是否已經在第一列
+      const isFirstColumn = currentColumnIndex === 0;
+
+      if (isFirstColumn) {
+        // 如果已經在第一列，將 focus 移動到該 cell 的開頭
+        const cellStart = Editor.start(editor, cellPath);
+
+        // 只有當 focus 還沒到開頭時才移動
+        if (focus.offset > cellStart.offset || focus.path.length !== cellStart.path.length) {
+          Transforms.select(editor, { anchor, focus: cellStart });
+        }
+
+        return;
+      }
+
+      const rowEntry = Editor.above(editor, {
+        at: cellPath,
+        match: (n) => Element.isElement(n) && n.type === types.table_row,
+      });
+
+      if (!rowEntry) return;
+
+      const [, rowPath] = rowEntry;
+
+      // 找到左邊的 cell
+      const targetCellPath = [...rowPath, currentColumnIndex - 1];
+      const targetPoint = Editor.end(editor, targetCellPath);
+
+      // 擴展選取範圍：保持 anchor 不變，移動 focus
+      Transforms.select(editor, { anchor, focus: targetPoint });
+    } catch (error) {
+      console.warn('Failed to extend selection left:', error);
+    }
+  };
+
+  const extendSelectionRight: Table<Editor>['extendSelectionRight'] = (editor, types) => {
+    if (!editor.selection) return;
+
+    try {
+      const { anchor, focus } = editor.selection;
+
+      // 找到 focus 點所在的 cell
+      const cellEntry = Editor.above(editor, {
+        at: focus,
+        match: (n) => Element.isElement(n) && n.type === types.table_cell,
+      });
+
+      if (!cellEntry) return;
+
+      const [, cellPath] = cellEntry;
+      const currentColumnIndex = cellPath[cellPath.length - 1];
+
+      const rowEntry = Editor.above(editor, {
+        at: cellPath,
+        match: (n) => Element.isElement(n) && n.type === types.table_row,
+      });
+
+      if (!rowEntry) return;
+
+      const [currentRow, rowPath] = rowEntry;
+
+      // 檢查是否已經在最後一列
+      const isLastColumn = currentColumnIndex >= currentRow.children.length - 1;
+
+      if (isLastColumn) {
+        // 如果已經在最後一列，將 focus 移動到該 cell 的結尾
+        const cellEnd = Editor.end(editor, cellPath);
+
+        // 只有當 focus 還沒到結尾時才移動
+        if (focus.offset < cellEnd.offset || focus.path.length !== cellEnd.path.length) {
+          Transforms.select(editor, { anchor, focus: cellEnd });
+        }
+
+        return;
+      }
+
+      // 找到右邊的 cell
+      const targetCellPath = [...rowPath, currentColumnIndex + 1];
+      const targetPoint = Editor.start(editor, targetCellPath);
+
+      // 擴展選取範圍：保持 anchor 不變，移動 focus
+      Transforms.select(editor, { anchor, focus: targetPoint });
+    } catch (error) {
+      console.warn('Failed to extend selection right:', error);
+    }
+  };
+
+  const extendSelectionUp: Table<Editor>['extendSelectionUp'] = (editor, types) => {
+    if (!editor.selection) return;
+
+    try {
+      const { anchor, focus } = editor.selection;
+
+      // 找到 focus 點所在的 cell
+      const cellEntry = Editor.above(editor, {
+        at: focus,
+        match: (n) => Element.isElement(n) && n.type === types.table_cell,
+      });
+
+      if (!cellEntry) return;
+
+      const [, cellPath] = cellEntry;
+      const currentColumnIndex = cellPath[cellPath.length - 1];
+
+      const rowEntry = Editor.above(editor, {
+        at: cellPath,
+        match: (n) => Element.isElement(n) && n.type === types.table_row,
+      });
+
+      if (!rowEntry) return;
+
+      const [, rowPath] = rowEntry;
+      const currentRowIndex = rowPath[rowPath.length - 1];
+
+      // 找到 table body 或 header 容器
+      const containerEntry = Editor.above(editor, {
+        at: rowPath,
+        match: (n) => Element.isElement(n) && [types.table_header, types.table_body].includes(n.type),
+      });
+
+      if (!containerEntry) return;
+
+      const [container, containerPath] = containerEntry;
+
+      // 嘗試移動到上一個 row 的相同 column
+      if (currentRowIndex > 0) {
+        const targetRowPath = [...containerPath, currentRowIndex - 1];
+        const targetRow = container.children[currentRowIndex - 1];
+
+        if (Element.isElement(targetRow)) {
+          const targetColumnIndex = Math.min(currentColumnIndex, targetRow.children.length - 1);
+          const targetCellPath = [...targetRowPath, targetColumnIndex];
+          const targetPoint = Editor.start(editor, targetCellPath);
+
+          // 擴展選取範圍
+          Transforms.select(editor, { anchor, focus: targetPoint });
+        }
+
+        return;
+      }
+
+      // 如果在 body 的第一行，嘗試移動到 header 的最後一行
+      if (Element.isElement(container) && container.type === types.table_body) {
+        const tableMainEntry = Editor.above(editor, {
+          at: containerPath,
+          match: (n) => Element.isElement(n) && n.type === types.table_main,
+        });
+
+        if (!tableMainEntry) return;
+
+        const [tableMain] = tableMainEntry;
+        const tableHeader = tableMain.children.find(
+          (child) => Element.isElement(child) && child.type === types.table_header,
+        );
+
+        if (tableHeader && Element.isElement(tableHeader) && tableHeader.children.length > 0) {
+          const tableMainPath = tableMainEntry[1];
+          const tableHeaderIndex = tableMain.children.findIndex((child) => child === tableHeader);
+          const lastRowIndex = tableHeader.children.length - 1;
+          const lastRow = tableHeader.children[lastRowIndex];
+
+          if (Element.isElement(lastRow)) {
+            const targetColumnIndex = Math.min(currentColumnIndex, lastRow.children.length - 1);
+            const targetCellPath = [...tableMainPath, tableHeaderIndex, lastRowIndex, targetColumnIndex];
+            const targetPoint = Editor.start(editor, targetCellPath);
+
+            // 擴展選取範圍
+            Transforms.select(editor, { anchor, focus: targetPoint });
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to extend selection up:', error);
+    }
+  };
+
+  const extendSelectionDown: Table<Editor>['extendSelectionDown'] = (editor, types) => {
+    if (!editor.selection) return;
+
+    try {
+      const { anchor, focus } = editor.selection;
+
+      // 找到 focus 點所在的 cell
+      const cellEntry = Editor.above(editor, {
+        at: focus,
+        match: (n) => Element.isElement(n) && n.type === types.table_cell,
+      });
+
+      if (!cellEntry) return;
+
+      const [, cellPath] = cellEntry;
+      const currentColumnIndex = cellPath[cellPath.length - 1];
+
+      const rowEntry = Editor.above(editor, {
+        at: cellPath,
+        match: (n) => Element.isElement(n) && n.type === types.table_row,
+      });
+
+      if (!rowEntry) return;
+
+      const [, rowPath] = rowEntry;
+      const currentRowIndex = rowPath[rowPath.length - 1];
+
+      // 找到 table body 或 header 容器
+      const containerEntry = Editor.above(editor, {
+        at: rowPath,
+        match: (n) => Element.isElement(n) && [types.table_header, types.table_body].includes(n.type),
+      });
+
+      if (!containerEntry) return;
+
+      const [container, containerPath] = containerEntry;
+
+      // 嘗試移動到下一個 row 的相同 column
+      if (currentRowIndex < container.children.length - 1) {
+        const targetRowPath = [...containerPath, currentRowIndex + 1];
+        const targetRow = container.children[currentRowIndex + 1];
+
+        if (Element.isElement(targetRow)) {
+          const targetColumnIndex = Math.min(currentColumnIndex, targetRow.children.length - 1);
+          const targetCellPath = [...targetRowPath, targetColumnIndex];
+          const targetPoint = Editor.end(editor, targetCellPath);
+
+          // 擴展選取範圍
+          Transforms.select(editor, { anchor, focus: targetPoint });
+        }
+
+        return;
+      }
+
+      // 如果在 header 的最後一行，嘗試移動到 body 的第一行
+      if (Element.isElement(container) && container.type === types.table_header) {
+        const tableMainEntry = Editor.above(editor, {
+          at: containerPath,
+          match: (n) => Element.isElement(n) && n.type === types.table_main,
+        });
+
+        if (!tableMainEntry) return;
+
+        const [tableMain] = tableMainEntry;
+        const tableBody = tableMain.children.find(
+          (child) => Element.isElement(child) && child.type === types.table_body,
+        );
+
+        if (tableBody && Element.isElement(tableBody) && tableBody.children.length > 0) {
+          const tableMainPath = tableMainEntry[1];
+          const tableBodyIndex = tableMain.children.findIndex((child) => child === tableBody);
+          const firstRow = tableBody.children[0];
+
+          if (Element.isElement(firstRow)) {
+            const targetColumnIndex = Math.min(currentColumnIndex, firstRow.children.length - 1);
+            const targetCellPath = [...tableMainPath, tableBodyIndex, 0, targetColumnIndex];
+            const targetPoint = Editor.end(editor, targetCellPath);
+
+            // 擴展選取範圍
+            Transforms.select(editor, { anchor, focus: targetPoint });
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to extend selection down:', error);
+    }
+  };
+
   return {
     types,
     createTableElement,
@@ -344,6 +625,10 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
     moveToNextCell,
     moveToRowAbove,
     moveToRowBelow,
+    extendSelectionLeft,
+    extendSelectionRight,
+    extendSelectionUp,
+    extendSelectionDown,
     with(editor) {
       editor.normalizeNode = (entry) => {
         const [node, path] = entry;

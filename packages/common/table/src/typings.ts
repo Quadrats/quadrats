@@ -46,6 +46,10 @@ export interface Table<T extends Editor = Editor> extends Withable {
   moveToNextCell(editor: Editor, types: TableTypes): void;
   moveToRowAbove(editor: Editor, types: TableTypes): void;
   moveToRowBelow(editor: Editor, types: TableTypes): void;
+  extendSelectionLeft(editor: Editor, types: TableTypes): void;
+  extendSelectionRight(editor: Editor, types: TableTypes): void;
+  extendSelectionUp(editor: Editor, types: TableTypes): void;
+  extendSelectionDown(editor: Editor, types: TableTypes): void;
   // 檢查選取範圍
   isSelectionInTableMain(editor: T): boolean;
   isSelectionInTableCell(editor: T): boolean;
