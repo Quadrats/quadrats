@@ -11,20 +11,15 @@ import {
 import { FileUploader, FileUploaderElement, UploaderPlaceholderElement } from './typings';
 import { FILE_UPLOADER_TYPE, FILE_UPLOADER_PLACEHOLDER_TYPE } from './constants';
 import { getFilesFromInput } from './getFilesFromInput';
+import { TABLE_CELL_TYPE } from '@quadrats/common/table';
 
 export interface CreateFileUploaderOptions {
   type?: string;
 }
 
 export const createFileUploaderElementByType: (type: string) => FileUploader<Editor>['createFileUploaderElement'] =
-  type => async (
-    editor,
-    file,
-    options,
-  ) => {
-    const {
-      createElement, getBody, getHeaders, getUrl, uploader,
-    } = options;
+  (type) => async (editor, file, options) => {
+    const { createElement, getBody, getHeaders, getUrl, uploader } = options;
 
     const [mime] = file.type.split('/');
     const createByMime = createElement[mime];
@@ -86,14 +81,31 @@ export const createFileUploaderElementByType: (type: string) => FileUploader<Edi
     return fileUploaderElement;
   };
 
-export function insertFileUploaderElement(
-  editor: Editor, fileUploaderElement: FileUploaderElement | undefined,
-) {
+export function insertFileUploaderElement(editor: Editor, fileUploaderElement: FileUploaderElement | undefined) {
   if (fileUploaderElement) {
+    // 驗證當前 selection 是否仍然有效
+    if (!editor.selection) {
+      return;
+    }
+
+    try {
+      // 嘗試取得當前選取位置的節點，確保路徑仍然有效
+      const node = Editor.node(editor, editor.selection);
+
+      if (!node) {
+        return;
+      }
+    } catch (error) {
+      // 如果路徑無效（例如 placeholder 已被移除），靜默失敗
+      console.warn('Cannot insert file uploader element: invalid selection path', error);
+
+      return;
+    }
+
     // Clear empty node
     if (isAboveBlockEmpty(editor)) {
       Transforms.removeNodes(editor, {
-        at: editor.selection?.anchor,
+        at: editor.selection.anchor,
       });
     }
 
@@ -112,11 +124,25 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
 
   const removeUploaderPlaceholder: FileUploader<Editor>['removeUploaderPlaceholder'] = (editor) => {
     Transforms.removeNodes(editor, {
-      match: node => Element.isElement(node) && (node as QuadratsElement).type === FILE_UPLOADER_PLACEHOLDER_TYPE,
+      match: (node) => Element.isElement(node) && (node as QuadratsElement).type === FILE_UPLOADER_PLACEHOLDER_TYPE,
     });
   };
 
   const upload: FileUploader<Editor>['upload'] = async (editor, options) => {
+    // 檢查是否在不允許的元件之中，如果是則不執行上傳
+    if (editor.selection) {
+      try {
+        const invalidEntry = Editor.above(editor, {
+          at: editor.selection,
+          match: (n) => Element.isElement(n) && (n as QuadratsElement).type === TABLE_CELL_TYPE,
+        });
+
+        if (invalidEntry) return;
+      } catch (error) {
+        return;
+      }
+    }
+
     const { accept, multiple } = options;
     const files = await getFilesFromInput({ accept, multiple });
 
@@ -137,17 +163,30 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
     }, Promise.resolve());
   };
 
-  const insertUploaderPlaceholder: FileUploader<Editor>['insertUploaderPlaceholder'] =
-    (editor) => {
-      const uploaderPlaceholderElement: UploaderPlaceholderElement = {
-        type: FILE_UPLOADER_PLACEHOLDER_TYPE,
-        children: [{ text: '' }],
-      };
+  const insertUploaderPlaceholder: FileUploader<Editor>['insertUploaderPlaceholder'] = (editor) => {
+    // 檢查是否在不允許的元件之中，如果是則不插入 placeholder
+    if (editor.selection) {
+      try {
+        const invalidEntry = Editor.above(editor, {
+          at: editor.selection,
+          match: (n) => Element.isElement(n) && (n as QuadratsElement).type === TABLE_CELL_TYPE,
+        });
 
-      Editor.withoutNormalizing(editor, () => {
-        Transforms.insertNodes(editor, uploaderPlaceholderElement);
-      });
+        if (invalidEntry) return;
+      } catch (error) {
+        return;
+      }
+    }
+
+    const uploaderPlaceholderElement: UploaderPlaceholderElement = {
+      type: FILE_UPLOADER_PLACEHOLDER_TYPE,
+      children: [{ text: '' }],
     };
+
+    Editor.withoutNormalizing(editor, () => {
+      Transforms.insertNodes(editor, uploaderPlaceholderElement);
+    });
+  };
 
   return {
     type,
