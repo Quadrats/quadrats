@@ -1,4 +1,4 @@
-import { Editor, Element } from '@quadrats/core';
+import { Editor, Element, Transforms } from '@quadrats/core';
 import { CellLocation, ColumnWidth, TableContainers, TableElement, TableTypes } from './typings';
 
 /**
@@ -64,7 +64,7 @@ export function calculateTableMinWidth(columnWidths: ColumnWidth[]): string {
 export function getCellLocation(editor: Editor, types: TableTypes, at?: any): CellLocation | null {
   const cellEntry = Editor.above(editor, {
     at,
-    match: (n) => Element.isElement(n) && n.type === types.table_cell,
+    match: (n) => Element.isElement(n) && (n as TableElement).type === types.table_cell,
   });
 
   if (!cellEntry) return null;
@@ -74,7 +74,7 @@ export function getCellLocation(editor: Editor, types: TableTypes, at?: any): Ce
 
   const rowEntry = Editor.above(editor, {
     at: cellPath,
-    match: (n) => Element.isElement(n) && n.type === types.table_row,
+    match: (n) => Element.isElement(n) && (n as TableElement).type === types.table_row,
   });
 
   if (!rowEntry) return null;
@@ -84,7 +84,7 @@ export function getCellLocation(editor: Editor, types: TableTypes, at?: any): Ce
 
   const containerEntry = Editor.above(editor, {
     at: rowPath,
-    match: (n) => Element.isElement(n) && [types.table_header, types.table_body].includes(n.type),
+    match: (n) => Element.isElement(n) && [types.table_header, types.table_body].includes((n as TableElement).type),
   });
 
   if (!containerEntry) return null;
@@ -99,8 +99,8 @@ export function getCellLocation(editor: Editor, types: TableTypes, at?: any): Ce
     rowIndex,
     container,
     containerPath,
-    isHeader: Element.isElement(container) && container.type === types.table_header,
-    isBody: Element.isElement(container) && container.type === types.table_body,
+    isHeader: Element.isElement(container) && (container as TableElement).type === types.table_header,
+    isBody: Element.isElement(container) && (container as TableElement).type === types.table_body,
   };
 }
 
@@ -114,7 +114,7 @@ export function getCellLocation(editor: Editor, types: TableTypes, at?: any): Ce
 export function getTableContainers(editor: Editor, types: TableTypes, containerPath: number[]): TableContainers | null {
   const tableMainEntry = Editor.above(editor, {
     at: containerPath,
-    match: (n) => Element.isElement(n) && n.type === types.table_main,
+    match: (n) => Element.isElement(n) && (n as TableElement).type === types.table_main,
   });
 
   if (!tableMainEntry) return null;
@@ -122,11 +122,11 @@ export function getTableContainers(editor: Editor, types: TableTypes, containerP
   const [tableMain, tableMainPath] = tableMainEntry;
 
   const tableHeader = tableMain.children.find(
-    (child) => Element.isElement(child) && child.type === types.table_header,
+    (child) => Element.isElement(child) && (child as TableElement).type === types.table_header,
   ) as TableElement | null;
 
   const tableBody = tableMain.children.find(
-    (child) => Element.isElement(child) && child.type === types.table_body,
+    (child) => Element.isElement(child) && (child as TableElement).type === types.table_body,
   ) as TableElement | null;
 
   const tableHeaderIndex = tableHeader ? tableMain.children.findIndex((child) => child === tableHeader) : -1;
@@ -269,4 +269,55 @@ export function tryMoveToNextCell(
   }
 
   return false;
+}
+
+/**
+ * 嘗試在水平方向擴展選擇（左右移動）
+ * @param editor - Slate editor
+ * @param location - 當前 cell 位置資訊
+ * @param direction - 移動方向（'left' 或 'right'）
+ * @param anchor - 選擇的起點
+ * @returns 是否成功擴展
+ */
+export function tryExtendSelectionHorizontal(
+  editor: Editor,
+  location: CellLocation,
+  direction: 'left' | 'right',
+  anchor: any,
+): boolean {
+  const { cellPath, columnIndex, row, rowPath } = location;
+  const focus = editor.selection?.focus;
+
+  if (!focus) return false;
+
+  const isLeftDirection = direction === 'left';
+  const isAtBoundary = isLeftDirection ? columnIndex === 0 : columnIndex >= row.children.length - 1;
+
+  // 如果已經在邊界，嘗試擴展到該 cell 的開頭或結尾
+  if (isAtBoundary) {
+    const boundaryPoint = isLeftDirection ? Editor.start(editor, cellPath) : Editor.end(editor, cellPath);
+
+    // 只有當 focus 還沒到邊界時才移動
+    const shouldMove = isLeftDirection
+      ? focus.offset > boundaryPoint.offset || focus.path.length !== boundaryPoint.path.length
+      : focus.offset < boundaryPoint.offset || focus.path.length !== boundaryPoint.path.length;
+
+    if (shouldMove) {
+      Transforms.select(editor, { anchor, focus: boundaryPoint });
+    }
+
+    return true;
+  }
+
+  // 找到目標 cell
+  const targetColumnIndex = isLeftDirection ? columnIndex - 1 : columnIndex + 1;
+  const targetCellPath = [...rowPath, targetColumnIndex];
+
+  // 根據方向選擇目標點（左邊用 end，右邊用 start）
+  const targetPoint = isLeftDirection ? Editor.end(editor, targetCellPath) : Editor.start(editor, targetCellPath);
+
+  // 保持 anchor 不變，移動 focus
+  Transforms.select(editor, { anchor, focus: targetPoint });
+
+  return true;
 }
