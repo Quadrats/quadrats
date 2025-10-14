@@ -1,4 +1,4 @@
-import { Editor, QuadratsElement, Text, Withable, WithElementType } from '@quadrats/core';
+import { Ancestor, Editor, QuadratsElement, Text, Withable, WithElementType } from '@quadrats/core';
 
 export type TableTypeKey = 'table'; // 元件最外層
 export type TableTitleTypeKey = 'table_title'; // 表格標題
@@ -57,4 +57,25 @@ export interface Table<T extends Editor = Editor> extends Withable {
   isSelectionInTableHeader(editor: T): boolean;
   isSelectionInTableBody(editor: T): boolean;
   isSelectionInTableList(editor: T): boolean;
+}
+
+export interface CellLocation {
+  cellPath: number[];
+  columnIndex: number;
+  row: Ancestor;
+  rowPath: number[];
+  rowIndex: number;
+  container: Ancestor;
+  containerPath: number[];
+  isHeader: boolean;
+  isBody: boolean;
+}
+
+export interface TableContainers {
+  tableMain: Ancestor;
+  tableMainPath: number[];
+  tableHeader: TableElement | null;
+  tableBody: TableElement | null;
+  tableHeaderIndex: number;
+  tableBodyIndex: number;
 }

@@ -12,6 +12,13 @@ import {
 import { Table, TableTypes } from './typings';
 import { TABLE_TYPES } from './constants';
 import { LIST_TYPES } from '@quadrats/common/list';
+import {
+  getCellLocation,
+  getTableContainers,
+  tryMoveToAdjacentRow,
+  tryCrossBoundaryMove,
+  tryMoveToNextCell,
+} from './utils';
 
 export interface CreateTableOptions {
   types?: Partial<TableTypes>;
@@ -83,82 +90,26 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
     if (!editor.selection) return;
 
     try {
-      const cellEntry = Editor.above(editor, {
-        match: (n) => Element.isElement(n) && n.type === types.table_cell,
-      });
+      const location = getCellLocation(editor, types);
 
-      if (!cellEntry) return;
+      if (!location) return;
 
-      const [, cellPath] = cellEntry;
-
-      const rowEntry = Editor.above(editor, {
-        at: cellPath,
-        match: (n) => Element.isElement(n) && n.type === types.table_row,
-      });
-
-      if (!rowEntry) return;
-
-      const [currentRow, rowPath] = rowEntry;
-      const cellIndex = cellPath[cellPath.length - 1];
-      const nextCellIndex = cellIndex + 1;
-
-      // Try to move to next cell in current row
-      if (nextCellIndex < currentRow.children.length) {
-        const targetCellPath = [...rowPath, nextCellIndex];
-        const point = Editor.start(editor, targetCellPath);
+      const selectFn = (cellPath: number[], position: 'start' | 'end') => {
+        const point = Editor[position](editor, cellPath);
 
         Transforms.select(editor, point);
+      };
 
-        return;
-      }
+      // 嘗試移動到下一個 cell（同一列或下一列）
+      if (tryMoveToNextCell(location, selectFn)) return;
 
-      // Current row is full, try to move to next row
-      const tableContainerEntry = Editor.above(editor, {
-        at: rowPath,
-        match: (n) => Element.isElement(n) && [types.table_header, types.table_body].includes(n.type),
-      });
+      // 如果在 header，嘗試移動到 body 的第一個 cell（第一行）
+      const containers = getTableContainers(editor, types, location.containerPath);
 
-      if (!tableContainerEntry) return;
+      if (!containers) return;
 
-      const [tableContainer, tableContainerPath] = tableContainerEntry;
-      const currentRowIndex = rowPath[rowPath.length - 1];
-      const nextRowIndex = currentRowIndex + 1;
-
-      // Try to move to next row in current container (header or body)
-      if (nextRowIndex < tableContainer.children.length) {
-        const nextRowPath = [...tableContainerPath, nextRowIndex];
-        const targetCellPath = [...nextRowPath, 0];
-        const point = Editor.start(editor, targetCellPath);
-
-        Transforms.select(editor, point);
-
-        return;
-      }
-
-      // If we're in header and no more rows, try to move to body
-      if (Element.isElement(tableContainer) && tableContainer.type === types.table_header) {
-        const tableMainEntry = Editor.above(editor, {
-          at: tableContainerPath,
-          match: (n) => Element.isElement(n) && n.type === types.table_main,
-        });
-
-        if (!tableMainEntry) return;
-
-        const [tableMain] = tableMainEntry;
-        const tableBody = tableMain.children.find(
-          (child) => Element.isElement(child) && child.type === types.table_body,
-        );
-
-        if (tableBody && Element.isElement(tableBody) && tableBody.children.length > 0) {
-          const tableMainPath = tableMainEntry[1];
-          const tableBodyIndex = tableMain.children.findIndex((child) => child === tableBody);
-          const firstRowPath = [...tableMainPath, tableBodyIndex, 0];
-          const targetCellPath = [...firstRowPath, 0];
-          const point = Editor.start(editor, targetCellPath);
-
-          Transforms.select(editor, point);
-        }
-      }
+      // 使用 tryCrossBoundaryMove，指定 targetColumn 為 0（Tab 導航總是移動到第一行）
+      if (tryCrossBoundaryMove(containers, location, 'down', selectFn, 0)) return;
     } catch (error) {
       console.warn('Failed to move to next cell:', error);
     }
@@ -168,81 +119,25 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
     if (!editor.selection) return;
 
     try {
-      const cellEntry = Editor.above(editor, {
-        match: (n) => Element.isElement(n) && n.type === types.table_cell,
-      });
+      const location = getCellLocation(editor, types);
 
-      if (!cellEntry) return;
+      if (!location) return;
 
-      const [, cellPath] = cellEntry;
-      const currentColumnIndex = cellPath[cellPath.length - 1];
+      const selectFn = (cellPath: number[], position: 'start' | 'end') => {
+        const point = Editor[position](editor, cellPath);
 
-      const rowEntry = Editor.above(editor, {
-        at: cellPath,
-        match: (n) => Element.isElement(n) && n.type === types.table_row,
-      });
+        Transforms.select(editor, point);
+      };
 
-      if (!rowEntry) return;
+      // 嘗試移動到相鄰列（同一行）
+      if (tryMoveToAdjacentRow(location, 'up', selectFn)) return;
 
-      const [, rowPath] = rowEntry;
-      const currentRowIndex = rowPath[rowPath.length - 1];
+      // 嘗試跨容器移動
+      const containers = getTableContainers(editor, types, location.containerPath);
 
-      // 找到 table body 或 header 容器
-      const containerEntry = Editor.above(editor, {
-        at: rowPath,
-        match: (n) => Element.isElement(n) && [types.table_header, types.table_body].includes(n.type),
-      });
+      if (!containers) return;
 
-      if (!containerEntry) return;
-
-      const [container, containerPath] = containerEntry;
-
-      // 嘗試移動到上一個 row 的相同 column
-      if (currentRowIndex > 0) {
-        const targetRowPath = [...containerPath, currentRowIndex - 1];
-        const targetRow = container.children[currentRowIndex - 1];
-
-        if (Element.isElement(targetRow)) {
-          // 確保目標 column 存在
-          const targetColumnIndex = Math.min(currentColumnIndex, targetRow.children.length - 1);
-          const targetCellPath = [...targetRowPath, targetColumnIndex];
-          const point = Editor.start(editor, targetCellPath);
-
-          Transforms.select(editor, point);
-        }
-
-        return;
-      }
-
-      // 如果在 body 的第一行，嘗試移動到 header 的最後一行
-      if (Element.isElement(container) && container.type === types.table_body) {
-        const tableMainEntry = Editor.above(editor, {
-          at: containerPath,
-          match: (n) => Element.isElement(n) && n.type === types.table_main,
-        });
-
-        if (!tableMainEntry) return;
-
-        const [tableMain] = tableMainEntry;
-        const tableHeader = tableMain.children.find(
-          (child) => Element.isElement(child) && child.type === types.table_header,
-        );
-
-        if (tableHeader && Element.isElement(tableHeader) && tableHeader.children.length > 0) {
-          const tableMainPath = tableMainEntry[1];
-          const tableHeaderIndex = tableMain.children.findIndex((child) => child === tableHeader);
-          const lastRowIndex = tableHeader.children.length - 1;
-          const lastRow = tableHeader.children[lastRowIndex];
-
-          if (Element.isElement(lastRow)) {
-            const targetColumnIndex = Math.min(currentColumnIndex, lastRow.children.length - 1);
-            const targetCellPath = [...tableMainPath, tableHeaderIndex, lastRowIndex, targetColumnIndex];
-            const point = Editor.start(editor, targetCellPath);
-
-            Transforms.select(editor, point);
-          }
-        }
-      }
+      if (tryCrossBoundaryMove(containers, location, 'up', selectFn)) return;
     } catch (error) {
       console.warn('Failed to move to row above:', error);
     }
@@ -252,80 +147,25 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
     if (!editor.selection) return;
 
     try {
-      const cellEntry = Editor.above(editor, {
-        match: (n) => Element.isElement(n) && n.type === types.table_cell,
-      });
+      const location = getCellLocation(editor, types);
 
-      if (!cellEntry) return;
+      if (!location) return;
 
-      const [, cellPath] = cellEntry;
-      const currentColumnIndex = cellPath[cellPath.length - 1];
+      const selectFn = (cellPath: number[], position: 'start' | 'end') => {
+        const point = Editor[position](editor, cellPath);
 
-      const rowEntry = Editor.above(editor, {
-        at: cellPath,
-        match: (n) => Element.isElement(n) && n.type === types.table_row,
-      });
+        Transforms.select(editor, point);
+      };
 
-      if (!rowEntry) return;
+      // 嘗試移動到相鄰列（同一行）
+      if (tryMoveToAdjacentRow(location, 'down', selectFn)) return;
 
-      const [, rowPath] = rowEntry;
-      const currentRowIndex = rowPath[rowPath.length - 1];
+      // 嘗試跨容器移動
+      const containers = getTableContainers(editor, types, location.containerPath);
 
-      // 找到 table body 或 header 容器
-      const containerEntry = Editor.above(editor, {
-        at: rowPath,
-        match: (n) => Element.isElement(n) && [types.table_header, types.table_body].includes(n.type),
-      });
+      if (!containers) return;
 
-      if (!containerEntry) return;
-
-      const [container, containerPath] = containerEntry;
-
-      // 嘗試移動到下一個 row 的相同 column
-      if (currentRowIndex < container.children.length - 1) {
-        const targetRowPath = [...containerPath, currentRowIndex + 1];
-        const targetRow = container.children[currentRowIndex + 1];
-
-        if (Element.isElement(targetRow)) {
-          // 確保目標 column 存在
-          const targetColumnIndex = Math.min(currentColumnIndex, targetRow.children.length - 1);
-          const targetCellPath = [...targetRowPath, targetColumnIndex];
-          const point = Editor.start(editor, targetCellPath);
-
-          Transforms.select(editor, point);
-        }
-
-        return;
-      }
-
-      // 如果在 header 的最後一行，嘗試移動到 body 的第一行
-      if (Element.isElement(container) && container.type === types.table_header) {
-        const tableMainEntry = Editor.above(editor, {
-          at: containerPath,
-          match: (n) => Element.isElement(n) && n.type === types.table_main,
-        });
-
-        if (!tableMainEntry) return;
-
-        const [tableMain] = tableMainEntry;
-        const tableBody = tableMain.children.find(
-          (child) => Element.isElement(child) && child.type === types.table_body,
-        );
-
-        if (tableBody && Element.isElement(tableBody) && tableBody.children.length > 0) {
-          const tableMainPath = tableMainEntry[1];
-          const tableBodyIndex = tableMain.children.findIndex((child) => child === tableBody);
-          const firstRow = tableBody.children[0];
-
-          if (Element.isElement(firstRow)) {
-            const targetColumnIndex = Math.min(currentColumnIndex, firstRow.children.length - 1);
-            const targetCellPath = [...tableMainPath, tableBodyIndex, 0, targetColumnIndex];
-            const point = Editor.start(editor, targetCellPath);
-
-            Transforms.select(editor, point);
-          }
-        }
-      }
+      if (tryCrossBoundaryMove(containers, location, 'down', selectFn)) return;
     } catch (error) {
       console.warn('Failed to move to row below:', error);
     }
@@ -348,11 +188,11 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
       const [, cellPath] = cellEntry;
       const currentColumnIndex = cellPath[cellPath.length - 1];
 
-      // 檢查是否已經在第一列
+      // 檢查是否已經在第一行（最左邊）
       const isFirstColumn = currentColumnIndex === 0;
 
       if (isFirstColumn) {
-        // 如果已經在第一列，將 focus 移動到該 cell 的開頭
+        // 如果已經在第一行，將 focus 移動到該 cell 的開頭
         const cellStart = Editor.start(editor, cellPath);
 
         // 只有當 focus 還沒到開頭時才移動
@@ -376,7 +216,7 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
       const targetCellPath = [...rowPath, currentColumnIndex - 1];
       const targetPoint = Editor.end(editor, targetCellPath);
 
-      // 擴展選取範圍：保持 anchor 不變，移動 focus
+      // 保持 anchor 不變，移動 focus
       Transforms.select(editor, { anchor, focus: targetPoint });
     } catch (error) {
       console.warn('Failed to extend selection left:', error);
@@ -409,11 +249,11 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
 
       const [currentRow, rowPath] = rowEntry;
 
-      // 檢查是否已經在最後一列
+      // 檢查是否已經在最後一行（最右邊）
       const isLastColumn = currentColumnIndex >= currentRow.children.length - 1;
 
       if (isLastColumn) {
-        // 如果已經在最後一列，將 focus 移動到該 cell 的結尾
+        // 如果已經在最後一行，將 focus 移動到該 cell 的結尾
         const cellEnd = Editor.end(editor, cellPath);
 
         // 只有當 focus 還沒到結尾時才移動
@@ -428,7 +268,7 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
       const targetCellPath = [...rowPath, currentColumnIndex + 1];
       const targetPoint = Editor.start(editor, targetCellPath);
 
-      // 擴展選取範圍：保持 anchor 不變，移動 focus
+      // 保持 anchor 不變，移動 focus
       Transforms.select(editor, { anchor, focus: targetPoint });
     } catch (error) {
       console.warn('Failed to extend selection right:', error);
@@ -439,86 +279,27 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
     if (!editor.selection) return;
 
     try {
-      const { anchor, focus } = editor.selection;
+      const { anchor } = editor.selection;
 
-      // 找到 focus 點所在的 cell
-      const cellEntry = Editor.above(editor, {
-        at: focus,
-        match: (n) => Element.isElement(n) && n.type === types.table_cell,
-      });
+      const location = getCellLocation(editor, types, editor.selection.focus);
 
-      if (!cellEntry) return;
+      if (!location) return;
 
-      const [, cellPath] = cellEntry;
-      const currentColumnIndex = cellPath[cellPath.length - 1];
+      const selectFn = (cellPath: number[], position: 'start' | 'end') => {
+        const point = Editor[position](editor, cellPath);
 
-      const rowEntry = Editor.above(editor, {
-        at: cellPath,
-        match: (n) => Element.isElement(n) && n.type === types.table_row,
-      });
+        Transforms.select(editor, { anchor, focus: point });
+      };
 
-      if (!rowEntry) return;
+      // 嘗試移動到相鄰列（同一行）
+      if (tryMoveToAdjacentRow(location, 'up', selectFn)) return;
 
-      const [, rowPath] = rowEntry;
-      const currentRowIndex = rowPath[rowPath.length - 1];
+      // 嘗試跨容器移動
+      const containers = getTableContainers(editor, types, location.containerPath);
 
-      // 找到 table body 或 header 容器
-      const containerEntry = Editor.above(editor, {
-        at: rowPath,
-        match: (n) => Element.isElement(n) && [types.table_header, types.table_body].includes(n.type),
-      });
+      if (!containers) return;
 
-      if (!containerEntry) return;
-
-      const [container, containerPath] = containerEntry;
-
-      // 嘗試移動到上一個 row 的相同 column
-      if (currentRowIndex > 0) {
-        const targetRowPath = [...containerPath, currentRowIndex - 1];
-        const targetRow = container.children[currentRowIndex - 1];
-
-        if (Element.isElement(targetRow)) {
-          const targetColumnIndex = Math.min(currentColumnIndex, targetRow.children.length - 1);
-          const targetCellPath = [...targetRowPath, targetColumnIndex];
-          const targetPoint = Editor.start(editor, targetCellPath);
-
-          // 擴展選取範圍
-          Transforms.select(editor, { anchor, focus: targetPoint });
-        }
-
-        return;
-      }
-
-      // 如果在 body 的第一行，嘗試移動到 header 的最後一行
-      if (Element.isElement(container) && container.type === types.table_body) {
-        const tableMainEntry = Editor.above(editor, {
-          at: containerPath,
-          match: (n) => Element.isElement(n) && n.type === types.table_main,
-        });
-
-        if (!tableMainEntry) return;
-
-        const [tableMain] = tableMainEntry;
-        const tableHeader = tableMain.children.find(
-          (child) => Element.isElement(child) && child.type === types.table_header,
-        );
-
-        if (tableHeader && Element.isElement(tableHeader) && tableHeader.children.length > 0) {
-          const tableMainPath = tableMainEntry[1];
-          const tableHeaderIndex = tableMain.children.findIndex((child) => child === tableHeader);
-          const lastRowIndex = tableHeader.children.length - 1;
-          const lastRow = tableHeader.children[lastRowIndex];
-
-          if (Element.isElement(lastRow)) {
-            const targetColumnIndex = Math.min(currentColumnIndex, lastRow.children.length - 1);
-            const targetCellPath = [...tableMainPath, tableHeaderIndex, lastRowIndex, targetColumnIndex];
-            const targetPoint = Editor.start(editor, targetCellPath);
-
-            // 擴展選取範圍
-            Transforms.select(editor, { anchor, focus: targetPoint });
-          }
-        }
-      }
+      if (tryCrossBoundaryMove(containers, location, 'up', selectFn)) return;
     } catch (error) {
       console.warn('Failed to extend selection up:', error);
     }
@@ -528,85 +309,27 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
     if (!editor.selection) return;
 
     try {
-      const { anchor, focus } = editor.selection;
+      const { anchor } = editor.selection;
 
-      // 找到 focus 點所在的 cell
-      const cellEntry = Editor.above(editor, {
-        at: focus,
-        match: (n) => Element.isElement(n) && n.type === types.table_cell,
-      });
+      const location = getCellLocation(editor, types, editor.selection.focus);
 
-      if (!cellEntry) return;
+      if (!location) return;
 
-      const [, cellPath] = cellEntry;
-      const currentColumnIndex = cellPath[cellPath.length - 1];
+      const selectFn = (cellPath: number[], position: 'start' | 'end') => {
+        const point = Editor[position](editor, cellPath);
 
-      const rowEntry = Editor.above(editor, {
-        at: cellPath,
-        match: (n) => Element.isElement(n) && n.type === types.table_row,
-      });
+        Transforms.select(editor, { anchor, focus: point });
+      };
 
-      if (!rowEntry) return;
+      // 嘗試移動到相鄰列（同一行）
+      if (tryMoveToAdjacentRow(location, 'down', selectFn)) return;
 
-      const [, rowPath] = rowEntry;
-      const currentRowIndex = rowPath[rowPath.length - 1];
+      // 嘗試跨容器移動
+      const containers = getTableContainers(editor, types, location.containerPath);
 
-      // 找到 table body 或 header 容器
-      const containerEntry = Editor.above(editor, {
-        at: rowPath,
-        match: (n) => Element.isElement(n) && [types.table_header, types.table_body].includes(n.type),
-      });
+      if (!containers) return;
 
-      if (!containerEntry) return;
-
-      const [container, containerPath] = containerEntry;
-
-      // 嘗試移動到下一個 row 的相同 column
-      if (currentRowIndex < container.children.length - 1) {
-        const targetRowPath = [...containerPath, currentRowIndex + 1];
-        const targetRow = container.children[currentRowIndex + 1];
-
-        if (Element.isElement(targetRow)) {
-          const targetColumnIndex = Math.min(currentColumnIndex, targetRow.children.length - 1);
-          const targetCellPath = [...targetRowPath, targetColumnIndex];
-          const targetPoint = Editor.end(editor, targetCellPath);
-
-          // 擴展選取範圍
-          Transforms.select(editor, { anchor, focus: targetPoint });
-        }
-
-        return;
-      }
-
-      // 如果在 header 的最後一行，嘗試移動到 body 的第一行
-      if (Element.isElement(container) && container.type === types.table_header) {
-        const tableMainEntry = Editor.above(editor, {
-          at: containerPath,
-          match: (n) => Element.isElement(n) && n.type === types.table_main,
-        });
-
-        if (!tableMainEntry) return;
-
-        const [tableMain] = tableMainEntry;
-        const tableBody = tableMain.children.find(
-          (child) => Element.isElement(child) && child.type === types.table_body,
-        );
-
-        if (tableBody && Element.isElement(tableBody) && tableBody.children.length > 0) {
-          const tableMainPath = tableMainEntry[1];
-          const tableBodyIndex = tableMain.children.findIndex((child) => child === tableBody);
-          const firstRow = tableBody.children[0];
-
-          if (Element.isElement(firstRow)) {
-            const targetColumnIndex = Math.min(currentColumnIndex, firstRow.children.length - 1);
-            const targetCellPath = [...tableMainPath, tableBodyIndex, 0, targetColumnIndex];
-            const targetPoint = Editor.end(editor, targetCellPath);
-
-            // 擴展選取範圍
-            Transforms.select(editor, { anchor, focus: targetPoint });
-          }
-        }
-      }
+      if (tryCrossBoundaryMove(containers, location, 'down', selectFn)) return;
     } catch (error) {
       console.warn('Failed to extend selection down:', error);
     }
