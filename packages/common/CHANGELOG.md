@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/Quadrats/quadrats/compare/v0.7.8...v1.0.0) (2025-10-14)
+
+### Bug Fixes
+
+- **common/accordion:** accordion can not in accordion ([e57c96d](https://github.com/Quadrats/quadrats/commit/e57c96de537c3f7e475694c0ef6af9156073b404))
+- **common/accordion:** build issue ([58ce9e9](https://github.com/Quadrats/quadrats/commit/58ce9e96768da7cbc7155b0473cb82b45b77032c))
+- **common/accordion:** const naming ([5a8d2de](https://github.com/Quadrats/quadrats/commit/5a8d2de76feb47d49d29a514d183e431c400d8a2))
+- **common/accordion:** fix mapping same key issue ([ea65f08](https://github.com/Quadrats/quadrats/commit/ea65f08c0b12890ec4b4ecb3b2a63351bcacce7d))
+- **common/accordion:** fix typings ([7e95d1a](https://github.com/Quadrats/quadrats/commit/7e95d1a8e44fd96a9196d26c6e53f129bac8a311))
+- **common/accordion:** type issue ([fb39b62](https://github.com/Quadrats/quadrats/commit/fb39b6204d688571573a85df1f5741941b4f152d))
+- **common/align:** fix align build error ([c24b8ac](https://github.com/Quadrats/quadrats/commit/c24b8ac8688b5123ae09c2f5556809304e083c49))
+- **common/card:** default types constants ([5ac55d9](https://github.com/Quadrats/quadrats/commit/5ac55d9fbe671ed50b60da3a80039f2cdc9963a4))
+- **common/card:** normalizeNode card [#86](https://github.com/Quadrats/quadrats/issues/86)eudm362 ([ab6bb41](https://github.com/Quadrats/quadrats/commit/ab6bb412e6a1883ff5f34df12bfcb5eaaabe8c0a)), closes [#86eudm362](https://github.com/Quadrats/quadrats/issues/86eudm362)
+- **common/carousel:** default types constants ([d01eb23](https://github.com/Quadrats/quadrats/commit/d01eb231f5b97c08ae6e31dae1bc68d811469b41))
+- **common/carousel:** normalizeNode carousel ([aba947c](https://github.com/Quadrats/quadrats/commit/aba947cc0da8d5bae0417981b45c64d731f02264))
+- **common/embed:** default types constants ([c3dd8cf](https://github.com/Quadrats/quadrats/commit/c3dd8cfb905e9a6882790fe2cc14e42a47d5ce45))
+- **common/paragraph:** fix paragraph typings ([e746924](https://github.com/Quadrats/quadrats/commit/e746924dfff2a5b281d74f3a95b05fec5bde70c8))
+
+### Features
+
+- **common/accordion:** base code ([d6ac3e8](https://github.com/Quadrats/quadrats/commit/d6ac3e8bf6d9f9af23a99f267b55fcbafcafddb5))
+- **common/accordion:** create accordion package ([123616c](https://github.com/Quadrats/quadrats/commit/123616c947eb6a2571e2b24ef3000db084c067f1))
+- **common/accordion:** insert empty accordion_title and accordion_content ([2dd6a01](https://github.com/Quadrats/quadrats/commit/2dd6a0112ce006672236c3b73b455711b20fc94b))
+- **common/accordion:** more methods for accordion ([d24dabc](https://github.com/Quadrats/quadrats/commit/d24dabcea25edb0b227d1f82d5963195a2546a3e))
+- **common/accordion:** normalizeNode ([452507a](https://github.com/Quadrats/quadrats/commit/452507a736d7061bc2811ae006551bfc50a3ca72))
+- **common/align:** implement align common logic, [#86](https://github.com/Quadrats/quadrats/issues/86)eujua1g ([5515bb3](https://github.com/Quadrats/quadrats/commit/5515bb35229235f603cef3d84995d1e188605668)), closes [#86eujua1](https://github.com/Quadrats/quadrats/issues/86eujua1)
+- **common/card:** card common ([a8e699b](https://github.com/Quadrats/quadrats/commit/a8e699bcab67ad687e70a13b1833564466ad55c4))
+- **common/card:** card typings ([4d5e4d7](https://github.com/Quadrats/quadrats/commit/4d5e4d7ccd548c28245aada74dd4eb9fb1c0e30a))
+- **common/card:** card typings ([cef2e44](https://github.com/Quadrats/quadrats/commit/cef2e4430a04be857640dd735cdac25d81bb287d))
+- **common/card:** creat card ([49c7ca0](https://github.com/Quadrats/quadrats/commit/49c7ca0c1b920d4ba206d3b810b085c0eaff0308))
+- **common/carousel:** block over limit files ([286def9](https://github.com/Quadrats/quadrats/commit/286def988852d4b7abffceabeb8bf68dfe70bc15))
+- **common/carousel:** carousel config ([33f4b71](https://github.com/Quadrats/quadrats/commit/33f4b71febd2f363efd2b8630fd5c34eda676072))
+- **common/carousel:** carousel config ([5612aec](https://github.com/Quadrats/quadrats/commit/5612aec097ac74c0de99119faf448df87bd46496))
+- **common/carousel:** carousel uploader typings ([0f5dc82](https://github.com/Quadrats/quadrats/commit/0f5dc82e6a9b85d1cb26f2d12a491ba9b02acc1d))
+- **common/carousel:** creaet carousel element ([bf30e70](https://github.com/Quadrats/quadrats/commit/bf30e70a06e71e30dc28ceff12df677aa10f355e))
+- **common/carousel:** createCarousel ([ee217c7](https://github.com/Quadrats/quadrats/commit/ee217c716ee23c8a5361e9bb43134625e6e7b1eb))
+- **common/carousel:** defined typings and constants ([2104014](https://github.com/Quadrats/quadrats/commit/21040143e59bb9e413c475de90a513a826876ed3))
+- **common/carousel:** export createCarousel ([a5a090d](https://github.com/Quadrats/quadrats/commit/a5a090d3870fbc2b5412baaa638aef3ef71e93e0))
+- **common/carousel:** give ratio to images component ([71e1c66](https://github.com/Quadrats/quadrats/commit/71e1c66b8407668589e7af789acd32889c3e7cd9))
+- **common/carousel:** give ratio to placeholder ([3395745](https://github.com/Quadrats/quadrats/commit/33957459b48154cb5e845ad267326194c88223aa))
+- **common/carousel:** insert carousel ([7791925](https://github.com/Quadrats/quadrats/commit/7791925c64563b25da9df3df9700c4fb2f86b895))
+- **common/carousel:** update carousel ([8b7e861](https://github.com/Quadrats/quadrats/commit/8b7e861cb8ae7bf9061e0be3d45a7baa94a39eb4))
+- **common/embed:** add align type ([4b5e504](https://github.com/Quadrats/quadrats/commit/4b5e504890aa84b71dc5fb723f2fa32d4087fb36))
+- **common/embed:** insert embed placeholder ([8f500e1](https://github.com/Quadrats/quadrats/commit/8f500e15876bd9fc185c8fd99449973462eda820))
+- **common/file-uploader:** insert placeholder ([0c8f33c](https://github.com/Quadrats/quadrats/commit/0c8f33c4877c5ec5201a348b596ef8345e1ef153))
+- **common/heading:** extended heading type to contain align property ([fe93044](https://github.com/Quadrats/quadrats/commit/fe93044075a76893414d29f727c0980bf838c4d9))
+- **common/image:** add align props ([11fcdd3](https://github.com/Quadrats/quadrats/commit/11fcdd3b0a2284936c1b0be30efa313c5eb7c01a))
+- **common/list:** add labels props to control list max level ([1703260](https://github.com/Quadrats/quadrats/commit/1703260abd8bd1dd3899e47311ffded336d4337c))
+- **common/paragraph:** common paragraph ([640ecae](https://github.com/Quadrats/quadrats/commit/640ecae6457d50de9b5e62999920245dbdb928e4))
+- **common/paragraph:** extended paragraph to contain align property ([424c224](https://github.com/Quadrats/quadrats/commit/424c2247d14f43887051eccebf5cc0499cdbff50))
+- **react/card:** card layout ([dc0031c](https://github.com/Quadrats/quadrats/commit/dc0031cf3b1491a60661ddc56954a1a11784592b))
+- **react/card:** insert card element ([ac95921](https://github.com/Quadrats/quadrats/commit/ac95921a2a583d5fb47bf5309f8358bb86801b20))
+- **react/carousel:** error case style ([251c8d8](https://github.com/Quadrats/quadrats/commit/251c8d8e19c51987fbdadf28704b78d0f2dbd378))
+- **react/components:** components layout ([9115434](https://github.com/Quadrats/quadrats/commit/9115434a3c3dcd8ab567cc66b7334578e1529bce))
+
 ## [0.7.7](https://github.com/Quadrats/quadrats/compare/v0.7.6...v0.7.7) (2025-06-30)
 
 ### Bug Fixes

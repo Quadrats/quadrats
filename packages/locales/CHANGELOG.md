@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/Quadrats/quadrats/compare/v0.7.8...v1.0.0) (2025-10-14)
+
+### Features
+
+- **locales:** accordion locales ([16cdb4c](https://github.com/Quadrats/quadrats/commit/16cdb4cf5e7cbcd12fe910ffcc13e8f5d95a557e))
+- **locales:** add accordion and carousel icon name ([99a49b2](https://github.com/Quadrats/quadrats/commit/99a49b21e24ee1f32e340137b9bd18b6819220c0))
+- **locales:** card icon name ([6753512](https://github.com/Quadrats/quadrats/commit/6753512cf54df0d6f0837c883a71800679e24d26))
+- **locales:** embed i18n ([1490b55](https://github.com/Quadrats/quadrats/commit/1490b55c8f9801e23d4c40492bff404603b55146))
+- **locales:** embed i18n ([8d6370c](https://github.com/Quadrats/quadrats/commit/8d6370ce3ab6ebe77d535285f9ecbfaab93a554a))
+- **locales:** more i18n ([dbbf7a0](https://github.com/Quadrats/quadrats/commit/dbbf7a0b73111d47d4f453e100a597cf3053d781))
+- **locales:** more i18n ([9298d79](https://github.com/Quadrats/quadrats/commit/9298d79ea719f6ee8adee7253d31bad74210a37b))
+- **locales:** youtube locales ([ceb7bed](https://github.com/Quadrats/quadrats/commit/ceb7bed5c51782a86771c21964010061e827fa9e))
+
 ## [0.7.7](https://github.com/Quadrats/quadrats/compare/v0.7.6...v0.7.7) (2025-06-30)
 
 ### Features

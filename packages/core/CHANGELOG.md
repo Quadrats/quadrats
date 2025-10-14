@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/Quadrats/quadrats/compare/v0.7.8...v1.0.0) (2025-10-14)
+
+### Bug Fixes
+
+- **core/typings:** add missing semicon ([938b901](https://github.com/Quadrats/quadrats/commit/938b9010b82052230269c4d9239e97c9bb4f510f))
+
 ## [0.7.7](https://github.com/Quadrats/quadrats/compare/v0.7.6...v0.7.7) (2025-06-30)
 
 ### Bug Fixes
