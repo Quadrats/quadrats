@@ -42,6 +42,9 @@ export type TableContextType = {
   unpinColumn: () => void;
   pinRow: (rowIndex: number) => void;
   unpinRow: () => void;
+  swapRow: (rowIndex: number, direction: 'up' | 'down') => void;
+  swapColumn: (columnIndex: number, direction: 'left' | 'right') => void;
+  swapCell: (rowIndex: number, columnIndex: number, direction: 'up' | 'down' | 'left' | 'right') => void;
   // Helper functions to check pin status
   isColumnPinned: (columnIndex: number) => boolean;
   isRowPinned: (rowIndex: number) => boolean;

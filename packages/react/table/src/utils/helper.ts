@@ -877,6 +877,33 @@ export function moveColumnWidth(currentWidths: ColumnWidth[], fromIndex: number,
 }
 
 /**
+ * 交換兩個欄位的寬度設定
+ * @param currentWidths - 當前的欄位寬度陣列
+ * @param indexA - 第一個欄位的索引
+ * @param indexB - 第二個欄位的索引
+ * @returns 交換後的欄位寬度陣列
+ */
+export function swapColumnWidth(currentWidths: ColumnWidth[], indexA: number, indexB: number): ColumnWidth[] {
+  if (
+    indexA === indexB ||
+    indexA < 0 ||
+    indexB < 0 ||
+    indexA >= currentWidths.length ||
+    indexB >= currentWidths.length
+  ) {
+    return currentWidths;
+  }
+
+  const newWidths = [...currentWidths];
+  const temp = newWidths[indexA];
+
+  newWidths[indexA] = newWidths[indexB];
+  newWidths[indexB] = temp;
+
+  return newWidths;
+}
+
+/**
  * 將 columnWidths 轉換為混合模式（釘選欄位用 percentage，未釘選欄位用 pixel）
  * @param currentWidths - 當前的欄位寬度陣列
  * @param pinnedColumnIndices - 釘選欄位的索引陣列

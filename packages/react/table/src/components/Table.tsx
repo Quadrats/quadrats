@@ -41,12 +41,14 @@ function Table({
     pinRow,
     unpinColumn,
     unpinRow,
+    swapRow,
+    swapColumn,
+    swapCell,
   } = useTableActions(element);
 
   const { tableSelectedOn, setTableSelectedOn, tableHoveredOn, setTableHoveredOn } = useTableStates();
   const portalContainerRef = useRef<HTMLDivElement>(null);
 
-  // 優化表格結構計算 - 使用 getTableElements 重用邏輯
   const { columnCount, rowCount, normalCols, bodyCount, tableElements } = useMemo(() => {
     const elements = getTableElements(element);
 
@@ -242,6 +244,9 @@ function Table({
       pinRow,
       unpinColumn,
       unpinRow,
+      swapRow,
+      swapColumn,
+      swapCell,
     }),
     [
       addColumn,
@@ -257,6 +262,9 @@ function Table({
       pinRow,
       unpinColumn,
       unpinRow,
+      swapRow,
+      swapColumn,
+      swapCell,
     ],
   );
 
