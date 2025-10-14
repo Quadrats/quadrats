@@ -32,37 +32,40 @@ export function Carousel({
       <div {...attributes} contentEditable={false} className="qdr-carousel qdr-carousel--with-inline-toolbar">
         <InlineToolbar
           className="qdr-carousel__inline-toolbar"
-          leftIcons={[]}
-          rightIcons={[
+          iconGroups={[
             {
-              icon: Edit,
-              onClick: () => {
-                setCarouselModalConfig({
-                  controller,
-                  initialValue: element.items,
-                  onConfirm: (items) => {
-                    controller.updateCarouselElement({ editor, items, path });
+              icons: [
+                {
+                  icon: Edit,
+                  onClick: () => {
+                    setCarouselModalConfig({
+                      controller,
+                      initialValue: element.items,
+                      onConfirm: (items) => {
+                        controller.updateCarouselElement({ editor, items, path });
+                      },
+                    });
                   },
-                });
-              },
-            },
-            {
-              icon: Trash,
-              onClick: () => {
-                if (controller.confirmModal) {
-                  // TODO: i18n
-                  setConfirmModalConfig({
-                    title: '刪除輪播',
-                    content: '是否確認刪除此輪播？刪除後將立即移除，且此操作無法復原。',
-                    confirmText: '刪除輪播',
-                    onConfirm: () => {
+                },
+                {
+                  icon: Trash,
+                  onClick: () => {
+                    if (controller.confirmModal) {
+                      // TODO: i18n
+                      setConfirmModalConfig({
+                        title: '刪除輪播',
+                        content: '是否確認刪除此輪播？刪除後將立即移除，且此操作無法復原。',
+                        confirmText: '刪除輪播',
+                        onConfirm: () => {
+                          Transforms.removeNodes(editor, { at: path });
+                        },
+                      });
+                    } else {
                       Transforms.removeNodes(editor, { at: path });
-                    },
-                  });
-                } else {
-                  Transforms.removeNodes(editor, { at: path });
-                }
-              },
+                    }
+                  },
+                },
+              ],
             },
           ]}
         />

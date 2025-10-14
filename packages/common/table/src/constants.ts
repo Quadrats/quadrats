@@ -1,0 +1,27 @@
+import { TableTypes } from './typings';
+
+export const TABLE_TYPE = 'table';
+export const TABLE_TITLE_TYPE = 'table_title';
+export const TABLE_MAIN_TYPE = 'table_main';
+export const TABLE_HEADER_TYPE = 'table_header';
+export const TABLE_BODY_TYPE = 'table_body';
+export const TABLE_ROW_TYPE = 'table_row';
+export const TABLE_CELL_TYPE = 'table_cell';
+
+export const TABLE_TYPES: TableTypes = {
+  table: TABLE_TYPE,
+  table_title: TABLE_TITLE_TYPE,
+  table_main: TABLE_MAIN_TYPE,
+  table_header: TABLE_HEADER_TYPE,
+  table_body: TABLE_BODY_TYPE,
+  table_row: TABLE_ROW_TYPE,
+  table_cell: TABLE_CELL_TYPE,
+};
+
+// Table limits
+export const TABLE_DEFAULT_MAX_COLUMNS = 6;
+export const TABLE_DEFAULT_MAX_ROWS = -1;
+// 釘選欄位的最大總寬度百分比
+export const MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE = 40;
+export const MIN_COLUMN_WIDTH_PIXEL = 60;
+export const MIN_COLUMN_WIDTH_PERCENTAGE = 5;

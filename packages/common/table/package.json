@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/common/table",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "list"
+    ]
+  }
+}

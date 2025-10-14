@@ -1,7 +1,7 @@
-import { Editor, Transforms, Element, PARAGRAPH_TYPE, QuadratsElement } from '@quadrats/core';
+import { Editor, Transforms, Element, QuadratsElement } from '@quadrats/core';
 import { ParagraphElement } from '@quadrats/common/paragraph';
-import { HEADING_TYPE, HeadingElement } from '@quadrats/common/heading';
-import { ALIGN_TYPE } from './constants';
+import { HeadingElement } from '@quadrats/common/heading';
+import { ALIGN_TYPE, ALIGNABLE_TYPES } from './constants';
 import { AlignValue } from './typings';
 
 export interface Align<E extends Editor = Editor> {
@@ -10,8 +10,6 @@ export interface Align<E extends Editor = Editor> {
   setAlign: (editor: E, value: AlignValue) => void;
   removeAlign: (editor: E) => void;
 }
-
-const ALIGNABLE_TYPES = [PARAGRAPH_TYPE, HEADING_TYPE];
 
 export function createAlign(): Align {
   const type = ALIGN_TYPE;

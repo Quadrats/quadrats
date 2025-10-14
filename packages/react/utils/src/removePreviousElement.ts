@@ -29,8 +29,14 @@ export function removePreviousElement({
         //   at: currentPath,
         //   match: (n) => Element.isElement(n) && (n as QuadratsElement).type === type,
         // });
+        let prevPath: Path = currentPath;
 
-        const prevPath = Path.previous(currentPath);
+        try {
+          prevPath = Path.previous(currentPath);
+        } catch (ex) {
+          // error
+        }
+
         const prevNode = Node.get(editor, prevPath);
 
         if (Element.isElement(prevNode) && (prevNode as QuadratsElement).type === type) {

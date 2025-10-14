@@ -1,18 +1,6 @@
-import React, {
-  useRef,
-  useLayoutEffect,
-  useState,
-  useContext,
-  useCallback,
-  JSX,
-} from 'react';
+import React, { useRef, useLayoutEffect, useState, useContext, useCallback, JSX } from 'react';
 import clsx from 'clsx';
-import {
-  getSelectionText,
-  isNodesTypeIn,
-  Range as QuadratsRange,
-  Transforms,
-} from '@quadrats/core';
+import { getSelectionText, isNodesTypeIn, Range as QuadratsRange, Transforms } from '@quadrats/core';
 import { More as MoreIcon } from '@quadrats/icons';
 import { ReactEditor, ThemeContext, useQuadrats } from '@quadrats/react';
 import { Portal } from '@quadrats/react/components';
@@ -85,10 +73,11 @@ function Toolbar(props: ToolbarProps) {
   const { selection } = editor;
   const [toolInput, setToolInput] = useState<ToolInputConfig>();
   const startToolInput: StartToolInput = useCallback(
-    inputConfig => setToolInput({
-      ...inputConfig,
-      currentSelection: selection,
-    }),
+    (inputConfig) =>
+      setToolInput({
+        ...inputConfig,
+        currentSelection: selection,
+      }),
     [selection],
   );
 
@@ -152,7 +141,8 @@ function Toolbar(props: ToolbarProps) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const tools = children(renderExpandedStatus! && !fixed);
   const { fakeTools, takeCount, shownElements, groupElements } = useAutoGroupIcons(
-    tools, renderExpandedStatus! && !fixed,
+    tools,
+    renderExpandedStatus! && !fixed,
   );
 
   const toolbarBody = (
@@ -165,7 +155,9 @@ function Toolbar(props: ToolbarProps) {
               {groupElements}
             </ToolbarGroupIcon>
           </>
-        ) : tools}
+        ) : (
+          tools
+        )}
       </StartToolInputContext.Provider>
       {toolInput && (
         <ToolbarInput
@@ -203,9 +195,7 @@ function Toolbar(props: ToolbarProps) {
           )}
           style={themeProps.style}
         >
-          <div className="qdr-toolbar">
-            {toolbarBody}
-          </div>
+          <div className="qdr-toolbar">{toolbarBody}</div>
           {fakeTools}
         </div>
       </ToolbarContext.Provider>
@@ -242,9 +232,7 @@ function Toolbar(props: ToolbarProps) {
           )}
           style={themeProps.style}
         >
-          <div className="qdr-toolbar qdr-toolbar--radius qdr-toolbar--shadow">
-            {toolbarBody}
-          </div>
+          <div className="qdr-toolbar qdr-toolbar--radius qdr-toolbar--shadow">{toolbarBody}</div>
           {fakeTools}
         </div>
       </ToolbarContext.Provider>

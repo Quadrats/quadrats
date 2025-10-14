@@ -1,0 +1,10 @@
+{
+  "name": "@quadrats/react/table/jsx-serializer",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "jsx-serializer",
+      "table"
+    ]
+  }
+}

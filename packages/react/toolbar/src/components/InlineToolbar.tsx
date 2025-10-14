@@ -1,65 +1,78 @@
-import React from 'react';
+import React, { Fragment, useRef } from 'react';
 import clsx from 'clsx';
 import { Icon } from '@quadrats/react/components';
 import { IconDefinition } from '@quadrats/icons';
+import { useClickAway } from '@quadrats/react/utils';
 
 export interface InlineToolbarProps {
   className?: string;
-  leftIcons: {
-    icon: IconDefinition;
-    onClick: VoidFunction;
-    active: boolean;
-    disabled?: boolean;
+  iconGroups: {
+    enabledBgColor?: boolean;
+    icons: (
+      | {
+          icon: IconDefinition;
+          onClick: VoidFunction;
+          active?: boolean;
+          disabled?: boolean;
+          className?: string;
+        }
+      | React.JSX.Element
+    )[];
   }[];
-  rightIcons: {
-    icon: IconDefinition;
-    onClick: VoidFunction;
-    disabled?: boolean;
-  }[];
+  style?: React.CSSProperties;
+  onClickAway?: VoidFunction;
 }
 
-function InlineToolbar({ className, leftIcons, rightIcons }: InlineToolbarProps) {
+function InlineToolbar({ className, iconGroups, style, onClickAway }: InlineToolbarProps) {
+  const validIconsGroup = iconGroups.filter((group) => group.icons.length);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useClickAway(
+    () => {
+      return onClickAway
+        ? () => {
+            onClickAway();
+          }
+        : undefined;
+    },
+    ref,
+    [onClickAway],
+  );
+
   return (
-    <div contentEditable={false} className={clsx('qdr-inline-toolbar', className)}>
-      {leftIcons.length > 0 && (
-        <div className="qdr-inline-toolbar__wrapper">
-          {leftIcons.map((icon) => (
-            <Icon
-              key={icon.icon.name}
-              className={clsx('qdr-inline-toolbar__icon', {
-                'qdr-inline-toolbar__icon--active': icon.active,
-                'qdr-inline-toolbar__icon--disabled': icon.disabled,
-              })}
-              icon={icon.icon}
-              width={24}
-              height={24}
-              onClick={(e) => {
-                if (!icon.disabled) {
-                  e.preventDefault();
-                  icon.onClick();
-                }
-              }}
-            />
-          ))}
-        </div>
-      )}
-      {leftIcons.length > 0 && rightIcons.length > 0 && <div className="qdr-inline-toolbar__divider" />}
-      {rightIcons.map((icon) => (
-        <Icon
-          key={icon.icon.name}
-          className={clsx('qdr-inline-toolbar__icon', {
-            'qdr-inline-toolbar__icon--disabled': icon.disabled,
-          })}
-          icon={icon.icon}
-          width={24}
-          height={24}
-          onClick={(e) => {
-            if (!icon.disabled) {
-              e.preventDefault();
-              icon.onClick();
-            }
-          }}
-        />
+    <div ref={ref} contentEditable={false} className={clsx('qdr-inline-toolbar', className)} style={style}>
+      {validIconsGroup.map((group, index) => (
+        <Fragment key={index}>
+          <div
+            className={clsx('qdr-inline-toolbar__wrapper', {
+              'qdr-inline-toolbar__wrapper--enabledBgColor': group.enabledBgColor,
+            })}
+          >
+            {group.icons.map((child) =>
+              'icon' in child ? (
+                <Icon
+                  key={child.icon.name}
+                  className={clsx('qdr-inline-toolbar__icon', child.className, {
+                    'qdr-inline-toolbar__icon--active': child.active,
+                    'qdr-inline-toolbar__icon--disabled': child.disabled,
+                  })}
+                  icon={child.icon}
+                  width={24}
+                  height={24}
+                  onClick={(e) => {
+                    if (!child.disabled) {
+                      e.preventDefault();
+                      child.onClick();
+                    }
+                  }}
+                />
+              ) : (
+                child
+              ),
+            )}
+          </div>
+          {index < validIconsGroup.length - 1 && <div className="qdr-inline-toolbar__divider" />}
+        </Fragment>
       ))}
     </div>
   );

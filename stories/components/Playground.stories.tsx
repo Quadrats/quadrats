@@ -27,6 +27,7 @@ import {
   Vimeo as VimeoIcon,
   Facebook as FacebookIcon,
   Instagram as InstagramIcon,
+  Table as TableIcon,
   Twitter as TwitterIcon,
   ReadMore as ReadMoreIcon,
   Fn as FnIcon,
@@ -72,6 +73,7 @@ import { createReactCard } from '@quadrats/react/card';
 import { createReactBlockquote } from '@quadrats/react/blockquote';
 import { createReactDivider } from '@quadrats/react/divider';
 import { createReactEmbed } from '@quadrats/react/embed';
+import { createReactTable } from '@quadrats/react/table';
 import { YoutubeEmbedStrategy } from '@quadrats/common/embed/strategies/youtube';
 import { VimeoEmbedStrategy } from '@quadrats/common/embed/strategies/vimeo';
 import { InstagramEmbedStrategy } from '@quadrats/common/embed/strategies/instagram';
@@ -131,6 +133,7 @@ import { BlockquoteToolbarIcon } from '@quadrats/react/blockquote/toolbar';
 import { DividerToolbarIcon } from '@quadrats/react/divider/toolbar';
 import { EmbedToolbarIcon } from '@quadrats/react/embed/toolbar';
 import { FileUploaderToolbarIcon } from '@quadrats/react/file-uploader/toolbar';
+import { TableToolbarIcon } from '@quadrats/react/table/toolbar';
 import { HeadingToolbarIcon } from '@quadrats/react/heading/toolbar';
 import { ParagraphToolbarIcon } from '@quadrats/react/paragraph/toolbar';
 import { LinkToolbarIcon, UnlinkToolbarIcon } from '@quadrats/react/link/toolbar';
@@ -153,6 +156,7 @@ import { createJsxSerializeHighlight } from '@quadrats/react/highlight/jsx-seria
 import { createJsxSerializeLineBreak } from '@quadrats/react/line-break/jsx-serializer';
 import { createJsxSerializeParagraph } from '@quadrats/react/paragraph/jsx-serializer';
 import { createJsxSerializeAccordion } from '@quadrats/react/accordion/jsx-serializer';
+import { createJsxSerializeTable } from '@quadrats/react/table/jsx-serializer';
 import { createJsxSerializeCarousel } from '@quadrats/react/carousel/jsx-serializer';
 import { createJsxSerializeCard } from '@quadrats/react/card/jsx-serializer';
 import { createJsxSerializeBlockquote } from '@quadrats/react/blockquote/jsx-serializer';
@@ -202,6 +206,8 @@ const card = createReactCard({
   uploader: new LocalFileUploader(),
 });
 
+const table = createReactTable();
+
 const blockquote = createReactBlockquote();
 const divider = createReactDivider();
 const bold = createReactBold();
@@ -232,6 +238,7 @@ export interface PlaygroundEditorProps {
   withCarousel: boolean;
   withCard: boolean;
   withBlockquote: boolean;
+  withTable: boolean;
   withLists: ('ol' | 'ul')[];
   withDivider: boolean;
   withEmbeds: ('youtube' | 'vimeo' | 'instagram' | 'facebook' | 'twitter' | 'podcastApple' | 'spotify')[];
@@ -257,6 +264,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withCarousel,
     withCard,
     withBlockquote,
+    withTable,
     withLists,
     withDivider,
     withEmbeds,
@@ -351,6 +359,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
         if (withCarousel) editorWithOptions.push(carousel.with);
         if (withCard) editorWithOptions.push(card.with);
         if (withBlockquote) editorWithOptions.push(blockquote.with);
+        if (withTable) editorWithOptions.push(table.with);
         if (withLists.length) editorWithOptions.push(list.with);
         if (withDivider) editorWithOptions.push(divider.with);
         if (withEmbeds.length) editorWithOptions.push(embed.with);
@@ -369,6 +378,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       withCarousel,
       withCard,
       withBlockquote,
+      withTable,
       withLists.length,
       withDivider,
       withEmbeds.length,
@@ -389,6 +399,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     if (withCarousel) handlers.push(carousel.createHandlers(setNeedConfirmModal, editorLocale));
     if (withCard) handlers.push(card.createHandlers(setNeedConfirmModal, editorLocale));
     if (withBlockquote) handlers.push(blockquote.createHandlers());
+    if (withTable) handlers.push(table.createHandlers());
     if (withLists.length) handlers.push(list.createHandlers());
     if (withBold) handlers.push(bold.createHandlers());
     if (withItalic) handlers.push(italic.createHandlers());
@@ -410,6 +421,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withCarousel,
     withCard,
     withBlockquote,
+    withTable,
     withLists,
     withAlign,
     withBold,
@@ -509,6 +521,10 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       elements.push(blockquote.createRenderElement());
     }
 
+    if (withTable) {
+      elements.push(table.createRenderElement());
+    }
+
     return composeRenderElements(elements);
   }, [
     withTitles.length,
@@ -525,6 +541,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withCarousel,
     withCard,
     withBlockquote,
+    withTable,
     embed,
   ]);
 
@@ -551,6 +568,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       const carouselTool = <CarouselToolbarIcon icon={CarouselIcon} controller={carousel} />;
       const cardTool = <CardToolbarIcon icon={CardIcon} controller={card} />;
       const blockquoteTool = <BlockquoteToolbarIcon icon={BlockquoteIcon} controller={blockquote} />;
+      const tableTool = <TableToolbarIcon icon={TableIcon} controller={table} />;
       const footnoteTool = <FootnoteToolbarIcon icon={FnIcon} controller={footnote} />;
 
       if (expanded) {
@@ -606,13 +624,20 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
           {withCarousel ? carouselTool : null}
           {withCard ? cardTool : null}
           {withBlockquote ? blockquoteTool : null}
+          {withTable ? tableTool : null}
           {~withLists.indexOf('ul') ? (
             <ListToolbarIcon icon={UnorderedListIcon} controller={list} listTypeKey="ul" />
           ) : null}
           {~withLists.indexOf('ol') ? (
             <ListToolbarIcon icon={OrderedListIcon} controller={list} listTypeKey="ol" />
           ) : null}
-          {withTitles.length || withAccordion || withCarousel || withCard || withBlockquote || withLists.length
+          {withTitles.length ||
+          withAccordion ||
+          withCarousel ||
+          withCard ||
+          withBlockquote ||
+          withTable ||
+          withLists.length
             ? TOOLBAR_DIVIDER
             : null}
           {withDivider ? <DividerToolbarIcon icon={DividerIcon} controller={divider} /> : null}
@@ -671,6 +696,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
       withAccordion,
       withCarousel,
       withCard,
+      withTable,
       withLists,
       withDivider,
       withEmbeds,
@@ -708,6 +734,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withCarousel,
     withCard,
     withBlockquote,
+    withTable,
     withLists,
     withDivider,
     withEmbeds,
@@ -742,6 +769,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     if (withCarousel) elements.push(createJsxSerializeCarousel());
     if (withCard) elements.push(createJsxSerializeCard());
     if (withBlockquote) elements.push(createJsxSerializeBlockquote());
+    if (withTable) elements.push(createJsxSerializeTable());
     if (withTitles.length) elements.push(createJsxSerializeHeading());
     if (withLists.length) elements.push(createJsxSerializeList());
     if (withDivider) elements.push(createJsxSerializeDivider());
@@ -793,6 +821,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withLink,
     withImage,
     withReadMore,
+    withTable,
   ]);
 
   return (
@@ -851,6 +880,7 @@ export const Editor: Story = {
     withAccordion: true,
     withCarousel: true,
     withCard: true,
+    withTable: true,
     withBlockquote: false,
     withLists: ['ol', 'ul'],
     withDivider: true,
@@ -885,6 +915,10 @@ export const Editor: Story = {
     },
     withCard: {
       name: 'Card',
+      control: { type: 'boolean' },
+    },
+    withTable: {
+      name: 'Table',
       control: { type: 'boolean' },
     },
     withBlockquote: {

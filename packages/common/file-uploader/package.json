@@ -1,4 +1,9 @@
 {
   "name": "@quadrats/common/file-uploader",
-  "sideEffects": false
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "table"
+    ]
+  }
 }

@@ -1,4 +1,9 @@
 {
   "name": "@quadrats/common/blockquote",
-  "sideEffects": false
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "table"
+    ]
+  }
 }

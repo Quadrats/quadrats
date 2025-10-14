@@ -83,7 +83,7 @@ function Tooltip({
 
   if (triggers.includes('click')) {
     triggerProps.onClick = (event) => {
-      delaySetVisible(prevVisible => !prevVisible, 0);
+      delaySetVisible((prevVisible) => !prevVisible, 0);
       (child.props as any).onClick?.(event);
     };
   }
@@ -107,7 +107,7 @@ function Tooltip({
     };
   }
 
-  const trigger = cloneElement(child, ({ ...triggerProps, ref: composeRefs([triggerRef, (child as any).ref]) } as any));
+  const trigger = cloneElement(child, { ...triggerProps, ref: composeRefs([triggerRef, (child as any).ref]) } as any);
 
   useLayoutEffect(() => {
     const triggerEl = triggerRef.current;
@@ -119,7 +119,10 @@ function Tooltip({
 
     const { top, left } = calculatePosition(
       {
-        placement, getContainer, horizontalOffset, verticalOffset,
+        placement,
+        getContainer,
+        horizontalOffset,
+        verticalOffset,
       },
       triggerEl,
       popupEl,

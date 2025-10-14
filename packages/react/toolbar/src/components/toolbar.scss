@@ -232,8 +232,11 @@ $qdr-toolbar-input-cross-size: --qdr-spacing-7;
     justify-content: flex-start;
     gap: var(--qdr-spacing-1);
     padding: var(--qdr-spacing-1);
-    background-color: var(--qdr-divider);
     border-radius: var(--qdr-radius-1);
+
+    &--enabledBgColor {
+      background-color: var(--qdr-divider);
+    }
   }
 
   &__divider {
