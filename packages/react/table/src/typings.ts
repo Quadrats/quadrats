@@ -10,7 +10,7 @@ import {
   TableCellTypeKey,
   TableBodyTypeKey,
 } from '@quadrats/common/table';
-import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps } from '@quadrats/react';
+import { WithCreateHandlers, WithCreateRenderElement, RenderElementProps, ReactWithable } from '@quadrats/react';
 import { Dispatch, SetStateAction, RefObject } from 'react';
 
 export type TableHeaderContextType = {
@@ -99,6 +99,7 @@ export type ReactTableCreateRenderElementOptions = {
 };
 
 export interface ReactTable
-  extends Table<Editor>,
+  extends Omit<Table<Editor>, 'with'>,
     WithCreateHandlers,
-    WithCreateRenderElement<[ReactTableCreateRenderElementOptions?]> {}
+    WithCreateRenderElement<[ReactTableCreateRenderElementOptions?]>,
+    ReactWithable {}
