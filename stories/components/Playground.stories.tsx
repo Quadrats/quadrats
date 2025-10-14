@@ -1,5 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import clsx from 'clsx';
 import {
+  Accordion as AccordionIcon,
+  Carousel as CarouselIcon,
+  Card as CardIcon,
   Bold as BoldIcon,
   Italic as ItalicIcon,
   Underline as UnderlineIcon,
@@ -7,6 +11,7 @@ import {
   Highlight as HighlightIcon,
   Link as LinkIcon,
   Unlink as UnlinkIcon,
+  Paragraph as ParagraphIcon,
   Heading1 as Heading1Icon,
   Heading2 as Heading2Icon,
   Heading3 as Heading3Icon,
@@ -18,7 +23,8 @@ import {
   OrderedList as OrderedListIcon,
   Divider as DividerIcon,
   Image as ImageIcon,
-  Video as VideoIcon,
+  Youtube as YoutubeIcon,
+  Vimeo as VimeoIcon,
   Facebook as FacebookIcon,
   Instagram as InstagramIcon,
   Twitter as TwitterIcon,
@@ -29,10 +35,13 @@ import {
   Dance as DanceIcon,
   PodcastApple as PodcastAppleIcon,
   Spotify as SpotifyIcon,
+  AlignLeft as AlignLeftIcon,
+  AlignCenter as AlignCenterIcon,
+  AlignRight as AlignRightIcon,
 } from '@quadrats/icons';
 import { ConfigsProvider } from '@quadrats/react/configs';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Theme, THEME_QDR, THEME_QDR_DARK } from '@quadrats/theme';
+import { Theme } from '@quadrats/theme';
 import { LocaleDefinition, zhTW, enUS } from '@quadrats/locales';
 import { pipe } from '@quadrats/utils';
 import {
@@ -43,14 +52,23 @@ import {
   composeRenderLeafs,
   composeHandlers,
   Descendant,
+  ConfirmModalConfig,
 } from '@quadrats/react';
-import { createRenderParagraphElement, renderParagraphElementWithSymbol } from '@quadrats/react/paragraph';
+import {
+  createReactParagraph,
+  createRenderParagraphElement,
+  renderParagraphElementWithSymbol,
+} from '@quadrats/react/paragraph';
 import { createReactLineBreak, renderLineBreakElementWithSymbol } from '@quadrats/react/line-break';
 import { createReactBold } from '@quadrats/react/bold';
 import { createReactItalic } from '@quadrats/react/italic';
 import { createReactUnderline } from '@quadrats/react/underline';
 import { createReactStrikethrough } from '@quadrats/react/strikethrough';
 import { createReactHighlight } from '@quadrats/react/highlight';
+import { createReactAlign } from '@quadrats/react/align';
+import { createReactAccordion } from '@quadrats/react/accordion';
+import { createReactCarousel } from '@quadrats/react/carousel';
+import { createReactCard } from '@quadrats/react/card';
 import { createReactBlockquote } from '@quadrats/react/blockquote';
 import { createReactDivider } from '@quadrats/react/divider';
 import { createReactEmbed } from '@quadrats/react/embed';
@@ -60,40 +78,72 @@ import { InstagramEmbedStrategy } from '@quadrats/common/embed/strategies/instag
 import { FacebookEmbedStrategy } from '@quadrats/common/embed/strategies/facebook';
 import { TwitterEmbedStrategy } from '@quadrats/common/embed/strategies/twitter';
 import { PodcastAppleEmbedStrategy } from '@quadrats/common/embed/strategies/podcast-apple';
-import { defaultRenderYoutubeEmbedElement } from '@quadrats/react/embed/renderers/youtube';
-import { defaultRenderVimeoEmbedElement } from '@quadrats/react/embed/renderers/vimeo';
-import { defaultRenderInstagramEmbedElement } from '@quadrats/react/embed/renderers/instagram';
-import { defaultRenderFacebookEmbedElement } from '@quadrats/react/embed/renderers/facebook';
-import { defaultRenderTwitterEmbedElement } from '@quadrats/react/embed/renderers/twitter';
-import { defaultRenderPodcastAppleEmbedElement } from '@quadrats/react/embed/renderers/podcast-apple';
+import {
+  defaultRenderYoutubeEmbedElement,
+  defaultRenderYoutubeEmbedPlaceholderElement,
+  defaultRenderYoutubeEmbedJsxSerializer,
+} from '@quadrats/react/embed/renderers/youtube';
+import {
+  defaultRenderVimeoEmbedElement,
+  defaultRenderVimeoEmbedPlaceholderElement,
+  defaultRenderVimeoEmbedJsxSerializer,
+} from '@quadrats/react/embed/renderers/vimeo';
+import {
+  defaultRenderInstagramEmbedElement,
+  defaultRenderInstagramEmbedPlaceholderElement,
+  defaultRenderInstagramEmbedJsxSerializer,
+} from '@quadrats/react/embed/renderers/instagram';
+import {
+  defaultRenderFacebookEmbedElement,
+  defaultRenderFacebookEmbedPlaceholderElement,
+  defaultRenderFacebookEmbedJsxSerializer,
+} from '@quadrats/react/embed/renderers/facebook';
+import {
+  defaultRenderTwitterEmbedElement,
+  defaultRenderTwitterEmbedPlaceholderElement,
+  defaultRenderTwitterEmbedJsxSerializer,
+} from '@quadrats/react/embed/renderers/twitter';
+import {
+  defaultRenderSpotifyEmbedElement,
+  defaultRenderSpotifyEmbedPlaceholderElement,
+  defaultRenderSpotifyEmbedJsxSerializer,
+} from '@quadrats/react/embed/renderers/spotify';
+import {
+  defaultRenderPodcastAppleEmbedElement,
+  defaultRenderPodcastAppleEmbedPlaceholderElement,
+  defaultRenderPodcastAppleEmbedJsxSerializer,
+} from '@quadrats/react/embed/renderers/podcast-apple';
 import { createReactFileUploader } from '@quadrats/react/file-uploader';
 import { createReactHeading } from '@quadrats/react/heading';
-import { createReactImage } from '@quadrats/react/image';
+import { createReactImage, ImagePlaceholder } from '@quadrats/react/image';
 import { createReactLink } from '@quadrats/react/link';
 import { createReactList } from '@quadrats/react/list';
 import { createReactReadMore } from '@quadrats/react/read-more';
 import { createReactInputBlock } from '@quadrats/react/input-block';
 
-import { Toolbar, TOOLBAR_DIVIDER } from '@quadrats/react/toolbar';
+import { Toolbar, ToolbarGroupIcon, TOOLBAR_DIVIDER } from '@quadrats/react/toolbar';
 import { ToggleMarkToolbarIcon } from '@quadrats/react/toggle-mark/toolbar';
+import { AlignToolbarIcon } from '@quadrats/react/align/toolbar';
+import { AccordionToolbarIcon } from '@quadrats/react/accordion/toolbar';
+import { CarouselToolbarIcon } from '@quadrats/react/carousel/toolbar';
+import { CardToolbarIcon } from '@quadrats/react/card/toolbar';
 import { BlockquoteToolbarIcon } from '@quadrats/react/blockquote/toolbar';
 import { DividerToolbarIcon } from '@quadrats/react/divider/toolbar';
 import { EmbedToolbarIcon } from '@quadrats/react/embed/toolbar';
 import { FileUploaderToolbarIcon } from '@quadrats/react/file-uploader/toolbar';
 import { HeadingToolbarIcon } from '@quadrats/react/heading/toolbar';
+import { ParagraphToolbarIcon } from '@quadrats/react/paragraph/toolbar';
 import { LinkToolbarIcon, UnlinkToolbarIcon } from '@quadrats/react/link/toolbar';
 import { ListToolbarIcon } from '@quadrats/react/list/toolbar';
 import { FootnoteToolbarIcon } from '@quadrats/react/footnote/toolbar';
 import { ReadMoreToolbarIcon } from '@quadrats/react/read-more/toolbar';
-import { defaultRenderSpotifyEmbedElement } from '@quadrats/react/embed/renderers/spotify';
 import { SpotifyEmbedStrategy } from '@quadrats/common/embed/strategies/spotify';
 
 import { createReactFootnote } from '@quadrats/react/footnote';
 import { HeadingLevel } from '@quadrats/common/heading';
 import type { EmbedStrategies } from '@quadrats/common/embed';
 import { PARAGRAPH_TYPE } from '@quadrats/core';
-import { customRenderBlockquote } from '../custom-elements';
-import getLocalFileUploaderOptions from '../helper/local-file-uploader-options';
+import getLocalFileUploaderOptions, { LocalFileUploader } from '../helper/local-file-uploader-options';
 
 import { createJsxSerializeBold } from '@quadrats/react/bold/jsx-serializer';
 import { createJsxSerializeItalic } from '@quadrats/react/italic/jsx-serializer';
@@ -102,6 +152,9 @@ import { createJsxSerializeStrikethrough } from '@quadrats/react/strikethrough/j
 import { createJsxSerializeHighlight } from '@quadrats/react/highlight/jsx-serializer';
 import { createJsxSerializeLineBreak } from '@quadrats/react/line-break/jsx-serializer';
 import { createJsxSerializeParagraph } from '@quadrats/react/paragraph/jsx-serializer';
+import { createJsxSerializeAccordion } from '@quadrats/react/accordion/jsx-serializer';
+import { createJsxSerializeCarousel } from '@quadrats/react/carousel/jsx-serializer';
+import { createJsxSerializeCard } from '@quadrats/react/card/jsx-serializer';
 import { createJsxSerializeBlockquote } from '@quadrats/react/blockquote/jsx-serializer';
 import { createJsxSerializeHeading } from '@quadrats/react/heading/jsx-serializer';
 import { createJsxSerializeList } from '@quadrats/react/list/jsx-serializer';
@@ -116,10 +169,39 @@ import { createJsxSerializer } from '@quadrats/react/jsx-serializer';
 import JSONPretty from 'react-json-pretty';
 
 // Default
+const paragraph = createReactParagraph();
 const lineBreak = createReactLineBreak();
 
 // Options
 const list = createReactList();
+const accordion = createReactAccordion();
+const carousel = createReactCarousel({
+  ratio: [16, 9],
+  maxLength: 12,
+  limitSize: 2,
+  getBody: (file) => file,
+  getHeaders: (file) => ({
+    Authorization: 'Bearer <Your OAuth2 Token>',
+    'Content-Type': file.type,
+  }),
+  getUrl: (file) =>
+    `https://storage.googleapis.com/upload/storage/v1/b/<Your Bucket Name>/o?uploadType=media&name=${file.name}`,
+  uploader: new LocalFileUploader(),
+});
+
+const card = createReactCard({
+  ratio: [3, 2],
+  limitSize: 2,
+  getBody: (file) => file,
+  getHeaders: (file) => ({
+    Authorization: 'Bearer <Your OAuth2 Token>',
+    'Content-Type': file.type,
+  }),
+  getUrl: (file) =>
+    `https://storage.googleapis.com/upload/storage/v1/b/<Your Bucket Name>/o?uploadType=media&name=${file.name}`,
+  uploader: new LocalFileUploader(),
+});
+
 const blockquote = createReactBlockquote();
 const divider = createReactDivider();
 const bold = createReactBold();
@@ -127,6 +209,7 @@ const italic = createReactItalic();
 const underline = createReactUnderline();
 const strikethrough = createReactStrikethrough();
 const highlight = createReactHighlight();
+const align = createReactAlign();
 const sheetMusic = createReactHighlight('sheet-music');
 const drama = createReactHighlight('drama');
 const dance = createReactHighlight('dance');
@@ -134,18 +217,25 @@ const inputBlock = createReactInputBlock();
 const footnote = createReactFootnote();
 const readMore = createReactReadMore();
 const fileUploader = createReactFileUploader();
-const image = createReactImage({
-  sizeSteps: [25, 50, 75],
-}, img => getLocalFileUploaderOptions(img));
+const image = createReactImage(
+  {
+    sizeSteps: [25, 50, 75],
+  },
+  (img) => getLocalFileUploaderOptions(img),
+);
 
 export interface PlaygroundEditorProps {
   theme: 'Default' | 'Dark';
   locale: 'Chinese' | 'English';
   withTitles: ('h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6')[];
+  withAccordion: boolean;
+  withCarousel: boolean;
+  withCard: boolean;
   withBlockquote: boolean;
   withLists: ('ol' | 'ul')[];
   withDivider: boolean;
   withEmbeds: ('youtube' | 'vimeo' | 'instagram' | 'facebook' | 'twitter' | 'podcastApple' | 'spotify')[];
+  withAlign: boolean;
   withBold: boolean;
   withItalic: boolean;
   withUnderline: boolean;
@@ -163,10 +253,14 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     theme,
     locale,
     withTitles,
+    withAccordion,
+    withCarousel,
+    withCard,
     withBlockquote,
     withLists,
     withDivider,
     withEmbeds,
+    withAlign,
     withBold,
     withItalic,
     withUnderline,
@@ -179,7 +273,8 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withReadMore,
   } = props;
 
-  const editorTheme = useMemo<Theme>(() => (theme === 'Dark' ? THEME_QDR_DARK : THEME_QDR), [theme]);
+  const [needConfirmModal, setNeedConfirmModal] = useState<ConfirmModalConfig | null>(null);
+  const editorTheme = useMemo<Theme>(() => (theme === 'Dark' ? 'dark' : 'light'), [theme]);
   const editorLocale = useMemo<LocaleDefinition>(() => (locale === 'Chinese' ? zhTW : enUS), [locale]);
 
   const link = useMemo(() => {
@@ -222,9 +317,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     return createReactHeading({
       enabledLevels: levels,
     });
-  }, [
-    withTitles,
-  ]);
+  }, [withTitles]);
 
   const embedStrategies = useMemo(() => {
     const strategies: EmbedStrategies<string> = {};
@@ -240,40 +333,66 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     return strategies;
   }, [withEmbeds]);
 
-  const embed = useMemo(() => createReactEmbed({
-    strategies: embedStrategies,
-  }), [embedStrategies]);
+  const embed = useMemo(
+    () =>
+      createReactEmbed({
+        strategies: embedStrategies,
+      }),
+    [embedStrategies],
+  );
 
-  const editor = useMemo(() => (() => {
-    const editorWithOptions = [
-      lineBreak.with,
-      inputBlock.with,
-    ];
+  const editor = useMemo(
+    () =>
+      (() => {
+        const editorWithOptions = [lineBreak.with, inputBlock.with];
 
-    if (withTitles.length) editorWithOptions.push(heading.with);
-    if (withBlockquote) editorWithOptions.push(blockquote.with);
-    if (withLists.length) editorWithOptions.push(list.with);
-    if (withDivider) editorWithOptions.push(divider.with);
-    if (withEmbeds.length) editorWithOptions.push(embed.with);
-    if (withFootnote) editorWithOptions.push(footnote.with);
-    if (withLink) editorWithOptions.push(link.with);
-    if (withImage) editorWithOptions.push(image.with);
-    if (withImage) editorWithOptions.push(fileUploader.with);
-    if (withReadMore) editorWithOptions.push(fileUploader.with);
+        if (withTitles.length) editorWithOptions.push(heading.with);
+        if (withAccordion) editorWithOptions.push(accordion.with);
+        if (withCarousel) editorWithOptions.push(carousel.with);
+        if (withCard) editorWithOptions.push(card.with);
+        if (withBlockquote) editorWithOptions.push(blockquote.with);
+        if (withLists.length) editorWithOptions.push(list.with);
+        if (withDivider) editorWithOptions.push(divider.with);
+        if (withEmbeds.length) editorWithOptions.push(embed.with);
+        if (withFootnote) editorWithOptions.push(footnote.with);
+        if (withLink) editorWithOptions.push(link.with);
+        if (withImage) editorWithOptions.push(image.with);
+        if (withImage) editorWithOptions.push(fileUploader.with);
+        if (withReadMore) editorWithOptions.push(fileUploader.with);
 
-    return pipe(createReactEditor(), ...editorWithOptions);
-  })(), [heading, withTitles, withBlockquote, withLists, withDivider, withEmbeds, withFootnote, withLink, withImage, withReadMore]);
+        return pipe(createReactEditor(), ...editorWithOptions);
+      })(),
+    [
+      withTitles.length,
+      heading.with,
+      withAccordion,
+      withCarousel,
+      withCard,
+      withBlockquote,
+      withLists.length,
+      withDivider,
+      withEmbeds.length,
+      embed.with,
+      withFootnote,
+      withLink,
+      link.with,
+      withImage,
+      withReadMore,
+    ],
+  );
 
   const handlers = useMemo(() => {
-    const handlers = [
-      lineBreak.createHandlers(),
-    ];
+    const handlers = [lineBreak.createHandlers()];
 
     if (withTitles.length) handlers.push(heading.createHandlers());
+    if (withAccordion) handlers.push(accordion.createHandlers());
+    if (withCarousel) handlers.push(carousel.createHandlers(setNeedConfirmModal, editorLocale));
+    if (withCard) handlers.push(card.createHandlers(setNeedConfirmModal, editorLocale));
     if (withBlockquote) handlers.push(blockquote.createHandlers());
     if (withLists.length) handlers.push(list.createHandlers());
     if (withBold) handlers.push(bold.createHandlers());
     if (withItalic) handlers.push(italic.createHandlers());
+    if (withAlign) handlers.push(align.createHandlers());
     if (withUnderline) handlers.push(underline.createHandlers());
     if (withStrikethrough) handlers.push(strikethrough.createHandlers());
     if (withHighlight) handlers.push(highlight.createHandlers());
@@ -287,8 +406,12 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     editor,
     heading,
     withTitles,
+    withAccordion,
+    withCarousel,
+    withCard,
     withBlockquote,
     withLists,
+    withAlign,
     withBold,
     withItalic,
     withUnderline,
@@ -296,6 +419,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     withHighlight,
     withCustomHighlights,
     withImage,
+    editorLocale,
   ]);
 
   const renderElement = useMemo(() => {
@@ -315,31 +439,94 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     if (withFootnote) elements.push(footnote.createRenderElement());
     if (withLink) elements.push(link.createRenderElement());
     if (withImage) elements.push(image.createRenderElement());
-    if (withImage) elements.push(fileUploader.createRenderElement());
+    if (withImage) {
+      elements.push(fileUploader.createRenderElement());
+      elements.push(
+        fileUploader.createRenderPlaceholderElement({ render: (props) => <ImagePlaceholder {...props} /> }),
+      );
+    }
+
     if (withReadMore) elements.push(readMore.createRenderElement());
 
     if (withEmbeds.length) {
       const embedElements: Record<string, (props: any) => React.JSX.Element> = {};
+      const embedPlaceholderElements: Record<string, (props: any) => React.JSX.Element> = {};
 
-      if (~withEmbeds.indexOf('youtube')) embedElements.youtube = defaultRenderYoutubeEmbedElement;
-      if (~withEmbeds.indexOf('vimeo')) embedElements.vimeo = defaultRenderVimeoEmbedElement;
-      if (~withEmbeds.indexOf('instagram')) embedElements.instagram = defaultRenderInstagramEmbedElement;
-      if (~withEmbeds.indexOf('facebook')) embedElements.facebook = defaultRenderFacebookEmbedElement;
-      if (~withEmbeds.indexOf('twitter')) embedElements.twitter = defaultRenderTwitterEmbedElement;
-      if (~withEmbeds.indexOf('podcastApple')) embedElements.podcastApple = defaultRenderPodcastAppleEmbedElement;
-      if (~withEmbeds.indexOf('spotify')) embedElements.spotify = defaultRenderSpotifyEmbedElement;
+      if (~withEmbeds.indexOf('youtube')) {
+        embedElements.youtube = defaultRenderYoutubeEmbedElement;
+        embedPlaceholderElements.youtube = defaultRenderYoutubeEmbedPlaceholderElement;
+      }
+
+      if (~withEmbeds.indexOf('vimeo')) {
+        embedElements.vimeo = defaultRenderVimeoEmbedElement;
+        embedPlaceholderElements.vimeo = defaultRenderVimeoEmbedPlaceholderElement;
+      }
+
+      if (~withEmbeds.indexOf('instagram')) {
+        embedElements.instagram = defaultRenderInstagramEmbedElement;
+        embedPlaceholderElements.instagram = defaultRenderInstagramEmbedPlaceholderElement;
+      }
+
+      if (~withEmbeds.indexOf('facebook')) {
+        embedElements.facebook = defaultRenderFacebookEmbedElement;
+        embedPlaceholderElements.facebook = defaultRenderFacebookEmbedPlaceholderElement;
+      }
+
+      if (~withEmbeds.indexOf('twitter')) {
+        embedElements.twitter = defaultRenderTwitterEmbedElement;
+        embedPlaceholderElements.twitter = defaultRenderTwitterEmbedPlaceholderElement;
+      }
+
+      if (~withEmbeds.indexOf('podcastApple')) {
+        embedElements.podcastApple = defaultRenderPodcastAppleEmbedElement;
+        embedPlaceholderElements.podcastApple = defaultRenderPodcastAppleEmbedPlaceholderElement;
+      }
+
+      if (~withEmbeds.indexOf('spotify')) {
+        embedElements.spotify = defaultRenderSpotifyEmbedElement;
+        embedPlaceholderElements.spotify = defaultRenderSpotifyEmbedPlaceholderElement;
+      }
 
       elements.push(embed.createRenderElement(embedElements));
+      elements.push(embed.createRenderPlaceholderElement(embedPlaceholderElements));
+    }
+
+    if (withAccordion) {
+      elements.push(accordion.createRenderElement());
+    }
+
+    if (withCarousel) {
+      elements.push(carousel.createRenderElement());
+      elements.push(carousel.createRenderPlaceholderElement());
+    }
+
+    if (withCard) {
+      elements.push(card.createRenderElement());
+      elements.push(card.createRenderPlaceholderElement());
     }
 
     if (withBlockquote) {
-      elements.push(blockquote.createRenderElement({
-        render: customRenderBlockquote,
-      }));
+      elements.push(blockquote.createRenderElement());
     }
 
     return composeRenderElements(elements);
-  }, [heading, withTitles, withLists, withDivider, withEmbeds, withFootnote, withLink, withImage, withBlockquote]);
+  }, [
+    withTitles.length,
+    heading,
+    withLists.length,
+    withDivider,
+    withFootnote,
+    withLink,
+    link,
+    withImage,
+    withReadMore,
+    withEmbeds,
+    withAccordion,
+    withCarousel,
+    withCard,
+    withBlockquote,
+    embed,
+  ]);
 
   const renderLeaf = useMemo(() => {
     const leafs = [];
@@ -354,166 +541,172 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     if (~withCustomHighlights.indexOf('dance')) leafs.push(dance.createRenderLeaf());
 
     return composeRenderLeafs(leafs);
-  }, [
-    withBold,
-    withItalic,
-    withUnderline,
-    withStrikethrough,
-    withHighlight,
-    withCustomHighlights,
-  ]);
+  }, [withBold, withItalic, withUnderline, withStrikethrough, withHighlight, withCustomHighlights]);
 
-  const toolbarRenderer = useCallback((expanded: boolean) => {
-    const linkTool = <LinkToolbarIcon icon={LinkIcon} controller={link} />;
-    const unlinkTool = <UnlinkToolbarIcon icon={UnlinkIcon} controller={link} />;
-    const blockquoteTool = <BlockquoteToolbarIcon icon={BlockquoteIcon} controller={blockquote} />;
-    const footnoteTool = <FootnoteToolbarIcon icon={FnIcon} controller={footnote} />;
+  const toolbarRenderer = useCallback(
+    (expanded: boolean) => {
+      const linkTool = <LinkToolbarIcon icon={LinkIcon} controller={link} />;
+      const unlinkTool = <UnlinkToolbarIcon icon={UnlinkIcon} controller={link} />;
+      const accordionTool = <AccordionToolbarIcon icon={AccordionIcon} controller={accordion} />;
+      const carouselTool = <CarouselToolbarIcon icon={CarouselIcon} controller={carousel} />;
+      const cardTool = <CardToolbarIcon icon={CardIcon} controller={card} />;
+      const blockquoteTool = <BlockquoteToolbarIcon icon={BlockquoteIcon} controller={blockquote} />;
+      const footnoteTool = <FootnoteToolbarIcon icon={FnIcon} controller={footnote} />;
 
-    if (expanded) {
+      if (expanded) {
+        return (
+          <>
+            {withBold ? <ToggleMarkToolbarIcon icon={BoldIcon} controller={bold} /> : null}
+            {withItalic ? <ToggleMarkToolbarIcon icon={ItalicIcon} controller={italic} /> : null}
+            {withUnderline ? <ToggleMarkToolbarIcon icon={UnderlineIcon} controller={underline} /> : null}
+            {withStrikethrough ? <ToggleMarkToolbarIcon icon={StrikethroughIcon} controller={strikethrough} /> : null}
+            {withHighlight ? <ToggleMarkToolbarIcon icon={HighlightIcon} controller={highlight} /> : null}
+            {~withCustomHighlights.indexOf('sheet-music') ? (
+              <ToggleMarkToolbarIcon icon={SheetMusicIcon} controller={sheetMusic} />
+            ) : null}
+            {~withCustomHighlights.indexOf('drama') ? (
+              <ToggleMarkToolbarIcon icon={DramaIcon} controller={drama} />
+            ) : null}
+            {~withCustomHighlights.indexOf('dance') ? (
+              <ToggleMarkToolbarIcon icon={DanceIcon} controller={dance} />
+            ) : null}
+            {withLink ? linkTool : null}
+            {withLink ? unlinkTool : null}
+            {withFootnote ? footnoteTool : null}
+          </>
+        );
+      }
+
+      if (withImage && image.isSelectionInImageCaption(editor)) return null;
+
+      if (withImage && image.isCollapsedOnImage(editor)) {
+        return (
+          <>
+            {withLink ? linkTool : null}
+            {withLink ? unlinkTool : null}
+            {withFootnote ? footnoteTool : null}
+          </>
+        );
+      }
+
+      if (withBlockquote && blockquote.isSelectionInBlockquote(editor)) {
+        return blockquoteTool;
+      }
+
       return (
         <>
-          {withBold ? <ToggleMarkToolbarIcon icon={BoldIcon} controller={bold} /> : null}
-          {withItalic ? <ToggleMarkToolbarIcon icon={ItalicIcon} controller={italic} /> : null}
-          {withUnderline ? <ToggleMarkToolbarIcon icon={UnderlineIcon} controller={underline} /> : null}
-          {withStrikethrough ? <ToggleMarkToolbarIcon icon={StrikethroughIcon} controller={strikethrough} /> : null}
-          {withHighlight ? <ToggleMarkToolbarIcon icon={HighlightIcon} controller={highlight} /> : null}
-          {~withCustomHighlights.indexOf('sheet-music') ? <ToggleMarkToolbarIcon icon={SheetMusicIcon} controller={sheetMusic} /> : null}
-          {~withCustomHighlights.indexOf('drama') ? <ToggleMarkToolbarIcon icon={DramaIcon} controller={drama} /> : null}
-          {~withCustomHighlights.indexOf('dance') ? <ToggleMarkToolbarIcon icon={DanceIcon} controller={dance} /> : null}
-          {withLink ? linkTool : null}
-          {withLink ? unlinkTool : null}
-          {withFootnote ? footnoteTool : null}
+          <ParagraphToolbarIcon icon={ParagraphIcon} controller={paragraph} />
+          {~withTitles.indexOf('h1') ? <HeadingToolbarIcon icon={Heading1Icon} controller={heading} level={1} /> : null}
+          {~withTitles.indexOf('h2') ? <HeadingToolbarIcon icon={Heading2Icon} controller={heading} level={2} /> : null}
+          {~withTitles.indexOf('h3') ? <HeadingToolbarIcon icon={Heading3Icon} controller={heading} level={3} /> : null}
+          {~withTitles.indexOf('h4') ? <HeadingToolbarIcon icon={Heading4Icon} controller={heading} level={4} /> : null}
+          {~withTitles.indexOf('h5') ? <HeadingToolbarIcon icon={Heading5Icon} controller={heading} level={5} /> : null}
+          {~withTitles.indexOf('h6') ? <HeadingToolbarIcon icon={Heading6Icon} controller={heading} level={6} /> : null}
+          {withAccordion ? accordionTool : null}
+          {withCarousel ? carouselTool : null}
+          {withCard ? cardTool : null}
+          {withBlockquote ? blockquoteTool : null}
+          {~withLists.indexOf('ul') ? (
+            <ListToolbarIcon icon={UnorderedListIcon} controller={list} listTypeKey="ul" />
+          ) : null}
+          {~withLists.indexOf('ol') ? (
+            <ListToolbarIcon icon={OrderedListIcon} controller={list} listTypeKey="ol" />
+          ) : null}
+          {withTitles.length || withAccordion || withCarousel || withCard || withBlockquote || withLists.length
+            ? TOOLBAR_DIVIDER
+            : null}
+          {withDivider ? <DividerToolbarIcon icon={DividerIcon} controller={divider} /> : null}
+          {withImage ? (
+            <FileUploaderToolbarIcon
+              icon={ImageIcon}
+              controller={fileUploader}
+              options={getLocalFileUploaderOptions(image)}
+            />
+          ) : null}
+          {~withEmbeds.indexOf('youtube') ? (
+            <EmbedToolbarIcon icon={YoutubeIcon} controller={embed} provider="youtube" />
+          ) : null}
+          {~withEmbeds.indexOf('vimeo') ? (
+            <EmbedToolbarIcon icon={VimeoIcon} controller={embed} provider="vimeo" />
+          ) : null}
+          {~withEmbeds.indexOf('instagram') ? (
+            <EmbedToolbarIcon icon={InstagramIcon} controller={embed} provider="instagram" />
+          ) : null}
+          {~withEmbeds.indexOf('facebook') ? (
+            <EmbedToolbarIcon icon={FacebookIcon} controller={embed} provider="facebook" />
+          ) : null}
+          {~withEmbeds.indexOf('twitter') ? (
+            <EmbedToolbarIcon icon={TwitterIcon} controller={embed} provider="twitter" />
+          ) : null}
+          {~withEmbeds.indexOf('podcastApple') ? (
+            <EmbedToolbarIcon icon={PodcastAppleIcon} controller={embed} provider="podcastApple" />
+          ) : null}
+          {~withEmbeds.indexOf('spotify') ? (
+            <EmbedToolbarIcon icon={SpotifyIcon} controller={embed} provider="spotify" />
+          ) : null}
+          {withReadMore ? <ReadMoreToolbarIcon icon={ReadMoreIcon} controller={readMore} /> : null}
+          {withAlign ? (
+            <ToolbarGroupIcon icon={AlignLeftIcon}>
+              <AlignToolbarIcon icon={AlignLeftIcon} controller={align} value="left" />
+              <AlignToolbarIcon icon={AlignCenterIcon} controller={align} value="center" />
+              <AlignToolbarIcon icon={AlignRightIcon} controller={align} value="right" />
+            </ToolbarGroupIcon>
+          ) : null}
+          <ToolbarGroupIcon icon={ParagraphIcon}>
+            <ParagraphToolbarIcon icon={ParagraphIcon} controller={paragraph} />
+            <HeadingToolbarIcon icon={Heading1Icon} controller={heading} level={1} />
+            <HeadingToolbarIcon icon={Heading2Icon} controller={heading} level={2} />
+            <HeadingToolbarIcon icon={Heading3Icon} controller={heading} level={3} />
+          </ToolbarGroupIcon>
         </>
       );
-    }
+    },
+    [
+      link,
+      withImage,
+      editor,
+      withBlockquote,
+      withTitles,
+      heading,
+      withAccordion,
+      withCarousel,
+      withCard,
+      withLists,
+      withDivider,
+      withEmbeds,
+      embed,
+      withReadMore,
+      withAlign,
+      withBold,
+      withItalic,
+      withUnderline,
+      withStrikethrough,
+      withHighlight,
+      withCustomHighlights,
+      withLink,
+      withFootnote,
+    ],
+  );
 
-    if (withImage && image.isSelectionInImageCaption(editor)) return null;
-
-    if (withImage && image.isCollapsedOnImage(editor)) {
-      return (
-        <>
-          {withLink ? linkTool : null}
-          {withLink ? unlinkTool : null}
-          {withFootnote ? footnoteTool : null}
-        </>
-      );
-    }
-
-    if (withBlockquote && blockquote.isSelectionInBlockquote(editor)) {
-      return blockquoteTool;
-    }
-
-    return (
-      <>
-        {~withTitles.indexOf('h1') ? <HeadingToolbarIcon icon={Heading1Icon} controller={heading} level={1} /> : null}
-        {~withTitles.indexOf('h2') ? <HeadingToolbarIcon icon={Heading2Icon} controller={heading} level={2} /> : null}
-        {~withTitles.indexOf('h3') ? <HeadingToolbarIcon icon={Heading3Icon} controller={heading} level={3} /> : null}
-        {~withTitles.indexOf('h4') ? <HeadingToolbarIcon icon={Heading4Icon} controller={heading} level={4} /> : null}
-        {~withTitles.indexOf('h5') ? <HeadingToolbarIcon icon={Heading5Icon} controller={heading} level={5} /> : null}
-        {~withTitles.indexOf('h6') ? <HeadingToolbarIcon icon={Heading6Icon} controller={heading} level={6} /> : null}
-        {withBlockquote ? blockquoteTool : null}
-        {~withLists.indexOf('ul') ? <ListToolbarIcon icon={UnorderedListIcon} controller={list} listTypeKey="ul" /> : null}
-        {~withLists.indexOf('ol') ? <ListToolbarIcon icon={OrderedListIcon} controller={list} listTypeKey="ol" /> : null}
-        {withTitles.length || withBlockquote || withLists.length ? TOOLBAR_DIVIDER : null}
-        {withDivider ? <DividerToolbarIcon icon={DividerIcon} controller={divider} /> : null}
-        {withImage ? (
-          <FileUploaderToolbarIcon
-            icon={ImageIcon}
-            controller={fileUploader}
-            options={getLocalFileUploaderOptions(image)}
-          />
-        ) : null}
-        {~withEmbeds.indexOf('youtube') || ~withEmbeds.indexOf('vimeo') ? (
-          <EmbedToolbarIcon
-            icon={VideoIcon}
-            controller={embed}
-            providers={[
-              ...(~withEmbeds.indexOf('youtube') ? ['youtube'] : []),
-              ...(~withEmbeds.indexOf('vimeo') ? ['vimeo'] : []),
-            ]}
-            getPlaceholder={locale => locale.editor.video.inputPlaceholder}
-            startToolInput={inputBlock.start}
-          />
-        ) : null}
-        {~withEmbeds.indexOf('instagram') ? (
-          <EmbedToolbarIcon
-            icon={InstagramIcon}
-            controller={embed}
-            providers={['instagram']}
-            getPlaceholder={locale => locale.editor.instagram.inputPlaceholder}
-            startToolInput={inputBlock.start}
-          />
-        ) : null}
-        {~withEmbeds.indexOf('facebook') ? (
-          <EmbedToolbarIcon
-            icon={FacebookIcon}
-            controller={embed}
-            providers={['facebook']}
-            getPlaceholder={locale => locale.editor.facebook.inputPlaceholder}
-            startToolInput={inputBlock.start}
-          />
-        ) : null}
-        {~withEmbeds.indexOf('twitter') ? (
-          <EmbedToolbarIcon
-            icon={TwitterIcon}
-            controller={embed}
-            providers={['twitter']}
-            getPlaceholder={locale => locale.editor.twitter.tweet.inputPlaceholder}
-            startToolInput={inputBlock.start}
-          />
-        ) : null}
-        {~withEmbeds.indexOf('podcastApple') ? (
-          <EmbedToolbarIcon
-            icon={PodcastAppleIcon}
-            controller={embed}
-            providers={['podcastApple']}
-            getPlaceholder={locale => locale.editor.podcastApple.inputPlaceholder}
-            startToolInput={inputBlock.start}
-          />
-        ) : null}
-        {~withEmbeds.indexOf('spotify') ? (
-          <EmbedToolbarIcon
-            icon={SpotifyIcon}
-            controller={embed}
-            providers={['spotify']}
-            getPlaceholder={locale => locale.editor.spotify.inputPlaceholder}
-            startToolInput={inputBlock.start}
-          />
-        ) : null}
-        {withReadMore ? <ReadMoreToolbarIcon icon={ReadMoreIcon} controller={readMore} /> : null}
-      </>
-    );
-  }, [
-    editor,
-    heading,
-    withTitles,
-    withBlockquote,
-    withLists,
-    withDivider,
-    withEmbeds,
-    withBold,
-    withItalic,
-    withUnderline,
-    withStrikethrough,
-    withHighlight,
-    withCustomHighlights,
-    withFootnote,
-    withLink,
-    withImage,
-  ]);
-
-  const [value, setValue] = useState<Descendant[]>([{
-    type: PARAGRAPH_TYPE,
-    children: [{ text: '' }],
-  }]);
-
-  useEffect(() => {
-    setValue([{
+  const [value, setValue] = useState<Descendant[]>([
+    {
       type: PARAGRAPH_TYPE,
       children: [{ text: '' }],
-    }]);
+    },
+  ]);
+
+  useEffect(() => {
+    setValue([
+      {
+        type: PARAGRAPH_TYPE,
+        children: [{ text: '' }],
+      },
+    ]);
   }, [
     withTitles,
+    withAccordion,
+    withCarousel,
+    withCard,
     withBlockquote,
     withLists,
     withDivider,
@@ -532,10 +725,7 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
   const jsxSerializer = useMemo(() => {
     const leafs = [];
 
-    const elements = [
-      createJsxSerializeLineBreak(),
-      createJsxSerializeParagraph(),
-    ];
+    const elements = [createJsxSerializeLineBreak(), createJsxSerializeParagraph()];
 
     // Leafs
     if (withBold) leafs.push(createJsxSerializeBold());
@@ -548,7 +738,10 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     if (~withCustomHighlights.indexOf('dance')) leafs.push(createJsxSerializeHighlight('dance'));
 
     // Elements
-    if (withBlockquote) elements.push(createJsxSerializeBlockquote({ render: customRenderBlockquote }));
+    if (withAccordion) elements.push(createJsxSerializeAccordion());
+    if (withCarousel) elements.push(createJsxSerializeCarousel());
+    if (withCard) elements.push(createJsxSerializeCard());
+    if (withBlockquote) elements.push(createJsxSerializeBlockquote());
     if (withTitles.length) elements.push(createJsxSerializeHeading());
     if (withLists.length) elements.push(createJsxSerializeList());
     if (withDivider) elements.push(createJsxSerializeDivider());
@@ -560,18 +753,20 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
     if (withEmbeds.length) {
       const embedElements: Record<string, (props: any) => React.JSX.Element> = {};
 
-      if (~withEmbeds.indexOf('youtube')) embedElements.youtube = defaultRenderYoutubeEmbedElement;
-      if (~withEmbeds.indexOf('vimeo')) embedElements.vimeo = defaultRenderVimeoEmbedElement;
-      if (~withEmbeds.indexOf('instagram')) embedElements.instagram = defaultRenderInstagramEmbedElement;
-      if (~withEmbeds.indexOf('facebook')) embedElements.facebook = defaultRenderFacebookEmbedElement;
-      if (~withEmbeds.indexOf('twitter')) embedElements.twitter = defaultRenderTwitterEmbedElement;
-      if (~withEmbeds.indexOf('podcastApple')) embedElements.podcastApple = defaultRenderPodcastAppleEmbedElement;
-      if (~withEmbeds.indexOf('spotify')) embedElements.spotify = defaultRenderSpotifyEmbedElement;
+      if (~withEmbeds.indexOf('youtube')) embedElements.youtube = defaultRenderYoutubeEmbedJsxSerializer;
+      if (~withEmbeds.indexOf('vimeo')) embedElements.vimeo = defaultRenderVimeoEmbedJsxSerializer;
+      if (~withEmbeds.indexOf('instagram')) embedElements.instagram = defaultRenderInstagramEmbedJsxSerializer;
+      if (~withEmbeds.indexOf('facebook')) embedElements.facebook = defaultRenderFacebookEmbedJsxSerializer;
+      if (~withEmbeds.indexOf('twitter')) embedElements.twitter = defaultRenderTwitterEmbedJsxSerializer;
+      if (~withEmbeds.indexOf('podcastApple')) embedElements.podcastApple = defaultRenderPodcastAppleEmbedJsxSerializer;
+      if (~withEmbeds.indexOf('spotify')) embedElements.spotify = defaultRenderSpotifyEmbedJsxSerializer;
 
-      elements.push(createJsxSerializeEmbed({
-        strategies: embedStrategies,
-        renderers: embedElements,
-      }));
+      elements.push(
+        createJsxSerializeEmbed({
+          strategies: embedStrategies,
+          renderers: embedElements,
+        }),
+      );
     }
 
     return createJsxSerializer({
@@ -581,6 +776,9 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
   }, [
     embedStrategies,
     withTitles,
+    withAccordion,
+    withCarousel,
+    withCard,
     withBlockquote,
     withLists,
     withDivider,
@@ -608,13 +806,11 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
             value={value}
             key={Math.random()} // Fixed Slate bug on re-create editor
             onChange={(v: Descendant[]) => setValue(v)}
+            needConfirmModal={needConfirmModal}
+            setNeedConfirmModal={setNeedConfirmModal}
           >
-            <Toolbar fixed>
-              {toolbarRenderer}
-            </Toolbar>
-            <Toolbar onlyRenderExpanded>
-              {toolbarRenderer}
-            </Toolbar>
+            <Toolbar fixed>{toolbarRenderer}</Toolbar>
+            <Toolbar onlyRenderExpanded>{toolbarRenderer}</Toolbar>
             <Editable
               {...handlers}
               className="stories__custom-elements stories__block"
@@ -626,10 +822,10 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
         <ConfigsProvider theme={editorTheme} locale={editorLocale}>
           {({
             theme: {
-              props: { style },
+              props: { style, className },
             },
           }) => (
-            <div className="stories__custom-elements stories__block" style={style}>
+            <div className={clsx('stories__custom-elements stories__block', className)} style={style}>
               {jsxSerializer.serialize(value)}
             </div>
           )}
@@ -652,12 +848,16 @@ type Story = StoryObj<typeof PlaygroundEditor>;
 export const Editor: Story = {
   args: {
     withTitles: ['h1', 'h2', 'h3'],
+    withAccordion: true,
+    withCarousel: true,
+    withCard: true,
     withBlockquote: false,
     withLists: ['ol', 'ul'],
     withDivider: true,
     locale: 'Chinese',
     theme: 'Default',
     withEmbeds: ['youtube', 'vimeo'],
+    withAlign: true,
     withBold: true,
     withItalic: true,
     withUnderline: false,
@@ -674,6 +874,18 @@ export const Editor: Story = {
       name: 'Titles',
       options: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
       control: { type: 'inline-check' },
+    },
+    withAccordion: {
+      name: 'Accordion',
+      control: { type: 'boolean' },
+    },
+    withCarousel: {
+      name: 'Carousel',
+      control: { type: 'boolean' },
+    },
+    withCard: {
+      name: 'Card',
+      control: { type: 'boolean' },
     },
     withBlockquote: {
       name: 'Blockquote',
@@ -692,6 +904,10 @@ export const Editor: Story = {
       name: 'Embed',
       options: ['youtube', 'vimeo', 'instagram', 'facebook', 'twitter', 'podcastApple', 'spotify'],
       control: { type: 'inline-check' },
+    },
+    withAlign: {
+      name: 'Text Align',
+      control: { type: 'boolean' },
     },
     withBold: {
       name: 'Bold',

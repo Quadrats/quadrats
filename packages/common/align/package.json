@@ -1,0 +1,10 @@
+{
+  "name": "@quadrats/common/align",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "paragraph",
+      "heading"
+    ]
+  }
+}

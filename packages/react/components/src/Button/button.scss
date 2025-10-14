@@ -1,0 +1,254 @@
+.qdr-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--qdr-spacing-2);
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all var(--qdr-duration-short) var(--qdr-easing-standard);
+
+  &--small {
+    padding: 0 var(--qdr-spacing-7);
+    font-size: var(--qdr-typography-basic-button2-font-size);
+    line-height: var(--qdr-typography-basic-button2-line-height);
+    letter-spacing: var(--qdr-typography-basic-button2-letter-spacing);
+    font-weight: var(--qdr-typography-basic-button2-font-weight);
+  }
+
+  &--medium {
+    padding: var(--qdr-spacing-1) var(--qdr-spacing-7);
+    font-size: var(--qdr-typography-basic-button2-font-size);
+    line-height: var(--qdr-typography-basic-button2-line-height);
+    letter-spacing: var(--qdr-typography-basic-button2-letter-spacing);
+    font-weight: var(--qdr-typography-basic-button2-font-weight);
+  }
+
+  &--large {
+    padding: 0 var(--qdr-spacing-7);
+    font-size: var(--qdr-typography-basic-button1-font-size);
+    line-height: var(--qdr-typography-basic-button1-line-height);
+    letter-spacing: var(--qdr-typography-basic-button1-letter-spacing);
+    font-weight: var(--qdr-typography-basic-button1-font-weight);
+  }
+
+  &--primary {
+    background-color: var(--qdr-primary);
+    color: var(--qdr-on-primary);
+    border: 1px solid var(--qdr-primary);
+
+    &:hover {
+      background-color: var(--qdr-primary-light);
+      border-color: var(--qdr-primary-light);
+    }
+
+    &:active {
+      background-color: var(--qdr-primary-dark);
+      border-color: var(--qdr-primary-dark);
+    }
+
+    &:disabled {
+      color: var(--qdr-action-disabled);
+      background-color: var(--qdr-action-disabled-bg);
+      border-color: var(--qdr-action-disabled-bg);
+      cursor: not-allowed;
+    }
+
+    &.qdr-button--danger {
+      background-color: var(--qdr-error);
+      color: var(--qdr-on-error);
+      border: 1px solid var(--qdr-error);
+
+      &:hover {
+        background-color: var(--qdr-error-light);
+        border-color: var(--qdr-error-light);
+      }
+
+      &:active {
+        background-color: var(--qdr-error-dark);
+        border-color: var(--qdr-error-dark);
+      }
+
+      &:disabled {
+        color: var(--qdr-action-disabled);
+        background-color: var(--qdr-action-disabled-bg);
+        border-color: var(--qdr-action-disabled-bg);
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &--secondary {
+    background-color: transparent;
+    color: var(--qdr-action-active);
+    border: 1px solid var(--qdr-border);
+
+    &:hover {
+      color: var(--qdr-primary);
+      border-color: var(--qdr-primary-light);
+    }
+
+    &:active {
+      color: var(--qdr-primary-dark);
+      border-color: var(--qdr-primary-dark);
+    }
+
+    &:disabled {
+      color: var(--qdr-action-disabled);
+      border-color: var(--qdr-action-disabled);
+      background-color: var(--qdr-action-disabled-bg);
+      cursor: not-allowed;
+    }
+
+    &.qdr-button--danger {
+      background-color: transparent;
+      color: var(--qdr-error);
+      border: 1px solid var(--qdr-border);
+
+      &:hover {
+        color: var(--qdr-error-light);
+        border-color: var(--qdr-error-light);
+      }
+
+      &:active {
+        color: var(--qdr-error-dark);
+        border-color: var(--qdr-error-dark);
+      }
+
+      &:disabled {
+        color: var(--qdr-action-disabled);
+        border-color: var(--qdr-action-disabled);
+        background-color: var(--qdr-action-disabled-bg);
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &--outlined {
+    background-color: transparent;
+    color: var(--qdr-primary);
+    border: 1px solid var(--qdr-primary);
+
+    &:hover {
+      background-color: var(--qdr-primary-hover-bg);
+      border-color: var(--qdr-primary-light);
+    }
+
+    &:active {
+      background-color: var(--qdr-primary-active-bg);
+      border-color: var(--qdr-primary);
+    }
+
+    &:disabled {
+      color: var(--qdr-action-disabled);
+      border-color: var(--qdr-action-disabled);
+      background-color: transparent;
+      cursor: not-allowed;
+    }
+
+    &.qdr-button--danger {
+      background-color: transparent;
+      color: var(--qdr-error);
+      border: 1px solid var(--qdr-error);
+
+      &:hover {
+        background-color: var(--qdr-error-hover-bg);
+        border-color: var(--qdr-error-light);
+      }
+
+      &:active {
+        background-color: var(--qdr-error-active-bg);
+        border-color: var(--qdr-error);
+      }
+
+      &:disabled {
+        color: var(--qdr-action-disabled);
+        border-color: var(--qdr-action-disabled);
+        background-color: transparent;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &--dashed {
+    background-color: transparent;
+    color: var(--qdr-primary);
+    border: 1px dashed var(--qdr-border);
+
+    &:hover {
+      background-color: var(--qdr-primary-hover-bg);
+      border-color: var(--qdr-primary-light);
+    }
+
+    &:active {
+      background-color: var(--qdr-primary-active-bg);
+      border-color: var(--qdr-primary-dark);
+    }
+
+    &:disabled {
+      color: var(--qdr-action-disabled);
+      border-color: var(--qdr-action-disabled);
+      background-color: transparent;
+      cursor: not-allowed;
+    }
+
+    &.qdr-button--danger {
+      background-color: transparent;
+      color: var(--qdr-error);
+      border: 1px dashed var(--qdr-error);
+
+      &:hover {
+        background-color: var(--qdr-error-hover-bg);
+        border-color: var(--qdr-error-light);
+      }
+
+      &:active {
+        background-color: var(--qdr-error-active-bg);
+        border-color: var(--qdr-error-dark);
+      }
+
+      &:disabled {
+        color: var(--qdr-action-disabled);
+        border-color: var(--qdr-action-disabled);
+        background-color: transparent;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &--tertiary {
+    color: var(--qdr-primary);
+
+    &:hover {
+      background-color: var(--qdr-primary-hover-bg);
+    }
+
+    &:active {
+      background-color: var(--qdr-primary-active-bg);
+    }
+
+    &:disabled {
+      color: var(--qdr-action-disabled);
+      background-color: transparent;
+      cursor: not-allowed;
+    }
+
+    &.qdr-button--danger {
+      color: var(--qdr-error);
+
+      &:hover {
+        background-color: var(--qdr-error-hover-bg);
+      }
+
+      &:active {
+        background-color: var(--qdr-error-active-bg);
+      }
+
+      &:disabled {
+        color: var(--qdr-action-disabled);
+        background-color: transparent;
+        cursor: not-allowed;
+      }
+    }
+  }
+}

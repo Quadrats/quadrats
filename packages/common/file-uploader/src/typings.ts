@@ -4,8 +4,12 @@ import {
   Path,
   TransformsInsertNodesOptions,
   Withable,
+  WithElementType,
+  Text,
 } from '@quadrats/core';
 import { GetFilesFromInputOptions } from './getFilesFromInput';
+
+export type ImageAccept = 'image/jpeg' | 'image/jpg' | 'image/png';
 
 export interface XHRUploadHeaders {
   [name: string]: string;
@@ -38,7 +42,7 @@ interface FileUploaderUploadImplement {
   onprogress: ((options: FileUploaderUploadImplementOnProgressArgs) => void) | null;
 }
 
-interface FileUploaderImplement {
+export interface FileUploaderImplement {
   onload: (() => void) | null;
   open: (method: string, url: string | URL) => void;
   setRequestHeader: (key: string, value: string) => void;
@@ -46,6 +50,10 @@ interface FileUploaderImplement {
   readonly status: number;
   readonly response: any;
   readonly upload: FileUploaderUploadImplement;
+}
+
+export interface UploaderPlaceholderElement extends QuadratsElement, WithElementType {
+  children: [Text];
 }
 
 export interface FileUploaderCreateFileUploaderElementOptions {
@@ -62,15 +70,17 @@ export interface FileUploaderCreateFileUploaderElementOptions {
 }
 
 export type FileUploaderUploadOptions = FileUploaderCreateFileUploaderElementOptions &
-GetFilesFromInputOptions &
-TransformsInsertNodesOptions;
+  GetFilesFromInputOptions &
+  TransformsInsertNodesOptions;
 
 export interface FileUploader<T extends Editor = Editor> extends Withable {
   type: string;
   createFileUploaderElement(
     editor: T,
     file: File,
-    options: FileUploaderCreateFileUploaderElementOptions
+    options: FileUploaderCreateFileUploaderElementOptions,
   ): Promise<FileUploaderElement | undefined>;
   upload(editor: T, options: FileUploaderUploadOptions): Promise<void>;
+  insertUploaderPlaceholder(editor: T): void;
+  removeUploaderPlaceholder(editor: T): void;
 }

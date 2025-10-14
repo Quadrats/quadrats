@@ -16,6 +16,10 @@ export function getFilesFromInput(options: GetFilesFromInputOptions = {}) {
     inputEl.multiple = !!multiple;
     inputEl.type = 'file';
 
+    inputEl.addEventListener('cancel', () => {
+      resolve(undefined);
+    });
+
     inputEl.addEventListener('change', () => {
       const { files: fileList } = inputEl;
 

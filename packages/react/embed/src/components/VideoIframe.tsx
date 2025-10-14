@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { EmbedElement } from '@quadrats/common/embed';
 import { RenderElementProps } from '@quadrats/react';
 import { composeRefs } from '@quadrats/react/utils';
@@ -9,12 +9,14 @@ export interface VideoIframeProps<E extends EmbedElement> {
   children?: any;
   data: string;
   element: E;
+  toolbarElement: ReactNode;
 }
 
 function VideoIframe<E extends EmbedElement>({
   attributes,
   children,
   data: src,
+  toolbarElement,
 }: VideoIframeProps<E>) {
   const { ref } = attributes || {};
   const { ref: containerRef, size } = useVideoIframeSize<HTMLDivElement>();
@@ -27,6 +29,7 @@ function VideoIframe<E extends EmbedElement>({
       className="qdr-embed-video"
       contentEditable={false}
     >
+      {toolbarElement}
       <div style={size}>
         <iframe title={src} src={src} frameBorder="0" width="100%" height="100%" />
       </div>

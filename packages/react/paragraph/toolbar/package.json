@@ -1,0 +1,10 @@
+{
+  "name": "@quadrats/react/paragraph/toolbar",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "toolbar",
+      "paragraph"
+    ]
+  }
+}

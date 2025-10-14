@@ -1,0 +1,243 @@
+.qdr-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: var(--qdr-spacing-6);
+  border-radius: var(--qdr-radius-3);
+  border: 1px solid var(--qdr-border);
+  background-color: var(--qdr-block);
+  margin: var(--qdr-spacing-12) 0;
+  padding: var(--qdr-spacing-6);
+
+  &:hover {
+    .qdr-card__inline-toolbar {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  &--rightImageLeftText {
+    flex-direction: row-reverse;
+  }
+
+  &-modal {
+    &__main {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: var(--qdr-spacing-12);
+    }
+
+    &__block {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: var(--qdr-spacing-6);
+    }
+
+    &__block-title {
+      align-self: stretch;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--qdr-text-primary);
+      font-size: var(--qdr-typography-basic-h5-font-size);
+      line-height: var(--qdr-typography-basic-h5-line-height);
+      letter-spacing: var(--qdr-typography-basic-h5-letter-spacing);
+      font-weight: var(--qdr-typography-basic-h5-font-weight);
+      margin: 0;
+    }
+
+    &__block-content {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: var(--qdr-spacing-9);
+    }
+
+    &__block-field {
+      width: 100%;
+    }
+
+    &__toggle-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: var(--qdr-spacing-2);
+      color: var(--qdr-text-secondary);
+      font-size: var(--qdr-typography-basic-h6-font-size);
+      line-height: var(--qdr-typography-basic-h6-line-height);
+      letter-spacing: var(--qdr-typography-basic-h6-letter-spacing);
+      font-weight: var(--qdr-typography-basic-h6-font-weight);
+    }
+
+    &__link-wrapper {
+      align-self: stretch;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: var(--qdr-spacing-7);
+    }
+
+    &__url-field {
+      flex: 1;
+    }
+  }
+
+  &__placeholder {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: var(--qdr-spacing-6);
+    border-radius: var(--qdr-radius-3);
+    border: 1px solid var(--qdr-border);
+    background-color: var(--qdr-block);
+    margin: var(--qdr-spacing-12) 0;
+    padding: var(--qdr-spacing-6);
+
+    &__line {
+      align-self: stretch;
+      height: 16px;
+      border-radius: var(--qdr-radius-6);
+      opacity: 0.2;
+      background: linear-gradient(90deg, var(--qdr-action-inactive) 0%, var(--qdr-divider) 100%);
+
+      &--small-radius {
+        border-radius: var(--qdr-radius-3);
+      }
+    }
+  }
+
+  &__placeholder-image-wrapper {
+    position: relative;
+    width: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--qdr-radius-1);
+    color: var(--qdr-action-disabled);
+  }
+
+  &__placeholder-bg {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--qdr-radius-1);
+    opacity: 0.2;
+    background: linear-gradient(90deg, var(--qdr-action-inactive) 0%, var(--qdr-divider) 100%);
+  }
+
+  &__placeholder-contents {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    align-self: stretch;
+    flex: 1;
+  }
+
+  &__placeholder-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    gap: var(--qdr-spacing-7);
+  }
+
+  &__placeholder-description-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    gap: var(--qdr-spacing-4);
+  }
+
+  &__placeholder-link-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    align-self: stretch;
+  }
+
+  &__image-wrapper {
+    width: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--qdr-radius-1);
+  }
+
+  &__image {
+    width: 100%;
+    border-radius: var(--qdr-radius-1);
+  }
+
+  &__contents {
+    flex: 1;
+  }
+
+  &__content-wrapper {
+    width: 100%;
+  }
+
+  &__title {
+    color: var(--qdr-text-primary);
+    font-size: var(--qdr-typography-article-h5-font-size);
+    line-height: var(--qdr-typography-article-h5-line-height);
+    letter-spacing: var(--qdr-typography-article-h5-letter-spacing);
+    font-weight: var(--qdr-typography-article-h5-font-weight);
+    margin: 0;
+    word-break: break-word;
+  }
+
+  &__description {
+    color: var(--qdr-text-primary);
+    font-size: var(--qdr-typography-article-body2-font-size);
+    line-height: var(--qdr-typography-article-body2-line-height);
+    letter-spacing: var(--qdr-typography-article-body2-letter-spacing);
+    font-weight: var(--qdr-typography-article-body2-font-weight);
+    margin: var(--qdr-spacing-4) 0 0;
+    word-break: break-word;
+  }
+
+  &__remark {
+    color: var(--qdr-text-secondary);
+    font-size: var(--qdr-typography-article-body2-font-size);
+    line-height: var(--qdr-typography-article-body2-line-height);
+    letter-spacing: var(--qdr-typography-article-body2-letter-spacing);
+    font-weight: var(--qdr-typography-article-body2-font-weight);
+    margin: var(--qdr-spacing-2) 0 0;
+  }
+
+  &__link-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    margin-top: var(--qdr-spacing-9);
+
+    &--rightImageLeftText {
+      justify-content: flex-start;
+    }
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--qdr-spacing-1);
+    color: var(--qdr-primary);
+    font-size: var(--qdr-typography-article-h6-font-size);
+    line-height: var(--qdr-typography-article-h6-line-height);
+    letter-spacing: var(--qdr-typography-article-h6-letter-spacing);
+    font-weight: var(--qdr-typography-article-h6-font-weight);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--qdr-primary-light);
+    }
+  }
+}

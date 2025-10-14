@@ -10,8 +10,18 @@
       "configs"
     ],
     "styles": {
+      "BaseField/baseField": "baseField",
       "Progress/progress": "progress",
-      "Tooltip/tooltip": "tooltip"
+      "Tooltip/tooltip": "tooltip",
+      "Button/button": "button",
+      "Input/input": "input",
+      "Textarea/textarea": "textarea",
+      "Hint/hint": "hint",
+      "Modal/modal": "modal",
+      "Message/message": "message",
+      "SegmentedControl/segmentedControl": "segmentedControl",
+      "Toggle/toggle": "toggle",
+      "components": "components"
     }
   }
 }

@@ -1,29 +1,36 @@
 .qdr-read-more {
   position: relative;
-  margin: 18px 0;
+  margin: var(--qdr-spacing-14) 0;
   width: 100%;
   color: var(--qdr-divider);
   text-align: center;
 
-  &::before {
-    position: absolute;
-    content: '';
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: linear-gradient(to right, var(--qdr-divider) 50%, rgba(255, 255, 255, 0) 0%);
-    background-position: center;
-    background-size: 1em 1px;
-    background-repeat: repeat-x;
-  }
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-  &__description {
-    position: relative;
-    z-index: 1;
-    padding: 0 1em;
-    background: var(--qdr-background);
-    transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
-    will-change: background-color, color;
+    &__description {
+      color: var(--qdr-text-secondary);
+      position: relative;
+      z-index: 1;
+      padding: 0 var(--qdr-spacing-7);
+      font-size: var(--qdr-typography-article-body2-font-size);
+      line-height: var(--qdr-typography-article-body2-line-height);
+      letter-spacing: var(--qdr-typography-article-body2-letter-spacing);
+      font-weight: var(--qdr-typography-article-body2-font-weight);
+    }
+
+    &__line {
+      flex: 1;
+      height: 2px;
+      background-image: repeating-linear-gradient(
+        to right,
+        var(--qdr-border),
+        var(--qdr-border) 10px,
+        transparent 10px,
+        transparent 15px
+      );
+    }
   }
 }

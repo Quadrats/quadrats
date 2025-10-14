@@ -1,0 +1,15 @@
+{
+  "name": "@quadrats/react/accordion",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "quadratsConfig": {
+    "deps": [
+      "__ROOT__"
+    ],
+    "styles": {
+      "accordion": "accordion"
+    }
+  }
+}

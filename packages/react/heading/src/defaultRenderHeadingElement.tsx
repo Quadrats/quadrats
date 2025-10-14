@@ -26,5 +26,11 @@ export const defaultRenderHeadingElement = ({
     return null;
   }
 
-  return <Component {...attributes} className={`qdr-${Component}`}>{children}</Component>;
+  const style = element.align ? { textAlign: element.align } : undefined;
+
+  return (
+    <Component {...attributes} className={`qdr-${Component}`} style={style}>
+      {children}
+    </Component>
+  );
 };

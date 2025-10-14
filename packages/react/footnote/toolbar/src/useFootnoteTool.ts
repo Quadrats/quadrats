@@ -12,7 +12,7 @@ export function useFootnoteTool(controller: ReactFootnote, options: UseFootnoteT
   return {
     active: controller.isSelectionInFootnote(editor),
     onClick: () => startToolInput({
-      getPlaceholder: (locale) => locale.editor.footnote.inputPlaceholder,
+      getPlaceholder: locale => locale.editor.footnote.inputPlaceholder,
       confirm: (footnoteText) => {
         controller.upsertFootnoteAndUpdateIndex(editor, footnoteText, options);
       },

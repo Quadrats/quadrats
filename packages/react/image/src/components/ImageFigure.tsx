@@ -5,6 +5,7 @@ import { RenderImageFigureElementProps } from '../typings';
 
 function ImageFigure(props: RenderImageFigureElementProps) {
   const { attributes, children, style } = props;
+
   const focused = useFocused();
   const selected = useSelected();
   const blurred = !focused || !selected;

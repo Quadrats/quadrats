@@ -1,0 +1,9 @@
+{
+  "name": "@quadrats/common/card",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "file-uploader"
+    ]
+  }
+}

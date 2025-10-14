@@ -10,12 +10,14 @@ export function useVideoIframeSize<E extends HTMLElement>() {
 
       if (el) {
         const width = el.offsetWidth;
+
         setSize({ width, height: Math.round(width * 0.75) });
       }
     }
 
     handler();
     window.addEventListener('resize', handler);
+
     return () => window.removeEventListener('resize', handler);
   }, [ref]);
 

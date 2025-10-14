@@ -1,9 +1,8 @@
 import React from 'react';
 import { RenderDividerElementProps } from './typings';
 
-export const defaultRenderDividerElement = ({ attributes, children }: RenderDividerElementProps) => (
+export const defaultRenderDividerElement = ({ attributes }: RenderDividerElementProps) => (
   <div {...attributes} className="qdr-divider" contentEditable={false}>
     <hr />
-    {children}
   </div>
 );

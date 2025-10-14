@@ -6,6 +6,9 @@ export function useFileUploaderTool(controller: ReactFileUploader, options: File
   const editor = useSlateStatic() as Editor;
 
   return {
-    onClick: () => controller.upload(editor, options),
+    onClick: () => {
+      controller.insertUploaderPlaceholder(editor);
+      controller.upload(editor, options);
+    },
   };
 }

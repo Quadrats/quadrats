@@ -16,12 +16,14 @@ export type ImageCaptionTypeKey = 'caption';
 export type ImageTypes = Record<ImageFigureTypeKey | ImageTypeKey | ImageCaptionTypeKey, string>;
 
 export interface ImageFigureElement extends QuadratsElement, WithElementType {
+  align?: 'start' | 'center' | 'end';
   width?: number;
 }
 
 export interface ImageElement extends QuadratsElement, WithElementType {
   children: [Text];
   src: string;
+  figureType: string;
   /**
    * e.g. The src of image is `8gy9pbaht92y4.jpg` and your static files are hosted by `https://foo.storage`.
    * Then you can make the hosting of element be `foo`.
@@ -68,13 +70,10 @@ export interface Image<Hosting extends string, T extends Editor = Editor> extend
    */
   sizeSteps?: ImageSizeSteps;
   isImageUrl(url: string): boolean;
-  getAboveImageFigure(
-    editor: T,
-    options?: ImageGetAboveImageFigureOptions
-  ): NodeEntry<ImageFigureElement> | undefined;
+  getAboveImageFigure(editor: T, options?: ImageGetAboveImageFigureOptions): NodeEntry<ImageFigureElement> | undefined;
   getAboveImageCaption(
     editor: T,
-    options?: ImageGetAboveImageCaptionOptions
+    options?: ImageGetAboveImageCaptionOptions,
   ): NodeEntry<ImageCaptionElement> | undefined;
   isSelectionInImage(editor: T): boolean;
   isSelectionInImageCaption(editor: T): boolean;
@@ -86,7 +85,7 @@ export interface Image<Hosting extends string, T extends Editor = Editor> extend
     options?: {
       hosting?: Hosting;
       at?: Location;
-    }
+    },
   ): void;
   resizeImage(editor: T, entry: NodeEntry<QuadratsElement>, width: number): void;
 }

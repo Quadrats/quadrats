@@ -20,4 +20,7 @@ Provider,
 
 export interface ReactEmbed<Provider extends string>
   extends Embed<Provider, Editor>,
-  WithCreateRenderElement<[ReactEmbedCreateRenderElementOptions<Provider>]> {}
+  WithCreateRenderElement<[ReactEmbedCreateRenderElementOptions<Provider>]> {
+  createRenderPlaceholderElement: (...params: [ReactEmbedCreateRenderElementOptions<Provider>]) =>
+  (props: RenderElementProps) => JSX.Element | null | undefined;
+}

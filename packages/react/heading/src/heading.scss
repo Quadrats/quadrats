@@ -1,0 +1,53 @@
+.qdr-h1 {
+  margin: var(--qdr-spacing-14) 0 var(--qdr-spacing-9);
+  color: var(--qdr-text-primary);
+  font-size: var(--qdr-typography-article-h1-font-size);
+  line-height: var(--qdr-typography-article-h1-line-height);
+  letter-spacing: var(--qdr-typography-article-h1-letter-spacing);
+  font-weight: var(--qdr-typography-article-h1-font-weight);
+}
+
+.qdr-h2 {
+  margin: var(--qdr-spacing-11) 0 var(--qdr-spacing-9);
+  color: var(--qdr-text-primary);
+  font-size: var(--qdr-typography-article-h2-font-size);
+  line-height: var(--qdr-typography-article-h2-line-height);
+  letter-spacing: var(--qdr-typography-article-h2-letter-spacing);
+  font-weight: var(--qdr-typography-article-h2-font-weight);
+}
+
+.qdr-h3 {
+  margin: var(--qdr-spacing-10) 0 var(--qdr-spacing-6);
+  color: var(--qdr-text-primary);
+  font-size: var(--qdr-typography-article-h3-font-size);
+  line-height: var(--qdr-typography-article-h3-line-height);
+  letter-spacing: var(--qdr-typography-article-h3-letter-spacing);
+  font-weight: var(--qdr-typography-article-h3-font-weight);
+}
+
+.qdr-h4 {
+  margin: var(--qdr-spacing-9) 0 var(--qdr-spacing-6);
+  color: var(--qdr-text-primary);
+  font-size: var(--qdr-typography-article-h4-font-size);
+  line-height: var(--qdr-typography-article-h4-line-height);
+  letter-spacing: var(--qdr-typography-article-h4-letter-spacing);
+  font-weight: var(--qdr-typography-article-h4-font-weight);
+}
+
+.qdr-h5 {
+  margin: var(--qdr-spacing-9) 0 var(--qdr-spacing-6);
+  color: var(--qdr-text-primary);
+  font-size: var(--qdr-typography-article-h5-font-size);
+  line-height: var(--qdr-typography-article-h5-line-height);
+  letter-spacing: var(--qdr-typography-article-h5-letter-spacing);
+  font-weight: var(--qdr-typography-article-h5-font-weight);
+}
+
+.qdr-h6 {
+  margin: var(--qdr-spacing-8) 0 var(--qdr-spacing-4);
+  color: var(--qdr-text-primary);
+  font-size: var(--qdr-typography-article-h6-font-size);
+  line-height: var(--qdr-typography-article-h6-line-height);
+  letter-spacing: var(--qdr-typography-article-h6-letter-spacing);
+  font-weight: var(--qdr-typography-article-h6-font-weight);
+}

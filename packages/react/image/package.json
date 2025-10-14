@@ -6,7 +6,8 @@
   ],
   "quadratsConfig": {
     "deps": [
-      "__ROOT__"
+      "__ROOT__",
+      "toolbar"
     ],
     "styles": {
       "components/image": "image"

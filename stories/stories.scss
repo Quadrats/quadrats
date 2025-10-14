@@ -1,67 +1,44 @@
-@import url('../packages/react/components/src/Progress/progress.scss');
-@import url('../packages/react/components/src/Tooltip/tooltip.scss');
+@use '../packages/theme/theming/register.scss';
+@use '../packages/theme/theming/styles.scss';
+@import url('../packages/react/components/src/components.scss');
 @import url('../packages/react/src/core/components/editable.scss');
 @import url('../packages/react/toolbar/src/components/toolbar.scss');
 @import url('../packages/react/file-uploader/src/components/file-uploader.scss');
 @import url('../packages/react/image/src/components/image.scss');
 @import url('../packages/react/read-more/src/components/read-more.scss');
 @import url('../packages/react/paragraph/src/paragraph.scss');
+@import url('../packages/react/heading/src/heading.scss');
+@import url('../packages/react/blockquote/src/blockquote.scss');
 @import url('../packages/react/line-break/src/line-break.scss');
+@import url('../packages/react/divider/src/divider.scss');
+@import url('../packages/react/list/src/list.scss');
+@import url('../packages/react/embed/src/embed.scss');
+@import url('../packages/react/accordion/src/accordion.scss');
+@import url('../packages/react/carousel/src/carousel.scss');
+@import url('../packages/react/card/src/card.scss');
+@import url('../packages/react/input-block/src/input-block.scss');
 
 @mixin stories-block {
-  color: var(--qdr-text);
+  color: var(--qdr-text-primary);
   padding: 36px 40px;
   width: 100%;
   min-height: 400px;
   box-sizing: border-box;
 }
 
+:root {
+  @include register.qdr-theme('light', styles.$qdr-palette-qdr);
+  @include register.qdr-theme('dark', styles.$qdr-palette-qdr-dark);
+}
+
 .stories {
   &__block {
-    background-color: var(--qdr-background);
+    background-color: var(--qdr-surface);
     overflow: hidden;
     overflow-wrap: break-word;
+    border: 1px solid var(--qdr-border);
 
     @include stories-block;
-  }
-
-  &__custom-elements {
-    p {
-      font-size: 1em;
-      line-height: 1.5;
-      margin: 1em 0;
-    }
-
-    mark {
-      color: var(--qdr-primary);
-      background-color: inherit;
-      transition: color 300ms ease-in-out;
-    }
-
-    a {
-      color: var(--qdr-text);
-      transition: color 300ms ease-in-out;
-    }
-
-    figure {
-      margin: 1.5em 0;
-    }
-
-    &__blockquote {
-      font-size: 1em;
-      line-height: 1.5;
-      margin: 1.5em 0;
-      padding: 2.25em 2.5em;
-      background-color: var(--qdr-border);
-      transition: background-color 300ms ease-in-out;
-
-      &__line {
-        width: 20px;
-        height: 2px;
-        background-color: var(--qdr-primary);
-        margin-bottom: 20px;
-      }
-    }
   }
 
   &__examples {

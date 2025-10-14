@@ -1,0 +1,10 @@
+{
+  "name": "@quadrats/react/accordion/toolbar",
+  "sideEffects": false,
+  "quadratsConfig": {
+    "deps": [
+      "toolbar",
+      "accordion"
+    ]
+  }
+}

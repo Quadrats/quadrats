@@ -1,12 +1,14 @@
 import React, { JSX, CompositionEvent, useCallback, useState } from 'react';
 import { Editable as SlateEditable, useSlate } from 'slate-react';
+import { Element } from 'slate';
 import { EditableProps as SlateEditableProps } from 'slate-react/dist/components/editable';
 import clsx from 'clsx';
-import { BaseRange, Editor, isAncestorEmpty } from '@quadrats/core';
+import { BaseRange, Editor, isAncestorEmpty, Path } from '@quadrats/core';
 import { useLocale, useTheme } from '@quadrats/react/configs';
 import DefaultLeaf from './DefaultLeaf';
 import { RenderElementProps, RenderLeafProps } from '../typings/renderer';
-import { PLACEHOLDER_KEY } from '..';
+import { CompositionProvider } from '../contexts/composition/CompositionProvider';
+import { PLACEHOLDER_KEY } from '../constants';
 
 export type EditableProps = Omit<SlateEditableProps, 'renderLeaf' | 'renderElement'> & {
   renderLeaf?: (props: RenderLeafProps) => JSX.Element;
@@ -30,6 +32,8 @@ function Editable(props: EditableProps) {
   const editor = useSlate();
   const isEditorEmpty = isAncestorEmpty(editor);
   const [placeholderShowable, setPlaceholderShowable] = useState(isEditorEmpty);
+  const [compositionType, setCompositionType] = useState<string>('');
+  const [compositionPath, setCompositionPath] = useState<Path>([]);
 
   const decorate: NonNullable<EditableProps['decorate']> = useCallback(
     (entry) => {
@@ -53,6 +57,8 @@ function Editable(props: EditableProps) {
 
   const onCompositionEnd = useCallback(
     (event: CompositionEvent<HTMLDivElement>) => {
+      setCompositionType('');
+      setCompositionPath([]);
       onCompositionEndProp?.(event);
       setPlaceholderShowable(true);
     },
@@ -61,13 +67,28 @@ function Editable(props: EditableProps) {
 
   const onCompositionStart = useCallback(
     (event: CompositionEvent<HTMLDivElement>) => {
+      if (editor.selection) {
+        const [, path] = Editor.node(editor, editor.selection);
+
+        const match = Editor.above(editor, {
+          at: path,
+          match: (n) => Element.isElement(n),
+          mode: 'lowest',
+        });
+
+        if (match) {
+          setCompositionPath(match[1]);
+          setCompositionType(match[0].type);
+        }
+      }
+
       onCompositionStartProp?.(event);
 
       if (isEditorEmpty) {
         setPlaceholderShowable(false);
       }
     },
-    [onCompositionStartProp, isEditorEmpty],
+    [editor, onCompositionStartProp, isEditorEmpty],
   );
 
   const renderLeaf = useCallback(
@@ -91,15 +112,17 @@ function Editable(props: EditableProps) {
   );
 
   return (
-    <SlateEditable
-      {...slateEditableProps}
-      className={clsx('qdr-editable', themeProps.className, className)}
-      decorate={decorate}
-      onCompositionStart={onCompositionStart}
-      onCompositionEnd={onCompositionEnd}
-      renderLeaf={renderLeaf}
-      style={{ ...themeProps.style, ...style }}
-    />
+    <CompositionProvider compositionType={compositionType} compositionPath={compositionPath}>
+      <SlateEditable
+        {...slateEditableProps}
+        className={clsx('qdr-editable', themeProps.className, className)}
+        decorate={decorate}
+        onCompositionStart={onCompositionStart}
+        onCompositionEnd={onCompositionEnd}
+        renderLeaf={renderLeaf}
+        style={{ ...themeProps.style, ...style }}
+      />
+    </CompositionProvider>
   );
 }
 

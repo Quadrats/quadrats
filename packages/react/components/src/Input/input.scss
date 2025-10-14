@@ -1,0 +1,102 @@
+.qdr-input {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: var(--qdr-spacing-2);
+  align-self: stretch;
+  position: relative;
+
+  &__input {
+    background-color: var(--qdr-surface);
+    border: 1px solid var(--qdr-border);
+    outline: none;
+    padding: 0 var(--qdr-spacing-12) 0 var(--qdr-spacing-6);
+    margin: 0;
+    align-self: stretch;
+    color: var(--qdr-text-primary);
+    font-size: var(--qdr-typography-basic-input2-font-size);
+    line-height: var(--qdr-typography-basic-input2-line-height);
+    letter-spacing: var(--qdr-typography-basic-input2-letter-spacing);
+    font-weight: var(--qdr-typography-basic-input2-font-weight);
+    transition: border var(--qdr-duration-short) var(--qdr-easing-standard);
+
+    &:hover,
+    &:focus {
+      border-color: var(--qdr-primary);
+    }
+
+    &::placeholder {
+      color: var(--qdr-text-secondary);
+    }
+
+    &--error {
+      border-color: var(--qdr-error);
+
+      &:hover,
+      &:focus {
+        border-color: var(--qdr-error);
+      }
+    }
+
+    &:disabled {
+      border-color: var(--qdr-border);
+      background-color: var(--qdr-action-disabled-bg);
+      color: var(--qdr-text-disabled);
+
+      &::placeholder {
+        color: var(--qdr-text-disabled);
+      }
+    }
+  }
+
+  &__hint-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    align-self: stretch;
+  }
+
+  &__hint {
+    color: var(--qdr-text-secondary);
+    font-size: var(--qdr-typography-basic-caption-font-size);
+    line-height: var(--qdr-typography-basic-caption-line-height);
+    letter-spacing: var(--qdr-typography-basic-caption-letter-spacing);
+    font-weight: var(--qdr-typography-basic-caption-font-weight);
+    transition: color var(--qdr-duration-short) var(--qdr-easing-standard);
+  }
+
+  &__counter {
+    position: absolute;
+    right: 0;
+    bottom: calc(
+      -1 *
+        (
+          var(--qdr-typography-basic-caption-font-size) * var(--qdr-typography-basic-caption-line-height) +
+            var(--qdr-spacing-2)
+        )
+    );
+    color: var(--qdr-text-secondary);
+    font-size: var(--qdr-typography-basic-caption-font-size);
+    line-height: var(--qdr-typography-basic-caption-line-height);
+    letter-spacing: var(--qdr-typography-basic-caption-letter-spacing);
+    font-weight: var(--qdr-typography-basic-caption-font-weight);
+    transition: color var(--qdr-duration-short) var(--qdr-easing-standard);
+
+    &--have-hint {
+      bottom: 0;
+    }
+
+    &--limited {
+      color: var(--qdr-primary);
+    }
+
+    &--error {
+      color: var(--qdr-error);
+    }
+
+    &--disabled {
+      color: var(--qdr-text-disabled);
+    }
+  }
+}

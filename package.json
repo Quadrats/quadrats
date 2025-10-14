@@ -30,7 +30,7 @@
     "release": "lerna version patch && npm run build && lerna publish from-package",
     "prepare": "husky install"
   },
-  "packageManager": "yarn@4.7.0",
+  "packageManager": "yarn@4.9.2",
   "devDependencies": {
     "@babel/preset-env": "^7.26.9",
     "@babel/preset-react": "^7.26.3",
@@ -70,6 +70,8 @@
     "lint-staged": "^15.5.0",
     "prettier": "^3.5.3",
     "react": "^19.1.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.1.0",
     "react-json-pretty": "^2.2.0",
     "rollup": "^4.38.0",

@@ -21,6 +21,7 @@ function createTweet(
 
   if (twttr) {
     twttr.widgets.createTweet(tweetId, containerEl);
+
     return true;
   }
 

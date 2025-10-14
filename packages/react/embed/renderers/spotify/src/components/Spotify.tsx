@@ -1,4 +1,5 @@
-import React, { useRef, useMemo } from 'react';
+/* eslint-disable react/no-unknown-property */
+import React, { useRef, useMemo, ReactNode } from 'react';
 import { SpotifyEmbedElement } from '@quadrats/common/embed/strategies/spotify';
 import { RenderElementProps } from '@quadrats/react';
 import { composeRefs } from '@quadrats/react/utils';
@@ -8,9 +9,10 @@ export interface SpotifyProps {
   children?: any;
   data: string;
   element: SpotifyEmbedElement;
+  toolbarElement: ReactNode;
 }
 
-function Spotify({ attributes, children, data: src }: SpotifyProps) {
+function Spotify({ attributes, children, data: src, toolbarElement }: SpotifyProps) {
   const containerRef = useRef<HTMLElement | null>(null);
   const composedRef = composeRefs([attributes?.ref, containerRef]);
 
@@ -25,6 +27,7 @@ function Spotify({ attributes, children, data: src }: SpotifyProps) {
       className="qdr-embed-spotify"
       contentEditable={false}
     >
+      {toolbarElement}
       <iframe
         title={src}
         src={src}

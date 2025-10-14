@@ -1,0 +1,55 @@
+.qdr-toggle {
+  display: inline-block;
+  position: relative;
+  width: 48px;
+  height: 24px;
+  background-color: var(--qdr-text-disabled);
+  border-radius: 999px;
+  transition: background-color var(--qdr-duration-short) var(--qdr-easing-standard);
+  will-change: background-color;
+  box-sizing: border-box;
+
+  &__input {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  &__control {
+    position: absolute;
+    content: '';
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--qdr-on-primary);
+    transition: left var(--qdr-duration-short) var(--qdr-easing-standard);
+    will-change: left;
+  }
+
+  &--checked {
+    background-color: var(--qdr-primary);
+
+    &.qdr-toggle--disabled {
+      background-color: var(--qdr-primary-light);
+      cursor: not-allowed;
+    }
+
+    .qdr-toggle__control {
+      left: calc(100% - 22px);
+    }
+  }
+
+  &--disabled {
+    background-color: var(--qdr-action-disabled-bg);
+    cursor: not-allowed;
+
+    .qdr-toggle__input {
+      cursor: default;
+      pointer-events: none;
+    }
+  }
+}
