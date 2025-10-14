@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/Quadrats/quadrats/compare/v1.0.0...v1.1.0) (2025-10-14)
+
+### Bug Fixes
+
+- **common/blockquote:** block invalid types ([5266805](https://github.com/Quadrats/quadrats/commit/52668056d641f97bc2140879be462de9ab551f9b))
+- **common/file-uploader:** block file uploader when in invalid entry ([60183a5](https://github.com/Quadrats/quadrats/commit/60183a5b8dcf4643b0df00d7c65d7aee1c3dfd23))
+- **common/table:** create paragraph after table ([747c2f2](https://github.com/Quadrats/quadrats/commit/747c2f2ad753474d47c6d4e75addb62ce7c1804a))
+- **common/table:** fix copy & paste excel table content, [#86](https://github.com/Quadrats/quadrats/issues/86)ev1z1xh ([5a4b56c](https://github.com/Quadrats/quadrats/commit/5a4b56c5bf3c6a981a7f09c7a6bf3fe0c610988c)), closes [#86ev1z1](https://github.com/Quadrats/quadrats/issues/86ev1z1)
+- **common/table:** fix copy & paste table cell text ([3ee7514](https://github.com/Quadrats/quadrats/commit/3ee751484c3f80902c14f23780248cc93ef68bf0))
+- **common/table:** fix table build error ([bc87353](https://github.com/Quadrats/quadrats/commit/bc87353a1ecc64fd19be3604386c25814635a533))
+- **common/table:** limit table cell children types, [#86](https://github.com/Quadrats/quadrats/issues/86)eux4g8e ([602585b](https://github.com/Quadrats/quadrats/commit/602585b73fb3dd5dbb836d0689f73843c2fd730e)), closes [#86eux4g8](https://github.com/Quadrats/quadrats/issues/86eux4g8)
+
+### Features
+
+- **common/table:** add align for table ([124f0fd](https://github.com/Quadrats/quadrats/commit/124f0fdb60fb42d6a8415369dd902049467a65ae))
+- **common/table:** add columnWidths for table ([f8bd57f](https://github.com/Quadrats/quadrats/commit/f8bd57f69d48d568bae18d5380238122b8605149))
+- **common/table:** add constants ([a35b84a](https://github.com/Quadrats/quadrats/commit/a35b84aeab564e0629beac999c297995db661b4f))
+- **common/table:** add normalizeNode for table ([3d54d54](https://github.com/Quadrats/quadrats/commit/3d54d5418aa57f1a84d0cc760b7e17542cbbff62))
+- **common/table:** add treatAsTitle boolean inside table element ([bb75d3c](https://github.com/Quadrats/quadrats/commit/bb75d3cae8cb4e47f1b79bedf731ea02ffc7f157))
+- **common/table:** add utils ([b6c495c](https://github.com/Quadrats/quadrats/commit/b6c495c163f3a8418694b8fecf5a20b9c532ed20))
+- **common/table:** create paragraph as table cell children ([053435e](https://github.com/Quadrats/quadrats/commit/053435e33e222399823afc1c88242a71cb8a0565))
+- **common/table:** first implement for common table ([7a546db](https://github.com/Quadrats/quadrats/commit/7a546dbbd075ad56ee455b338a942c3e78899a62))
+- **common/table:** implement moveToRowAbove and moveToRowBelow ([b51f835](https://github.com/Quadrats/quadrats/commit/b51f835b32906bc1f3b80e6d97fb01dcb8b706ae))
+- **common/table:** moveToNextCell logic fix, [#86](https://github.com/Quadrats/quadrats/issues/86)eurewuv ([2acd81f](https://github.com/Quadrats/quadrats/commit/2acd81f7d18557308d852be4c79e1ef07d3bc024))
+- **common/table:** record scrollPosition and fix title deletion ([6a60f44](https://github.com/Quadrats/quadrats/commit/6a60f44d0535f31f15bea361563d38d0cd4dbe07))
+- **common/table:** table body and cursor moving ([eda79e7](https://github.com/Quadrats/quadrats/commit/eda79e783ee3e27a0640e03864eaaf31f89a53bc))
+- **common/table:** table shift with arrow selection ([60d3bc7](https://github.com/Quadrats/quadrats/commit/60d3bc7700a016b1c96d78baa1e944963bfedca0))
+- **icons:** add table set column/row title icons ([5a67c0d](https://github.com/Quadrats/quadrats/commit/5a67c0dd4f65d717b82823aa0a9851bef2768080))
+- **react/table:** pinned/unpinned action icon ([c6b70c4](https://github.com/Quadrats/quadrats/commit/c6b70c43cc24c0fe640d3a461de4294e44fd8e6d))
+- **react/table:** prevent selection toolbar collapse with focus toolbar ([19d5133](https://github.com/Quadrats/quadrats/commit/19d51337cea60a2797f2f0c6eb36b8b4faf07ddf))
+- **react/table:** unlimit table rows ([16bc548](https://github.com/Quadrats/quadrats/commit/16bc5483043c21ba636954d21599e42acf5528fd))
+- remove tanstack react table ([60130e7](https://github.com/Quadrats/quadrats/commit/60130e7d23e534d74741d5feb03444391b8ecd3b))
+
 # [1.0.0](https://github.com/Quadrats/quadrats/compare/v0.7.8...v1.0.0) (2025-10-14)
 
 ### Bug Fixes

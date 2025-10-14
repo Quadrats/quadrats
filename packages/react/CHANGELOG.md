@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/Quadrats/quadrats/compare/v1.0.0...v1.1.0) (2025-10-14)
+
+### Bug Fixes
+
+- **react/table:** clear any focus and selection when resizing, [#86](https://github.com/Quadrats/quadrats/issues/86)ev4xaen ([839a3e2](https://github.com/Quadrats/quadrats/commit/839a3e22179210bfc4118d35cc3e9a0b5ee9b174)), closes [#86ev4](https://github.com/Quadrats/quadrats/issues/86ev4)
+- **react/table:** fix action button position calculation ([19f5193](https://github.com/Quadrats/quadrats/commit/19f5193d8501006d1aaae7bd0294b1743988549e))
+- **react/table:** fix border collapse ([c3e7891](https://github.com/Quadrats/quadrats/commit/c3e7891fb830cc87b1b3ea3bbf3c438f939e1f18))
+- **react/table:** fix react table build error ([1e81626](https://github.com/Quadrats/quadrats/commit/1e816269b45d97d408ba97a21605769ce4355cb7))
+- **react/table:** fix table scroll position calculation ([17469d0](https://github.com/Quadrats/quadrats/commit/17469d00ea6d415fbbd664150b1a6a11d9867797))
+- **react/table:** implement clickaway for column/row actions, [#86](https://github.com/Quadrats/quadrats/issues/86)ev32c08 ([22a6a53](https://github.com/Quadrats/quadrats/commit/22a6a53399507cb17d3e402351067f1d8fadb61f)), closes [#86ev32c08](https://github.com/Quadrats/quadrats/issues/86ev32c08)
+- **react/table:** remove unused props ([6b8f2d7](https://github.com/Quadrats/quadrats/commit/6b8f2d7e9f7abccb1bb77c4d740b58830a6bffa8))
+- **react/table:** size indicators layout correction ([f24d2ec](https://github.com/Quadrats/quadrats/commit/f24d2ec8f7e71013c67b04c12f0af7be09ed8522))
+- **react/table:** table resize correction ([0d73367](https://github.com/Quadrats/quadrats/commit/0d733676c7a2aac880c620d644c10010257f8ad7))
+- **utils:** fix previous path finding error ([0c0110d](https://github.com/Quadrats/quadrats/commit/0c0110da4955819620065678833265750a72e022))
+
+### Features
+
+- **react/table:** add column/row action btn ([ad6b615](https://github.com/Quadrats/quadrats/commit/ad6b615dfdc55e9902edbabe60aa750dd5e10e9b))
+- **react/table:** add table cell hover show action btn ([1abb9e5](https://github.com/Quadrats/quadrats/commit/1abb9e5046f11d4ecaa1a8a325d01e104c832019))
+- **react/table:** add table scroll container and use portal to render actions ([efde3a8](https://github.com/Quadrats/quadrats/commit/efde3a8eb8233692c6dc178b56e8582badf81075))
+- **react/table:** change paragraph type only for cell selection, [#86](https://github.com/Quadrats/quadrats/issues/86)eurf636 ([c834179](https://github.com/Quadrats/quadrats/commit/c834179c1d076595d81bbb9f5e3d78a82e1884be)), closes [#86eurf636](https://github.com/Quadrats/quadrats/issues/86eurf636)
+- **react/table:** create new column/row on selection, [#86](https://github.com/Quadrats/quadrats/issues/86)eurexrf, [#86](https://github.com/Quadrats/quadrats/issues/86)eurf0pm ([54dccae](https://github.com/Quadrats/quadrats/commit/54dccae61989e32814b9e018649c0f7b22c35fa9)), closes [#86eurf0](https://github.com/Quadrats/quadrats/issues/86eurf0)
+- **react/table:** create paragraph as table cell children and fix list type enter ([f31e521](https://github.com/Quadrats/quadrats/commit/f31e521e1471bdce17890245272217c4b6e09cb0))
+- **react/table:** create table with default settings, [#86](https://github.com/Quadrats/quadrats/issues/86)eurewxb ([0da7965](https://github.com/Quadrats/quadrats/commit/0da796525add657f3a304305ec629462ce4b2cfc))
+- **react/table:** first implement for react/table ([a3e8a40](https://github.com/Quadrats/quadrats/commit/a3e8a404e781f7586d4cb4a3d369c538e9c99147))
+- **react/table:** highlight relative cell border when selection ([ce3e0c5](https://github.com/Quadrats/quadrats/commit/ce3e0c548990573435e59e3953150e294a0f2c4b))
+- **react/table:** implement resize feature ([d80b10b](https://github.com/Quadrats/quadrats/commit/d80b10ba8ee1a5eb31ddcd31ac275e0a9f6183df))
+- **react/table:** implement table cell ArrowUp and ArrowDown, [#86](https://github.com/Quadrats/quadrats/issues/86)eurewy3 ([9006727](https://github.com/Quadrats/quadrats/commit/9006727dcd9b5afb51ca919b7d9591282dc3929d)), closes [#86eurewy3](https://github.com/Quadrats/quadrats/issues/86eurewy3)
+- **react/table:** implement table copy feature, [#86](https://github.com/Quadrats/quadrats/issues/86)eut757h ([b27a593](https://github.com/Quadrats/quadrats/commit/b27a593cadb4332724e08ed5d6fab808259ca7e7)), closes [#86eut757](https://github.com/Quadrats/quadrats/issues/86eut757)
+- **react/table:** implement table serializer ([a797248](https://github.com/Quadrats/quadrats/commit/a7972484f2aad825f87c43efda30aec0c9138627))
+- **react/table:** implement table set as title feature ([6b9eeee](https://github.com/Quadrats/quadrats/commit/6b9eeee1771febadd6f38f5eba697fbb4715b895)), closes [#86eurf3](https://github.com/Quadrats/quadrats/issues/86eurf3) [#86eurf3t3](https://github.com/Quadrats/quadrats/issues/86eurf3t3) [#86](https://github.com/Quadrats/quadrats/issues/86) [#86eurf1](https://github.com/Quadrats/quadrats/issues/86eurf1)
+- **react/table:** implement table shift with arrow feature, [#86](https://github.com/Quadrats/quadrats/issues/86)eurewy3 ([72597af](https://github.com/Quadrats/quadrats/commit/72597af38b0e7cd85dbc5b781964dc69cb92da17)), closes [#86eurewy3](https://github.com/Quadrats/quadrats/issues/86eurewy3)
+- **react/table:** implement whole table selection and delete, [#86](https://github.com/Quadrats/quadrats/issues/86)eurfpvb ([cb68f6f](https://github.com/Quadrats/quadrats/commit/cb68f6fb87e5a9b54b5a5d9c3a67ccdf87f1000a))
+- **react/table:** integrate pinned with all actions ([91c661e](https://github.com/Quadrats/quadrats/commit/91c661ede7f91ce1a6c6df3e11d6c37e985225f7))
+- **react/table:** limited title and headers ([6debf5b](https://github.com/Quadrats/quadrats/commit/6debf5b38e20ebb57fd7f75559d43a522939473a))
+- **react/table:** pinned/unpinned action icon ([c6b70c4](https://github.com/Quadrats/quadrats/commit/c6b70c43cc24c0fe640d3a461de4294e44fd8e6d))
+- **react/table:** pinned/unpinned feature and actions refactor ([a4d91be](https://github.com/Quadrats/quadrats/commit/a4d91be8cf9499e94e9eceecadcf3f7b3bec38d4))
+- **react/table:** pinned/unpinned feature with cross tested ([8a73435](https://github.com/Quadrats/quadrats/commit/8a734356446ec3e79def52b90dd394bcdff9bf16))
+- **react/table:** pinned/unpinned styling correction ([c184233](https://github.com/Quadrats/quadrats/commit/c1842337a98381c5f4bb1c379768e15defad71fe))
+- **react/table:** prevent selection toolbar collapse with focus toolbar ([19d5133](https://github.com/Quadrats/quadrats/commit/19d51337cea60a2797f2f0c6eb36b8b4faf07ddf))
+- **react/table:** remove backward logic ([451e029](https://github.com/Quadrats/quadrats/commit/451e0292ffb7464db76fc6d3b7653aa5b695ac38))
+- **react/table:** resize feature ([de18a4c](https://github.com/Quadrats/quadrats/commit/de18a4c85e639099f6078030e934d3ce5d88e3e0))
+- **react/table:** resize feature optimize and correction ([5919c74](https://github.com/Quadrats/quadrats/commit/5919c7406eb59d3e84ee306bdcf2f3a191cb6e19))
+- **react/table:** resize percentage cells, [#86](https://github.com/Quadrats/quadrats/issues/86)eurf5bt ([1287131](https://github.com/Quadrats/quadrats/commit/12871319896ef1aab88b5262aa207a7378501e73)), closes [#86eurf5](https://github.com/Quadrats/quadrats/issues/86eurf5)
+- **react/table:** set align for column or table, [#86](https://github.com/Quadrats/quadrats/issues/86)eurfpgt, [#86](https://github.com/Quadrats/quadrats/issues/86)eurfprb ([66f9da5](https://github.com/Quadrats/quadrats/commit/66f9da580a41af62b53d3c07029706568007e782))
+- **react/table:** set row/column typography type, [#86](https://github.com/Quadrats/quadrats/issues/86)eurf636, [#86](https://github.com/Quadrats/quadrats/issues/86)eurf688 ([8071658](https://github.com/Quadrats/quadrats/commit/80716582f05bd56b78ef841a1238d7e9b24498e4)), closes [#86eurf636](https://github.com/Quadrats/quadrats/issues/86eurf636) [#86eurf688](https://github.com/Quadrats/quadrats/issues/86eurf688)
+- **react/table:** show row/column control when hovering on same col/row ([e043ce4](https://github.com/Quadrats/quadrats/commit/e043ce4168af78ec49a83985a37d066a70309d32))
+- **react/table:** table cell focus state, [#86](https://github.com/Quadrats/quadrats/issues/86)eurewy3 ([e1585ce](https://github.com/Quadrats/quadrats/commit/e1585ce47fc8a8cad302136ff1d733724df116a3)), closes [#86eurewy3](https://github.com/Quadrats/quadrats/issues/86eurewy3)
+- **react/table:** table selection with delete ([1c956db](https://github.com/Quadrats/quadrats/commit/1c956db354b447320eca0442ac65d0525fd56904)), closes [#86](https://github.com/Quadrats/quadrats/issues/86) [#86eurfq11](https://github.com/Quadrats/quadrats/issues/86eurfq11) [#86eurfq2](https://github.com/Quadrats/quadrats/issues/86eurfq2)
+- **react/table:** unlimit table rows ([16bc548](https://github.com/Quadrats/quadrats/commit/16bc5483043c21ba636954d21599e42acf5528fd))
+- **react/toolbar:** inline toolbar add onClickAway prop ([215ac1d](https://github.com/Quadrats/quadrats/commit/215ac1d9308963f026c6d3fc1f1029b4e6bf9c40))
+- **react/toolbar:** inline toolbar allow style customize ([4801510](https://github.com/Quadrats/quadrats/commit/4801510b3241c77e2a2a5949f9e044b922d611bf))
+- remove tanstack react table ([60130e7](https://github.com/Quadrats/quadrats/commit/60130e7d23e534d74741d5feb03444391b8ecd3b))
+
 # [1.0.0](https://github.com/Quadrats/quadrats/compare/v0.7.8...v1.0.0) (2025-10-14)
 
 ### Bug Fixes

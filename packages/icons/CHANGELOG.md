@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/Quadrats/quadrats/compare/v1.0.0...v1.1.0) (2025-10-14)
+
+### Features
+
+- **icons/table:** table icon ([32e4040](https://github.com/Quadrats/quadrats/commit/32e40409cb954d08ec4dc509b2f0d889a3c1f361))
+- **icons:** add copy icon ([653b87b](https://github.com/Quadrats/quadrats/commit/653b87ba6cd928883f6c173ce65186ccf14c5f13))
+- **icons:** add drag icons ([f88cbc6](https://github.com/Quadrats/quadrats/commit/f88cbc6c626e3efb76236ad667a159551ff9ef2f))
+- **icons:** add table column/row add icon ([49881b5](https://github.com/Quadrats/quadrats/commit/49881b5c27154ee18f1e7ffd58756371834583bd))
+- **icons:** add table remove title icons ([f370506](https://github.com/Quadrats/quadrats/commit/f370506431f25d7718dc797170be649ee559b95e))
+- **icons:** add table set column/row title icons ([5a67c0d](https://github.com/Quadrats/quadrats/commit/5a67c0dd4f65d717b82823aa0a9851bef2768080))
+- **react/table:** pinned/unpinned action icon ([c6b70c4](https://github.com/Quadrats/quadrats/commit/c6b70c43cc24c0fe640d3a461de4294e44fd8e6d))
+
 # [1.0.0](https://github.com/Quadrats/quadrats/compare/v0.7.8...v1.0.0) (2025-10-14)
 
 ### Features
