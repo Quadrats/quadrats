@@ -46,6 +46,12 @@ $toolbar-z-index: 10;
   pointer-events: auto;
   cursor: pointer;
   opacity: 1;
+
+  &--dragging {
+    border: 1px solid var(--qdr-divider);
+    background-color: var(--qdr-bg);
+    cursor: grabbing;
+  }
 }
 
 @mixin cell-selected($border-position) {
@@ -366,21 +372,6 @@ $toolbar-z-index: 10;
 
 .qdr-table__cell-row-action {
   @include cell-action();
-
-  &--dragging {
-    opacity: 0.5;
-    cursor: grabbing;
-  }
-
-  &--drop-target {
-    background-color: var(--qdr-primary-hover-bg);
-    border-color: var(--qdr-primary);
-  }
-
-  &--drop-forbidden {
-    cursor: not-allowed;
-    border-color: var(--qdr-error);
-  }
 }
 
 .qdr-table__cell-column-action {
@@ -388,21 +379,6 @@ $toolbar-z-index: 10;
 
   transform: rotate(90deg);
   transform-origin: center;
-
-  &--dragging {
-    opacity: 0.5;
-    cursor: grabbing;
-  }
-
-  &--drop-target {
-    background-color: var(--qdr-primary-hover-bg);
-    border-color: var(--qdr-primary);
-  }
-
-  &--drop-forbidden {
-    cursor: not-allowed;
-    border-color: var(--qdr-error);
-  }
 }
 
 .qdr-table__size-indicators {

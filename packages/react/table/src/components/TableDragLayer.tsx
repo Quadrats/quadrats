@@ -99,10 +99,10 @@ export const TableDragLayer: React.FC<DragLayerProps> = ({ scrollRef }) => {
   const tableContainer = scrollRef.current;
   const tableRect = tableContainer.getBoundingClientRect();
 
-  // 渲染 column overlay
-  if (dragState.type === 'column') {
-    const sourceColumnIndex = dragState.columnIndex;
-    const columnWidth = columnWidths[sourceColumnIndex];
+  if (dragState.type) {
+    const sourceIndex = dragState.type === 'column' ? dragState.columnIndex : dragState.rowIndex;
+    const rowHeight = dragState.type === 'column' ? tableRect.height : rowHeights[sourceIndex];
+    const columnWidth = dragState.type === 'column' ? columnWidths[sourceIndex] : tableRect.width;
 
     return (
       <div
@@ -111,29 +111,11 @@ export const TableDragLayer: React.FC<DragLayerProps> = ({ scrollRef }) => {
           left: tableRect.left,
           top: tableRect.top,
           width: columnWidth,
-          height: tableRect.height,
-          transform: `translateX(${currentOffset.x - tableRect.left - columnWidth / 2}px)`,
-        }}
-      >
-        <div className="qdr-table__drag-overlay-content" />
-      </div>
-    );
-  }
-
-  // 渲染 row overlay
-  if (dragState.type === 'row') {
-    const sourceRowIndex = dragState.rowIndex;
-    const rowHeight = rowHeights[sourceRowIndex];
-
-    return (
-      <div
-        className="qdr-table__drag-overlay"
-        style={{
-          left: tableRect.left,
-          top: tableRect.top,
-          width: tableRect.width,
           height: rowHeight,
-          transform: `translateY(${currentOffset.y - tableRect.top - rowHeight / 2}px)`,
+          transform:
+            dragState.type === 'column'
+              ? `translateX(${currentOffset.x - tableRect.left - columnWidth / 2}px)`
+              : `translateY(${currentOffset.y - tableRect.top - rowHeight / 2}px)`,
         }}
       >
         <div className="qdr-table__drag-overlay-content" />

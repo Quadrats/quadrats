@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useDrag } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import clsx from 'clsx';
 import { Icon } from '@quadrats/react/components';
 import { Drag } from '@quadrats/icons';
@@ -21,13 +22,12 @@ export const RowDragButton: React.FC<RowDragButtonProps> = ({ rowIndex, headerRo
   // 判斷當前 row 是否在 header 中
   const isInHeader = rowIndex < headerRowCount;
 
-  const [{ isDragging }, drag] = useDrag(
+  const [{ isDragging }, drag, preview] = useDrag(
     () => ({
       type: ROW_DRAG_TYPE,
       item: () => {
         const dragItem = { rowIndex, isInHeader };
 
-        // 設置拖曳狀態
         setDragState({ type: 'row', rowIndex, isInHeader });
 
         return dragItem;
@@ -36,7 +36,6 @@ export const RowDragButton: React.FC<RowDragButtonProps> = ({ rowIndex, headerRo
         isDragging: monitor.isDragging(),
       }),
       end: () => {
-        // 清除拖曳狀態
         setDragState(null);
         setDropTargetIndex(null);
         setDragDirection(null);
@@ -45,7 +44,11 @@ export const RowDragButton: React.FC<RowDragButtonProps> = ({ rowIndex, headerRo
     [rowIndex, isInHeader, setDragState, setDropTargetIndex, setDragDirection],
   );
 
-  // 組合 ref
+  // 使用空白圖片作為 drag preview，避免顯示預設的拖曳圖像
+  useEffect(() => {
+    preview(getEmptyImage(), { captureDraggingState: true });
+  }, [preview]);
+
   drag(buttonRef);
 
   return (

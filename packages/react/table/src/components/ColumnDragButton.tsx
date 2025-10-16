@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useDrag } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import clsx from 'clsx';
 import { Icon } from '@quadrats/react/components';
 import { Drag } from '@quadrats/icons';
@@ -22,17 +23,14 @@ export const ColumnDragButton: React.FC<ColumnDragButtonProps> = ({
 }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const { setDragState, setDropTargetIndex, setDragDirection } = useTableDragContext();
-
-  // 判斷當前 column 是否為標題列
   const isTitle = checkIsTitleColumn(columnIndex);
 
-  const [{ isDragging }, drag] = useDrag(
+  const [{ isDragging }, drag, preview] = useDrag(
     () => ({
       type: COLUMN_DRAG_TYPE,
       item: () => {
         const dragItem = { columnIndex, isTitle };
 
-        // 設置拖曳狀態
         setDragState({ type: 'column', columnIndex, isTitle });
 
         return dragItem;
@@ -41,7 +39,6 @@ export const ColumnDragButton: React.FC<ColumnDragButtonProps> = ({
         isDragging: monitor.isDragging(),
       }),
       end: () => {
-        // 清除拖曳狀態
         setDragState(null);
         setDropTargetIndex(null);
         setDragDirection(null);
@@ -50,7 +47,11 @@ export const ColumnDragButton: React.FC<ColumnDragButtonProps> = ({
     [columnIndex, isTitle, setDragState, setDropTargetIndex, setDragDirection],
   );
 
-  // 組合 ref
+  // 使用空白圖片作為 drag preview，避免顯示預設的拖曳圖像
+  useEffect(() => {
+    preview(getEmptyImage(), { captureDraggingState: true });
+  }, [preview]);
+
   drag(buttonRef);
 
   return (

@@ -71,6 +71,10 @@ function TableCell(props: RenderElementProps<TableElement>) {
   const isSelectedInSameColumn =
     tableSelectedOn?.region === 'column' && tableSelectedOn?.index === cellPosition.columnIndex;
 
+  // 判斷是否為正在被拖曳的 row/column
+  const isDraggingThisRow = dragState?.type === 'row' && dragState.rowIndex === cellPosition.rowIndex;
+  const isDraggingThisColumn = dragState?.type === 'column' && dragState.columnIndex === cellPosition.columnIndex;
+
   const isSelectionTriggerByMe =
     (isSelectedInSameRow && cellPosition.columnIndex === 0) || (isSelectedInSameColumn && cellPosition.rowIndex === 0);
 
@@ -95,7 +99,6 @@ function TableCell(props: RenderElementProps<TableElement>) {
   const [columnButtonPosition, setColumnButtonPosition] = useState<{ top: number; left: number } | null>(null);
   const [cellStuckAtLeft, setCellStuckAtLeft] = useState<number | undefined>(undefined);
 
-  // Drop target logic for rows
   const [, dropRow] = useDrop<{ rowIndex: number; isInHeader: boolean }, void, void>(
     () => ({
       accept: ROW_DRAG_TYPE,
@@ -109,13 +112,17 @@ function TableCell(props: RenderElementProps<TableElement>) {
         return sourceInHeader === targetInHeader;
       },
       hover: (item, monitor) => {
-        if (monitor.canDrop()) {
-          // 計算拖曳方向
-          const direction = item.rowIndex < cellPosition.rowIndex ? 'down' : 'up';
+        if (!monitor.canDrop()) {
+          setDropTargetIndex(null);
+          setDragDirection(null);
 
-          setDropTargetIndex(cellPosition.rowIndex);
-          setDragDirection(direction);
+          return;
         }
+
+        const direction = item.rowIndex < cellPosition.rowIndex ? 'down' : 'up';
+
+        setDropTargetIndex(cellPosition.rowIndex);
+        setDragDirection(direction);
       },
       drop: (item) => {
         moveOrSwapRow(item.rowIndex, cellPosition.rowIndex, 'move');
@@ -140,13 +147,18 @@ function TableCell(props: RenderElementProps<TableElement>) {
         return sourceIsTitle === targetIsTitle;
       },
       hover: (item, monitor) => {
-        if (monitor.canDrop()) {
-          // 計算拖曳方向
-          const direction = item.columnIndex < cellPosition.columnIndex ? 'right' : 'left';
+        if (!monitor.canDrop()) {
+          setDropTargetIndex(null);
+          setDragDirection(null);
 
-          setDropTargetIndex(cellPosition.columnIndex);
-          setDragDirection(direction);
+          return;
         }
+
+        // 計算拖曳方向
+        const direction = item.columnIndex < cellPosition.columnIndex ? 'right' : 'left';
+
+        setDropTargetIndex(cellPosition.columnIndex);
+        setDragDirection(direction);
       },
       drop: (item) => {
         moveOrSwapColumn(item.columnIndex, cellPosition.columnIndex, 'move');
@@ -255,18 +267,27 @@ function TableCell(props: RenderElementProps<TableElement>) {
       className={clsx('qdr-table__cell', {
         'qdr-table__cell--header': isHeader || element.treatAsTitle,
         'qdr-table__cell--pinned': myColumnIsPinned,
-        'qdr-table__cell--top-active': isSelectedInSameRow || (isSelectedInSameColumn && cellPosition.rowIndex === 0),
+        'qdr-table__cell--top-active':
+          isSelectedInSameRow ||
+          (isSelectedInSameColumn && cellPosition.rowIndex === 0) ||
+          isDraggingThisRow ||
+          (isDraggingThisColumn && cellPosition.rowIndex === 0),
         'qdr-table__cell--right-active':
-          isSelectedInSameColumn || (isSelectedInSameRow && cellPosition.columnIndex === columnCount - 1),
+          isSelectedInSameColumn ||
+          (isSelectedInSameRow && cellPosition.columnIndex === columnCount - 1) ||
+          isDraggingThisColumn ||
+          (isDraggingThisRow && cellPosition.columnIndex === columnCount - 1),
         'qdr-table__cell--bottom-active':
-          isSelectedInSameRow || (isSelectedInSameColumn && cellPosition.rowIndex === rowCount - 1),
+          isSelectedInSameRow ||
+          (isSelectedInSameColumn && cellPosition.rowIndex === rowCount - 1) ||
+          isDraggingThisRow ||
+          (isDraggingThisColumn && cellPosition.rowIndex === rowCount - 1),
         'qdr-table__cell--left-active':
-          isSelectedInSameColumn || (isSelectedInSameRow && cellPosition.columnIndex === 0),
+          isSelectedInSameColumn ||
+          (isSelectedInSameRow && cellPosition.columnIndex === 0) ||
+          isDraggingThisColumn ||
+          (isDraggingThisRow && cellPosition.columnIndex === 0),
         'qdr-table__cell--is-selection-trigger-by-me': isSelectionTriggerByMe,
-        'qdr-table__cell--drag-row-target':
-          dragState?.type === 'row' &&
-          dropTargetIndex === cellPosition.rowIndex &&
-          dropTargetIndex !== dragState.rowIndex,
         'qdr-table__cell--drag-row-target-top':
           dragState?.type === 'row' &&
           dropTargetIndex === cellPosition.rowIndex &&
@@ -277,10 +298,6 @@ function TableCell(props: RenderElementProps<TableElement>) {
           dropTargetIndex === cellPosition.rowIndex &&
           dropTargetIndex !== dragState.rowIndex &&
           dragDirection === 'down',
-        'qdr-table__cell--drag-column-target':
-          dragState?.type === 'column' &&
-          dropTargetIndex === cellPosition.columnIndex &&
-          dropTargetIndex !== dragState.columnIndex,
         'qdr-table__cell--drag-column-target-left':
           dragState?.type === 'column' &&
           dropTargetIndex === cellPosition.columnIndex &&
@@ -336,7 +353,6 @@ function TableCell(props: RenderElementProps<TableElement>) {
               e.preventDefault();
               e.stopPropagation();
 
-              // Clear focus by removing selection
               Transforms.deselect(editor);
 
               setTableSelectedOn((prev) => {
@@ -363,7 +379,6 @@ function TableCell(props: RenderElementProps<TableElement>) {
               e.preventDefault();
               e.stopPropagation();
 
-              // Clear focus by removing selection
               Transforms.deselect(editor);
 
               setTableSelectedOn((prev) => {
