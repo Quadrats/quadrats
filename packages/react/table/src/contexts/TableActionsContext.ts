@@ -16,8 +16,8 @@ export type TableActionsContextType = Pick<
   | 'unpinColumn'
   | 'pinRow'
   | 'unpinRow'
-  | 'swapRow'
-  | 'swapColumn'
+  | 'moveOrSwapRow'
+  | 'moveOrSwapColumn'
   | 'swapCell'
 >;
 

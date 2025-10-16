@@ -81,8 +81,8 @@ export function useTableCellToolbarActions({
     unpinColumn,
     pinRow,
     unpinRow,
-    swapRow,
-    swapColumn,
+    moveOrSwapRow,
+    moveOrSwapColumn,
     swapCell,
   } = useTableActionsContext();
 
@@ -647,7 +647,7 @@ export function useTableCellToolbarActions({
             icon: TableMoveDown,
             onClick: () => {
               if (typeof tableSelectedOn.index === 'number') {
-                swapRow(tableSelectedOn.index, 'down');
+                moveOrSwapRow(tableSelectedOn.index, tableSelectedOn.index + 1, 'swap');
                 setTableSelectedOn(undefined);
               }
             },
@@ -658,14 +658,14 @@ export function useTableCellToolbarActions({
             icon: TableMoveUp,
             onClick: () => {
               if (typeof tableSelectedOn.index === 'number') {
-                swapRow(tableSelectedOn.index, 'up');
+                moveOrSwapRow(tableSelectedOn.index, tableSelectedOn.index - 1, 'swap');
                 setTableSelectedOn(undefined);
               }
             },
           }
         : undefined,
     ].filter((i) => i !== undefined);
-  }, [tableSelectedOn, setTableSelectedOn, rowCount, tableElement, swapRow]);
+  }, [tableSelectedOn, setTableSelectedOn, rowCount, tableElement, moveOrSwapRow]);
 
   // Column move actions
   const columnMoveActions = useMemo(() => {
@@ -727,7 +727,7 @@ export function useTableCellToolbarActions({
             icon: TableMoveRight,
             onClick: () => {
               if (typeof tableSelectedOn.index === 'number') {
-                swapColumn(tableSelectedOn.index, 'right');
+                moveOrSwapColumn(tableSelectedOn.index, tableSelectedOn.index + 1, 'swap');
                 setTableSelectedOn(undefined);
               }
             },
@@ -738,14 +738,14 @@ export function useTableCellToolbarActions({
             icon: TableMoveLeft,
             onClick: () => {
               if (typeof tableSelectedOn.index === 'number') {
-                swapColumn(tableSelectedOn.index, 'left');
+                moveOrSwapColumn(tableSelectedOn.index, tableSelectedOn.index - 1, 'swap');
                 setTableSelectedOn(undefined);
               }
             },
           }
         : undefined,
     ].filter((i) => i !== undefined);
-  }, [tableSelectedOn, setTableSelectedOn, columnCount, element.treatAsTitle, tableElement, swapColumn]);
+  }, [tableSelectedOn, setTableSelectedOn, columnCount, element.treatAsTitle, tableElement, moveOrSwapColumn]);
 
   // Delete actions
   const deleteActions = useMemo(() => {

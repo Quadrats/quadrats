@@ -20,8 +20,7 @@ import {
   calculateColumnWidthsAfterAdd,
   calculateColumnWidthsAfterDelete,
   setColumnWidths,
-  moveColumnWidth,
-  swapColumnWidth,
+  moveOrSwapColumnWidth,
   convertToMixedWidthMode,
   getPinnedColumnsInfo,
 } from '../utils/helper';
@@ -703,7 +702,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
             const currentWidths = getColumnWidths(element);
 
             if (currentWidths.length > 0) {
-              const movedWidths = moveColumnWidth(currentWidths, columnIndex, actualTargetIndex);
+              const movedWidths = moveOrSwapColumnWidth(currentWidths, columnIndex, actualTargetIndex, 'move');
 
               // 檢查移動後是否還有 pinned columns
               const { pinnedColumnIndices } = getPinnedColumnsInfo(element);
@@ -853,7 +852,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
             const currentWidths = getColumnWidths(element);
 
             if (currentWidths.length > 0) {
-              const movedWidths = moveColumnWidth(currentWidths, columnIndex, targetColumnIndex);
+              const movedWidths = moveOrSwapColumnWidth(currentWidths, columnIndex, targetColumnIndex, 'move');
 
               // 如果設定了 pinned，需要轉換為混合模式
               if (finalProps?.pinned && tableWidth > 0) {
@@ -1120,8 +1119,12 @@ export function useTableActions(element: RenderTableElementProps['element']) {
     }
   }, [editor, element]);
 
-  const swapRow: TableContextType['swapRow'] = useCallback(
-    (rowIndex: number, direction: 'up' | 'down') => {
+  /**
+   * 內部函數：移動或交換列的位置
+   * @param mode 'swap' 為交換相鄰位置（toolbar 按鈕），'move' 為移動到任意位置（拖曳）
+   */
+  const moveOrSwapRow = useCallback(
+    (sourceRowIndex: number, targetRowIndex: number, mode: 'swap' | 'move' = 'move') => {
       try {
         const tableStructure = getTableStructure(editor, element);
 
@@ -1129,70 +1132,88 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
         const { tableHeaderElement, tableBodyElement, tableHeaderPath, tableBodyPath, headerRowCount } = tableStructure;
 
-        // 計算目標列的索引
-        const targetRowIndex = direction === 'up' ? rowIndex - 1 : rowIndex + 1;
-
         // 確定當前列和目標列所屬的容器
-        const currentInHeader = rowIndex < headerRowCount;
+        const sourceInHeader = sourceRowIndex < headerRowCount;
         const targetInHeader = targetRowIndex < headerRowCount;
 
-        // 標題列只能與標題列互換，一般列只能與一般列互換
-        if (currentInHeader !== targetInHeader) {
-          console.warn('Cannot swap row between header and body');
+        // 標題列只能與標題列互換/移動，一般列只能與一般列互換/移動
+        if (sourceInHeader !== targetInHeader) {
+          console.warn(`Cannot ${mode} row between header and body`);
 
           return;
         }
 
+        // 檢查邊界
+        if (sourceRowIndex === targetRowIndex) {
+          return;
+        }
+
         let containerPath: number[];
-        let currentLocalIndex: number;
+        let sourceLocalIndex: number;
         let targetLocalIndex: number;
 
-        if (currentInHeader) {
-          // 在 header 中交換
+        if (sourceInHeader) {
+          // 在 header 中
           if (!tableHeaderElement || !tableHeaderPath) return;
 
           containerPath = tableHeaderPath;
-          currentLocalIndex = rowIndex;
+          sourceLocalIndex = sourceRowIndex;
           targetLocalIndex = targetRowIndex;
         } else {
-          // 在 body 中交換
+          // 在 body 中
           if (!tableBodyElement) return;
 
           containerPath = tableBodyPath;
-          currentLocalIndex = rowIndex - headerRowCount;
+          sourceLocalIndex = sourceRowIndex - headerRowCount;
           targetLocalIndex = targetRowIndex - headerRowCount;
         }
 
         Editor.withoutNormalizing(editor, () => {
-          if (direction === 'down') {
-            // 向下移動：先將當前列移到目標位置之後
-            const currentPath = [...containerPath, currentLocalIndex];
-            const afterTargetPath = [...containerPath, targetLocalIndex];
+          if (mode === 'swap') {
+            // swap 邏輯：交換兩個相鄰位置
+            if (sourceRowIndex < targetRowIndex) {
+              // 向下移動：先將源列移到目標位置之後
+              const sourcePath = [...containerPath, sourceLocalIndex];
+              const afterTargetPath = [...containerPath, targetLocalIndex];
 
-            Transforms.moveNodes(editor, {
-              at: currentPath,
-              to: afterTargetPath,
-            });
+              Transforms.moveNodes(editor, {
+                at: sourcePath,
+                to: afterTargetPath,
+              });
+            } else {
+              // 向上移動：先將目標列移到源位置之後
+              const targetPath = [...containerPath, targetLocalIndex];
+              const afterSourcePath = [...containerPath, sourceLocalIndex];
+
+              Transforms.moveNodes(editor, {
+                at: targetPath,
+                to: afterSourcePath,
+              });
+            }
           } else {
-            // 向上移動：先將目標列移到當前位置之後
+            // move 邏輯：直接移動到目標位置
+            const sourcePath = [...containerPath, sourceLocalIndex];
             const targetPath = [...containerPath, targetLocalIndex];
-            const afterCurrentPath = [...containerPath, currentLocalIndex];
 
             Transforms.moveNodes(editor, {
-              at: targetPath,
-              to: afterCurrentPath,
+              at: sourcePath,
+              to: targetPath,
             });
           }
         });
       } catch (error) {
-        console.warn('Failed to swap row:', error);
+        console.warn(`Failed to ${mode} row:`, error);
       }
     },
     [editor, element],
   );
 
-  const swapColumn: TableContextType['swapColumn'] = useCallback(
-    (columnIndex: number, direction: 'left' | 'right') => {
+  /**
+   * 內部函數：移動或交換行的位置
+   * @param mode 'swap' 為交換相鄰位置（toolbar 按鈕），'move' 為移動到任意位置（拖曳）
+   */
+  const moveOrSwapColumn = useCallback(
+    (sourceColumnIndex: number, targetColumnIndex: number, mode: 'swap' | 'move' = 'move') => {
       try {
         const tableStructure = getTableStructure(editor, element);
 
@@ -1200,13 +1221,15 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
         const { tableHeaderElement, tableBodyElement, columnCount } = tableStructure;
 
-        // 計算目標行的索引
-        const targetColumnIndex = direction === 'left' ? columnIndex - 1 : columnIndex + 1;
-
         // 檢查邊界
         if (targetColumnIndex < 0 || targetColumnIndex >= columnCount) {
           console.warn('Target column index out of bounds');
 
+          return;
+        }
+
+        // 檢查是否為同一行
+        if (sourceColumnIndex === targetColumnIndex) {
           return;
         }
 
@@ -1229,40 +1252,40 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         };
 
         // 檢查兩個 container 中的第一列來確定是否為標題行
-        let currentIsTitle = false;
+        let sourceIsTitle = false;
         let targetIsTitle = false;
 
         if (tableHeaderElement) {
-          currentIsTitle = currentIsTitle || checkIsTitleColumn(tableHeaderElement, columnIndex);
+          sourceIsTitle = sourceIsTitle || checkIsTitleColumn(tableHeaderElement, sourceColumnIndex);
           targetIsTitle = targetIsTitle || checkIsTitleColumn(tableHeaderElement, targetColumnIndex);
         }
 
         if (tableBodyElement) {
-          currentIsTitle = currentIsTitle || checkIsTitleColumn(tableBodyElement, columnIndex);
+          sourceIsTitle = sourceIsTitle || checkIsTitleColumn(tableBodyElement, sourceColumnIndex);
           targetIsTitle = targetIsTitle || checkIsTitleColumn(tableBodyElement, targetColumnIndex);
         }
 
-        // 標題行只能與標題行互換，一般行只能與一般行互換
-        if (currentIsTitle !== targetIsTitle) {
-          console.warn('Cannot swap column between title and normal columns');
+        // 標題行只能與標題行互換/移動，一般行只能與一般行互換/移動
+        if (sourceIsTitle !== targetIsTitle) {
+          console.warn(`Cannot ${mode} column between title and normal columns`);
 
           return;
         }
 
-        // 獲取當前的行寬配置並進行交換
+        // 根據模式選擇不同的 columnWidths 處理方式
         const currentWidths = getColumnWidths(element);
-        const newWidths = swapColumnWidth(currentWidths, columnIndex, targetColumnIndex);
+        const newWidths = moveOrSwapColumnWidth(currentWidths, sourceColumnIndex, targetColumnIndex, mode);
 
         setColumnWidths(editor, element, newWidths);
 
-        // 對 header 和 body 中的所有列進行交換
+        // 對 header 和 body 中的所有列進行操作
         Editor.withoutNormalizing(editor, () => {
           const containers = [tableHeaderElement, tableBodyElement].filter(
             (c) => c && Element.isElement(c),
           ) as TableElement[];
 
           for (const container of containers) {
-            // 對每一列進行交換
+            // 對每一列進行操作
             for (let rowIndex = 0; rowIndex < container.children.length; rowIndex++) {
               const row = container.children[rowIndex];
 
@@ -1271,30 +1294,42 @@ export function useTableActions(element: RenderTableElementProps['element']) {
               const containerPath = ReactEditor.findPath(editor, container);
               const rowPath = [...containerPath, rowIndex];
 
-              if (direction === 'right') {
-                // 向右移動：將當前 cell 移到目標位置之後
-                const currentCellPath = [...rowPath, columnIndex];
-                const afterTargetCellPath = [...rowPath, targetColumnIndex];
+              if (mode === 'swap') {
+                // swap 邏輯：交換兩個相鄰位置
+                if (sourceColumnIndex < targetColumnIndex) {
+                  // 向右移動：將源 cell 移到目標位置之後
+                  const sourceCellPath = [...rowPath, sourceColumnIndex];
+                  const afterTargetCellPath = [...rowPath, targetColumnIndex];
 
-                Transforms.moveNodes(editor, {
-                  at: currentCellPath,
-                  to: afterTargetCellPath,
-                });
+                  Transforms.moveNodes(editor, {
+                    at: sourceCellPath,
+                    to: afterTargetCellPath,
+                  });
+                } else {
+                  // 向左移動：將目標 cell 移到源位置之後
+                  const targetCellPath = [...rowPath, targetColumnIndex];
+                  const afterSourceCellPath = [...rowPath, sourceColumnIndex];
+
+                  Transforms.moveNodes(editor, {
+                    at: targetCellPath,
+                    to: afterSourceCellPath,
+                  });
+                }
               } else {
-                // 向左移動：將目標 cell 移到當前位置之後
+                // move 邏輯：直接移動到目標位置
+                const sourceCellPath = [...rowPath, sourceColumnIndex];
                 const targetCellPath = [...rowPath, targetColumnIndex];
-                const afterCurrentCellPath = [...rowPath, columnIndex];
 
                 Transforms.moveNodes(editor, {
-                  at: targetCellPath,
-                  to: afterCurrentCellPath,
+                  at: sourceCellPath,
+                  to: targetCellPath,
                 });
               }
             }
           }
         });
       } catch (error) {
-        console.warn('Failed to swap column:', error);
+        console.warn(`Failed to ${mode} column:`, error);
       }
     },
     [editor, element],
@@ -1485,8 +1520,8 @@ export function useTableActions(element: RenderTableElementProps['element']) {
     unpinRow,
     isColumnPinned,
     isRowPinned,
-    swapRow,
-    swapColumn,
+    moveOrSwapRow,
+    moveOrSwapColumn,
     swapCell,
   };
 }

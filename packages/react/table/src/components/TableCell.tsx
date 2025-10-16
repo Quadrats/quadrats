@@ -1,11 +1,11 @@
-import React, { useContext, useRef, useState, useEffect, useMemo } from 'react';
+import React, { useContext, useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import clsx from 'clsx';
 import { RenderElementProps } from '@quadrats/react';
-import { Transforms } from '@quadrats/core';
+import { Transforms, Element } from '@quadrats/core';
 import { useSlateStatic } from 'slate-react';
+import { useDrop } from 'react-dnd';
 import { TableHeaderContext } from '../contexts/TableHeaderContext';
-import { Icon, Portal } from '@quadrats/react/components';
-import { Drag } from '@quadrats/icons';
+import { Portal } from '@quadrats/react/components';
 import { TableElement } from '@quadrats/common/table';
 import { useTableMetadata } from '../hooks/useTableMetadata';
 import { useTableStateContext } from '../hooks/useTableStateContext';
@@ -14,11 +14,18 @@ import { useTableCellFocused, useTableCellPosition, useTableCellTransformContent
 import { useTableCellToolbarActions } from '../hooks/useTableCellToolbarActions';
 import { TableScrollContext } from '../contexts/TableScrollContext';
 import { useColumnResize } from '../hooks/useColumnResize';
+import { useTableActionsContext } from '../hooks/useTableActionsContext';
+import { useTableDragContext } from '../contexts/TableDragContext';
+import { ROW_DRAG_TYPE, RowDragButton } from './RowDragButton';
+import { COLUMN_DRAG_TYPE, ColumnDragButton } from './ColumnDragButton';
+import { getTableElements } from '../utils/helper';
 
 function TableCell(props: RenderElementProps<TableElement>) {
   const { attributes, children, element } = props;
   const { tableSelectedOn, setTableSelectedOn, tableHoveredOn, setTableHoveredOn } = useTableStateContext();
   const { columnCount, rowCount, portalContainerRef, isColumnPinned, tableElement } = useTableMetadata();
+  const { moveOrSwapRow, moveOrSwapColumn } = useTableActionsContext();
+  const { dragState, dropTargetIndex, setDropTargetIndex, dragDirection, setDragDirection } = useTableDragContext();
 
   // Component context
   const { isHeader } = useContext(TableHeaderContext);
@@ -29,6 +36,28 @@ function TableCell(props: RenderElementProps<TableElement>) {
   const focused = useTableCellFocused(element, editor);
   const cellPosition = useTableCellPosition(element, editor);
   const transformCellContent = useTableCellTransformContent(element, editor);
+
+  // Get header row count from table structure
+  const tableElements = getTableElements(tableElement);
+  const headerRowCount = tableElements.tableHeaderElement?.children.length || 0;
+
+  // Helper to check if column is title column
+  const checkIsTitleColumn = useCallback(
+    (colIndex: number) => {
+      const elements = getTableElements(tableElement);
+
+      if (!elements.tableBodyElement) return false;
+
+      const firstRow = elements.tableBodyElement.children[0];
+
+      if (!Element.isElement(firstRow)) return false;
+
+      const cell = firstRow.children[colIndex];
+
+      return Element.isElement(cell) && !!cell.treatAsTitle;
+    },
+    [tableElement],
+  );
 
   // Toolbar actions
   const { focusToolbarIconGroups, inlineToolbarIconGroups } = useTableCellToolbarActions({
@@ -45,14 +74,14 @@ function TableCell(props: RenderElementProps<TableElement>) {
   const isSelectionTriggerByMe =
     (isSelectedInSameRow && cellPosition.columnIndex === 0) || (isSelectedInSameColumn && cellPosition.rowIndex === 0);
 
-  const showRowActionButton = useMemo(
+  const showColumnActionButton = useMemo(
     () =>
       cellPosition.rowIndex === 0 &&
       (isSelectedInSameColumn || (tableHoveredOn?.columnIndex === cellPosition.columnIndex && !tableSelectedOn)),
     [cellPosition, isSelectedInSameColumn, tableHoveredOn, tableSelectedOn],
   );
 
-  const showColumnActionButton = useMemo(
+  const showRowActionButton = useMemo(
     () =>
       cellPosition.columnIndex === 0 &&
       (isSelectedInSameRow || (tableHoveredOn?.rowIndex === cellPosition.rowIndex && !tableSelectedOn)),
@@ -65,6 +94,71 @@ function TableCell(props: RenderElementProps<TableElement>) {
   const [rowButtonPosition, setRowButtonPosition] = useState<{ top: number; left: number } | null>(null);
   const [columnButtonPosition, setColumnButtonPosition] = useState<{ top: number; left: number } | null>(null);
   const [cellStuckAtLeft, setCellStuckAtLeft] = useState<number | undefined>(undefined);
+
+  // Drop target logic for rows
+  const [, dropRow] = useDrop<{ rowIndex: number; isInHeader: boolean }, void, void>(
+    () => ({
+      accept: ROW_DRAG_TYPE,
+      canDrop: (item) => {
+        if (!dragState || dragState.type !== 'row') return false;
+        if (item.rowIndex === cellPosition.rowIndex) return false;
+
+        const sourceInHeader = item.isInHeader;
+        const targetInHeader = cellPosition.rowIndex < headerRowCount;
+
+        return sourceInHeader === targetInHeader;
+      },
+      hover: (item, monitor) => {
+        if (monitor.canDrop()) {
+          // 計算拖曳方向
+          const direction = item.rowIndex < cellPosition.rowIndex ? 'down' : 'up';
+
+          setDropTargetIndex(cellPosition.rowIndex);
+          setDragDirection(direction);
+        }
+      },
+      drop: (item) => {
+        moveOrSwapRow(item.rowIndex, cellPosition.rowIndex, 'move');
+        setDropTargetIndex(null);
+        setDragDirection(null);
+      },
+    }),
+    [dragState, cellPosition.rowIndex, headerRowCount, moveOrSwapRow, setDropTargetIndex, setDragDirection],
+  );
+
+  // Drop target logic for columns
+  const [, dropColumn] = useDrop<{ columnIndex: number; isTitle: boolean }, void, void>(
+    () => ({
+      accept: COLUMN_DRAG_TYPE,
+      canDrop: (item) => {
+        if (!dragState || dragState.type !== 'column') return false;
+        if (item.columnIndex === cellPosition.columnIndex) return false;
+
+        const sourceIsTitle = item.isTitle;
+        const targetIsTitle = checkIsTitleColumn(cellPosition.columnIndex);
+
+        return sourceIsTitle === targetIsTitle;
+      },
+      hover: (item, monitor) => {
+        if (monitor.canDrop()) {
+          // 計算拖曳方向
+          const direction = item.columnIndex < cellPosition.columnIndex ? 'right' : 'left';
+
+          setDropTargetIndex(cellPosition.columnIndex);
+          setDragDirection(direction);
+        }
+      },
+      drop: (item) => {
+        moveOrSwapColumn(item.columnIndex, cellPosition.columnIndex, 'move');
+        setDropTargetIndex(null);
+        setDragDirection(null);
+      },
+    }),
+    [dragState, cellPosition.columnIndex, checkIsTitleColumn, moveOrSwapColumn, setDropTargetIndex, setDragDirection],
+  );
+
+  // Combine refs
+  dropRow(dropColumn(cellRef));
 
   // Column resize
   const { isResizing, handleResizeStart } = useColumnResize({
@@ -169,7 +263,37 @@ function TableCell(props: RenderElementProps<TableElement>) {
         'qdr-table__cell--left-active':
           isSelectedInSameColumn || (isSelectedInSameRow && cellPosition.columnIndex === 0),
         'qdr-table__cell--is-selection-trigger-by-me': isSelectionTriggerByMe,
+        'qdr-table__cell--drag-row-target':
+          dragState?.type === 'row' &&
+          dropTargetIndex === cellPosition.rowIndex &&
+          dropTargetIndex !== dragState.rowIndex,
+        'qdr-table__cell--drag-row-target-top':
+          dragState?.type === 'row' &&
+          dropTargetIndex === cellPosition.rowIndex &&
+          dropTargetIndex !== dragState.rowIndex &&
+          dragDirection === 'up',
+        'qdr-table__cell--drag-row-target-bottom':
+          dragState?.type === 'row' &&
+          dropTargetIndex === cellPosition.rowIndex &&
+          dropTargetIndex !== dragState.rowIndex &&
+          dragDirection === 'down',
+        'qdr-table__cell--drag-column-target':
+          dragState?.type === 'column' &&
+          dropTargetIndex === cellPosition.columnIndex &&
+          dropTargetIndex !== dragState.columnIndex,
+        'qdr-table__cell--drag-column-target-left':
+          dragState?.type === 'column' &&
+          dropTargetIndex === cellPosition.columnIndex &&
+          dropTargetIndex !== dragState.columnIndex &&
+          dragDirection === 'left',
+        'qdr-table__cell--drag-column-target-right':
+          dragState?.type === 'column' &&
+          dropTargetIndex === cellPosition.columnIndex &&
+          dropTargetIndex !== dragState.columnIndex &&
+          dragDirection === 'right',
       })}
+      data-row-index={cellPosition.rowIndex}
+      data-column-index={cellPosition.columnIndex}
       style={
         myColumnIsPinned
           ? {
@@ -199,11 +323,11 @@ function TableCell(props: RenderElementProps<TableElement>) {
           />
         </Portal>
       )}
-      {showColumnActionButton && (
+      {showRowActionButton && (
         <Portal getContainer={() => portalContainerRef.current || document.body}>
-          <button
-            type="button"
-            contentEditable={false}
+          <RowDragButton
+            rowIndex={cellPosition.rowIndex}
+            headerRowCount={headerRowCount}
             style={{
               top: rowButtonPosition?.top,
               left: rowButtonPosition?.left,
@@ -223,17 +347,13 @@ function TableCell(props: RenderElementProps<TableElement>) {
                 return { region: 'row', index: cellPosition.rowIndex };
               });
             }}
-            className="qdr-table__cell-row-action"
-          >
-            <Icon icon={Drag} width={20} height={20} />
-          </button>
+          />
         </Portal>
       )}
-      {showRowActionButton && (
+      {showColumnActionButton && (
         <Portal getContainer={() => portalContainerRef.current || document.body}>
-          <button
-            type="button"
-            contentEditable={false}
+          <ColumnDragButton
+            columnIndex={cellPosition.columnIndex}
             style={{
               // pinned 時因為 sticky 所以要扣掉 scrollTop
               top: (columnButtonPosition?.top ?? 0) - (element.pinned ? scrollTop : 0),
@@ -254,10 +374,8 @@ function TableCell(props: RenderElementProps<TableElement>) {
                 return { region: 'column', index: cellPosition.columnIndex };
               });
             }}
-            className="qdr-table__cell-column-action"
-          >
-            <Icon icon={Drag} width={20} height={20} />
-          </button>
+            checkIsTitleColumn={checkIsTitleColumn}
+          />
         </Portal>
       )}
       {isSelectionTriggerByMe && (cellPosition.columnIndex === 0 || cellPosition.rowIndex === 0) ? (

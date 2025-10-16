@@ -857,48 +857,43 @@ export function calculateResizedColumnWidths(
 }
 
 /**
- * 移動 columnWidths 陣列中的元素位置
+ * 移動或交換欄位寬度設定
  * @param currentWidths - 當前的欄位寬度陣列
- * @param fromIndex - 來源索引
- * @param toIndex - 目標索引
- * @returns 新的欄位寬度陣列
+ * @param sourceIndex - 來源欄位的索引
+ * @param targetIndex - 目標欄位的索引
+ * @param mode - 'swap' 為交換兩個位置，'move' 為移動到目標位置
+ * @returns 處理後的欄位寬度陣列
  */
-export function moveColumnWidth(currentWidths: ColumnWidth[], fromIndex: number, toIndex: number): ColumnWidth[] {
-  if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= currentWidths.length) {
-    return currentWidths;
-  }
-
-  const newWidths = [...currentWidths];
-  const [movedWidth] = newWidths.splice(fromIndex, 1);
-
-  newWidths.splice(toIndex, 0, movedWidth);
-
-  return newWidths;
-}
-
-/**
- * 交換兩個欄位的寬度設定
- * @param currentWidths - 當前的欄位寬度陣列
- * @param indexA - 第一個欄位的索引
- * @param indexB - 第二個欄位的索引
- * @returns 交換後的欄位寬度陣列
- */
-export function swapColumnWidth(currentWidths: ColumnWidth[], indexA: number, indexB: number): ColumnWidth[] {
+export function moveOrSwapColumnWidth(
+  currentWidths: ColumnWidth[],
+  sourceIndex: number,
+  targetIndex: number,
+  mode: 'swap' | 'move' = 'move',
+): ColumnWidth[] {
   if (
-    indexA === indexB ||
-    indexA < 0 ||
-    indexB < 0 ||
-    indexA >= currentWidths.length ||
-    indexB >= currentWidths.length
+    sourceIndex === targetIndex ||
+    sourceIndex < 0 ||
+    targetIndex < 0 ||
+    sourceIndex >= currentWidths.length ||
+    targetIndex >= currentWidths.length
   ) {
     return currentWidths;
   }
 
   const newWidths = [...currentWidths];
-  const temp = newWidths[indexA];
 
-  newWidths[indexA] = newWidths[indexB];
-  newWidths[indexB] = temp;
+  if (mode === 'swap') {
+    // swap 邏輯：直接交換兩個位置的值
+    const temp = newWidths[sourceIndex];
+
+    newWidths[sourceIndex] = newWidths[targetIndex];
+    newWidths[targetIndex] = temp;
+  } else {
+    // move 邏輯：移除再插入
+    const [movedWidth] = newWidths.splice(sourceIndex, 1);
+
+    newWidths.splice(targetIndex, 0, movedWidth);
+  }
 
   return newWidths;
 }

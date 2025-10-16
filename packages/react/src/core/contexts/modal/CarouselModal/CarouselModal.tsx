@@ -1,8 +1,6 @@
 /* eslint-disable max-len */
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import clsx from 'clsx';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
 import { Editor } from '@quadrats/core';
 import { Plus, Upload } from '@quadrats/icons';
 import { usePreviousValue, readFileAsBase64, upload } from '@quadrats/react/utils';
@@ -230,57 +228,55 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
         }
       }}
     >
-      <DndProvider backend={HTML5Backend}>
-        <FilesDropZone
-          isDragging={isDragging}
-          setIsDragging={setIsDragging}
-          isOverMaxLength={isOverMaxLength}
-          controller={controller}
-          uploadFiles={uploadFiles}
-        >
-          {items.length > 0 ? (
-            <div
-              className={clsx('qdr-carousel-modal__grid', {
-                'qdr-carousel-modal__grid--isDragging': isDragging,
-              })}
-            >
-              {items.map((item, index) => (
-                <CarouselItem
-                  key={`${item.url}-${item.caption || ''}-${index}`}
-                  url={item.url}
-                  preview={item.preview}
-                  progress={item.progress}
-                  caption={item.caption}
-                  index={index}
-                  ratio={controller?.ratio}
-                  isError={item.isError}
-                  onChange={(value) => {
-                    change(index, { url: item.url, caption: value });
-                  }}
-                  onRemove={() => {
-                    remove(index);
-                  }}
-                  swap={swap}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="qdr-carousel-modal__placeholder">
-              <div className="qdr-carousel-modal__placeholder__block">
-                <div className="qdr-carousel-modal__placeholder__icon">
-                  <Icon icon={Upload} width={32} height={32} />
-                </div>
-                <div className="qdr-carousel-modal__placeholder__title">拖曳檔案到此上傳</div>
-                <div className="qdr-carousel-modal__placeholder__hint">
-                  {controller?.ratio
-                    ? `僅能上傳 ${acceptText}；建議比例為 ${controller.ratio[0]}:${controller.ratio[1]} 且寬度至少達 2000px 以上；檔案大小不可超過 ${controller?.limitSize}MB`
-                    : `僅能上傳 ${acceptText}；檔案大小不可超過 ${controller?.limitSize}MB`}
-                </div>
+      <FilesDropZone
+        isDragging={isDragging}
+        setIsDragging={setIsDragging}
+        isOverMaxLength={isOverMaxLength}
+        controller={controller}
+        uploadFiles={uploadFiles}
+      >
+        {items.length > 0 ? (
+          <div
+            className={clsx('qdr-carousel-modal__grid', {
+              'qdr-carousel-modal__grid--isDragging': isDragging,
+            })}
+          >
+            {items.map((item, index) => (
+              <CarouselItem
+                key={`${item.url}-${item.caption || ''}-${index}`}
+                url={item.url}
+                preview={item.preview}
+                progress={item.progress}
+                caption={item.caption}
+                index={index}
+                ratio={controller?.ratio}
+                isError={item.isError}
+                onChange={(value) => {
+                  change(index, { url: item.url, caption: value });
+                }}
+                onRemove={() => {
+                  remove(index);
+                }}
+                swap={swap}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="qdr-carousel-modal__placeholder">
+            <div className="qdr-carousel-modal__placeholder__block">
+              <div className="qdr-carousel-modal__placeholder__icon">
+                <Icon icon={Upload} width={32} height={32} />
+              </div>
+              <div className="qdr-carousel-modal__placeholder__title">拖曳檔案到此上傳</div>
+              <div className="qdr-carousel-modal__placeholder__hint">
+                {controller?.ratio
+                  ? `僅能上傳 ${acceptText}；建議比例為 ${controller.ratio[0]}:${controller.ratio[1]} 且寬度至少達 2000px 以上；檔案大小不可超過 ${controller?.limitSize}MB`
+                  : `僅能上傳 ${acceptText}；檔案大小不可超過 ${controller?.limitSize}MB`}
               </div>
             </div>
-          )}
-        </FilesDropZone>
-      </DndProvider>
+          </div>
+        )}
+      </FilesDropZone>
     </Modal>
   );
 };

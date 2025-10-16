@@ -12,6 +12,7 @@ import { calculateTableMinWidth, columnWidthToCSS, TableElement } from '@quadrat
 import { TableScrollContext } from '../contexts/TableScrollContext';
 import { useTableCellAlign, useTableCellAlignStatus } from '../hooks/useTableCell';
 import { getTableElements, getColumnWidths } from '../utils/helper';
+import { TableDragLayer } from './TableDragLayer';
 
 function TableMain(props: RenderElementProps<TableElement>) {
   const { attributes, children } = props;
@@ -274,6 +275,7 @@ function TableMain(props: RenderElementProps<TableElement>) {
             {children}
           </table>
         </TableScrollContext.Provider>
+        <TableDragLayer scrollRef={scrollRef} />
       </div>
       <div className="qdr-table__size-indicators">
         {firstRowCells?.map((cell, colIndex) => (
