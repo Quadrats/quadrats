@@ -61,6 +61,7 @@ export const ColumnDragButton: React.FC<ColumnDragButtonProps> = ({
       contentEditable={false}
       style={style}
       onClick={onClick}
+      title="點擊開啟選單，拖曳以移動"
       className={clsx('qdr-table__cell-column-action', {
         'qdr-table__cell-column-action--dragging': isDragging,
       })}

@@ -58,6 +58,7 @@ export const RowDragButton: React.FC<RowDragButtonProps> = ({ rowIndex, headerRo
       contentEditable={false}
       style={style}
       onClick={onClick}
+      title="點擊開啟選單，拖曳以移動"
       className={clsx('qdr-table__cell-row-action', {
         'qdr-table__cell-row-action--dragging': isDragging,
       })}
