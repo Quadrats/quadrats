@@ -773,7 +773,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
         const { tableHeaderElement, tableBodyElement, tableMainElement } = tableStructure;
 
-        // 檢查是否已有 pinned columns（一致性規則檢查）
+        // 檢查是否已有 pinned columns
         const hasExistingPinnedColumns = hasAnyPinnedColumns(tableStructure);
 
         // 如果有現有的 pinned columns 且沒有提供自定義屬性，自動設置 pinned 以保持一致性
@@ -830,10 +830,10 @@ export function useTableActions(element: RenderTableElementProps['element']) {
             }
           });
 
-          // 如果目標位置並不需要移動，則直接返回
-          if (columnIndex < targetColumnIndex) return;
+          // 檢查是否需要移動位置
+          const needsMove = columnIndex >= targetColumnIndex && columnIndex !== targetColumnIndex;
 
-          if (columnIndex !== targetColumnIndex) {
+          if (needsMove) {
             for (let rowIndex = containerElement.children.length - 1; rowIndex >= 0; rowIndex--) {
               const row = containerElement.children[rowIndex];
 
