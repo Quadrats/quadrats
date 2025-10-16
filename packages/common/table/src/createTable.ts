@@ -472,11 +472,8 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
           if (cellEntry) {
             const [, cellPath] = cellEntry;
 
-            // 檢查 cell 是否為空
-            const cellText = Editor.string(editor, cellPath);
-
-            if (!cellText.trim() && Editor.isStart(editor, selection.anchor, cellPath)) {
-              // 在空的 table_cell 開頭按 backspace，不執行任何操作
+            if (Editor.isStart(editor, selection.anchor, cellPath)) {
+              // 在 table_cell 開頭按 backspace，不執行任何操作
               return;
             }
           }
