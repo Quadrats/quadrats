@@ -899,8 +899,12 @@ export function useTableActions(element: RenderTableElementProps['element']) {
               const firstRow = containerElement.children[0];
 
               if (Element.isElement(firstRow) && firstRow.type.includes(TABLE_ROW_TYPE)) {
-                firstRow.children.forEach((cell, colIndex) => {
-                  if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE) && cell.treatAsTitle) {
+                (firstRow.children as TableElement[]).forEach((cell: TableElement, colIndex: number) => {
+                  if (
+                    Element.isElement(cell) &&
+                    (cell as TableElement).type.includes(TABLE_CELL_TYPE) &&
+                    (cell as TableElement).treatAsTitle
+                  ) {
                     titleColumnIndices.add(colIndex);
                   }
                 });
