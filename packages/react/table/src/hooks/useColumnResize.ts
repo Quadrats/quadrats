@@ -131,6 +131,42 @@ export function useColumnResize({ tableElement, columnIndex, cellRef }: UseColum
           });
         }
 
+        // 如果有 pinned columns，重新計算所有 pinned cells 的 left 位置
+        if (pinnedColumnIndices.length > 0) {
+          const allRows = tableDOMElement.querySelectorAll('tr');
+          const scrollContainer = tableDOMElement.closest('.qdr-table__scrollContainer') as HTMLDivElement | null;
+          const containerRect = scrollContainer?.getBoundingClientRect();
+          const containerWidth = containerRect?.width || tableWidth;
+
+          // 為每個 pinned column 計算應該的絕對位置
+          pinnedColumnIndices.forEach((pinnedIndex) => {
+            // 計算此 column 之前所有 pinned columns 的累積寬度
+            let accumulatedLeft = 0;
+
+            for (let i = 0; i < pinnedIndex; i++) {
+              if (pinnedColumnIndices.includes(i)) {
+                const width = newWidths[i];
+
+                if (width.type === 'percentage') {
+                  const pixelWidth = (containerWidth * width.value) / 100;
+
+                  accumulatedLeft += pixelWidth;
+                }
+              }
+            }
+
+            // 更新該 column 所有 cells 的 left 位置
+            allRows.forEach((row) => {
+              const cells = row.querySelectorAll('td, th');
+              const targetCell = cells[pinnedIndex] as HTMLElement;
+
+              if (targetCell && targetCell.classList.contains('qdr-table__cell--pinned')) {
+                targetCell.style.left = `${accumulatedLeft}px`;
+              }
+            });
+          });
+        }
+
         // 更新 size indicators
         const sizeIndicatorsContainer = mainWrapper?.querySelector('.qdr-table__size-indicators');
 

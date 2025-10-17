@@ -1036,30 +1036,31 @@ export function convertToMixedWidthMode(
   });
 
   // 確保釘選欄位總和不超過指定範圍
-  if (totalPinnedPercentage > MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE) {
-    const scaleFactor = MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE / totalPinnedPercentage;
+  const scaleFactor =
+    totalPinnedPercentage > MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE
+      ? MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE / totalPinnedPercentage
+      : 1;
 
-    totalPinnedPercentage = MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE;
+  totalPinnedPercentage = Math.min(totalPinnedPercentage, MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE);
 
-    // 調整釘選欄位的百分比
-    currentWidths.forEach((width, index) => {
-      if (pinnedColumnIndices.includes(index)) {
-        if (width.type === 'percentage') {
-          currentWidths[index] = {
-            type: 'percentage',
-            value: Math.round(width.value * scaleFactor * 10) / 10,
-          };
-        } else {
-          const percentage = (width.value / tableWidth) * 100;
+  // 調整釘選欄位的百分比
+  currentWidths.forEach((width, index) => {
+    if (pinnedColumnIndices.includes(index)) {
+      if (width.type === 'percentage') {
+        currentWidths[index] = {
+          type: 'percentage',
+          value: Math.round(width.value * scaleFactor * 10) / 10,
+        };
+      } else {
+        const percentage = (width.value / tableWidth) * 100;
 
-          currentWidths[index] = {
-            type: 'percentage',
-            value: Math.round(percentage * scaleFactor * 10) / 10,
-          };
-        }
+        currentWidths[index] = {
+          type: 'percentage',
+          value: Math.round(percentage * scaleFactor * 10) / 10,
+        };
       }
-    });
-  }
+    }
+  });
 
   // 計算剩餘空間（用於未釘選欄位）
   const remainingPercentage = 100 - totalPinnedPercentage;
