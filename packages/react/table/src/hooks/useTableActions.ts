@@ -894,7 +894,24 @@ export function useTableActions(element: RenderTableElementProps['element']) {
             if (currentWidths.length > 0) {
               const { pinnedColumnIndices } = getPinnedColumnsInfo(element);
 
-              const updatedPinnedIndices = [...new Set([...pinnedColumnIndices, columnIndex])].sort((a, b) => a - b);
+              // 找出所有已經是 title 的 columns
+              const titleColumnIndices = new Set<number>();
+              const firstRow = containerElement.children[0];
+
+              if (Element.isElement(firstRow) && firstRow.type.includes(TABLE_ROW_TYPE)) {
+                firstRow.children.forEach((cell, colIndex) => {
+                  if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE) && cell.treatAsTitle) {
+                    titleColumnIndices.add(colIndex);
+                  }
+                });
+              }
+
+              // 將當前 column 加入 title columns
+              titleColumnIndices.add(columnIndex);
+
+              // 合併所有 pinned columns 和 title columns
+              const allPinnedIndices = new Set([...pinnedColumnIndices, ...Array.from(titleColumnIndices)]);
+              const updatedPinnedIndices = Array.from(allPinnedIndices).sort((a, b) => a - b);
               const mixedWidths = convertToMixedWidthMode(currentWidths, updatedPinnedIndices, tableWidth);
 
               setColumnWidths(editor, element, mixedWidths);
