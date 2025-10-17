@@ -83,7 +83,6 @@ export function useTableCellToolbarActions({
     unpinRow,
     moveOrSwapRow,
     moveOrSwapColumn,
-    swapCell,
   } = useTableActionsContext();
 
   // 獲取當前 cell 內容的類型（用於顯示對應的 icon）
@@ -130,82 +129,6 @@ export function useTableCellToolbarActions({
 
   // Focus toolbar - 當 cell 被 focus 時顯示的工具列
   const focusToolbarIconGroups = useMemo(() => {
-    // 檢查是否可以移動到指定方向
-    const canMoveInDirection = (direction: 'up' | 'down' | 'left' | 'right'): boolean => {
-      // 從 tableElement 獲取 header 和 body 的資訊
-      const tableMainElement = tableElement.children.find(
-        (child) => Element.isElement(child) && child.type.includes('table_main'),
-      );
-
-      if (!tableMainElement || !Element.isElement(tableMainElement)) {
-        return false;
-      }
-
-      const tableHeaderElement = tableMainElement.children.find(
-        (child) => Element.isElement(child) && child.type.includes('table_header'),
-      );
-
-      const tableBodyElement = tableMainElement.children.find(
-        (child) => Element.isElement(child) && child.type.includes('table_body'),
-      );
-
-      const headerRowCount =
-        tableHeaderElement && Element.isElement(tableHeaderElement) ? tableHeaderElement.children.length : 0;
-
-      const currentInHeader = cellPosition.rowIndex < headerRowCount;
-
-      // 垂直移動檢查
-      if (direction === 'up' || direction === 'down') {
-        const targetRowIndex = direction === 'up' ? cellPosition.rowIndex - 1 : cellPosition.rowIndex + 1;
-
-        // 檢查邊界
-        if (targetRowIndex < 0 || targetRowIndex >= rowCount) {
-          return false;
-        }
-
-        // 檢查是否跨越 header/body 邊界
-        const targetInHeader = targetRowIndex < headerRowCount;
-
-        return currentInHeader === targetInHeader;
-      }
-
-      // 水平移動檢查
-      if (direction === 'left' || direction === 'right') {
-        const targetColumnIndex = direction === 'left' ? cellPosition.columnIndex - 1 : cellPosition.columnIndex + 1;
-
-        // 檢查邊界
-        if (targetColumnIndex < 0 || targetColumnIndex >= columnCount) {
-          return false;
-        }
-
-        // 檢查當前 cell 和目標 cell 的 treatAsTitle 狀態
-        const currentIsTitle = !!element.treatAsTitle;
-
-        // 從 body 的第一列獲取目標 cell 的 treatAsTitle 屬性
-        if (!tableBodyElement || !Element.isElement(tableBodyElement)) {
-          return false;
-        }
-
-        const firstRow = tableBodyElement.children[0];
-
-        if (!Element.isElement(firstRow)) {
-          return false;
-        }
-
-        const targetCell = firstRow.children[targetColumnIndex];
-
-        if (!Element.isElement(targetCell)) {
-          return false;
-        }
-
-        const targetIsTitle = !!targetCell.treatAsTitle;
-
-        return currentIsTitle === targetIsTitle;
-      }
-
-      return false;
-    };
-
     return [
       {
         icons: [
@@ -269,56 +192,8 @@ export function useTableCellToolbarActions({
               },
         ].filter((i) => i !== undefined),
       },
-      {
-        icons: [
-          canMoveInDirection('right')
-            ? {
-                icon: TableMoveRight,
-                onClick: () => {
-                  swapCell(cellPosition.rowIndex, cellPosition.columnIndex, 'right');
-                },
-              }
-            : undefined,
-          canMoveInDirection('left')
-            ? {
-                icon: TableMoveLeft,
-                onClick: () => {
-                  swapCell(cellPosition.rowIndex, cellPosition.columnIndex, 'left');
-                },
-              }
-            : undefined,
-          canMoveInDirection('down')
-            ? {
-                icon: TableMoveDown,
-                onClick: () => {
-                  swapCell(cellPosition.rowIndex, cellPosition.columnIndex, 'down');
-                },
-              }
-            : undefined,
-          canMoveInDirection('up')
-            ? {
-                icon: TableMoveUp,
-                onClick: () => {
-                  swapCell(cellPosition.rowIndex, cellPosition.columnIndex, 'up');
-                },
-              }
-            : undefined,
-        ].filter((i) => i !== undefined),
-      },
     ];
-  }, [
-    transformCellContent,
-    addRow,
-    addColumn,
-    cellPosition,
-    isReachMaximumColumns,
-    getCurrentIcon,
-    tableElement,
-    rowCount,
-    columnCount,
-    element.treatAsTitle,
-    swapCell,
-  ]);
+  }, [transformCellContent, addRow, addColumn, cellPosition, isReachMaximumColumns, getCurrentIcon]);
 
   // Row actions
   const rowActions = useMemo(() => {

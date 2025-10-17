@@ -44,7 +44,6 @@ export type TableContextType = {
   unpinRow: () => void;
   moveOrSwapRow: (sourceRowIndex: number, targetRowIndex: number, mode?: 'swap' | 'move') => void;
   moveOrSwapColumn: (sourceColumnIndex: number, targetColumnIndex: number, mode?: 'swap' | 'move') => void;
-  swapCell: (rowIndex: number, columnIndex: number, direction: 'up' | 'down' | 'left' | 'right') => void;
   // Helper functions to check pin status
   isColumnPinned: (columnIndex: number) => boolean;
   isRowPinned: (rowIndex: number) => boolean;

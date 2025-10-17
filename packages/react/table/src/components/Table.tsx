@@ -44,7 +44,6 @@ function Table({
     unpinRow,
     moveOrSwapRow,
     moveOrSwapColumn,
-    swapCell,
   } = useTableActions(element);
 
   const { tableSelectedOn, setTableSelectedOn, tableHoveredOn, setTableHoveredOn } = useTableStates();
@@ -247,7 +246,6 @@ function Table({
       unpinRow,
       moveOrSwapRow,
       moveOrSwapColumn,
-      swapCell,
     }),
     [
       addColumn,
@@ -265,7 +263,6 @@ function Table({
       unpinRow,
       moveOrSwapRow,
       moveOrSwapColumn,
-      swapCell,
     ],
   );
 
