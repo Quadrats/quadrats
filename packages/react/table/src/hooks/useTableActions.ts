@@ -22,6 +22,7 @@ import {
   setColumnWidths,
   moveOrSwapColumnWidth,
   convertToMixedWidthMode,
+  convertToPercentageMode,
   getPinnedColumnsInfo,
 } from '../utils/helper';
 
@@ -985,6 +986,12 @@ export function useTableActions(element: RenderTableElementProps['element']) {
       if (tableBodyElement) {
         processContainer(tableBodyElement);
       }
+
+      // 轉換回純百分比模式
+      const currentWidths = getColumnWidths(element);
+      const percentageWidths = convertToPercentageMode(currentWidths);
+
+      setColumnWidths(editor, element, percentageWidths);
     } catch (error) {
       console.warn('Failed to unpin column:', error);
     }

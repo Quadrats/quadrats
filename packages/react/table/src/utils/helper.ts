@@ -1037,3 +1037,26 @@ export function convertToMixedWidthMode(
 
   return newWidths;
 }
+
+/**
+ * 將混合模式的欄位寬度轉換回純百分比模式
+ * 當所有 pinned columns 都被 unpin 後，需要將 pixel 欄位轉換回 percentage
+ * @param currentWidths - 當前的欄位寬度陣列（混合模式）
+ * @returns 轉換後的純百分比欄位寬度陣列，總和為 100%
+ */
+export function convertToPercentageMode(currentWidths: ColumnWidth[]): ColumnWidth[] {
+  if (currentWidths.length === 0) return [];
+
+  // 檢查是否有 pixel 欄位
+  const hasPixelColumns = currentWidths.some((width) => width.type === 'pixel');
+
+  // 如果沒有 pixel 欄位，表示已經是純百分比模式，直接返回
+  if (!hasPixelColumns) {
+    return currentWidths;
+  }
+
+  // 使用 distributeEqualPercentages 重新分配百分比，確保總和為 100%
+  const percentages = distributeEqualPercentages(currentWidths.length);
+
+  return percentages.map((value) => ({ type: 'percentage' as const, value }));
+}
