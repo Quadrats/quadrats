@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/Quadrats/quadrats/compare/v1.1.0...v1.1.1) (2025-10-17)
+
+### Bug Fixes
+
+- **common/table:** fix table backspace behavior ([2d1aef8](https://github.com/Quadrats/quadrats/commit/2d1aef83fce95a4a9e5d02d2fef4a447e4725269))
+
 # [1.1.0](https://github.com/Quadrats/quadrats/compare/v1.0.0...v1.1.0) (2025-10-14)
 
 ### Bug Fixes

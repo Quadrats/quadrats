@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/Quadrats/quadrats/compare/v1.1.0...v1.1.1) (2025-10-17)
+
+### Features
+
+- **icons:** add table move icons ([1ebbc40](https://github.com/Quadrats/quadrats/commit/1ebbc404740122db7711d6424f70f40ba349086f))
+
 # [1.1.0](https://github.com/Quadrats/quadrats/compare/v1.0.0...v1.1.0) (2025-10-14)
 
 ### Features

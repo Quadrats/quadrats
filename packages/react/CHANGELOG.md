@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/Quadrats/quadrats/compare/v1.1.0...v1.1.1) (2025-10-17)
+
+### Bug Fixes
+
+- **react/table:** convert to percentage mode when unpin, [#86](https://github.com/Quadrats/quadrats/issues/86)ev69pxh ([389b01f](https://github.com/Quadrats/quadrats/commit/389b01f3e22b4586b91a0d20549f0d8368755f6e)), closes [#86ev69](https://github.com/Quadrats/quadrats/issues/86ev69)
+- **react/table:** ensure width total is 100%, [#86](https://github.com/Quadrats/quadrats/issues/86)ev69prr ([3648656](https://github.com/Quadrats/quadrats/commit/3648656c8f2320c34cf6eece16a9b47b3ce385a0)), closes [#86ev69](https://github.com/Quadrats/quadrats/issues/86ev69)
+- **react/table:** fix table copy pinned column width bug, [#86](https://github.com/Quadrats/quadrats/issues/86)ev6a2f9 ([d92a90d](https://github.com/Quadrats/quadrats/commit/d92a90dec077c40c7868b70181400d6f3a18763f)), closes [#86ev6a2f9](https://github.com/Quadrats/quadrats/issues/86ev6a2f9)
+- **react/table:** fix table pinned column resize bug, [#86](https://github.com/Quadrats/quadrats/issues/86)ev69uy4 ([d113264](https://github.com/Quadrats/quadrats/commit/d113264db58e630f685aac7ff8c7c3c1a496317b)), closes [#86ev69uy4](https://github.com/Quadrats/quadrats/issues/86ev69uy4)
+- **react/table:** fix table pinned column widths bug ([ebb0dee](https://github.com/Quadrats/quadrats/commit/ebb0dee9428ff882f5a9445fb5cdefbe7c58cac7))
+- **react/table:** fix title column to pinned column width bugs, [#86](https://github.com/Quadrats/quadrats/issues/86)ev69pqe ([ee9529e](https://github.com/Quadrats/quadrats/commit/ee9529e902b761fe8424a38fa7940ad7ef156afc)), closes [#86ev69](https://github.com/Quadrats/quadrats/issues/86ev69)
+- **react/table:** fix typings for build ([4db7439](https://github.com/Quadrats/quadrats/commit/4db74398897bb8b9e70c8f074b0bea7e5535a83e))
+
+### Features
+
+- **react/table:** add title for drag button ([cc25e80](https://github.com/Quadrats/quadrats/commit/cc25e808ea45f545a791829ff3e3f1bef12838ea))
+- **react/table:** drag n drop feature, [#86](https://github.com/Quadrats/quadrats/issues/86)eurf5ww ([1e20f81](https://github.com/Quadrats/quadrats/commit/1e20f818e8c13d1d573ab79977ca459d731e4f00)), closes [#86eurf5](https://github.com/Quadrats/quadrats/issues/86eurf5)
+- **react/table:** optimize table drag feature, [#86](https://github.com/Quadrats/quadrats/issues/86)eurf5ww ([991f429](https://github.com/Quadrats/quadrats/commit/991f42970edd961e34c390d00cd32dabeeb2b669)), closes [#86eurf5](https://github.com/Quadrats/quadrats/issues/86eurf5)
+- **react/table:** remove swap cell feature, [#86](https://github.com/Quadrats/quadrats/issues/86)ev69pfw ([e0c7a15](https://github.com/Quadrats/quadrats/commit/e0c7a15dcef60b7ce40986fdcf11b2ac9153a43c)), closes [#86ev69](https://github.com/Quadrats/quadrats/issues/86ev69)
+- **react/table:** swap column/row/cell feature, [#86](https://github.com/Quadrats/quadrats/issues/86)eurf5ne, [#86](https://github.com/Quadrats/quadrats/issues/86)eurf5yd ([dd84d93](https://github.com/Quadrats/quadrats/commit/dd84d935c1e56ca6449326f308e09b95e9de1610)), closes [#86eurf5](https://github.com/Quadrats/quadrats/issues/86eurf5) [#86eurf5](https://github.com/Quadrats/quadrats/issues/86eurf5)
+
 # [1.1.0](https://github.com/Quadrats/quadrats/compare/v1.0.0...v1.1.0) (2025-10-14)
 
 ### Bug Fixes
