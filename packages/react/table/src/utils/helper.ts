@@ -587,14 +587,21 @@ export function setColumnWidths(
  * 計算新增欄位後的欄位寬度
  * - 如果所有欄位都是 percentage：按比例縮減現有欄位，新欄位佔平均寬度
  * - 如果有混合模式（percentage + pixel）：
- *   * percentage 欄位（pinned）保持不變
- *   * 新欄位使用 pixel（與其他 pixel 欄位平均分配剩餘空間）
+ *   * 如果用戶操作的欄位是 pinned column：新欄位使用 percentage（需要調整 pinned columns 的百分比）
+ *   * 如果用戶操作的欄位是 unpinned column：新欄位使用 pixel（與其他 pixel 欄位相同寬度）
  *
  * @param currentWidths - 當前的欄位寬度陣列
  * @param insertIndex - 新欄位插入的位置（0-based）
+ * @param pinnedColumnIndices - 當前釘選欄位的索引陣列（插入前的索引）
+ * @param operatingColumnIndex - 用戶實際操作的欄位索引（用於判斷是在 pinned 還是 unpinned column 操作）
  * @returns 新的欄位寬度陣列
  */
-export function calculateColumnWidthsAfterAdd(currentWidths: ColumnWidth[], insertIndex: number): ColumnWidth[] {
+export function calculateColumnWidthsAfterAdd(
+  currentWidths: ColumnWidth[],
+  insertIndex: number,
+  pinnedColumnIndices: number[] = [],
+  operatingColumnIndex?: number,
+): ColumnWidth[] {
   const newColumnCount = currentWidths.length + 1;
 
   // 分離 percentage 和 pixel 欄位
@@ -624,28 +631,64 @@ export function calculateColumnWidthsAfterAdd(currentWidths: ColumnWidth[], inse
   }
 
   // 如果有混合的 pixel 和 percentage 欄位（有 pinned columns）
-  // percentage 欄位（pinned）保持不變
-  // 新欄位應維持 pixel（此時一般欄位必定是 pixel）
   if (percentageColumns.length && pixelColumns.length) {
-    const newWidths: ColumnWidth[] = [];
+    // 判斷新欄位是否應該是 pinned column
+    const isNewColumnPinned =
+      typeof operatingColumnIndex === 'number' ? pinnedColumnIndices.includes(operatingColumnIndex) : false;
 
-    // 找到最後一個 pixel 欄位的寬度，新欄位將複製這個寬度
-    const lastPixelWidth = pixelColumns.length > 0 ? pixelColumns[pixelColumns.length - 1].value : 150;
+    if (isNewColumnPinned) {
+      // 新欄位應該是 pinned column，使用 percentage
+      // 需要調整所有 pinned columns 的百分比
+      const newWidths: ColumnWidth[] = [];
+      const pinnedColumnCount = pinnedColumnIndices.length + 1; // 加上新欄位
 
-    currentWidths.forEach((width, index) => {
-      if (index === insertIndex) {
+      const pinnedPercentagePerColumn = Math.min(
+        Math.round((MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE / pinnedColumnCount) * 10) / 10,
+        MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE,
+      );
+
+      currentWidths.forEach((width, index) => {
+        if (index === insertIndex) {
+          newWidths.push({ type: 'percentage', value: pinnedPercentagePerColumn });
+        }
+
+        if (pinnedColumnIndices.includes(index)) {
+          // 調整現有 pinned column 的百分比
+          newWidths.push({ type: 'percentage', value: pinnedPercentagePerColumn });
+        } else {
+          // 保持非 pinned column (pixel) 不變
+          newWidths.push({ ...width });
+        }
+      });
+
+      // 如果插入位置在最後（但仍在 pinned 區域內）
+      if (insertIndex >= currentWidths.length) {
+        newWidths.push({ type: 'percentage', value: pinnedPercentagePerColumn });
+      }
+
+      return newWidths;
+    } else {
+      // 新欄位應該是 unpinned column，使用 pixel
+      const newWidths: ColumnWidth[] = [];
+
+      // 找到最後一個 pixel 欄位的寬度，新欄位將複製這個寬度
+      const lastPixelWidth = pixelColumns.length > 0 ? pixelColumns[pixelColumns.length - 1].value : 150;
+
+      currentWidths.forEach((width, index) => {
+        if (index === insertIndex) {
+          newWidths.push({ type: 'pixel', value: lastPixelWidth });
+        }
+
+        newWidths.push({ ...width });
+      });
+
+      // 如果插入位置在最後
+      if (insertIndex >= currentWidths.length) {
         newWidths.push({ type: 'pixel', value: lastPixelWidth });
       }
 
-      newWidths.push({ ...width });
-    });
-
-    // 如果插入位置在最後
-    if (insertIndex >= currentWidths.length) {
-      newWidths.push({ type: 'pixel', value: lastPixelWidth });
+      return newWidths;
     }
-
-    return newWidths;
   }
 
   // Fallback: 等比例縮減並插入新欄位

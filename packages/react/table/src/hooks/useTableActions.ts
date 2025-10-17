@@ -173,7 +173,14 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           const currentWidths = getColumnWidths(element);
 
           if (currentWidths.length > 0) {
-            const newWidths = calculateColumnWidthsAfterAdd(currentWidths, insertIndex);
+            // 獲取當前的 pinned columns 資訊
+            const { pinnedColumnIndices } = getPinnedColumnsInfo(element);
+            const newWidths = calculateColumnWidthsAfterAdd(
+              currentWidths,
+              insertIndex,
+              pinnedColumnIndices,
+              columnIndex,
+            );
 
             setColumnWidths(editor, element, newWidths);
           }
@@ -342,7 +349,9 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         if (currentWidths.length > 0) {
           // 新欄位插入在最後（columnCount 位置）
           const insertIndex = columnCount;
-          const newWidths = calculateColumnWidthsAfterAdd(currentWidths, insertIndex);
+          // 獲取當前的 pinned columns 資訊
+          const { pinnedColumnIndices } = getPinnedColumnsInfo(element);
+          const newWidths = calculateColumnWidthsAfterAdd(currentWidths, insertIndex, pinnedColumnIndices);
 
           setColumnWidths(editor, element, newWidths);
         }
