@@ -17,6 +17,75 @@ import { ALIGN_TYPE, ALIGNABLE_TYPES, AlignValue } from '@quadrats/common/align'
 import { ParagraphElement } from '@quadrats/common/paragraph';
 import { HeadingElement } from '@quadrats/common/heading';
 
+/**
+ * 分配百分比寬度，確保總和為 100%
+ * 前 n-1 個欄位使用四捨五入的平均值，最後一個欄位使用剩餘寬度
+ * @param count - 欄位數量
+ * @returns 百分比陣列，總和為 100%
+ */
+export function distributeEqualPercentages(count: number): number[] {
+  if (count <= 0) return [];
+  if (count === 1) return [100];
+
+  const percentages: number[] = [];
+  const averagePercentage = Math.round((100 / count) * 10) / 10;
+
+  // 前 n-1 個欄位使用四捨五入的平均值
+  for (let i = 0; i < count - 1; i++) {
+    percentages.push(averagePercentage);
+  }
+
+  // 最後一個欄位使用剩餘寬度，確保總和為 100%
+  const sumOfFirst = percentages.reduce((sum, val) => sum + val, 0);
+  const lastPercentage = Math.round((100 - sumOfFirst) * 10) / 10;
+
+  percentages.push(lastPercentage);
+
+  return percentages;
+}
+
+/**
+ * 等比例縮減現有百分比並加入新欄位
+ * 前 n-1 個縮減後的欄位使用四捨五入，最後一個縮減欄位使用剩餘寬度
+ * @param currentPercentages - 當前的百分比陣列
+ * @param newColumnPercentage - 新欄位要佔的百分比
+ * @param insertIndex - 新欄位插入的位置（0-based）
+ * @returns 新的百分比陣列，總和為 100%
+ */
+export function scalePercentagesWithNewColumn(
+  currentPercentages: number[],
+  newColumnPercentage: number,
+  insertIndex: number,
+): number[] {
+  if (currentPercentages.length === 0) return [100];
+
+  const currentTotal = currentPercentages.reduce((sum, val) => sum + val, 0);
+  const targetTotal = 100 - newColumnPercentage;
+  const scaleFactor = targetTotal / currentTotal;
+
+  const scaledPercentages: number[] = [];
+
+  // 前 n-1 個欄位使用縮放後四捨五入的值
+  for (let i = 0; i < currentPercentages.length - 1; i++) {
+    const scaledValue = Math.round(currentPercentages[i] * scaleFactor * 10) / 10;
+
+    scaledPercentages.push(scaledValue);
+  }
+
+  // 最後一個現有欄位使用剩餘寬度，確保總和正確
+  const sumOfScaled = scaledPercentages.reduce((sum, val) => sum + val, 0);
+  const lastScaledValue = Math.round((targetTotal - sumOfScaled) * 10) / 10;
+
+  scaledPercentages.push(lastScaledValue);
+
+  // 在指定位置插入新欄位
+  const result = [...scaledPercentages];
+
+  result.splice(insertIndex, 0, newColumnPercentage);
+
+  return result;
+}
+
 export interface TableElements {
   tableMainElement: TableElement | null;
   tableBodyElement: TableElement | null;
@@ -492,12 +561,10 @@ export function getColumnWidths(tableElement: TableElement, tableWidth?: number)
     return widths;
   }
 
-  // 否則返回平均分配的 percentage（精確到小數點後一位）
-  const equalPercentage = Math.round((100 / columnCount) * 10) / 10;
+  // 否則返回平均分配的 percentage（總和為 100%）
+  const percentages = distributeEqualPercentages(columnCount);
 
-  return Array(columnCount)
-    .fill(null)
-    .map(() => ({ type: 'percentage' as const, value: equalPercentage }));
+  return percentages.map((value) => ({ type: 'percentage' as const, value }));
 }
 
 /**
@@ -520,16 +587,22 @@ export function setColumnWidths(
  * 計算新增欄位後的欄位寬度
  * - 如果所有欄位都是 percentage：按比例縮減現有欄位，新欄位佔平均寬度
  * - 如果有混合模式（percentage + pixel）：
- *   * percentage 欄位（pinned）保持不變
- *   * 新欄位使用 pixel（與其他 pixel 欄位平均分配剩餘空間）
+ *   * 如果用戶操作的欄位是 pinned column：新欄位使用 percentage（需要調整 pinned columns 的百分比）
+ *   * 如果用戶操作的欄位是 unpinned column：新欄位使用 pixel（與其他 pixel 欄位相同寬度）
  *
  * @param currentWidths - 當前的欄位寬度陣列
  * @param insertIndex - 新欄位插入的位置（0-based）
+ * @param pinnedColumnIndices - 當前釘選欄位的索引陣列（插入前的索引）
+ * @param operatingColumnIndex - 用戶實際操作的欄位索引（用於判斷是在 pinned 還是 unpinned column 操作）
  * @returns 新的欄位寬度陣列
  */
-export function calculateColumnWidthsAfterAdd(currentWidths: ColumnWidth[], insertIndex: number): ColumnWidth[] {
+export function calculateColumnWidthsAfterAdd(
+  currentWidths: ColumnWidth[],
+  insertIndex: number,
+  pinnedColumnIndices: number[] = [],
+  operatingColumnIndex?: number,
+): ColumnWidth[] {
   const newColumnCount = currentWidths.length + 1;
-  const averagePercentage = Math.round((100 / newColumnCount) * 10) / 10;
 
   // 分離 percentage 和 pixel 欄位
   const percentageColumns: { index: number; value: number }[] = [];
@@ -545,61 +618,89 @@ export function calculateColumnWidthsAfterAdd(currentWidths: ColumnWidth[], inse
 
   // 如果所有欄位都是 percentage（正常模式，無 pinned columns）
   if (percentageColumns.length === currentWidths.length) {
-    const currentTotal = percentageColumns.reduce((sum, col) => sum + col.value, 0);
-    const targetTotal = 100 - averagePercentage;
-    const scaleFactor = targetTotal / currentTotal;
+    // 計算新欄位的平均百分比
+    const averagePercentage = Math.round((100 / newColumnCount) * 10) / 10;
 
-    const newWidths: ColumnWidth[] = [];
+    // 提取當前的百分比值
+    const currentPercentages = currentWidths.map((w) => w.value);
 
-    currentWidths.forEach((width, index) => {
-      if (index === insertIndex) {
-        newWidths.push({ type: 'percentage', value: averagePercentage });
-      }
+    // 等比例縮減現有欄位並插入新欄位
+    const newPercentages = scalePercentagesWithNewColumn(currentPercentages, averagePercentage, insertIndex);
 
-      // 按比例縮減現有欄位
-      const scaledValue = Math.round((width as { value: number }).value * scaleFactor * 10) / 10;
-
-      newWidths.push({ type: 'percentage', value: scaledValue });
-    });
-
-    if (insertIndex >= currentWidths.length) {
-      newWidths.push({ type: 'percentage', value: averagePercentage });
-    }
-
-    return newWidths;
+    return newPercentages.map((value) => ({ type: 'percentage' as const, value }));
   }
 
   // 如果有混合的 pixel 和 percentage 欄位（有 pinned columns）
-  // percentage 欄位（pinned）保持不變
-  // 新欄位應維持 pixel（此時一般欄位必定是 pixel）
   if (percentageColumns.length && pixelColumns.length) {
-    const newWidths: ColumnWidth[] = [];
+    // 判斷新欄位是否應該是 pinned column
+    const isNewColumnPinned =
+      typeof operatingColumnIndex === 'number' ? pinnedColumnIndices.includes(operatingColumnIndex) : false;
 
-    // 找到最後一個 pixel 欄位的寬度，新欄位將複製這個寬度
-    const lastPixelWidth = pixelColumns.length > 0 ? pixelColumns[pixelColumns.length - 1].value : 150;
+    if (isNewColumnPinned) {
+      // 新欄位應該是 pinned column，使用 percentage
+      // 需要調整所有 pinned columns 的百分比
+      const newWidths: ColumnWidth[] = [];
+      const pinnedColumnCount = pinnedColumnIndices.length + 1; // 加上新欄位
 
-    currentWidths.forEach((width, index) => {
-      if (index === insertIndex) {
+      const pinnedPercentagePerColumn = Math.min(
+        Math.round((MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE / pinnedColumnCount) * 10) / 10,
+        MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE,
+      );
+
+      currentWidths.forEach((width, index) => {
+        if (index === insertIndex) {
+          newWidths.push({ type: 'percentage', value: pinnedPercentagePerColumn });
+        }
+
+        if (pinnedColumnIndices.includes(index)) {
+          // 調整現有 pinned column 的百分比
+          newWidths.push({ type: 'percentage', value: pinnedPercentagePerColumn });
+        } else {
+          // 保持非 pinned column (pixel) 不變
+          newWidths.push({ ...width });
+        }
+      });
+
+      // 如果插入位置在最後（但仍在 pinned 區域內）
+      if (insertIndex >= currentWidths.length) {
+        newWidths.push({ type: 'percentage', value: pinnedPercentagePerColumn });
+      }
+
+      return newWidths;
+    } else {
+      // 新欄位應該是 unpinned column，使用 pixel
+      const newWidths: ColumnWidth[] = [];
+
+      // 找到最後一個 pixel 欄位的寬度，新欄位將複製這個寬度
+      const lastPixelWidth = pixelColumns.length > 0 ? pixelColumns[pixelColumns.length - 1].value : 150;
+
+      currentWidths.forEach((width, index) => {
+        if (index === insertIndex) {
+          newWidths.push({ type: 'pixel', value: lastPixelWidth });
+        }
+
+        newWidths.push({ ...width });
+      });
+
+      // 如果插入位置在最後
+      if (insertIndex >= currentWidths.length) {
         newWidths.push({ type: 'pixel', value: lastPixelWidth });
       }
 
-      newWidths.push({ ...width });
-    });
-
-    // 如果插入位置在最後
-    if (insertIndex >= currentWidths.length) {
-      newWidths.push({ type: 'pixel', value: lastPixelWidth });
+      return newWidths;
     }
-
-    return newWidths;
   }
 
-  // Fallback: 返回原始寬度加一個平均 percentage 欄位
-  const newWidths = [...currentWidths];
+  // Fallback: 等比例縮減並插入新欄位
+  const averagePercentage = Math.round((100 / newColumnCount) * 10) / 10;
 
-  newWidths.splice(insertIndex, 0, { type: 'percentage', value: averagePercentage });
+  // 提取當前的百分比值（假設都是 percentage，否則轉為平均分配）
+  const currentPercentages = currentWidths.map((w) => (w.type === 'percentage' ? w.value : 100 / currentWidths.length));
 
-  return newWidths;
+  // 等比例縮減現有欄位並插入新欄位
+  const newPercentages = scalePercentagesWithNewColumn(currentPercentages, averagePercentage, insertIndex);
+
+  return newPercentages.map((value) => ({ type: 'percentage' as const, value }));
 }
 
 /**
@@ -857,21 +958,43 @@ export function calculateResizedColumnWidths(
 }
 
 /**
- * 移動 columnWidths 陣列中的元素位置
+ * 移動或交換欄位寬度設定
  * @param currentWidths - 當前的欄位寬度陣列
- * @param fromIndex - 來源索引
- * @param toIndex - 目標索引
- * @returns 新的欄位寬度陣列
+ * @param sourceIndex - 來源欄位的索引
+ * @param targetIndex - 目標欄位的索引
+ * @param mode - 'swap' 為交換兩個位置，'move' 為移動到目標位置
+ * @returns 處理後的欄位寬度陣列
  */
-export function moveColumnWidth(currentWidths: ColumnWidth[], fromIndex: number, toIndex: number): ColumnWidth[] {
-  if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= currentWidths.length) {
+export function moveOrSwapColumnWidth(
+  currentWidths: ColumnWidth[],
+  sourceIndex: number,
+  targetIndex: number,
+  mode: 'swap' | 'move' = 'move',
+): ColumnWidth[] {
+  if (
+    sourceIndex === targetIndex ||
+    sourceIndex < 0 ||
+    targetIndex < 0 ||
+    sourceIndex >= currentWidths.length ||
+    targetIndex >= currentWidths.length
+  ) {
     return currentWidths;
   }
 
   const newWidths = [...currentWidths];
-  const [movedWidth] = newWidths.splice(fromIndex, 1);
 
-  newWidths.splice(toIndex, 0, movedWidth);
+  if (mode === 'swap') {
+    // swap 邏輯：直接交換兩個位置的值
+    const temp = newWidths[sourceIndex];
+
+    newWidths[sourceIndex] = newWidths[targetIndex];
+    newWidths[targetIndex] = temp;
+  } else {
+    // move 邏輯：移除再插入
+    const [movedWidth] = newWidths.splice(sourceIndex, 1);
+
+    newWidths.splice(targetIndex, 0, movedWidth);
+  }
 
   return newWidths;
 }
@@ -913,30 +1036,31 @@ export function convertToMixedWidthMode(
   });
 
   // 確保釘選欄位總和不超過指定範圍
-  if (totalPinnedPercentage > MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE) {
-    const scaleFactor = MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE / totalPinnedPercentage;
+  const scaleFactor =
+    totalPinnedPercentage > MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE
+      ? MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE / totalPinnedPercentage
+      : 1;
 
-    totalPinnedPercentage = MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE;
+  totalPinnedPercentage = Math.min(totalPinnedPercentage, MAX_PINNED_COLUMNS_WIDTH_PERCENTAGE);
 
-    // 調整釘選欄位的百分比
-    currentWidths.forEach((width, index) => {
-      if (pinnedColumnIndices.includes(index)) {
-        if (width.type === 'percentage') {
-          currentWidths[index] = {
-            type: 'percentage',
-            value: Math.round(width.value * scaleFactor * 10) / 10,
-          };
-        } else {
-          const percentage = (width.value / tableWidth) * 100;
+  // 調整釘選欄位的百分比
+  currentWidths.forEach((width, index) => {
+    if (pinnedColumnIndices.includes(index)) {
+      if (width.type === 'percentage') {
+        currentWidths[index] = {
+          type: 'percentage',
+          value: Math.round(width.value * scaleFactor * 10) / 10,
+        };
+      } else {
+        const percentage = (width.value / tableWidth) * 100;
 
-          currentWidths[index] = {
-            type: 'percentage',
-            value: Math.round(percentage * scaleFactor * 10) / 10,
-          };
-        }
+        currentWidths[index] = {
+          type: 'percentage',
+          value: Math.round(percentage * scaleFactor * 10) / 10,
+        };
       }
-    });
-  }
+    }
+  });
 
   // 計算剩餘空間（用於未釘選欄位）
   const remainingPercentage = 100 - totalPinnedPercentage;
@@ -956,4 +1080,27 @@ export function convertToMixedWidthMode(
   });
 
   return newWidths;
+}
+
+/**
+ * 將混合模式的欄位寬度轉換回純百分比模式
+ * 當所有 pinned columns 都被 unpin 後，需要將 pixel 欄位轉換回 percentage
+ * @param currentWidths - 當前的欄位寬度陣列（混合模式）
+ * @returns 轉換後的純百分比欄位寬度陣列，總和為 100%
+ */
+export function convertToPercentageMode(currentWidths: ColumnWidth[]): ColumnWidth[] {
+  if (currentWidths.length === 0) return [];
+
+  // 檢查是否有 pixel 欄位
+  const hasPixelColumns = currentWidths.some((width) => width.type === 'pixel');
+
+  // 如果沒有 pixel 欄位，表示已經是純百分比模式，直接返回
+  if (!hasPixelColumns) {
+    return currentWidths;
+  }
+
+  // 使用 distributeEqualPercentages 重新分配百分比，確保總和為 100%
+  const percentages = distributeEqualPercentages(currentWidths.length);
+
+  return percentages.map((value) => ({ type: 'percentage' as const, value }));
 }

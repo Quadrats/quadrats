@@ -6,12 +6,14 @@ import { AlignCenter, AlignLeft, AlignRight, Copy, Plus, Trash } from '@quadrats
 import { useTableActionsContext } from '../hooks/useTableActionsContext';
 import { useTableMetadata } from '../hooks/useTableMetadata';
 import { useTableStateContext } from '../hooks/useTableStateContext';
+import { useTableDragContext } from '../contexts/TableDragContext';
 import { InlineToolbar, ToolbarGroupIcon, ToolbarIcon } from '@quadrats/react/toolbar';
 import { Transforms } from 'slate';
 import { calculateTableMinWidth, columnWidthToCSS, TableElement } from '@quadrats/common/table';
 import { TableScrollContext } from '../contexts/TableScrollContext';
 import { useTableCellAlign, useTableCellAlignStatus } from '../hooks/useTableCell';
 import { getTableElements, getColumnWidths } from '../utils/helper';
+import { TableDragLayer } from './TableDragLayer';
 
 function TableMain(props: RenderElementProps<TableElement>) {
   const { attributes, children } = props;
@@ -22,6 +24,7 @@ function TableMain(props: RenderElementProps<TableElement>) {
   const { addColumn, addRow, addColumnAndRow } = useTableActionsContext();
   const { isReachMaximumColumns, isReachMaximumRows, tableElement } = useTableMetadata();
   const { tableSelectedOn, setTableSelectedOn } = useTableStateContext();
+  const { dragState } = useTableDragContext();
 
   // Table align functions
   const setAlign = useTableCellAlign(tableElement, editor);
@@ -78,8 +81,13 @@ function TableMain(props: RenderElementProps<TableElement>) {
       setScrollTop(scrollContainer.scrollTop);
       setScrollLeft(scrollContainer.scrollLeft);
 
-      // 如果正在程式化更新滾動位置，不要觸發 Slate 更新
+      // 如果正在更新滾動位置，不要觸發 Slate 更新
       if (isUpdatingScrollRef.current) {
+        return;
+      }
+
+      // 如果正在拖曳，不要觸發 Slate 更新（避免 transform 導致事件遺失）
+      if (dragState) {
         return;
       }
 
@@ -114,7 +122,7 @@ function TableMain(props: RenderElementProps<TableElement>) {
         clearTimeout(scrollUpdateTimerRef.current);
       }
     };
-  }, [editor, tableElement]);
+  }, [editor, tableElement, dragState]);
 
   // 只在 columnWidths 改變時恢復滾動位置
   useEffect(() => {
@@ -168,7 +176,7 @@ function TableMain(props: RenderElementProps<TableElement>) {
   const currentTableAlign = getAlign('table');
 
   // 根據當前 table align 狀態選擇對應的 icon
-  const getCurrentTableAlignIcon = () => {
+  const getCurrentTableAlignIcon = useCallback(() => {
     switch (currentTableAlign) {
       case 'left':
         return AlignLeft;
@@ -179,7 +187,7 @@ function TableMain(props: RenderElementProps<TableElement>) {
       default:
         return AlignLeft;
     }
-  };
+  }, [currentTableAlign]);
 
   return (
     <div
@@ -274,6 +282,7 @@ function TableMain(props: RenderElementProps<TableElement>) {
             {children}
           </table>
         </TableScrollContext.Provider>
+        <TableDragLayer scrollRef={scrollRef} />
       </div>
       <div className="qdr-table__size-indicators">
         {firstRowCells?.map((cell, colIndex) => (

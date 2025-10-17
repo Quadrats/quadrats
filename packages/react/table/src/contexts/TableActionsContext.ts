@@ -16,6 +16,8 @@ export type TableActionsContextType = Pick<
   | 'unpinColumn'
   | 'pinRow'
   | 'unpinRow'
+  | 'moveOrSwapRow'
+  | 'moveOrSwapColumn'
 >;
 
 export const TableActionsContext = createContext<TableActionsContextType | undefined>(undefined);

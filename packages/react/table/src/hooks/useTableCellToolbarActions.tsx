@@ -10,6 +10,10 @@ import {
   OrderedList,
   Paragraph,
   Pinned,
+  TableMoveDown,
+  TableMoveLeft,
+  TableMoveRight,
+  TableMoveUp,
   TableRemoveTitle,
   TableSetColumnTitle,
   TableSetRowTitle,
@@ -52,6 +56,8 @@ export function useTableCellToolbarActions({
   const { tableSelectedOn, setTableSelectedOn } = useTableStateContext();
   const {
     tableElement,
+    columnCount,
+    rowCount,
     isReachMaximumColumns,
     isReachMinimumNormalColumns,
     isReachMinimumBodyRows,
@@ -75,6 +81,8 @@ export function useTableCellToolbarActions({
     unpinColumn,
     pinRow,
     unpinRow,
+    moveOrSwapRow,
+    moveOrSwapColumn,
   } = useTableActionsContext();
 
   // 獲取當前 cell 內容的類型（用於顯示對應的 icon）
@@ -469,6 +477,151 @@ export function useTableCellToolbarActions({
     ].filter((i) => i !== undefined);
   }, [tableSelectedOn, addColumn, setTableSelectedOn, isReachMaximumColumns]);
 
+  // Row move actions
+  const rowMoveActions = useMemo(() => {
+    if (tableSelectedOn?.region !== 'row' || typeof tableSelectedOn.index !== 'number') {
+      return null;
+    }
+
+    const rowIndex = tableSelectedOn.index;
+
+    // 從 tableElement 獲取 header 和 body 的資訊
+    const tableMainElement = tableElement.children.find(
+      (child) => Element.isElement(child) && child.type.includes('table_main'),
+    );
+
+    if (!tableMainElement || !Element.isElement(tableMainElement)) {
+      return null;
+    }
+
+    const tableHeaderElement = tableMainElement.children.find(
+      (child) => Element.isElement(child) && child.type.includes('table_header'),
+    );
+
+    const headerRowCount =
+      tableHeaderElement && Element.isElement(tableHeaderElement) ? tableHeaderElement.children.length : 0;
+
+    // 判斷當前列是在 header 還是 body 中
+    const currentInHeader = rowIndex < headerRowCount;
+
+    // 判斷上方和下方是否可以互換
+    const canMoveUp = rowIndex > 0; // 不在第一列
+    const canMoveDown = rowIndex < rowCount - 1; // 不在最後一列
+
+    // 檢查目標位置是否在相同的容器中（header 或 body）
+    const targetUpInHeader = rowIndex - 1 < headerRowCount;
+    const targetDownInHeader = rowIndex + 1 < headerRowCount;
+
+    // 標題列只能與標題列互換，一般列只能與一般列互換
+    const canSwapUp = canMoveUp && currentInHeader === targetUpInHeader;
+    const canSwapDown = canMoveDown && currentInHeader === targetDownInHeader;
+
+    return [
+      canSwapDown
+        ? {
+            icon: TableMoveDown,
+            onClick: () => {
+              if (typeof tableSelectedOn.index === 'number') {
+                moveOrSwapRow(tableSelectedOn.index, tableSelectedOn.index + 1, 'swap');
+                setTableSelectedOn(undefined);
+              }
+            },
+          }
+        : undefined,
+      canSwapUp
+        ? {
+            icon: TableMoveUp,
+            onClick: () => {
+              if (typeof tableSelectedOn.index === 'number') {
+                moveOrSwapRow(tableSelectedOn.index, tableSelectedOn.index - 1, 'swap');
+                setTableSelectedOn(undefined);
+              }
+            },
+          }
+        : undefined,
+    ].filter((i) => i !== undefined);
+  }, [tableSelectedOn, setTableSelectedOn, rowCount, tableElement, moveOrSwapRow]);
+
+  // Column move actions
+  const columnMoveActions = useMemo(() => {
+    if (tableSelectedOn?.region !== 'column' || typeof tableSelectedOn.index !== 'number') {
+      return null;
+    }
+
+    const columnIndex = tableSelectedOn.index;
+
+    // 檢查當前行是否為標題行
+    const currentIsTitle = !!element.treatAsTitle;
+
+    // 判斷左右是否可以移動
+    const canMoveLeft = columnIndex > 0;
+    const canMoveRight = columnIndex < columnCount - 1;
+
+    // 檢查相鄰行是否為相同類型（都是標題行或都不是標題行）
+    const checkAdjacentColumnType = (adjacentIndex: number): boolean => {
+      // 從 tableElement 中獲取相鄰行的 treatAsTitle 狀態
+      const tableMainElement = tableElement.children.find(
+        (child) => Element.isElement(child) && child.type.includes('table_main'),
+      );
+
+      if (!tableMainElement || !Element.isElement(tableMainElement)) {
+        return false;
+      }
+
+      const tableBodyElement = tableMainElement.children.find(
+        (child) => Element.isElement(child) && child.type.includes('table_body'),
+      );
+
+      if (!tableBodyElement || !Element.isElement(tableBodyElement)) {
+        return false;
+      }
+
+      // 從 body 的第一列獲取相鄰 cell 的 treatAsTitle 屬性
+      const firstRow = tableBodyElement.children[0];
+
+      if (!Element.isElement(firstRow)) {
+        return false;
+      }
+
+      const adjacentCell = firstRow.children[adjacentIndex];
+
+      if (!Element.isElement(adjacentCell)) {
+        return false;
+      }
+
+      return !!adjacentCell.treatAsTitle;
+    };
+
+    // 標題行只能與標題行互換，一般行只能與一般行互換
+    const canSwapLeft = canMoveLeft && currentIsTitle === checkAdjacentColumnType(columnIndex - 1);
+    const canSwapRight = canMoveRight && currentIsTitle === checkAdjacentColumnType(columnIndex + 1);
+
+    return [
+      canSwapRight
+        ? {
+            icon: TableMoveRight,
+            onClick: () => {
+              if (typeof tableSelectedOn.index === 'number') {
+                moveOrSwapColumn(tableSelectedOn.index, tableSelectedOn.index + 1, 'swap');
+                setTableSelectedOn(undefined);
+              }
+            },
+          }
+        : undefined,
+      canSwapLeft
+        ? {
+            icon: TableMoveLeft,
+            onClick: () => {
+              if (typeof tableSelectedOn.index === 'number') {
+                moveOrSwapColumn(tableSelectedOn.index, tableSelectedOn.index - 1, 'swap');
+                setTableSelectedOn(undefined);
+              }
+            },
+          }
+        : undefined,
+    ].filter((i) => i !== undefined);
+  }, [tableSelectedOn, setTableSelectedOn, columnCount, element.treatAsTitle, tableElement, moveOrSwapColumn]);
+
   // Delete actions
   const deleteActions = useMemo(() => {
     return [
@@ -501,10 +654,22 @@ export function useTableCellToolbarActions({
         icons: rowAddActions || columnAddActions || [],
       },
       {
+        icons: rowMoveActions || columnMoveActions || [],
+      },
+      {
         icons: deleteActions,
       },
     ];
-  }, [rowActions, columnActions, columnAlignActions, rowAddActions, columnAddActions, deleteActions]);
+  }, [
+    rowActions,
+    columnActions,
+    columnAlignActions,
+    rowAddActions,
+    columnAddActions,
+    rowMoveActions,
+    columnMoveActions,
+    deleteActions,
+  ]);
 
   return {
     focusToolbarIconGroups,

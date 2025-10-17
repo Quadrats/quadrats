@@ -20,8 +20,9 @@ import {
   calculateColumnWidthsAfterAdd,
   calculateColumnWidthsAfterDelete,
   setColumnWidths,
-  moveColumnWidth,
+  moveOrSwapColumnWidth,
   convertToMixedWidthMode,
+  convertToPercentageMode,
   getPinnedColumnsInfo,
 } from '../utils/helper';
 
@@ -172,7 +173,14 @@ export function useTableActions(element: RenderTableElementProps['element']) {
           const currentWidths = getColumnWidths(element);
 
           if (currentWidths.length > 0) {
-            const newWidths = calculateColumnWidthsAfterAdd(currentWidths, insertIndex);
+            // 獲取當前的 pinned columns 資訊
+            const { pinnedColumnIndices } = getPinnedColumnsInfo(element);
+            const newWidths = calculateColumnWidthsAfterAdd(
+              currentWidths,
+              insertIndex,
+              pinnedColumnIndices,
+              columnIndex,
+            );
 
             setColumnWidths(editor, element, newWidths);
           }
@@ -341,7 +349,9 @@ export function useTableActions(element: RenderTableElementProps['element']) {
         if (currentWidths.length > 0) {
           // 新欄位插入在最後（columnCount 位置）
           const insertIndex = columnCount;
-          const newWidths = calculateColumnWidthsAfterAdd(currentWidths, insertIndex);
+          // 獲取當前的 pinned columns 資訊
+          const { pinnedColumnIndices } = getPinnedColumnsInfo(element);
+          const newWidths = calculateColumnWidthsAfterAdd(currentWidths, insertIndex, pinnedColumnIndices);
 
           setColumnWidths(editor, element, newWidths);
         }
@@ -702,7 +712,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
             const currentWidths = getColumnWidths(element);
 
             if (currentWidths.length > 0) {
-              const movedWidths = moveColumnWidth(currentWidths, columnIndex, actualTargetIndex);
+              const movedWidths = moveOrSwapColumnWidth(currentWidths, columnIndex, actualTargetIndex, 'move');
 
               // 檢查移動後是否還有 pinned columns
               const { pinnedColumnIndices } = getPinnedColumnsInfo(element);
@@ -773,7 +783,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
 
         const { tableHeaderElement, tableBodyElement, tableMainElement } = tableStructure;
 
-        // 檢查是否已有 pinned columns（一致性規則檢查）
+        // 檢查是否已有 pinned columns
         const hasExistingPinnedColumns = hasAnyPinnedColumns(tableStructure);
 
         // 如果有現有的 pinned columns 且沒有提供自定義屬性，自動設置 pinned 以保持一致性
@@ -830,10 +840,10 @@ export function useTableActions(element: RenderTableElementProps['element']) {
             }
           });
 
-          // 如果目標位置並不需要移動，則直接返回
-          if (columnIndex < targetColumnIndex) return;
+          // 檢查是否需要移動位置
+          const needsMove = columnIndex >= targetColumnIndex && columnIndex !== targetColumnIndex;
 
-          if (columnIndex !== targetColumnIndex) {
+          if (needsMove) {
             for (let rowIndex = containerElement.children.length - 1; rowIndex >= 0; rowIndex--) {
               const row = containerElement.children[rowIndex];
 
@@ -852,7 +862,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
             const currentWidths = getColumnWidths(element);
 
             if (currentWidths.length > 0) {
-              const movedWidths = moveColumnWidth(currentWidths, columnIndex, targetColumnIndex);
+              const movedWidths = moveOrSwapColumnWidth(currentWidths, columnIndex, targetColumnIndex, 'move');
 
               // 如果設定了 pinned，需要轉換為混合模式
               if (finalProps?.pinned && tableWidth > 0) {
@@ -884,7 +894,28 @@ export function useTableActions(element: RenderTableElementProps['element']) {
             if (currentWidths.length > 0) {
               const { pinnedColumnIndices } = getPinnedColumnsInfo(element);
 
-              const updatedPinnedIndices = [...new Set([...pinnedColumnIndices, columnIndex])].sort((a, b) => a - b);
+              // 找出所有已經是 title 的 columns
+              const titleColumnIndices = new Set<number>();
+              const firstRow = containerElement.children[0];
+
+              if (Element.isElement(firstRow) && firstRow.type.includes(TABLE_ROW_TYPE)) {
+                (firstRow.children as TableElement[]).forEach((cell: TableElement, colIndex: number) => {
+                  if (
+                    Element.isElement(cell) &&
+                    (cell as TableElement).type.includes(TABLE_CELL_TYPE) &&
+                    (cell as TableElement).treatAsTitle
+                  ) {
+                    titleColumnIndices.add(colIndex);
+                  }
+                });
+              }
+
+              // 將當前 column 加入 title columns
+              titleColumnIndices.add(columnIndex);
+
+              // 合併所有 pinned columns 和 title columns
+              const allPinnedIndices = new Set([...pinnedColumnIndices, ...Array.from(titleColumnIndices)]);
+              const updatedPinnedIndices = Array.from(allPinnedIndices).sort((a, b) => a - b);
               const mixedWidths = convertToMixedWidthMode(currentWidths, updatedPinnedIndices, tableWidth);
 
               setColumnWidths(editor, element, mixedWidths);
@@ -985,6 +1016,12 @@ export function useTableActions(element: RenderTableElementProps['element']) {
       if (tableBodyElement) {
         processContainer(tableBodyElement);
       }
+
+      // 轉換回純百分比模式
+      const currentWidths = getColumnWidths(element);
+      const percentageWidths = convertToPercentageMode(currentWidths);
+
+      setColumnWidths(editor, element, percentageWidths);
     } catch (error) {
       console.warn('Failed to unpin column:', error);
     }
@@ -1119,6 +1156,222 @@ export function useTableActions(element: RenderTableElementProps['element']) {
     }
   }, [editor, element]);
 
+  /**
+   * 內部函數：移動或交換列的位置
+   * @param mode 'swap' 為交換相鄰位置（toolbar 按鈕），'move' 為移動到任意位置（拖曳）
+   */
+  const moveOrSwapRow = useCallback(
+    (sourceRowIndex: number, targetRowIndex: number, mode: 'swap' | 'move' = 'move') => {
+      try {
+        const tableStructure = getTableStructure(editor, element);
+
+        if (!tableStructure) return;
+
+        const { tableHeaderElement, tableBodyElement, tableHeaderPath, tableBodyPath, headerRowCount } = tableStructure;
+
+        // 確定當前列和目標列所屬的容器
+        const sourceInHeader = sourceRowIndex < headerRowCount;
+        const targetInHeader = targetRowIndex < headerRowCount;
+
+        // 標題列只能與標題列互換/移動，一般列只能與一般列互換/移動
+        if (sourceInHeader !== targetInHeader) {
+          console.warn(`Cannot ${mode} row between header and body`);
+
+          return;
+        }
+
+        // 檢查邊界
+        if (sourceRowIndex === targetRowIndex) {
+          return;
+        }
+
+        let containerPath: number[];
+        let sourceLocalIndex: number;
+        let targetLocalIndex: number;
+
+        if (sourceInHeader) {
+          // 在 header 中
+          if (!tableHeaderElement || !tableHeaderPath) return;
+
+          containerPath = tableHeaderPath;
+          sourceLocalIndex = sourceRowIndex;
+          targetLocalIndex = targetRowIndex;
+        } else {
+          // 在 body 中
+          if (!tableBodyElement) return;
+
+          containerPath = tableBodyPath;
+          sourceLocalIndex = sourceRowIndex - headerRowCount;
+          targetLocalIndex = targetRowIndex - headerRowCount;
+        }
+
+        Editor.withoutNormalizing(editor, () => {
+          if (mode === 'swap') {
+            // swap 邏輯：交換兩個相鄰位置
+            if (sourceRowIndex < targetRowIndex) {
+              // 向下移動：先將源列移到目標位置之後
+              const sourcePath = [...containerPath, sourceLocalIndex];
+              const afterTargetPath = [...containerPath, targetLocalIndex];
+
+              Transforms.moveNodes(editor, {
+                at: sourcePath,
+                to: afterTargetPath,
+              });
+            } else {
+              // 向上移動：先將目標列移到源位置之後
+              const targetPath = [...containerPath, targetLocalIndex];
+              const afterSourcePath = [...containerPath, sourceLocalIndex];
+
+              Transforms.moveNodes(editor, {
+                at: targetPath,
+                to: afterSourcePath,
+              });
+            }
+          } else {
+            // move 邏輯：直接移動到目標位置
+            const sourcePath = [...containerPath, sourceLocalIndex];
+            const targetPath = [...containerPath, targetLocalIndex];
+
+            Transforms.moveNodes(editor, {
+              at: sourcePath,
+              to: targetPath,
+            });
+          }
+        });
+      } catch (error) {
+        console.warn(`Failed to ${mode} row:`, error);
+      }
+    },
+    [editor, element],
+  );
+
+  /**
+   * 內部函數：移動或交換行的位置
+   * @param mode 'swap' 為交換相鄰位置（toolbar 按鈕），'move' 為移動到任意位置（拖曳）
+   */
+  const moveOrSwapColumn = useCallback(
+    (sourceColumnIndex: number, targetColumnIndex: number, mode: 'swap' | 'move' = 'move') => {
+      try {
+        const tableStructure = getTableStructure(editor, element);
+
+        if (!tableStructure) return;
+
+        const { tableHeaderElement, tableBodyElement, columnCount } = tableStructure;
+
+        // 檢查邊界
+        if (targetColumnIndex < 0 || targetColumnIndex >= columnCount) {
+          console.warn('Target column index out of bounds');
+
+          return;
+        }
+
+        // 檢查是否為同一行
+        if (sourceColumnIndex === targetColumnIndex) {
+          return;
+        }
+
+        // 檢查當前行和目標行是否都是標題行或都是一般行
+        // 透過檢查第一個 cell 的 treatAsTitle 屬性來判斷
+        const checkIsTitleColumn = (container: TableElement, colIndex: number): boolean => {
+          if (!Element.isElement(container)) return false;
+
+          for (const row of container.children) {
+            if (Element.isElement(row) && row.type.includes(TABLE_ROW_TYPE)) {
+              const cell = row.children[colIndex];
+
+              if (Element.isElement(cell) && cell.type.includes(TABLE_CELL_TYPE)) {
+                return !!cell.treatAsTitle;
+              }
+            }
+          }
+
+          return false;
+        };
+
+        // 檢查兩個 container 中的第一列來確定是否為標題行
+        let sourceIsTitle = false;
+        let targetIsTitle = false;
+
+        if (tableHeaderElement) {
+          sourceIsTitle = sourceIsTitle || checkIsTitleColumn(tableHeaderElement, sourceColumnIndex);
+          targetIsTitle = targetIsTitle || checkIsTitleColumn(tableHeaderElement, targetColumnIndex);
+        }
+
+        if (tableBodyElement) {
+          sourceIsTitle = sourceIsTitle || checkIsTitleColumn(tableBodyElement, sourceColumnIndex);
+          targetIsTitle = targetIsTitle || checkIsTitleColumn(tableBodyElement, targetColumnIndex);
+        }
+
+        // 標題行只能與標題行互換/移動，一般行只能與一般行互換/移動
+        if (sourceIsTitle !== targetIsTitle) {
+          console.warn(`Cannot ${mode} column between title and normal columns`);
+
+          return;
+        }
+
+        // 根據模式選擇不同的 columnWidths 處理方式
+        const currentWidths = getColumnWidths(element);
+        const newWidths = moveOrSwapColumnWidth(currentWidths, sourceColumnIndex, targetColumnIndex, mode);
+
+        setColumnWidths(editor, element, newWidths);
+
+        // 對 header 和 body 中的所有列進行操作
+        Editor.withoutNormalizing(editor, () => {
+          const containers = [tableHeaderElement, tableBodyElement].filter(
+            (c) => c && Element.isElement(c),
+          ) as TableElement[];
+
+          for (const container of containers) {
+            // 對每一列進行操作
+            for (let rowIndex = 0; rowIndex < container.children.length; rowIndex++) {
+              const row = container.children[rowIndex];
+
+              if (!Element.isElement(row) || !row.type.includes(TABLE_ROW_TYPE)) continue;
+
+              const containerPath = ReactEditor.findPath(editor, container);
+              const rowPath = [...containerPath, rowIndex];
+
+              if (mode === 'swap') {
+                // swap 邏輯：交換兩個相鄰位置
+                if (sourceColumnIndex < targetColumnIndex) {
+                  // 向右移動：將源 cell 移到目標位置之後
+                  const sourceCellPath = [...rowPath, sourceColumnIndex];
+                  const afterTargetCellPath = [...rowPath, targetColumnIndex];
+
+                  Transforms.moveNodes(editor, {
+                    at: sourceCellPath,
+                    to: afterTargetCellPath,
+                  });
+                } else {
+                  // 向左移動：將目標 cell 移到源位置之後
+                  const targetCellPath = [...rowPath, targetColumnIndex];
+                  const afterSourceCellPath = [...rowPath, sourceColumnIndex];
+
+                  Transforms.moveNodes(editor, {
+                    at: targetCellPath,
+                    to: afterSourceCellPath,
+                  });
+                }
+              } else {
+                // move 邏輯：直接移動到目標位置
+                const sourceCellPath = [...rowPath, sourceColumnIndex];
+                const targetCellPath = [...rowPath, targetColumnIndex];
+
+                Transforms.moveNodes(editor, {
+                  at: sourceCellPath,
+                  to: targetCellPath,
+                });
+              }
+            }
+          }
+        });
+      } catch (error) {
+        console.warn(`Failed to ${mode} column:`, error);
+      }
+    },
+    [editor, element],
+  );
+
   return {
     addColumn,
     addRow,
@@ -1135,5 +1388,7 @@ export function useTableActions(element: RenderTableElementProps['element']) {
     unpinRow,
     isColumnPinned,
     isRowPinned,
+    moveOrSwapRow,
+    moveOrSwapColumn,
   };
 }

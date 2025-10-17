@@ -4,6 +4,7 @@ import { Element } from '@quadrats/core';
 import { TableActionsContext } from '../contexts/TableActionsContext';
 import { TableMetadataContext } from '../contexts/TableMetadataContext';
 import { TableStateContext } from '../contexts/TableStateContext';
+import { TableDragProvider } from '../contexts/TableDragContext';
 import { RenderTableElementProps, TableContextType } from '../typings';
 import {
   TABLE_DEFAULT_MAX_COLUMNS,
@@ -41,12 +42,13 @@ function Table({
     pinRow,
     unpinColumn,
     unpinRow,
+    moveOrSwapRow,
+    moveOrSwapColumn,
   } = useTableActions(element);
 
   const { tableSelectedOn, setTableSelectedOn, tableHoveredOn, setTableHoveredOn } = useTableStates();
   const portalContainerRef = useRef<HTMLDivElement>(null);
 
-  // 優化表格結構計算 - 使用 getTableElements 重用邏輯
   const { columnCount, rowCount, normalCols, bodyCount, tableElements } = useMemo(() => {
     const elements = getTableElements(element);
 
@@ -242,6 +244,8 @@ function Table({
       pinRow,
       unpinColumn,
       unpinRow,
+      moveOrSwapRow,
+      moveOrSwapColumn,
     }),
     [
       addColumn,
@@ -257,6 +261,8 @@ function Table({
       pinRow,
       unpinColumn,
       unpinRow,
+      moveOrSwapRow,
+      moveOrSwapColumn,
     ],
   );
 
@@ -304,39 +310,41 @@ function Table({
   );
 
   return (
-    <TableActionsContext.Provider value={actionsValue}>
-      <TableMetadataContext.Provider value={metadataValue}>
-        <TableStateContext.Provider value={stateValue}>
-          <div {...attributes} className="qdr-table">
-            {children}
-            <button
-              type="button"
-              onClick={(evt) => {
-                evt.preventDefault();
-                evt.stopPropagation();
+    <TableDragProvider>
+      <TableActionsContext.Provider value={actionsValue}>
+        <TableMetadataContext.Provider value={metadataValue}>
+          <TableStateContext.Provider value={stateValue}>
+            <div {...attributes} className="qdr-table">
+              {children}
+              <button
+                type="button"
+                onClick={(evt) => {
+                  evt.preventDefault();
+                  evt.stopPropagation();
 
-                setTableSelectedOn((prev) => (prev?.region === 'table' ? undefined : { region: 'table' }));
-              }}
-              onMouseDown={(evt) => {
-                evt.preventDefault();
-                evt.stopPropagation();
-              }}
-              className="qdr-table__selection"
-              title={tableSelectedOn?.region === 'table' ? 'Deselect Table' : 'Select Table'}
-            >
-              <Icon icon={Drag} width={20} height={20} />
-            </button>
-            {/* Portal container for table cell toolbars */}
-            <div
-              ref={portalContainerRef}
-              className="qdr-table__portal-container"
-              data-slate-editor={false}
-              contentEditable={false}
-            />
-          </div>
-        </TableStateContext.Provider>
-      </TableMetadataContext.Provider>
-    </TableActionsContext.Provider>
+                  setTableSelectedOn((prev) => (prev?.region === 'table' ? undefined : { region: 'table' }));
+                }}
+                onMouseDown={(evt) => {
+                  evt.preventDefault();
+                  evt.stopPropagation();
+                }}
+                className="qdr-table__selection"
+                title={tableSelectedOn?.region === 'table' ? 'Deselect Table' : 'Select Table'}
+              >
+                <Icon icon={Drag} width={20} height={20} />
+              </button>
+              {/* Portal container for table cell toolbars */}
+              <div
+                ref={portalContainerRef}
+                className="qdr-table__portal-container"
+                data-slate-editor={false}
+                contentEditable={false}
+              />
+            </div>
+          </TableStateContext.Provider>
+        </TableMetadataContext.Provider>
+      </TableActionsContext.Provider>
+    </TableDragProvider>
   );
 }
 

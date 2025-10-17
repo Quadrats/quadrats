@@ -1,5 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { Slate } from 'slate-react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend'; // dnd provider 只能有一個，所以必須放在 root
 import { ConfigsProvider, ConfigsProviderProps } from '@quadrats/react/configs';
 import { ModalProvider } from '../contexts/modal/ModalProvider';
 import { MessageProvider } from '../contexts/message/MessageProvider';
@@ -23,11 +25,13 @@ function Quadrats(props: QuadratsProps) {
   return (
     <ConfigsProvider theme={theme} locale={locale}>
       <Slate editor={editor} onChange={onChange} initialValue={value}>
-        <MessageProvider>
-          <ModalProvider needConfirmModal={needConfirmModal} setNeedConfirmModal={setNeedConfirmModal}>
-            {children}
-          </ModalProvider>
-        </MessageProvider>
+        <DndProvider backend={HTML5Backend}>
+          <MessageProvider>
+            <ModalProvider needConfirmModal={needConfirmModal} setNeedConfirmModal={setNeedConfirmModal}>
+              {children}
+            </ModalProvider>
+          </MessageProvider>
+        </DndProvider>
       </Slate>
     </ConfigsProvider>
   );
