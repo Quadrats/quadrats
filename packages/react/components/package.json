@@ -20,6 +20,7 @@
       "Modal/modal": "modal",
       "Message/message": "message",
       "SegmentedControl/segmentedControl": "segmentedControl",
+      "ImageUploader/imageUploader": "imageUploader",
       "Toggle/toggle": "toggle",
       "components": "components"
     }
