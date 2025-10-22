@@ -63,7 +63,6 @@ export function createImage<Hosting extends string>(options: CreateImageOptions<
   const createImageElement: Image<Hosting>['createImageElement'] = (src, hosting) => {
     const imageElement: ImageElement = {
       type: types.image,
-      figureType: types.figure,
       src,
       hosting,
       children: [{ text: '' }],

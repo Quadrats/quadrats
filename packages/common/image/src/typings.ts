@@ -23,7 +23,6 @@ export interface ImageFigureElement extends QuadratsElement, WithElementType {
 export interface ImageElement extends QuadratsElement, WithElementType {
   children: [Text];
   src: string;
-  figureType: string;
   /**
    * e.g. The src of image is `8gy9pbaht92y4.jpg` and your static files are hosted by `https://foo.storage`.
    * Then you can make the hosting of element be `foo`.
