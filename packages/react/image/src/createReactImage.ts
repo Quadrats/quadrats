@@ -95,6 +95,7 @@ export function createReactImage<Hosting extends string>(
               attributes,
               element,
               children,
+              parentType: core.types.figure,
               resizeImage: core.resizeImage,
             });
           },

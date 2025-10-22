@@ -12,6 +12,7 @@ function Image(props: RenderImageElementProps) {
     attributes,
     children,
     element,
+    parentType,
     // resizeImage,
     src,
   } = props;
@@ -21,7 +22,7 @@ function Image(props: RenderImageElementProps) {
 
   const parentEntry = Editor.above(editor, {
     at: path,
-    match: (node) => Element.isElement(node) && (node as QuadratsElement).type === element.figureType,
+    match: (node) => Element.isElement(node) && (node as QuadratsElement).type === parentType,
     mode: 'lowest',
   });
 
