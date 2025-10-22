@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.4](https://github.com/Quadrats/quadrats/compare/v1.1.3...v1.1.4) (2025-10-22)
+
+### Bug Fixes
+
+- **common/image:** remove figureType from image element ([814ae36](https://github.com/Quadrats/quadrats/commit/814ae36e1f3f2e7e2a43c2b3bc276433474cb74c))
+- **react/image:** parent type of image from props ([ef24181](https://github.com/Quadrats/quadrats/commit/ef241812810db9f8a45d1117e32dc7b0b148326a))
+
 ## [1.1.3](https://github.com/Quadrats/quadrats/compare/v1.1.2...v1.1.3) (2025-10-21)
 
 ### Bug Fixes
