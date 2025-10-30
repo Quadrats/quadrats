@@ -60,17 +60,19 @@ const options: {
   },
 ];
 
+const emptyValues: CardModalValues = {
+  alignment: 'leftImageRightText',
+  title: '',
+  description: '',
+  remark: '',
+  linkText: '',
+  linkUrl: '',
+};
+
 // TODO: i18n
 export const CardModal = ({ isOpen, close, controller, initialValue, onConfirm: onConfirmProps }: CardModalProps) => {
   const { message } = useMessage();
-  const [values, setValues] = useState<CardModalValues>({
-    alignment: 'leftImageRightText',
-    title: '',
-    description: '',
-    remark: '',
-    linkText: '',
-    linkUrl: '',
-  });
+  const [values, setValues] = useState<CardModalValues>(emptyValues);
 
   const [imageUploaderItem, setImageUploaderItem] = useState<ImageUploaderItem | null>(null);
   const [haveLink, setHaveLink] = useState<boolean>(true);
@@ -127,6 +129,7 @@ export const CardModal = ({ isOpen, close, controller, initialValue, onConfirm: 
       setErrors(errorItems);
     } else {
       close();
+      setValues(emptyValues);
       onConfirmProps({ values, imageItem: values.alignment === 'noImage' ? null : imageUploaderItem, haveLink });
     }
   }, [imageUploaderItem, close, onConfirmProps, haveLink, values]);
@@ -142,6 +145,7 @@ export const CardModal = ({ isOpen, close, controller, initialValue, onConfirm: 
       maskClosable={!uploading}
       onClose={() => {
         close();
+        setValues(emptyValues);
       }}
       onConfirm={onConfirm}
     >
