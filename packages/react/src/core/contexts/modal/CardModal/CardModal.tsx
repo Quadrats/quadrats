@@ -130,6 +130,9 @@ export const CardModal = ({ isOpen, close, controller, initialValue, onConfirm: 
     } else {
       close();
       setValues(emptyValues);
+      setHaveLink(true);
+      setImageUploaderItem(null);
+
       onConfirmProps({ values, imageItem: values.alignment === 'noImage' ? null : imageUploaderItem, haveLink });
     }
   }, [imageUploaderItem, close, onConfirmProps, haveLink, values]);
@@ -146,6 +149,8 @@ export const CardModal = ({ isOpen, close, controller, initialValue, onConfirm: 
       onClose={() => {
         close();
         setValues(emptyValues);
+        setHaveLink(true);
+        setImageUploaderItem(null);
       }}
       onConfirm={onConfirm}
     >
