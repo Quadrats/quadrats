@@ -1,4 +1,4 @@
-import { Editor, Transforms, Element, QuadratsElement, createParagraphElement, Node } from '@quadrats/core';
+import { Editor, Transforms, Element, QuadratsElement, createParagraphElement, Node, Path } from '@quadrats/core';
 import {
   ImageAccept,
   FileUploaderGetBody,
@@ -85,7 +85,27 @@ export function createCard(options: CreateCardOptions): Card<Editor> {
   };
 
   const insertCard: Card<Editor>['insertCard'] = ({ editor, cardValues }) => {
-    Transforms.insertNodes(editor, [createCardElement(cardValues), createParagraphElement()]);
+    const [currentBlockEntry] = Editor.nodes(editor, {
+      match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
+    });
+
+    if (currentBlockEntry) {
+      const [, currentPath] = currentBlockEntry;
+
+      // 在目前 block 後面插入
+      const insertPath = Path.next(currentPath);
+
+      Editor.withoutNormalizing(editor, () => {
+        Transforms.insertNodes(editor, [createCardElement(cardValues), createParagraphElement()], {
+          at: insertPath,
+        });
+      });
+    } else {
+      // 沒找到 block（例如空編輯器）
+      Editor.withoutNormalizing(editor, () => {
+        Transforms.insertNodes(editor, [createCardElement(cardValues), createParagraphElement()]);
+      });
+    }
   };
 
   const updateCardElement: Card<Editor>['updateCardElement'] = ({ editor, cardValues, path }) => {

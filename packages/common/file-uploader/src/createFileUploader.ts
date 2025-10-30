@@ -7,6 +7,7 @@ import {
   HistoryEditor,
   isAboveBlockEmpty,
   Transforms,
+  Path,
 } from '@quadrats/core';
 import { FileUploader, FileUploaderElement, UploaderPlaceholderElement } from './typings';
 import { FILE_UPLOADER_TYPE, FILE_UPLOADER_PLACEHOLDER_TYPE } from './constants';
@@ -102,16 +103,34 @@ export function insertFileUploaderElement(editor: Editor, fileUploaderElement: F
       return;
     }
 
+    const [currentBlockEntry] = Editor.nodes(editor, {
+      match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
+    });
+
+    if (currentBlockEntry) {
+      const [, currentPath] = currentBlockEntry;
+
+      // 在目前 block 後面插入
+      const insertPath = Path.next(currentPath);
+
+      Editor.withoutNormalizing(editor, () => {
+        Transforms.insertNodes(editor, [fileUploaderElement, createParagraphElement()], {
+          at: insertPath,
+        });
+      });
+    } else {
+      // 沒找到 block（例如空編輯器）
+      Editor.withoutNormalizing(editor, () => {
+        Transforms.insertNodes(editor, [fileUploaderElement, createParagraphElement()]);
+      });
+    }
+
     // Clear empty node
     if (isAboveBlockEmpty(editor)) {
       Transforms.removeNodes(editor, {
         at: editor.selection.anchor,
       });
     }
-
-    Transforms.insertNodes(editor, [fileUploaderElement, createParagraphElement()], {
-      at: editor.selection?.anchor.path.length ? [editor.selection?.anchor.path[0] + 1] : undefined,
-    });
 
     Transforms.move(editor);
   }
