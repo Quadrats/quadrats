@@ -90,9 +90,21 @@ export function createEmbed<P extends string>(options: CreateEmbedOptions<P>): E
   };
 
   const removeEmbedPlaceholder: Embed<P>['removeEmbedPlaceholder'] = (editor) => {
-    Transforms.removeNodes(editor, {
-      match: (node) => Element.isElement(node) && (node as QuadratsElement).type === EMBED_PLACEHOLDER_TYPE,
-    });
+    const matches = Array.from(
+      Editor.nodes(editor, {
+        at: [],
+        match: (node) => Element.isElement(node) && (node as QuadratsElement).type === EMBED_PLACEHOLDER_TYPE,
+      }),
+    );
+
+    if (matches.length) {
+      matches
+        .map(([, path]) => path)
+
+        .forEach((path) => {
+          Transforms.removeNodes(editor, { at: path });
+        });
+    }
   };
 
   return {
