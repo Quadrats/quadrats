@@ -126,9 +126,10 @@ export const CardModal = ({ isOpen, close, controller, initialValue, onConfirm: 
     if (errorItems.length > 0) {
       setErrors(errorItems);
     } else {
+      close();
       onConfirmProps({ values, imageItem: values.alignment === 'noImage' ? null : imageUploaderItem, haveLink });
     }
-  }, [imageUploaderItem, onConfirmProps, haveLink, values]);
+  }, [imageUploaderItem, close, onConfirmProps, haveLink, values]);
 
   return (
     <Modal
