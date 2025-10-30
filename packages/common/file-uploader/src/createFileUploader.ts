@@ -123,9 +123,21 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
     createFileUploaderElementByType(type);
 
   const removeUploaderPlaceholder: FileUploader<Editor>['removeUploaderPlaceholder'] = (editor) => {
-    Transforms.removeNodes(editor, {
-      match: (node) => Element.isElement(node) && (node as QuadratsElement).type === FILE_UPLOADER_PLACEHOLDER_TYPE,
-    });
+    const matches = Array.from(
+      Editor.nodes(editor, {
+        at: [],
+        match: (node) => Element.isElement(node) && (node as QuadratsElement).type === FILE_UPLOADER_PLACEHOLDER_TYPE,
+      }),
+    );
+
+    if (matches.length) {
+      matches
+        .map(([, path]) => path)
+
+        .forEach((path) => {
+          Transforms.removeNodes(editor, { at: path });
+        });
+    }
   };
 
   const upload: FileUploader<Editor>['upload'] = async (editor, options) => {
