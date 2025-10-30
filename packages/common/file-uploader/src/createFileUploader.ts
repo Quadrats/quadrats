@@ -7,7 +7,8 @@ import {
   HistoryEditor,
   isAboveBlockEmpty,
   Transforms,
-  Path,
+  NodeEntry,
+  Node,
 } from '@quadrats/core';
 import { FileUploader, FileUploaderElement, UploaderPlaceholderElement } from './typings';
 import { FILE_UPLOADER_TYPE, FILE_UPLOADER_PLACEHOLDER_TYPE } from './constants';
@@ -82,7 +83,11 @@ export const createFileUploaderElementByType: (type: string) => FileUploader<Edi
     return fileUploaderElement;
   };
 
-export function insertFileUploaderElement(editor: Editor, fileUploaderElement: FileUploaderElement | undefined) {
+export function insertFileUploaderElement(
+  editor: Editor,
+  fileUploaderElement: FileUploaderElement | undefined,
+  currentBlockEntry?: NodeEntry<Node> | undefined,
+) {
   if (fileUploaderElement) {
     // 驗證當前 selection 是否仍然有效
     if (!editor.selection) {
@@ -103,19 +108,12 @@ export function insertFileUploaderElement(editor: Editor, fileUploaderElement: F
       return;
     }
 
-    const [currentBlockEntry] = Editor.nodes(editor, {
-      match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
-    });
-
     if (currentBlockEntry) {
       const [, currentPath] = currentBlockEntry;
 
-      // 在目前 block 後面插入
-      const insertPath = Path.next(currentPath);
-
       Editor.withoutNormalizing(editor, () => {
         Transforms.insertNodes(editor, [fileUploaderElement, createParagraphElement()], {
-          at: insertPath,
+          at: currentPath,
         });
       });
     } else {
@@ -132,7 +130,11 @@ export function insertFileUploaderElement(editor: Editor, fileUploaderElement: F
       });
     }
 
-    Transforms.move(editor);
+    if (currentBlockEntry) {
+      const [, currentPath] = currentBlockEntry;
+
+      Transforms.select(editor, Editor.start(editor, currentPath));
+    }
   }
 }
 
@@ -175,6 +177,11 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
     }
 
     const { accept, multiple } = options;
+
+    const [currentBlockEntry] = Editor.nodes(editor, {
+      match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
+    });
+
     const files = await getFilesFromInput({ accept, multiple });
 
     if (!files) {
@@ -189,7 +196,7 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
       await prev;
 
       return createFileUploaderElement(editor, file, options).then((fileUploaderElement) => {
-        insertFileUploaderElement(editor, fileUploaderElement);
+        insertFileUploaderElement(editor, fileUploaderElement, currentBlockEntry);
       });
     }, Promise.resolve());
   };
