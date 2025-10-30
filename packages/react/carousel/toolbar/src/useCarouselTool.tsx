@@ -1,37 +1,10 @@
 import { useEffect } from 'react';
-import { Editor, Element } from '@quadrats/core';
-import { CAROUSEL_PLACEHOLDER_TYPE, CarouselPlaceholderElement } from '@quadrats/common/carousel';
 import { useSlateStatic, useModal } from '@quadrats/react';
 import { ReactCarousel } from '@quadrats/react/carousel';
 
 export function useCarouselTool(controller: ReactCarousel) {
   const editor = useSlateStatic();
   const { setCarouselModalConfig, isModalClosed, setIsModalClosed } = useModal();
-
-  useEffect(() => {
-    const [match] = Editor.nodes(editor, {
-      at: [],
-      match: (node) => {
-        const placeholderElement = node as CarouselPlaceholderElement;
-
-        return Element.isElement(placeholderElement) && placeholderElement.type === CAROUSEL_PLACEHOLDER_TYPE;
-      },
-    });
-
-    if (match) {
-      setCarouselModalConfig({
-        controller,
-        onConfirm: (items) => {
-          controller.removeCarouselPlaceholder(editor);
-          controller.insertCarousel({
-            editor,
-            items,
-          });
-        },
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [controller, editor]);
 
   useEffect(() => {
     if (isModalClosed) {
@@ -45,6 +18,16 @@ export function useCarouselTool(controller: ReactCarousel) {
   return {
     onClick: () => {
       controller.insertCarouselPlaceholder(editor);
+      setCarouselModalConfig({
+        controller,
+        onConfirm: (items) => {
+          controller.removeCarouselPlaceholder(editor);
+          controller.insertCarousel({
+            editor,
+            items,
+          });
+        },
+      });
     },
   };
 }
