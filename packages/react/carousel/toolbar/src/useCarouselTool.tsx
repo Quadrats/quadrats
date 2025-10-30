@@ -21,11 +21,12 @@ export function useCarouselTool(controller: ReactCarousel) {
       setCarouselModalConfig({
         controller,
         onConfirm: (items) => {
-          controller.removeCarouselPlaceholder(editor);
           controller.insertCarousel({
             editor,
             items,
           });
+
+          controller.removeCarouselPlaceholder(editor);
         },
       });
     },

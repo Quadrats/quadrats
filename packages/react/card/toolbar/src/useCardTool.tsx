@@ -21,7 +21,6 @@ export function useCardTool(controller: ReactCard) {
       setCardModalConfig({
         controller,
         onConfirm: ({ values, imageItem, haveLink }) => {
-          controller.removeCardPlaceholder(editor);
           controller.insertCard({
             editor,
             cardValues: {
@@ -35,6 +34,8 @@ export function useCardTool(controller: ReactCard) {
               linkUrl: values.linkUrl,
             },
           });
+
+          controller.removeCardPlaceholder(editor);
         },
       });
     },

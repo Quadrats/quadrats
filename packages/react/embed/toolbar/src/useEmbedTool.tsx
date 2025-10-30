@@ -96,8 +96,8 @@ export function useEmbedTool<P extends string>(controller: ReactEmbed<P>, provid
       controller.insertEmbedPlaceholder(editor, provider);
       setEmbedModalConfig({
         onConfirm: (value) => {
-          controller.removeEmbedPlaceholder(editor);
           controller.insertEmbed(editor, provider, value);
+          controller.removeEmbedPlaceholder(editor);
         },
         ...config,
       });
