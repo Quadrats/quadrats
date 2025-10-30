@@ -36,6 +36,7 @@ export const EmbedModal = ({ isOpen, close, placeholder, confirmText, hint, type
       }}
       onConfirm={() => {
         close();
+        setValue('');
         onConfirm(value);
       }}
     >
