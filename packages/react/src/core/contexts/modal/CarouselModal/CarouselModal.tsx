@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { Editor } from '@quadrats/core';
 import { Plus, Upload } from '@quadrats/icons';
 import { usePreviousValue, readFileAsBase64, upload } from '@quadrats/react/utils';
-import { useSlateStatic } from 'slate-react';
 import { Carousel, CarouselFieldArrayItem } from '@quadrats/common/carousel';
 import { Hints, Button, Modal, Icon } from '@quadrats/react/components';
 import { useMessage } from '../../message/message';
@@ -20,7 +19,6 @@ export interface CarouselModalProps {
 }
 
 export const CarouselModal = ({ isOpen, close, controller, initialValue = [], onConfirm }: CarouselModalProps) => {
-  const editor = useSlateStatic();
   const [uploading, setUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [items, setItems] = useState<CarouselFieldArrayItem[]>([]);
@@ -182,7 +180,7 @@ export const CarouselModal = ({ isOpen, close, controller, initialValue = [], on
             disabled={isOverMaxLength}
             prefix={<Icon icon={Plus} width={24} height={24} />}
             onClick={async () => {
-              const files = await controller?.selectFiles(editor);
+              const files = await controller?.selectFiles();
 
               if (files) {
                 const correctFiles = files.filter(
