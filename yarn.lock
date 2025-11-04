@@ -3497,17 +3497,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@quadrats/common@npm:^1.1.4, @quadrats/common@workspace:packages/common":
+"@quadrats/common@npm:^1.1.5, @quadrats/common@workspace:packages/common":
   version: 0.0.0-use.local
   resolution: "@quadrats/common@workspace:packages/common"
   dependencies:
-    "@quadrats/core": "npm:^1.1.0"
+    "@quadrats/core": "npm:^1.1.5"
     "@quadrats/locales": "npm:^1.0.0"
     "@quadrats/utils": "npm:^1.0.0"
   languageName: unknown
   linkType: soft
 
-"@quadrats/core@npm:^1.1.0, @quadrats/core@workspace:packages/core":
+"@quadrats/core@npm:^1.1.5, @quadrats/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@quadrats/core@workspace:packages/core"
   dependencies:
@@ -3533,8 +3533,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@quadrats/react@workspace:packages/react"
   dependencies:
-    "@quadrats/common": "npm:^1.1.4"
-    "@quadrats/core": "npm:^1.1.0"
+    "@quadrats/common": "npm:^1.1.5"
+    "@quadrats/core": "npm:^1.1.5"
     "@quadrats/icons": "npm:^1.1.1"
     "@quadrats/locales": "npm:^1.0.0"
     "@quadrats/theme": "npm:^1.0.0"

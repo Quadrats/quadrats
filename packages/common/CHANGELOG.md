@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.5](https://github.com/Quadrats/quadrats/compare/v1.1.4...v1.1.5) (2025-11-04)
+
+### Bug Fixes
+
+- **common/file-uploader:** insert file-uploader ([0def12f](https://github.com/Quadrats/quadrats/commit/0def12f170c9e39ce7d9bbd43e4e34cb962b842c))
+- **common:** insert card/carousel/embed/file-uploader ([488588f](https://github.com/Quadrats/quadrats/commit/488588f317274730228d7bcb9f6cada72f4b93e9))
+
 ## [1.1.4](https://github.com/Quadrats/quadrats/compare/v1.1.3...v1.1.4) (2025-10-22)
 
 ### Bug Fixes

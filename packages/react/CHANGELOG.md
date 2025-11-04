@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.5](https://github.com/Quadrats/quadrats/compare/v1.1.4...v1.1.5) (2025-11-04)
+
+### Bug Fixes
+
+- **react/card:** open card modal ([ad6f9c9](https://github.com/Quadrats/quadrats/commit/ad6f9c96afdb5a1c47abfbbf80c04f311fef8251))
+- **react/card:** reduce value after confirm ([c69ab79](https://github.com/Quadrats/quadrats/commit/c69ab79dbb878f8b05b24dd69b7751518bb06f1a))
+- **react/carousel:** carousel input issue ([3fb07de](https://github.com/Quadrats/quadrats/commit/3fb07deecb38e07ee13fef55d5ed614069db186e))
+- **react/carousel:** open carousel modal ([f5a2b32](https://github.com/Quadrats/quadrats/commit/f5a2b324935d034d0bac5b226b36cb619bc7b903))
+- **react/embed:** open embed modal ([74d9d3d](https://github.com/Quadrats/quadrats/commit/74d9d3d87e18a30d38b26f96cc60e5ff48465fe7))
+- **react/embed:** reduce value after confirm ([e6895c0](https://github.com/Quadrats/quadrats/commit/e6895c0d3b89311fae22d5bb43caa2dd69529518))
+- **react/table:** add key on table component to calc width correctly ([b37aaea](https://github.com/Quadrats/quadrats/commit/b37aaeabc1dd734805a4b870bb533fa9dd2192a9))
+- **react:** init card modal when close ([6bb09a9](https://github.com/Quadrats/quadrats/commit/6bb09a9a536d81e2f18a0d72d473a2508ef1cef7))
+- **react:** modal behavior ([d60f0c8](https://github.com/Quadrats/quadrats/commit/d60f0c8cb4a1c3ac79bf07cb18f34afb1a350713))
+- **react:** remove placeholder after insert ([5a7a5ee](https://github.com/Quadrats/quadrats/commit/5a7a5ee949683f7d4d1a2c36093ec86f557866ad))
+
 ## [1.1.4](https://github.com/Quadrats/quadrats/compare/v1.1.3...v1.1.4) (2025-10-22)
 
 ### Bug Fixes
