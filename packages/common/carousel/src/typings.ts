@@ -55,7 +55,7 @@ export interface Carousel<T extends Editor = Editor> extends Withable {
   maxLength: number;
   limitSize: number;
   confirmModal: boolean;
-  selectFiles(editor: T): Promise<File[] | undefined>;
+  selectFiles(): Promise<File[] | undefined>;
   getBody: FileUploaderGetBody;
   getHeaders?: FileUploaderGetHeaders;
   getUrl: FileUploaderGetUrl;

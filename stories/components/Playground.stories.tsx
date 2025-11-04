@@ -833,7 +833,6 @@ function PlaygroundEditor(props: PlaygroundEditorProps) {
             locale={editorLocale}
             theme={editorTheme}
             value={value}
-            key={Math.random()} // Fixed Slate bug on re-create editor
             onChange={(v: Descendant[]) => setValue(v)}
             needConfirmModal={needConfirmModal}
             setNeedConfirmModal={setNeedConfirmModal}

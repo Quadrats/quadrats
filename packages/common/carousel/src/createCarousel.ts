@@ -1,4 +1,4 @@
-import { Editor, Transforms, Element, QuadratsElement, createParagraphElement, Node } from '@quadrats/core';
+import { Editor, Transforms, Element, QuadratsElement, createParagraphElement, Node, Path } from '@quadrats/core';
 import {
   ImageAccept,
   FileUploaderGetBody,
@@ -96,7 +96,27 @@ export function createCarousel(options: CreateCarouselOptions): Carousel<Editor>
   };
 
   const insertCarousel: Carousel<Editor>['insertCarousel'] = ({ editor, items }) => {
-    Transforms.insertNodes(editor, [createCarouselElement({ items }), createParagraphElement()]);
+    const [currentBlockEntry] = Editor.nodes(editor, {
+      match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
+    });
+
+    if (currentBlockEntry) {
+      const [, currentPath] = currentBlockEntry;
+
+      // 在目前 block 後面插入
+      const insertPath = Path.next(currentPath);
+
+      Editor.withoutNormalizing(editor, () => {
+        Transforms.insertNodes(editor, [createCarouselElement({ items }), createParagraphElement()], {
+          at: insertPath,
+        });
+      });
+    } else {
+      // 沒找到 block（例如空編輯器）
+      Editor.withoutNormalizing(editor, () => {
+        Transforms.insertNodes(editor, [createCarouselElement({ items }), createParagraphElement()]);
+      });
+    }
   };
 
   const updateCarouselElement: Carousel<Editor>['updateCarouselElement'] = ({ editor, items, path }) => {

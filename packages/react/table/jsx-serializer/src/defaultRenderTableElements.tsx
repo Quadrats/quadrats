@@ -9,7 +9,7 @@ import { TableRowJsxSerializeElement } from './components/TableRow';
 import { TableCellJsxSerializeElement } from './components/TableCell';
 
 export const defaultRenderTableElements: TableJsxSerializeElements = {
-  table: (props) => <TableJsxSerializeElement {...props} />,
+  table: (props) => <TableJsxSerializeElement key={Math.random()} {...props} />,
   table_title: (props) => <TableTitleJsxSerializeElement {...props} />,
   table_main: (props) => <TableMainJsxSerializeElement {...props} />,
   table_header: (props) => <TableHeaderJsxSerializeElement {...props} />,

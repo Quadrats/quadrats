@@ -9,7 +9,7 @@ import { TableRenderElements } from './typings';
 import TableBody from './components/TableBody';
 
 export const defaultRenderTableElements: TableRenderElements = {
-  table: (props) => <Table {...props} />,
+  table: (props) => <Table key={Math.random()} {...props} />,
   table_title: (props) => <TableTitle {...props} />,
   table_main: (props) => <TableMain {...props} />,
   table_header: (props) => <TableHeader {...props} />,

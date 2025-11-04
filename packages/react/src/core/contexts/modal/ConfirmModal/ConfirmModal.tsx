@@ -55,7 +55,14 @@ export const ConfirmModal = ({
           <Button variant="secondary" onClick={close}>
             {locale.editor.cancel}
           </Button>
-          <Button variant="primary" danger onClick={onConfirm}>
+          <Button
+            variant="primary"
+            danger
+            onClick={() => {
+              close();
+              onConfirm?.();
+            }}
+          >
             {confirmText || locale.editor.confirm}
           </Button>
         </div>

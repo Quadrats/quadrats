@@ -24,15 +24,15 @@ function Quadrats(props: QuadratsProps) {
 
   return (
     <ConfigsProvider theme={theme} locale={locale}>
-      <Slate editor={editor} onChange={onChange} initialValue={value}>
-        <DndProvider backend={HTML5Backend}>
-          <MessageProvider>
-            <ModalProvider needConfirmModal={needConfirmModal} setNeedConfirmModal={setNeedConfirmModal}>
+      <DndProvider backend={HTML5Backend}>
+        <MessageProvider>
+          <ModalProvider needConfirmModal={needConfirmModal} setNeedConfirmModal={setNeedConfirmModal}>
+            <Slate editor={editor} onChange={onChange} initialValue={value}>
               {children}
-            </ModalProvider>
-          </MessageProvider>
-        </DndProvider>
-      </Slate>
+            </Slate>
+          </ModalProvider>
+        </MessageProvider>
+      </DndProvider>
     </ConfigsProvider>
   );
 }

@@ -1,7 +1,5 @@
 import { useMemo, useEffect } from 'react';
-import { Editor, Element } from '@quadrats/core';
 import { useSlateStatic, useLocale, useModal } from '@quadrats/react';
-import { EMBED_PLACEHOLDER_TYPE, EmbedPlaceholderElement } from '@quadrats/common/embed';
 import { ReactEmbed } from '@quadrats/react/embed';
 
 type ConfigType = {
@@ -85,32 +83,6 @@ export function useEmbedTool<P extends string>(controller: ReactEmbed<P>, provid
   }, [locale, provider]);
 
   useEffect(() => {
-    const [match] = Editor.nodes(editor, {
-      at: [],
-      match: (node) => {
-        const placeholderElement = node as EmbedPlaceholderElement;
-
-        return (
-          Element.isElement(placeholderElement) &&
-          placeholderElement.type === EMBED_PLACEHOLDER_TYPE &&
-          placeholderElement.provider === provider
-        );
-      },
-    });
-
-    if (match) {
-      setEmbedModalConfig({
-        onConfirm: (value) => {
-          controller.removeEmbedPlaceholder(editor);
-          controller.insertEmbed(editor, provider, value);
-        },
-        ...config,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config, controller, editor, provider]);
-
-  useEffect(() => {
     if (isModalClosed) {
       setTimeout(() => {
         controller.removeEmbedPlaceholder(editor);
@@ -122,6 +94,13 @@ export function useEmbedTool<P extends string>(controller: ReactEmbed<P>, provid
   return {
     onClick: () => {
       controller.insertEmbedPlaceholder(editor, provider);
+      setEmbedModalConfig({
+        onConfirm: (value) => {
+          controller.insertEmbed(editor, provider, value);
+          controller.removeEmbedPlaceholder(editor);
+        },
+        ...config,
+      });
     },
   };
 }

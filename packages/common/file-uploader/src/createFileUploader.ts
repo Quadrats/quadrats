@@ -7,6 +7,8 @@ import {
   HistoryEditor,
   isAboveBlockEmpty,
   Transforms,
+  NodeEntry,
+  Node,
 } from '@quadrats/core';
 import { FileUploader, FileUploaderElement, UploaderPlaceholderElement } from './typings';
 import { FILE_UPLOADER_TYPE, FILE_UPLOADER_PLACEHOLDER_TYPE } from './constants';
@@ -81,7 +83,11 @@ export const createFileUploaderElementByType: (type: string) => FileUploader<Edi
     return fileUploaderElement;
   };
 
-export function insertFileUploaderElement(editor: Editor, fileUploaderElement: FileUploaderElement | undefined) {
+export function insertFileUploaderElement(
+  editor: Editor,
+  fileUploaderElement: FileUploaderElement | undefined,
+  currentBlockEntry?: NodeEntry<Node> | undefined,
+) {
   if (fileUploaderElement) {
     // 驗證當前 selection 是否仍然有效
     if (!editor.selection) {
@@ -102,6 +108,21 @@ export function insertFileUploaderElement(editor: Editor, fileUploaderElement: F
       return;
     }
 
+    if (currentBlockEntry) {
+      const [, currentPath] = currentBlockEntry;
+
+      Editor.withoutNormalizing(editor, () => {
+        Transforms.insertNodes(editor, [fileUploaderElement, createParagraphElement()], {
+          at: currentPath,
+        });
+      });
+    } else {
+      // 沒找到 block（例如空編輯器）
+      Editor.withoutNormalizing(editor, () => {
+        Transforms.insertNodes(editor, [fileUploaderElement, createParagraphElement()]);
+      });
+    }
+
     // Clear empty node
     if (isAboveBlockEmpty(editor)) {
       Transforms.removeNodes(editor, {
@@ -109,11 +130,11 @@ export function insertFileUploaderElement(editor: Editor, fileUploaderElement: F
       });
     }
 
-    Transforms.insertNodes(editor, [fileUploaderElement, createParagraphElement()], {
-      at: editor.selection?.anchor.path.length ? [editor.selection?.anchor.path[0] + 1] : undefined,
-    });
+    if (currentBlockEntry) {
+      const [, currentPath] = currentBlockEntry;
 
-    Transforms.move(editor);
+      Transforms.select(editor, Editor.start(editor, currentPath));
+    }
   }
 }
 
@@ -123,9 +144,21 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
     createFileUploaderElementByType(type);
 
   const removeUploaderPlaceholder: FileUploader<Editor>['removeUploaderPlaceholder'] = (editor) => {
-    Transforms.removeNodes(editor, {
-      match: (node) => Element.isElement(node) && (node as QuadratsElement).type === FILE_UPLOADER_PLACEHOLDER_TYPE,
-    });
+    const matches = Array.from(
+      Editor.nodes(editor, {
+        at: [],
+        match: (node) => Element.isElement(node) && (node as QuadratsElement).type === FILE_UPLOADER_PLACEHOLDER_TYPE,
+      }),
+    );
+
+    if (matches.length) {
+      matches
+        .map(([, path]) => path)
+
+        .forEach((path) => {
+          Transforms.removeNodes(editor, { at: path });
+        });
+    }
   };
 
   const upload: FileUploader<Editor>['upload'] = async (editor, options) => {
@@ -144,6 +177,11 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
     }
 
     const { accept, multiple } = options;
+
+    const [currentBlockEntry] = Editor.nodes(editor, {
+      match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
+    });
+
     const files = await getFilesFromInput({ accept, multiple });
 
     if (!files) {
@@ -158,7 +196,7 @@ export function createFileUploader(options: CreateFileUploaderOptions = {}): Fil
       await prev;
 
       return createFileUploaderElement(editor, file, options).then((fileUploaderElement) => {
-        insertFileUploaderElement(editor, fileUploaderElement);
+        insertFileUploaderElement(editor, fileUploaderElement, currentBlockEntry);
       });
     }, Promise.resolve());
   };
