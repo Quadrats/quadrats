@@ -624,6 +624,22 @@ export function useTableCellToolbarActions({
 
   // Delete actions
   const deleteActions = useMemo(() => {
+    // 當選中 row 時，檢查是否為最後一行
+    if (tableSelectedOn?.region === 'row' && typeof tableSelectedOn.index === 'number') {
+      // 如果只剩一行，不顯示刪除按鈕
+      if (isReachMinimumBodyRows && !isHeader) {
+        return [];
+      }
+    }
+
+    // 當選中 column 時，檢查是否為最後一列
+    if (tableSelectedOn?.region === 'column' && typeof tableSelectedOn.index === 'number') {
+      // 如果只剩一列（考慮 title columns），不顯示刪除按鈕
+      if (columnCount <= 1) {
+        return [];
+      }
+    }
+
     return [
       {
         icon: Trash,
@@ -639,7 +655,7 @@ export function useTableCellToolbarActions({
         },
       },
     ];
-  }, [tableSelectedOn, deleteRow, deleteColumn, setTableSelectedOn]);
+  }, [tableSelectedOn, deleteRow, deleteColumn, setTableSelectedOn, isReachMinimumBodyRows, isHeader, columnCount]);
 
   // Inline toolbar icon groups - 當選中行/列時顯示的完整工具列
   const inlineToolbarIconGroups = useMemo(() => {
