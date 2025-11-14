@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.6](https://github.com/Quadrats/quadrats/compare/v1.1.5...v1.1.6) (2025-11-14)
+
+### Bug Fixes
+
+- **react/table:** hide delete action when remain one column/row, [#86](https://github.com/Quadrats/quadrats/issues/86)evedezr ([f0dd808](https://github.com/Quadrats/quadrats/commit/f0dd8080e19a3b31d3f02b8a544d855b71eede78))
+
 ## [1.1.5](https://github.com/Quadrats/quadrats/compare/v1.1.4...v1.1.5) (2025-11-04)
 
 ### Bug Fixes
