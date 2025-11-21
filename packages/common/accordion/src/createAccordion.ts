@@ -1,16 +1,5 @@
-import {
-  Editor,
-  isNodesTypeIn,
-  Transforms,
-  Element,
-  Text,
-  Node,
-  QuadratsElement,
-} from '@quadrats/core';
-import {
-  Accordion,
-  AccordionTypes,
-} from './typings';
+import { Editor, isNodesTypeIn, Transforms, Element, Text, Node, QuadratsElement } from '@quadrats/core';
+import { Accordion, AccordionTypes } from './typings';
 import { ACCORDION_TYPES } from './constants';
 
 export interface CreateAccordionOptions {
@@ -30,11 +19,11 @@ export function createAccordion(options: CreateAccordionOptions = {}): Accordion
     ],
   });
 
-  const isSelectionInAccordionTitle: Accordion<Editor>['isSelectionInAccordionTitle']
-    = editor => isNodesTypeIn(editor, [types.accordion_title]);
+  const isSelectionInAccordionTitle: Accordion<Editor>['isSelectionInAccordionTitle'] = (editor) =>
+    isNodesTypeIn(editor, [types.accordion_title]);
 
-  const isSelectionInAccordionContent: Accordion<Editor>['isSelectionInAccordionContent']
-    = editor => isNodesTypeIn(editor, [types.accordion_content]);
+  const isSelectionInAccordionContent: Accordion<Editor>['isSelectionInAccordionContent'] = (editor) =>
+    isNodesTypeIn(editor, [types.accordion_content]);
 
   const insertAccordion: Accordion<Editor>['insertAccordion'] = (editor) => {
     Transforms.insertNodes(editor, createAccordionElement());
@@ -47,6 +36,8 @@ export function createAccordion(options: CreateAccordionOptions = {}): Accordion
     isSelectionInAccordionContent,
     insertAccordion,
     with(editor) {
+      const { normalizeNode } = editor;
+
       editor.normalizeNode = (entry) => {
         const [node, path] = entry;
 
@@ -56,7 +47,6 @@ export function createAccordion(options: CreateAccordionOptions = {}): Accordion
           if (type === types.accordion) {
             for (const [child, childPath] of Node.children(editor, path)) {
               if (Element.isElement(child) && (child as QuadratsElement).type === types.accordion) {
-
                 Transforms.removeNodes(editor, { at: childPath });
 
                 return;
@@ -70,7 +60,7 @@ export function createAccordion(options: CreateAccordionOptions = {}): Accordion
             }
           } else if (type === types.accordion_title || type === types.accordion_content) {
             if (node.children.length !== 1 || !Text.isText(node.children[0])) {
-              const mergedText = node.children.map(child => Node.string(child)).join('');
+              const mergedText = node.children.map((child) => Node.string(child)).join('');
               const mergedElement: QuadratsElement = {
                 type,
                 children: [{ text: mergedText }],
@@ -84,6 +74,8 @@ export function createAccordion(options: CreateAccordionOptions = {}): Accordion
             }
           }
         }
+
+        normalizeNode(entry);
       };
 
       return editor;
