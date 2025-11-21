@@ -282,7 +282,7 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
     extendSelectionUp,
     extendSelectionDown,
     with(editor) {
-      const { insertFragment, deleteBackward } = editor;
+      const { insertFragment, deleteBackward, normalizeNode } = editor;
 
       editor.normalizeNode = (entry) => {
         const [node, path] = entry;
@@ -444,6 +444,8 @@ export function createTable(options: CreateTableOptions = {}): Table<Editor> {
             }
           }
         }
+
+        normalizeNode(entry);
       };
 
       editor.deleteBackward = (unit) => {

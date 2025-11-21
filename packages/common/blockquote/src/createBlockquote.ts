@@ -1,4 +1,13 @@
-import { Editor, isNodesTypeIn, WithElementType, wrapNodesWithUnhangRange, unwrapNodesByTypes } from '@quadrats/core';
+import {
+  Editor,
+  isNodesTypeIn,
+  WithElementType,
+  wrapNodesWithUnhangRange,
+  unwrapNodesByTypes,
+  Element,
+  QuadratsElement,
+  Node,
+} from '@quadrats/core';
 import { Blockquote, BlockquoteElement } from './typings';
 import { BLOCKQUOTE_TYPE } from './constants';
 import { TABLE_CELL_TYPE } from '@quadrats/common/table';
@@ -58,6 +67,28 @@ export function createBlockquote({ type = BLOCKQUOTE_TYPE }: CreateBlockquoteOpt
       }
     },
     with(editor) {
+      const { normalizeNode } = editor;
+
+      editor.normalizeNode = (entry) => {
+        const [node, path] = entry;
+
+        if (Element.isElement(node)) {
+          const currentType = (node as QuadratsElement).type;
+
+          if (currentType === type) {
+            for (const [child] of Node.children(editor, path)) {
+              if (Element.isElement(child) && (child as QuadratsElement).type === type) {
+                unwrapBlockquote(editor);
+
+                return;
+              }
+            }
+          }
+        }
+
+        normalizeNode(entry);
+      };
+
       return editor;
     },
   };
