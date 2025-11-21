@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.7](https://github.com/Quadrats/quadrats/compare/v1.1.6...v1.1.7) (2025-11-21)
+
+### Bug Fixes
+
+- **common/accordion:** with of accordion ([f9253a0](https://github.com/Quadrats/quadrats/commit/f9253a05945c1f09f6a49628cc6616e8f4b8aaf5))
+- **common/table:** with of table ([106d50e](https://github.com/Quadrats/quadrats/commit/106d50eb8c3ff88aba715e602d2149f83a808c31))
+- **react/blockquote:** behavior of Backspace event ([a3b874c](https://github.com/Quadrats/quadrats/commit/a3b874c92529d2541b98d67f364a02f8f1745287))
+
+### Features
+
+- **common/blockquote:** normalizeNode ([bb99095](https://github.com/Quadrats/quadrats/commit/bb990956a1829652048321038098d60bb72cbcfa))
+
 ## [1.1.6](https://github.com/Quadrats/quadrats/compare/v1.1.5...v1.1.6) (2025-11-14)
 
 ### Bug Fixes
