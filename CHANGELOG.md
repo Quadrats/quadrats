@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.8](https://github.com/Quadrats/quadrats/compare/v1.1.7...v1.1.8) (2025-12-24)
+
+### Bug Fixes
+
+- **react/image:** backspace behavior [#86](https://github.com/Quadrats/quadrats/issues/86)evz23z1 ([2c59865](https://github.com/Quadrats/quadrats/commit/2c59865df675731581671e9c6b90dcd8b2200f83)), closes [#86evz23z1](https://github.com/Quadrats/quadrats/issues/86evz23z1)
+
 ## [1.1.7](https://github.com/Quadrats/quadrats/compare/v1.1.6...v1.1.7) (2025-11-21)
 
 ### Bug Fixes
