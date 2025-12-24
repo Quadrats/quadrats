@@ -18,6 +18,7 @@ import {
   insertFileUploaderElement,
 } from '@quadrats/common/file-uploader';
 import { createRenderElements, QuadratsReactEditor, RenderElementProps } from '@quadrats/react';
+import { removePreviousElement } from '@quadrats/react/utils';
 import { ReactImage } from './typings';
 import { defaultRenderImageElements } from './defaultRenderImageElements';
 
@@ -38,13 +39,22 @@ export function createReactImage<Hosting extends string>(
     ...core,
     createHandlers: () => ({
       onKeyDown(event, editor, next) {
-        if ((event.key === 'Backspace' || event.key === 'Delete') && core.isCollapsedOnImage(editor)) {
-          const [, figurePath] = core.getAboveImageFigure(editor) || [];
+        if (event.key === 'Backspace' || event.key === 'Delete') {
+          if (core.isCollapsedOnImage(editor)) {
+            const [, figurePath] = core.getAboveImageFigure(editor) || [];
 
-          if (figurePath) {
-            Transforms.removeNodes(editor, { at: figurePath });
+            if (figurePath) {
+              Transforms.removeNodes(editor, { at: figurePath });
 
-            return;
+              return;
+            }
+          } else {
+            removePreviousElement({
+              event,
+              editor,
+              type: types.figure,
+              confirmModal: false,
+            });
           }
         }
 
