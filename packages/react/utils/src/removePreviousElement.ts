@@ -12,7 +12,7 @@ export function removePreviousElement({
   editor: QuadratsEditor & Editor;
   type: string;
   confirmModal: boolean;
-  doConfirm: (remove: VoidFunction) => void;
+  doConfirm?: (remove: VoidFunction) => void;
 }) {
   const { selection } = editor;
 
@@ -49,7 +49,7 @@ export function removePreviousElement({
           };
 
           if (confirmModal) {
-            doConfirm(remove);
+            doConfirm?.(remove);
           } else {
             remove();
           }
