@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.9](https://github.com/Quadrats/quadrats/compare/v1.1.8...v1.1.9) (2025-12-26)
+
+**Note:** Version bump only for package @quadrats/react
+
 ## [1.1.8](https://github.com/Quadrats/quadrats/compare/v1.1.7...v1.1.8) (2025-12-24)
 
 ### Bug Fixes
