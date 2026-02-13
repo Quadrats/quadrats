@@ -66,6 +66,7 @@ export const createFileUploaderElementByType: (type: string) => FileUploader<Edi
 
         return () => {
           xhr.onload = null;
+          xhr.onerror = null;
           xhr.upload.onprogress = null;
         };
       },

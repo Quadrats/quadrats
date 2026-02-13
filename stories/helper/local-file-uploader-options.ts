@@ -37,6 +37,10 @@ export class LocalFileUploader {
     console.log('set header', key, value);
   }
 
+  onerror() {
+    console.log('request failed');
+  }
+
   send(body?: Document | XMLHttpRequestBodyInit | null) {
     const url = URL.createObjectURL(body as Blob);
 

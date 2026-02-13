@@ -47,6 +47,7 @@ export interface FileUploaderImplement {
   open: (method: string, url: string | URL) => void;
   setRequestHeader: (key: string, value: string) => void;
   send(body?: Document | BodyInit | null): void;
+  onerror: (() => void) | null;
   readonly status: number;
   readonly response: any;
   readonly upload: FileUploaderUploadImplement;
