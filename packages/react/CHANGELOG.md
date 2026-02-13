@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.10](https://github.com/Quadrats/quadrats/compare/v1.1.9...v1.1.10) (2026-02-13)
+
+### Features
+
+- **react/file-uploader:** onError config ([3ca968a](https://github.com/Quadrats/quadrats/commit/3ca968aa508926461e237fe1a466d45421030ad8))
+- **react/image:** onError config ([764c11b](https://github.com/Quadrats/quadrats/commit/764c11b159fe6202225027125752b826ab2103e9))
+
 ## [1.1.9](https://github.com/Quadrats/quadrats/compare/v1.1.8...v1.1.9) (2025-12-26)
 
 **Note:** Version bump only for package @quadrats/react

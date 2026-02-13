@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.10](https://github.com/Quadrats/quadrats/compare/v1.1.9...v1.1.10) (2026-02-13)
+
+### Features
+
+- **common/file-uploader:** give onerror type ([f8aa22b](https://github.com/Quadrats/quadrats/commit/f8aa22be43a6464aea0199c2d991ac604b12d6de))
+- **common/file-uploader:** remove element when upload failed ([ea817d2](https://github.com/Quadrats/quadrats/commit/ea817d23e179088f8bbeaf96eba34872da713653))
+- **common/file-uploader:** trigger onerror ([bee482b](https://github.com/Quadrats/quadrats/commit/bee482ba329dedf364962e680369465216c09f9c))
+
 ## [1.1.9](https://github.com/Quadrats/quadrats/compare/v1.1.8...v1.1.9) (2025-12-26)
 
 **Note:** Version bump only for package @quadrats/common
