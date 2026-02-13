@@ -28,6 +28,7 @@ export function createReactImage<Hosting extends string>(
   options: CreateReactImageOptions<Hosting> = {},
   getUploadOptions?: (image: Image<Hosting, QuadratsReactEditor>) => FileUploaderUploadOptions & {
     type?: string;
+    onError?: VoidFunction;
   },
 ): ReactImage<Hosting> {
   const core = createImage(options);
@@ -142,7 +143,10 @@ export function createReactImage<Hosting extends string>(
            * Insert each image when upload options are set.
            */
           if (uploadOptions) {
-            const createFileUploaderElement = createFileUploaderElementByType(uploadOptions.type ?? FILE_UPLOADER_TYPE);
+            const createFileUploaderElement = createFileUploaderElementByType(
+              uploadOptions.type ?? FILE_UPLOADER_TYPE,
+              { onError: uploadOptions.onError },
+            );
 
             Array.from(files).reduce(async (prev, file) => {
               await prev;
