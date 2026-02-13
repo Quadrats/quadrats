@@ -17,72 +17,81 @@ import { TABLE_CELL_TYPE } from '@quadrats/common/table';
 
 export interface CreateFileUploaderOptions {
   type?: string;
+  onError?: VoidFunction;
 }
 
-export const createFileUploaderElementByType: (type: string) => FileUploader<Editor>['createFileUploaderElement'] =
-  (type) => async (editor, file, options) => {
-    const { createElement, getBody, getHeaders, getUrl, uploader } = options;
+export const createFileUploaderElementByType: (
+  type: string,
+  uploaderOptions?: {
+    onError?: VoidFunction;
+  },
+) => FileUploader<Editor>['createFileUploaderElement'] = (type, uploaderOptions) => async (editor, file, options) => {
+  const { createElement, getBody, getHeaders, getUrl, uploader } = options;
 
-    const [mime] = file.type.split('/');
-    const createByMime = createElement[mime];
+  const [mime] = file.type.split('/');
+  const createByMime = createElement[mime];
 
-    if (!createByMime) {
-      return;
-    }
+  if (!createByMime) {
+    return;
+  }
 
-    const { dataURL: createElementByDataURL, response: createElementByResponse } = createByMime;
+  const { dataURL: createElementByDataURL, response: createElementByResponse } = createByMime;
 
-    const headers = await getHeaders?.(file);
-    const xhr = uploader || new XMLHttpRequest();
-    const dataURL = await readFileAsDataURL(file);
+  const headers = await getHeaders?.(file);
+  const xhr = uploader || new XMLHttpRequest();
+  const dataURL = await readFileAsDataURL(file);
 
-    let sent = false;
+  let sent = false;
 
-    const fileUploaderElement: FileUploaderElement = {
-      type,
-      register: (getPath, onProgress) => {
-        xhr.onload = () => {
-          if (xhr.status < 400) {
-            const path = getPath();
+  const fileUploaderElement: FileUploaderElement = {
+    type,
+    register: (getPath, onProgress) => {
+      xhr.onload = () => {
+        if (xhr.status < 400) {
+          const path = getPath();
 
-            if (path) {
-              HistoryEditor.withoutSaving(editor as HistoryEditor, () => {
-                Transforms.removeNodes(editor, { at: path });
-                Transforms.insertNodes(editor, createElementByResponse(xhr.response), { at: path });
-              });
-            }
-          } else {
-            throw xhr.response;
+          if (path) {
+            HistoryEditor.withoutSaving(editor as HistoryEditor, () => {
+              Transforms.removeNodes(editor, { at: path });
+              Transforms.insertNodes(editor, createElementByResponse(xhr.response), { at: path });
+            });
           }
-        };
-
-        xhr.upload.onprogress = ({ loaded, total }: { loaded: number; total: number }) =>
-          onProgress((loaded * 100) / total);
-
-        if (!sent) {
-          sent = true;
-          xhr.send(getBody(file) as XMLHttpRequestBodyInit);
+        } else {
+          throw xhr.response;
         }
+      };
 
-        return () => {
-          xhr.onload = null;
-          xhr.onerror = null;
-          xhr.upload.onprogress = null;
-        };
-      },
-      children: [createElementByDataURL(dataURL)],
-    };
+      xhr.onerror = () => {
+        uploaderOptions?.onError?.();
+      };
 
-    xhr.open('POST', getUrl(file));
+      xhr.upload.onprogress = ({ loaded, total }: { loaded: number; total: number }) =>
+        onProgress((loaded * 100) / total);
 
-    if (headers) {
-      for (const headerName in headers) {
-        xhr.setRequestHeader(headerName, headers[headerName]);
+      if (!sent) {
+        sent = true;
+        xhr.send(getBody(file) as XMLHttpRequestBodyInit);
       }
-    }
 
-    return fileUploaderElement;
+      return () => {
+        xhr.onload = null;
+        xhr.onerror = null;
+        xhr.upload.onprogress = null;
+      };
+    },
+    children: [createElementByDataURL(dataURL)],
   };
+
+  xhr.open('POST', getUrl(file));
+
+  if (headers) {
+    for (const headerName in headers) {
+      xhr.setRequestHeader(headerName, headers[headerName]);
+    }
+  }
+
+  return fileUploaderElement;
+};
 
 export function insertFileUploaderElement(
   editor: Editor,
@@ -140,9 +149,11 @@ export function insertFileUploaderElement(
 }
 
 export function createFileUploader(options: CreateFileUploaderOptions = {}): FileUploader<Editor> {
-  const { type = FILE_UPLOADER_TYPE } = options;
-  const createFileUploaderElement: FileUploader<Editor>['createFileUploaderElement'] =
-    createFileUploaderElementByType(type);
+  const { type = FILE_UPLOADER_TYPE, onError } = options;
+  const createFileUploaderElement: FileUploader<Editor>['createFileUploaderElement'] = createFileUploaderElementByType(
+    type,
+    { onError },
+  );
 
   const removeUploaderPlaceholder: FileUploader<Editor>['removeUploaderPlaceholder'] = (editor) => {
     const matches = Array.from(

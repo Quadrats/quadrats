@@ -54,6 +54,10 @@ export class LocalFileUploader {
     if (typeof this.onload === 'function') {
       this.onload();
     }
+
+    if (typeof this.onerror === 'function') {
+      this.onerror();
+    }
   }
 
   get upload() {
