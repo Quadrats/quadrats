@@ -1,12 +1,11 @@
 import { createFileUploader, FILE_UPLOADER_PLACEHOLDER_TYPE } from '@quadrats/common/file-uploader';
 import { createRenderElement } from '@quadrats/react';
 import { ReactFileUploader } from './typings';
-import {
-  defaultRenderFileUploaderElement,
-} from './defaultRenderFileUploaderElement';
+import { defaultRenderFileUploaderElement } from './defaultRenderFileUploaderElement';
 
 export interface CreateReactFileUploaderOptions {
   type?: string;
+  onError?: VoidFunction;
 }
 
 export function createReactFileUploader(options: CreateReactFileUploaderOptions = {}): ReactFileUploader {
@@ -15,10 +14,11 @@ export function createReactFileUploader(options: CreateReactFileUploaderOptions 
 
   return {
     ...core,
-    createRenderElement: ({ render = defaultRenderFileUploaderElement } = {}) => createRenderElement({
-      type,
-      render,
-    }),
+    createRenderElement: ({ render = defaultRenderFileUploaderElement } = {}) =>
+      createRenderElement({
+        type,
+        render,
+      }),
     createRenderPlaceholderElement: ({ render }) =>
       createRenderElement({
         type: FILE_UPLOADER_PLACEHOLDER_TYPE,
