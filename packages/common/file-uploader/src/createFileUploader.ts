@@ -62,7 +62,15 @@ export const createFileUploaderElementByType: (
       };
 
       xhr.onerror = () => {
+        const path = getPath();
+
         uploaderOptions?.onError?.();
+
+        if (path) {
+          HistoryEditor.withoutSaving(editor as HistoryEditor, () => {
+            Transforms.removeNodes(editor, { at: path });
+          });
+        }
       };
 
       xhr.upload.onprogress = ({ loaded, total }: { loaded: number; total: number }) =>
