@@ -61,17 +61,19 @@ export const createFileUploaderElementByType: (
         }
       };
 
-      xhr.onerror = () => {
-        const path = getPath();
+      if (xhr.addEventListener) {
+        xhr.addEventListener('error', () => {
+          const path = getPath();
 
-        uploaderOptions?.onError?.();
+          uploaderOptions?.onError?.();
 
-        if (path) {
-          HistoryEditor.withoutSaving(editor as HistoryEditor, () => {
-            Transforms.removeNodes(editor, { at: path });
-          });
-        }
-      };
+          if (path) {
+            HistoryEditor.withoutSaving(editor as HistoryEditor, () => {
+              Transforms.removeNodes(editor, { at: path });
+            });
+          }
+        });
+      }
 
       xhr.upload.onprogress = ({ loaded, total }: { loaded: number; total: number }) =>
         onProgress((loaded * 100) / total);
@@ -83,7 +85,6 @@ export const createFileUploaderElementByType: (
 
       return () => {
         xhr.onload = null;
-        xhr.onerror = null;
         xhr.upload.onprogress = null;
       };
     },

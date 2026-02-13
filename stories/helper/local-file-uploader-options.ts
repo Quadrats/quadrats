@@ -37,7 +37,7 @@ export class LocalFileUploader {
     console.log('set header', key, value);
   }
 
-  onerror() {
+  onError() {
     console.log('request failed');
   }
 

@@ -15,7 +15,7 @@ export function readFileAsBase64(file: File): Promise<string> {
       }
     };
 
-    reader.onerror = () => reject(reader.error);
+    reader.addEventListener('error', () => reject(reader.error));
 
     reader.readAsDataURL(file);
   });
