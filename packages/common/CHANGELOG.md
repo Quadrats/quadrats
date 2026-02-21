@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.11](https://github.com/Quadrats/quadrats/compare/v1.1.10...v1.1.11) (2026-02-21)
+
+### Bug Fixes
+
+- **common/file-uploader:** handle non-success status by removing node instead of throwing ([d439729](https://github.com/Quadrats/quadrats/commit/d439729d62304950d8fe7141e2fde761a45b8743))
+
 ## [1.1.10](https://github.com/Quadrats/quadrats/compare/v1.1.9...v1.1.10) (2026-02-13)
 
 ### Features
