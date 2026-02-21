@@ -57,7 +57,15 @@ export const createFileUploaderElementByType: (
             });
           }
         } else {
-          throw xhr.response;
+          const path = getPath();
+
+          uploaderOptions?.onError?.();
+
+          if (path) {
+            HistoryEditor.withoutSaving(editor as HistoryEditor, () => {
+              Transforms.removeNodes(editor, { at: path });
+            });
+          }
         }
       };
 
