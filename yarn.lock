@@ -3504,6 +3504,9 @@ __metadata:
     "@quadrats/core": "npm:^1.1.9"
     "@quadrats/locales": "npm:^1.1.9"
     "@quadrats/utils": "npm:^1.1.9"
+  peerDependencies:
+    slate: ^0.112.0
+    slate-history: ^0.110.3
   languageName: unknown
   linkType: soft
 
@@ -3511,9 +3514,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@quadrats/core@workspace:packages/core"
   dependencies:
-    slate: "npm:^0.112.0"
-    slate-history: "npm:^0.110.3"
     tslib: "npm:^2.6.2"
+  peerDependencies:
+    slate: ^0.112.0
+    slate-history: ^0.110.3
   languageName: unknown
   linkType: soft
 
@@ -3546,13 +3550,14 @@ __metadata:
     react-dnd: "npm:^15.1.2"
     react-dnd-html5-backend: "npm:^15.1.2"
     react-transition-group: "npm:^4.4.5"
-    slate-dom: "npm:^0.112.2"
-    slate-react: "npm:^0.112.1"
     tslib: "npm:^2.6.2"
   peerDependencies:
     react: ^19.1.0
     react-dom: ^19.1.0
     slate: ^0.112.0
+    slate-dom: ^0.112.2
+    slate-history: ^0.110.3
+    slate-react: ^0.112.1
   languageName: unknown
   linkType: soft
 
@@ -16662,7 +16667,11 @@ __metadata:
     rollup-plugin-typescript2: "npm:^0.36.0"
     sass: "npm:^1.69.5"
     sass-loader: "npm:^13.3.2"
+    slate: "npm:^0.112.0"
+    slate-dom: "npm:^0.112.2"
+    slate-history: "npm:^0.110.3"
     slate-hyperscript: "npm:^0.100.0"
+    slate-react: "npm:^0.112.1"
     storybook: "npm:^8.6.11"
     stylelint: "npm:^15.11.0"
     stylelint-config-recommended-scss: "npm:^13.1.0"

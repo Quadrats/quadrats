@@ -26,5 +26,9 @@
     "@quadrats/core": "^1.1.9",
     "@quadrats/locales": "^1.1.9",
     "@quadrats/utils": "^1.1.9"
+  },
+  "peerDependencies": {
+    "slate": "^0.112.0",
+    "slate-history": "^0.110.3"
   }
 }
