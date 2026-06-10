@@ -14,17 +14,13 @@ export function useLinkTool(controller: ReactLink, options: UseLinkToolOptions =
     onClick: () => startToolInput({
       getPlaceholder: locale => locale.editor.link.inputPlaceholder,
       confirm: (url) => {
-        const urlValidation = /^http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/;
-
-        if (!urlValidation.test(url)) {
+        if (!controller.isValidHref(url)) {
           window.alert('請輸入正確的網址格式');
 
           return;
         }
 
-        if (controller.isUrl(url)) {
-          controller.upsertLink(editor, url, options);
-        }
+        controller.upsertLink(editor, url, options);
       },
     }),
   };

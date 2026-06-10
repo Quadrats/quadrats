@@ -1,4 +1,4 @@
-import { isUrl as defaultIsUrl } from '@quadrats/utils';
+import { isRelativeUrl, isUrl as defaultIsUrl } from '@quadrats/utils';
 import {
   Editor,
   Element,
@@ -20,6 +20,14 @@ import { LINK_TYPE } from './constants';
 export interface CreateLinkOptions extends Partial<WithElementType> {
   isUrl?: (value: string) => boolean;
   /**
+   * Whether a value is acceptable as the `url` of a link element.
+   * `normalizeNode` unwraps links whose `url` fails this check, so loosening
+   * or tightening it controls which hrefs survive normalization.
+   *
+   * @default (value) => isUrl(value) || isRelativeUrl(value)
+   */
+  isValidHref?: (value: string) => boolean;
+  /**
    * If `true`, transform previous url text to link after entering a space.
    *
    * @default true
@@ -35,6 +43,7 @@ export interface CreateLinkOptions extends Partial<WithElementType> {
 export function createLink({
   type = LINK_TYPE,
   isUrl = defaultIsUrl,
+  isValidHref = value => isUrl(value) || isRelativeUrl(value),
   prevUrlToLinkAfterSpaceEntered = true,
   wrappableVoidTypes,
 }: CreateLinkOptions = {}): Link {
@@ -133,6 +142,7 @@ export function createLink({
   return {
     type,
     isUrl,
+    isValidHref,
     getFirstPrevTextAsUrlAndRange,
     isSelectionInLink,
     insertLink,
@@ -192,7 +202,7 @@ export function createLink({
           /**
            * Remove invalid url.
            */
-          if (!isUrl((node as LinkElement).url as string)) {
+          if (!isValidHref((node as LinkElement).url as string)) {
             Transforms.unwrapNodes(editor, { at: path });
 
             return;
