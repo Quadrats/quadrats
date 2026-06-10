@@ -54,11 +54,24 @@ export interface ToolbarProps {
    */
   containerRef?: React.MutableRefObject<HTMLElement | undefined>;
   /**
-   * only render expanded case toolbar or not.
+   * Only render the toolbar when the selection is expanded (the floating
+   * "selection bubble" shown above selected text).
+   *
+   * Note that a `<Toolbar fixed>` never floats: to get the selection bubble
+   * you must render a second toolbar instance alongside the fixed one —
+   * without it, selecting text shows no bubble at all.
+   *
+   * ```tsx
+   * <Toolbar fixed>{renderTools}</Toolbar>
+   * <Toolbar onlyRenderExpanded>{renderTools}</Toolbar>
+   * <Editable ... />
+   * ```
    */
   onlyRenderExpanded?: boolean;
   /**
-   * fix main toolbar or not.
+   * Render as the main toolbar: a sticky bar above the editable area which is
+   * always visible, instead of a floating toolbar positioned at the
+   * selection. See `onlyRenderExpanded` for the companion selection bubble.
    */
   fixed?: boolean;
 }
