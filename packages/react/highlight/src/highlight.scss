@@ -1,0 +1,19 @@
+/**
+ * Default styling for highlight marks.
+ *
+ * `defaultRenderHighlight` renders `<mark class="highlight">`
+ * (or `highlight.<variant>` for custom variants) in both the editor and the
+ * jsx-serializer output, but no stylesheet was shipped for it, so the
+ * highlight was only visible through the browser's default `mark` style —
+ * and variant classes (`highlight.<variant>`) got no styling at all.
+ *
+ * Override via the `--qdr-highlight-bg` / `--qdr-highlight-text` custom
+ * properties, or per variant with `mark[class='highlight.<variant>']`.
+ */
+mark.highlight,
+mark[class^='highlight.'],
+.qdr-editable mark,
+.qdr-content mark {
+  background-color: var(--qdr-highlight-bg, #fef08a);
+  color: var(--qdr-highlight-text, inherit);
+}
