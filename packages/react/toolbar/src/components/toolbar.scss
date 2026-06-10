@@ -8,8 +8,10 @@ $qdr-toolbar-input-cross-size: --qdr-spacing-7;
 .qdr-toolbar {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--qdr-spacing-4);
-  height: var(#{$qdr-toolbar-height});
+  min-height: var(#{$qdr-toolbar-height});
+  height: auto;
   padding: var(#{$qdr-toolbar-padding-vertical}) var(#{$qdr-toolbar-padding-horizontal});
   background-color: var(--qdr-surface);
   border: 1px solid var(--qdr-border);
@@ -56,7 +58,8 @@ $qdr-toolbar-input-cross-size: --qdr-spacing-7;
 
   &__wrapper {
     box-sizing: content-box;
-    height: var(#{$qdr-toolbar-height});
+    min-height: var(#{$qdr-toolbar-height});
+    height: auto;
 
     &--fixed {
       position: sticky;
