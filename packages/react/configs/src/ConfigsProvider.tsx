@@ -1,6 +1,6 @@
-import React, { ReactNode, useMemo } from 'react';
+import React, { ReactNode, useContext, useMemo } from 'react';
 import { Theme } from '@quadrats/theme';
-import { enUS, LocaleDefinition } from '@quadrats/locales';
+import { LocaleDefinition } from '@quadrats/locales';
 import { LocaleContext } from './locale';
 import { resolveThemeToProps, ThemeContext, ThemeContextValue } from './theme';
 
@@ -18,19 +18,32 @@ export interface ConfigsProviderProps {
   children: ReactNode | ((props: ConfigsProviderRenderProps) => ReactNode);
 }
 
-function ConfigsProvider({ theme, locale = enUS, children }: ConfigsProviderProps) {
+/**
+ * Provide theme / locale configs.
+ *
+ * Omitted configs are inherited from the closest ancestor `ConfigsProvider`
+ * (falling back to the context defaults, e.g. `enUS`, at the top level), so
+ * components which render their own nested `ConfigsProvider` (e.g.
+ * `<Quadrats>`) won't reset configs provided by the host application.
+ */
+function ConfigsProvider({ theme, locale, children }: ConfigsProviderProps) {
+  const inheritedTheme = useContext(ThemeContext);
+  const inheritedLocale = useContext(LocaleContext);
+  const resolvedLocale = locale ?? inheritedLocale;
   const themeContext: ThemeContextValue = useMemo(
-    () => ({
-      props: theme ? resolveThemeToProps(theme) : {},
-      theme,
-    }),
-    [theme],
+    () => (theme
+      ? {
+        props: resolveThemeToProps(theme),
+        theme,
+      }
+      : inheritedTheme),
+    [theme, inheritedTheme],
   );
 
   return (
     <ThemeContext.Provider value={themeContext}>
-      <LocaleContext.Provider value={locale}>
-        {typeof children === 'function' ? children({ theme: themeContext, locale }) : children}
+      <LocaleContext.Provider value={resolvedLocale}>
+        {typeof children === 'function' ? children({ theme: themeContext, locale: resolvedLocale }) : children}
       </LocaleContext.Provider>
     </ThemeContext.Provider>
   );
