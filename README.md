@@ -34,6 +34,29 @@ Currently based on [Slate](https://github.com/ianstormtaylor/slate) framework.
 - Default
 - Dark Mode
 
+## Toolbar usage
+
+`<Toolbar>` has two render modes, and a typical editor renders **both**
+instances side by side:
+
+```tsx
+<Quadrats editor={editor} value={value} onChange={setValue}>
+  {/* Main toolbar: always-visible sticky bar above the editable area. */}
+  <Toolbar fixed>{renderTools}</Toolbar>
+  {/* Selection bubble: floats above the text whenever the selection is
+      expanded. Without this second instance, selecting text shows no
+      bubble at all — a fixed toolbar never floats. */}
+  <Toolbar onlyRenderExpanded>{renderTools}</Toolbar>
+  <Editable renderElement={renderElement} renderLeaf={renderLeaf} />
+</Quadrats>
+```
+
+- `fixed` — render as the main toolbar (sticky, always visible).
+- `onlyRenderExpanded` — render only when the selection is expanded, as a
+  floating bubble positioned at the selection.
+- The `children` render prop receives an `expanded` flag, so the same
+  renderer can show different tools in the bar and in the bubble.
+
 ## Development scripts
 
 Useful scripts include:
