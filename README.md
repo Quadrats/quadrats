@@ -34,6 +34,35 @@ Currently based on [Slate](https://github.com/ianstormtaylor/slate) framework.
 - Default
 - Dark Mode
 
+## Rendering paragraphs (1.x note)
+
+Unlike most other plugins, the paragraph controller returned by
+`createReactParagraph()` does **not** expose a `createRenderElement()`
+method. Older examples in the wild that call it throw at runtime:
+
+```ts
+const paragraph = createReactParagraph();
+
+paragraph.createRenderElement();
+// ✗ TypeError: paragraph.createRenderElement is not a function
+```
+
+Use the standalone `createRenderParagraphElement()` exported from
+`@quadrats/react/paragraph` instead:
+
+```tsx
+import { createReactParagraph, createRenderParagraphElement } from '@quadrats/react/paragraph';
+
+const paragraph = createReactParagraph();
+
+const renderElement = composeRenderElements([
+  createRenderParagraphElement(),
+  // other plugins keep the controller method form:
+  heading.createRenderElement(),
+  list.createRenderElement(),
+]);
+```
+
 ## Development scripts
 
 Useful scripts include:
