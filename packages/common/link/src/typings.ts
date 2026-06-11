@@ -29,6 +29,13 @@ export interface LinkUpsertLinkOptions {
 export interface Link<T extends Editor = Editor> extends WithElementType, Withable {
   isUrl(value: string): boolean;
   /**
+   * Whether the given value is acceptable as the `url` of a link element.
+   * Used by `normalizeNode` to decide if an existing link should be kept, and
+   * by toolbar inputs to validate user input. Defaults to accepting whatever
+   * `isUrl` accepts, plus relative urls (`/`, `./`, `../`, `#`, `?` prefixed).
+   */
+  isValidHref(value: string): boolean;
+  /**
    * To get the first previous text which is url and its range.
    */
   getFirstPrevTextAsUrlAndRange(editor: T, at: Location): { url: string; at: Range } | undefined;
